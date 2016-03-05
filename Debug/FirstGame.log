@@ -1,0 +1,4 @@
+﻿  WaveManager.cpp
+  c:\program files (x86)\windows kits\8.1\include\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+d:\github projects\firstgame\source\gameobjects\weaponsystem.h(31): warning C4305: 'initializing': truncation from 'double' to 'float'
+  FirstGame.vcxproj -> D:\github projects\FirstGame\Debug\FirstGame.exe

@@ -1,0 +1,165 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\PlayerShip">
+      <UniqueIdentifier>{66250581-e45b-4dc9-bd5c-5ed25df87360}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\PlayerShip">
+      <UniqueIdentifier>{5e7fd692-c8d2-4fa9-a733-58dd3c8e3fb6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\EnemyShips">
+      <UniqueIdentifier>{4fa3bf2b-5c81-4088-8154-f514baf0d542}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\EnemyShips">
+      <UniqueIdentifier>{c69c133a-2bbe-4d68-ab65-4e65bc09c97c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\BaseClasses">
+      <UniqueIdentifier>{b7d87cb7-9ed3-4f3a-a32e-64945f36192c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\BaseClasses">
+      <UniqueIdentifier>{f852081d-a23e-47ec-8088-f75a7ee21692}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\Engine\GameEngine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\GraphicsEngine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Input.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\LevelController\LevelManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameObjects\Bullet.cpp">
+      <Filter>Source Files\PlayerShip</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameObjects\WeaponSystem.cpp">
+      <Filter>Source Files\PlayerShip</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameObjects\PlayerShip.cpp">
+      <Filter>Source Files\PlayerShip</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameObjects\LaserSystem.cpp">
+      <Filter>Source Files\PlayerShip</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameObjects\LaserBolt.cpp">
+      <Filter>Source Files\PlayerShip</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameObjects\EnemyShip.cpp">
+      <Filter>Source Files\EnemyShips</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameObjects\RearAttackShip.cpp">
+      <Filter>Source Files\EnemyShips</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameObjects\Graphics\FontSet.cpp">
+      <Filter>Source Files\BaseClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameObjects\Graphics\Sprite.cpp">
+      <Filter>Source Files\BaseClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\LevelController\TextLabel.cpp">
+      <Filter>Source Files\BaseClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameObjects\Tile.cpp">
+      <Filter>Source Files\BaseClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\LevelController\WaveManager.cpp">
+      <Filter>Source Files\EnemyShips</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameObjects\EnemyBullet.cpp">
+      <Filter>Source Files\EnemyShips</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\LevelController\Wave.cpp">
+      <Filter>Source Files\EnemyShips</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\LevelController\RearAttackWave.cpp">
+      <Filter>Source Files\EnemyShips</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\Engine\GameEngine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\GraphicsEngine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Input.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\LevelController\LevelManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\globals.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameObjects\LaserBolt.h">
+      <Filter>Header Files\PlayerShip</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameObjects\LaserSystem.h">
+      <Filter>Header Files\PlayerShip</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameObjects\PlayerShip.h">
+      <Filter>Header Files\PlayerShip</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameObjects\WeaponSystem.h">
+      <Filter>Header Files\PlayerShip</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameObjects\Bullet.h">
+      <Filter>Header Files\PlayerShip</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameObjects\EnemyShip.h">
+      <Filter>Header Files\EnemyShips</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameObjects\RearAttackShip.h">
+      <Filter>Header Files\EnemyShips</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameObjects\Graphics\FontSet.h">
+      <Filter>Header Files\BaseClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameObjects\Graphics\IElement2D.h">
+      <Filter>Header Files\BaseClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameObjects\Tile.h">
+      <Filter>Header Files\BaseClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\LevelController\TextLabel.h">
+      <Filter>Header Files\BaseClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameObjects\Graphics\Sprite.h">
+      <Filter>Header Files\BaseClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\LevelController\WaveManager.h">
+      <Filter>Header Files\EnemyShips</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameObjects\EnemyBullet.h">
+      <Filter>Header Files\EnemyShips</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\LevelController\Wave.h">
+      <Filter>Header Files\EnemyShips</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\LevelController\RearAttackWave.h">
+      <Filter>Header Files\EnemyShips</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+</Project>
