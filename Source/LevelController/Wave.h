@@ -24,12 +24,12 @@ public:
 	vector<EnemyShip*> enemyShips;
 	vector<Bullet*> bullets;
 protected:
-	/*Sprite* sharedShipSprite;
-	Sprite* sharedBulletSprite;*/
+
 	unique_ptr<Sprite> sharedShipSprite;
 	unique_ptr<Sprite> sharedBulletSprite;
 
-
+	double timeSinceLastLaunch = 0;
+	int maxTimeBetweenLaunches = 15;
 private:
 
 

@@ -47,7 +47,8 @@ bool Sprite::load(ID3D11Device* device, const wchar_t* textureFile) {
 	sourceRect.bottom = height;
 	sourceRect.right = width;
 
-	hitArea = new HitArea(position, Vector2(width, height));
+	hitArea = new HitArea(Vector2(position.x - width / 2, position.y - height / 2),
+		Vector2(width - 2, height - 2));
 
 
 	return true;
@@ -110,7 +111,8 @@ const RECT Sprite::getRect() const {
 
 void Sprite::setHitArea(const HitArea* hitarea) {
 
-	hitArea = new HitArea(hitarea->position, hitarea->size);
+	hitArea = new HitArea(Vector2(position.x - width / 2, position.y - height / 2),
+		Vector2(hitarea->size.x - 2, hitarea->size.y - 2));
 }
 
 void Sprite::setPostion(const Vector2& pos) {

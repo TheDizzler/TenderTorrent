@@ -30,7 +30,7 @@ protected:
 	/* GPU object */
 	ID3D11Device* device = 0;
 	/* GPU interface */
-	ID3D11DeviceContext* deviceContext = 0;
+	ID3D11DeviceContext* deviceContext;
 	/* The backbuffer that gets drawn to. */
 	ID3D11RenderTargetView* renderTargetView = 0;
 

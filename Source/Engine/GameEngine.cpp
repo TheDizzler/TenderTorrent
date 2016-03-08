@@ -66,11 +66,11 @@ void GameEngine::run(double deltaTime, int fps) {
 			DestroyWindow(hwnd);
 		
 	}
-
+	waitingForInput = false;
 	if (GetKeyState(VK_LBUTTON) & 0x8000)
 		waitingForInput = false;
 	if (!waitingForInput) {
-		update(deltaTime);
+		//update(deltaTime);
 		render(deltaTime);
 	} else {
 		batch->Begin(SpriteSortMode_Deferred);
@@ -93,10 +93,6 @@ void GameEngine::detectInput(double deltaTime) {
 
 
 	GetCursorPos(&cursorPos);
-
-
-
-
 
 }
 

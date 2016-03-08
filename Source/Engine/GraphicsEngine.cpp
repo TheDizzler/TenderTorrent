@@ -84,6 +84,7 @@ bool GraphicsEngine::initD3D(HWND hwnd) {
 
 	HRESULT hr;
 
+	
 	for (int i = 0; i < numDriverTypes; ++i) {
 
 		hr = D3D11CreateDeviceAndSwapChain(NULL, driverTypes[i], NULL, createDeviceFlags,

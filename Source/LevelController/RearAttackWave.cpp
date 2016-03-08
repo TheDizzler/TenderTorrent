@@ -30,6 +30,9 @@ bool RearAttackWave::initialize(ID3D11Device* device) {
 
 void RearAttackWave::launchNewWave() {
 
+	timeSinceLastLaunch = 0;
+
+
 	RearAttackShip* enemy = new RearAttackShip(false);
 	enemy->setHitArea(sharedShipSprite->getHitArea());
 	enemyShips.push_back(enemy);

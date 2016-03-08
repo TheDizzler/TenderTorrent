@@ -7,10 +7,7 @@ WeaponSystem::WeaponSystem(Vector2 position) {
 
 	weaponLocation = position;
 
-	for (int i = 0; i <= 24; ++i) {
-		Bullet* bullet = new Bullet(weaponStore);
-		bulletStore.push_back(bullet);
-	}
+	
 
 }
 
@@ -24,6 +21,15 @@ bool WeaponSystem::loadWeaponTexture(ID3D11Device * device, const wchar_t* textu
 		MessageBox(NULL, L"Failed to load bullet", L"ERROR", MB_OK);
 		return false;
 	}
+
+
+	for (int i = 0; i <= 24; ++i) {
+		Bullet* bullet = new Bullet(weaponStore);
+		bullet->setHitArea(baseBulletSprite->getHitArea());
+		bulletStore.push_back(bullet);
+
+	}
+
 
 	return true;
 }
