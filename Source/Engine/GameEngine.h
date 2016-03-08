@@ -7,12 +7,13 @@
 
 
 
-
 class GameEngine : public GraphicsEngine, public Input {
 public:
 
 	GameEngine();
 	~GameEngine();
+
+
 
 	bool initEngine(HWND hwnd, HINSTANCE hInstance);
 

@@ -3,7 +3,7 @@
 #include "Bullet.h"
 
 
-class EnemyBullet : public Bullet{
+class EnemyBullet : public Bullet {
 public:
 	EnemyBullet();
 	EnemyBullet(Vector2& position);

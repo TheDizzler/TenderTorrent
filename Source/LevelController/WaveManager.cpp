@@ -47,7 +47,6 @@ void WaveManager::update(double deltaTime, PlayerShip* player) {
 
 	for (Bullet* bullet : player->liveBullets) {
 		bullet->update(deltaTime);
-		//for (EnemyShip* enemy : enemyShips) {
 		for (Wave* wave : waves) {
 			for (EnemyShip* enemy : wave->enemyShips) {
 				if (bullet->getHitArea()->collision(enemy->getHitArea())) {
@@ -71,13 +70,16 @@ void WaveManager::update(double deltaTime, PlayerShip* player) {
 		/*for (EnemyShip* enemy : wave->enemyShips) {
 			enemy->update(deltaTime, player);
 			if (enemy->readyToFire()) {
-				bullets.push_back(enemy->launchBullet(player->position));
-
+				wave->bullets.push_back(enemy->launchBullet(player->position));
 			}
 		}*/
 
 		for (Bullet* bullet : wave->bullets) {
 			bullet->update(deltaTime);
+			if (bullet->getHitArea()->collision(player->getHitArea())) {
+
+				bullet->isAlive = false;
+			}
 		}
 	}
 

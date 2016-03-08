@@ -24,7 +24,7 @@ bool LevelManager::initStage(ID3D11Device* device) {
 
 
 	playerShip.reset(new PlayerShip(startPosition));
-	playerShip->layerDepth = .25f;
+	//playerShip->layerDepth = .25f;
 	if (!playerShip->load(device, L"assets/Heroship Complete.dds")) {
 		MessageBox(NULL, L"Failed to load playership", L"ERROR", MB_OK);
 		return false;
@@ -33,7 +33,7 @@ bool LevelManager::initStage(ID3D11Device* device) {
 		MessageBox(NULL, L"Failed to load weapons", L"ERROR", MB_OK);
 		return false;
 	}
-
+	playerShip->setDimensions(playerShip.get());
 	
 	waveManager->initialize(device);
 
@@ -50,8 +50,8 @@ bool LevelManager::initStage(ID3D11Device* device) {
 	scoreLabel.reset(new TextLabel(Vector2(10, 10), arial.get()));
 	textLabels.push_back(scoreLabel.get());
 
-	shipPosLabel.reset(new TextLabel(Vector2(10, 30), arial.get()));
-	textLabels.push_back(shipPosLabel.get());
+	energyLabel.reset(new TextLabel(Vector2(10, 30), arial.get()));
+	textLabels.push_back(energyLabel.get());
 
 	pauseLabel.reset(new TextLabel(
 		Vector2(Globals::WINDOW_WIDTH / 2, Globals::WINDOW_HEIGHT / 2),
@@ -78,17 +78,17 @@ void LevelManager::update(double deltaTime, BYTE keyboardState[256], DIMOUSESTAT
 
 	// GUI updates
 	mouse->setPostion(mousePos);
-	//{
-	//	wostringstream ws;
-	//	ws << "Score: " << scoreLabel ;
-	//	scoreLabel->label = ws.str();
-	//}
-
 	{
 		wostringstream ws;
-		ws << "liveBullets: " << playerShip->liveBullets.size();
+		ws << "Score: " << score ;
 		scoreLabel->label = ws.str();
 	}
+
+	//{
+	//	wostringstream ws;
+	//	ws << "liveBullets: " << playerShip->liveBullets.size();
+	//	scoreLabel->label = ws.str();
+	//}
 
 
 	{
@@ -100,14 +100,15 @@ void LevelManager::update(double deltaTime, BYTE keyboardState[256], DIMOUSESTAT
 
 	/*{
 		wostringstream ws;
-		ws << "shipHitArea X: " << shipHitArea->position.x << " shipHitArea Y: " << shipHitArea->position.y;
+		ws << "playerShip X: " << playerShip->getHitArea()->position.x << " playerShip Y: " << playerShip->getHitArea()->position.y;
+		ws << " width: " << playerShip->getHitArea()->size.x << " height: " << playerShip->getHitArea()->size.y;
 		shipPosLabel->label = ws.str();
 	}*/
 
 	{
 		wostringstream ws;
 		ws << "Engery: " << playerShip->energy;
-		shipPosLabel->label = ws.str();
+		energyLabel->label = ws.str();
 	}
 
 

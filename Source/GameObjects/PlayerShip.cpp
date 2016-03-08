@@ -82,25 +82,9 @@ void PlayerShip::update(double deltaTime, const BYTE keyboardState[256], DIMOUSE
 				firing = true;
 				liveBullets.push_back(weaponSlot->fire());
 				energy -= weaponSlot->energyCost;
-			}
+			} else
+				firing = false;
 		}
-		/*if (energy >= leftWeaponSlot->energyCost
-			&& leftWeaponSlot->ready()) {
-
-			firing = true;
-			liveBullets.push_back(leftWeaponSlot->fire());
-			energy -= leftWeaponSlot->energyCost;
-		}
-
-		if (energy >= centerWeaponSlot->energyCost
-			&& centerWeaponSlot->ready()) {
-
-			firing = true;
-			liveBullets.push_back(centerWeaponSlot->fire());
-			energy -= centerWeaponSlot->energyCost;
-		}*/
-
-
 	} else {
 		firing = false;
 	}

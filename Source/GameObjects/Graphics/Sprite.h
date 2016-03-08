@@ -2,6 +2,9 @@
 
 #include "IElement2D.h"
 
+
+
+
 struct HitArea {
 
 	HitArea(Vector2 pos, Vector2 sz) : position(pos), size(sz) {
@@ -22,6 +25,8 @@ struct HitArea {
 
 		return false;
 	}
+
+	
 
 	Vector2 position; // top left position
 	Vector2 size; // (width, height)
@@ -56,7 +61,8 @@ public:
 	virtual const float getAlpha() const;
 	virtual const RECT getRect() const;
 
-	virtual void setHitArea(const HitArea* hitarea);
+	//virtual void setHitArea(const HitArea* hitarea);
+	virtual void setDimensions(Sprite* baseSprite);
 	virtual void setPostion(const Vector2& position);
 	virtual void setOrigin(const Vector2& origin);
 	virtual void setScale(const Vector2& scale);

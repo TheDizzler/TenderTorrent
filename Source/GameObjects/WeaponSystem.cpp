@@ -25,7 +25,8 @@ bool WeaponSystem::loadWeaponTexture(ID3D11Device * device, const wchar_t* textu
 
 	for (int i = 0; i <= 24; ++i) {
 		Bullet* bullet = new Bullet(weaponStore);
-		bullet->setHitArea(baseBulletSprite->getHitArea());
+		//bullet->setHitArea(baseBulletSprite->getHitArea());
+		bullet->setDimensions(baseBulletSprite.get());
 		bulletStore.push_back(bullet);
 
 	}

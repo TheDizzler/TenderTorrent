@@ -14,4 +14,13 @@ EnemyBullet::~EnemyBullet() {
 void EnemyBullet::update(double deltaTime) {
 
 	position += direction*deltaTime*bulletSpeed;
+
+	if (position.x < 0 || position.x > Globals::WINDOW_WIDTH
+		|| position.y < 0 || position.y > Globals::WINDOW_HEIGHT)
+
+		isAlive = false;
+
+
+	//hitArea->position = Vector2(position.x - width / 2, position.y - height / 2);
+	Sprite::update(deltaTime);
 }

@@ -41,7 +41,7 @@ private:
 
 	unique_ptr<TextLabel> timerLabel;
 	unique_ptr<TextLabel> scoreLabel;
-	unique_ptr<TextLabel> shipPosLabel;
+	unique_ptr<TextLabel> energyLabel;
 	unique_ptr<TextLabel> pauseLabel;
 
 	float timeStep = 1.0f / 60.0f;

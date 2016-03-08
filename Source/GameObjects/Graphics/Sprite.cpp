@@ -48,11 +48,12 @@ bool Sprite::load(ID3D11Device* device, const wchar_t* textureFile) {
 	sourceRect.right = width;
 
 	hitArea = new HitArea(Vector2(position.x - width / 2, position.y - height / 2),
-		Vector2(width - 2, height - 2));
+		Vector2(width, height));
 
 
 	return true;
 }
+
 
 
 void Sprite::draw(SpriteBatch* batch) {
@@ -64,7 +65,9 @@ void Sprite::draw(SpriteBatch* batch) {
 
 void Sprite::update(double deltaTime) {
 
-	hitArea->position = position;
+	hitArea->position = Vector2(position.x - width / 2, position.y - height / 2);
+
+
 }
 
 
@@ -109,10 +112,19 @@ const RECT Sprite::getRect() const {
 }
 
 
-void Sprite::setHitArea(const HitArea* hitarea) {
+//void Sprite::setHitArea(const HitArea* hitarea) {
+//
+//	hitArea = new HitArea(Vector2(position.x - width / 2, position.y - height / 2),
+//		Vector2(hitarea->size.x - 2, hitarea->size.y - 2));
+//}
+
+void Sprite::setDimensions(Sprite* baseSprite) {
+
+	width = baseSprite->width;
+	height = baseSprite->height;
 
 	hitArea = new HitArea(Vector2(position.x - width / 2, position.y - height / 2),
-		Vector2(hitarea->size.x - 2, hitarea->size.y - 2));
+		Vector2(width, height));
 }
 
 void Sprite::setPostion(const Vector2& pos) {
