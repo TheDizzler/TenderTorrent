@@ -1,3 +1,25 @@
-﻿  Button.cpp
+﻿  MenuManager.cpp
   c:\program files (x86)\windows kits\8.1\include\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+d:\github projects\firstgame\source\gameobjects\guiobjects\button.h(8): warning C4091: 'static ': ignored on left of 'Actions' when no variable is declared
+d:\github projects\firstgame\source\gameobjects\weaponsystem.h(31): warning C4305: 'initializing': truncation from 'double' to 'float'
+  LevelManager.cpp
+  c:\program files (x86)\windows kits\8.1\include\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+d:\github projects\firstgame\source\gameobjects\weaponsystem.h(31): warning C4305: 'initializing': truncation from 'double' to 'float'
+  main.cpp
+  c:\program files (x86)\windows kits\8.1\include\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+d:\github projects\firstgame\source\gameobjects\weaponsystem.h(31): warning C4305: 'initializing': truncation from 'double' to 'float'
+d:\github projects\firstgame\source\gameobjects\guiobjects\button.h(8): warning C4091: 'static ': ignored on left of 'Actions' when no variable is declared
+d:\github projects\firstgame\source\engine\main.cpp(209): warning C4244: '=': conversion from 'float' to '__int64', possible loss of data
+  GameEngine.cpp
+  c:\program files (x86)\windows kits\8.1\include\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+d:\github projects\firstgame\source\gameobjects\weaponsystem.h(31): warning C4305: 'initializing': truncation from 'double' to 'float'
+d:\github projects\firstgame\source\gameobjects\guiobjects\button.h(8): warning C4091: 'static ': ignored on left of 'Actions' when no variable is declared
+d:\github projects\firstgame\source\engine\gameengine.cpp(92): warning C4244: 'argument': conversion from 'LONG' to 'float', possible loss of data
+  Generating Code...
+  Compiling...
+  GameManager.cpp
+  c:\program files (x86)\windows kits\8.1\include\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+d:\github projects\firstgame\source\gameobjects\weaponsystem.h(31): warning C4305: 'initializing': truncation from 'double' to 'float'
+d:\github projects\firstgame\source\gameobjects\guiobjects\button.h(8): warning C4091: 'static ': ignored on left of 'Actions' when no variable is declared
+  Generating Code...
   FirstGame.vcxproj -> D:\github projects\FirstGame\Debug\FirstGame.exe

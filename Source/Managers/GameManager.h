@@ -22,7 +22,16 @@ public:
 	void update(double deltaTime, BYTE keyboardState[256], MouseController* mouse);
 	void draw(SpriteBatch* batch);
 
+
+	void loadLevel();
+	void exit();
+
 private:
 
-	unique_ptr<Screen> currentScreen;
+	//unique_ptr<Screen> currentScreen;
+	Screen* currentScreen;
+	Screen* lastScreen = 0;
+
+	MouseController* mouse;
+	ID3D11Device* device;
 };

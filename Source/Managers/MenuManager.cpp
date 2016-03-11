@@ -1,9 +1,16 @@
 #include "MenuManager.h"
+#include "GameManager.h"
+
 
 MenuManager::MenuManager() {
 }
 
 MenuManager::~MenuManager() {
+}
+
+void MenuManager::setGameManager(GameManager * gm) {
+
+	game = gm;
 }
 
 bool MenuManager::initialize(ID3D11Device * device, MouseController* mouse) {
@@ -16,12 +23,22 @@ bool MenuManager::initialize(ID3D11Device * device, MouseController* mouse) {
 	if (!mouse->load(device, L"assets/mouse icon.dds"))
 		return false;
 
-	Button* button = new Button(device, L"assets/Arial.spritefont");
-	if (!button->load(device, L"assets/big button.dds"))
+	Button* button = new Button();
+	if (!button->load(device, L"assets/Arial.spritefont",
+		L"assets/button up (256x64).dds", L"assets/button down (256x64).dds"))
 		return false;
-
-	button->setText("This is a Button");
+	button->action = PLAY;
+	button->setText("Play");
 	button->setPosition(Vector2(200, 200));
+	buttons.push_back(button);
+
+	button = new Button();
+	if (!button->load(device, L"assets/Arial.spritefont",
+		L"assets/button up (256x64).dds", L"assets/button down (256x64).dds"))
+		return false;
+	button->action = EXIT;
+	button->setText("Exit");
+	button->setPosition(Vector2(600, 200));
 	buttons.push_back(button);
 
 
@@ -42,12 +59,22 @@ void MenuManager::update(double deltaTime, BYTE keyboardState[256], MouseControl
 	wostringstream ws;
 	ws << "Mouse: " << mouse->position.x << ", " << mouse->position.y;
 	mouseLabel->label = ws.str();
-	
+
 
 	for (Button* button : buttons) {
 		button->update(deltaTime, mouse);
 		if (button->clicked()) {
 			test->setText("Clicked!");
+			switch (button->action) {
+				case EXIT:
+					game->exit();
+					test->setText("Exit!");
+					break;
+				case PLAY:
+					game->loadLevel();
+					test->setText("Play!");
+					break;
+			}
 		}
 	}
 

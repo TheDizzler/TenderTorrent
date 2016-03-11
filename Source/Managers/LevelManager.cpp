@@ -1,13 +1,14 @@
 #include "LevelManager.h"
 
 LevelManager::LevelManager() {
-
-
-
 }
 
 LevelManager::~LevelManager() {
+}
 
+void LevelManager::setGameManager(GameManager * gm) {
+
+	game = gm;
 }
 
 bool LevelManager::initialize(ID3D11Device* device, MouseController* mouse) {

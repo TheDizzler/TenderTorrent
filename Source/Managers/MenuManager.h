@@ -11,6 +11,8 @@ public:
 	MenuManager();
 	~MenuManager();
 
+	
+	virtual void setGameManager(GameManager* game);
 
 	virtual bool initialize(ID3D11Device* device, MouseController* mouse);
 	virtual void update(double deltaTime, BYTE keyboardState[256],
@@ -27,6 +29,6 @@ private:
 	vector<TextLabel*> textLabels;
 	vector<Button*> buttons;
 
-	//Sprite* mouse;
+	GameManager* game;
 
 };

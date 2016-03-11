@@ -1,31 +1,52 @@
 #include "Button.h"
 
-Button::Button(ID3D11Device * device, const wchar_t* file) {
+Button::Button() {
 
-	buttonFont.reset(new FontSet());
-	buttonFont->load(device, file);
-	buttonFont->layerDepth = .1f;
-	buttonFont->setTint(normalColor);
 
-	buttonLabel.reset(new TextLabel(
-		Vector2(0, 0), buttonFont.get()));
 }
 
 Button::~Button() {
 }
 
 
+bool Button::load(ID3D11Device* device, const wchar_t* fontFile,
+	const wchar_t * upButtonFile, const wchar_t * downButtonFile) {
+
+	buttonFont.reset(new FontSet());
+	if (!buttonFont->load(device, fontFile))
+		return false;
+	buttonFont->setTint(normalColor);
+
+	buttonLabel.reset(new TextLabel(
+		Vector2(0, 0), buttonFont.get()));
+
+	normalSprite.reset(new Sprite());
+	pressedSprite.reset(new Sprite());
+	if (!normalSprite->load(device, upButtonFile) ||
+		!pressedSprite->load(device, downButtonFile))
+		return false;
+
+
+	return true;
+}
+
 void Button::setPosition(Vector2& pos) {
 
 	position = pos;
-	buttonLabel->position = Vector2(position.x - width / 3, position.y - height / 3);
 
-	hitArea->position = position;
+	normalSprite->setPosition(position);
+	pressedSprite->setPosition(position);
+
+	hitArea = normalSprite->getHitArea();
+
+	buttonLabel->position = Vector2(position.x - hitArea->size.x / 3, position.y - hitArea->size.y / 3);
+
+	
+	
+
 }
 
 void Button::update(double deltaTime, MouseController* mouse) {
-
-	
 
 	isHover = hitArea->contains(mouse->position);
 
@@ -41,15 +62,18 @@ void Button::update(double deltaTime, MouseController* mouse) {
 
 void Button::draw(SpriteBatch* batch) {
 
-	Sprite::draw(batch);
+	Sprite* drawSprite;
+	drawSprite = normalSprite.get();
 
-	if (isSelected)
+	if (isSelected) {
+		drawSprite = pressedSprite.get();
 		buttonFont->setTint(selectedColor);
-	else if (isHover)
+	} else if (isHover)
 		buttonFont->setTint(hoverColor);
 	else
 		buttonFont->setTint(normalColor);
 
+	drawSprite->draw(batch);
 	buttonLabel->draw(batch);
 
 }

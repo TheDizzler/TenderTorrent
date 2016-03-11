@@ -130,6 +130,7 @@ void Sprite::setDimensions(Sprite* baseSprite) {
 void Sprite::setPosition(const Vector2& pos) {
 
 	position = pos;
+	hitArea->position = Vector2(position.x - width / 2, position.y - height / 2);
 }
 
 

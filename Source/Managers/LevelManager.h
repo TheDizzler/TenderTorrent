@@ -16,6 +16,8 @@ public:
 	LevelManager();
 	~LevelManager();
 
+	virtual void setGameManager(GameManager* game);
+
 	virtual bool initialize(ID3D11Device* device, MouseController* mouse);
 
 	virtual void update(double deltaTime, BYTE keyboardState[256],
@@ -24,7 +26,7 @@ public:
 
 
 private:
-
+	GameManager* game;
 
 	unique_ptr<WaveManager> waveManager;
 
