@@ -50,10 +50,9 @@ bool Input::initDirectInput(HINSTANCE hInstance, HWND hwnd) {
 		return false;
 
 	if (FAILED(inputMouse->SetCooperativeLevel(hwnd, DISCL_EXCLUSIVE | DISCL_NOWINKEY | DISCL_FOREGROUND)))
-
 		return false;
 
-	//ZeroMemory(&movement, sizeof(Movement));
+	mouse.reset(new MouseController());
 
 	return true;
 }

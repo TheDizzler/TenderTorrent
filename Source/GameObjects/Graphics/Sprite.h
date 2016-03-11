@@ -26,7 +26,11 @@ struct HitArea {
 		return false;
 	}
 
-	
+	bool contains(const Vector2& point) const {
+
+		return position.x < point.x && position.x + size.x > point.x
+			&& position.y < point.y && position.y + size.y > point.y;
+	}
 
 	Vector2 position; // top left position
 	Vector2 size; // (width, height)
@@ -63,7 +67,7 @@ public:
 
 	//virtual void setHitArea(const HitArea* hitarea);
 	virtual void setDimensions(Sprite* baseSprite);
-	virtual void setPostion(const Vector2& position);
+	virtual void setPosition(const Vector2& position);
 	virtual void setOrigin(const Vector2& origin);
 	virtual void setScale(const Vector2& scale);
 	virtual void setRotation(const float rotation);
@@ -82,10 +86,10 @@ protected:
 	std::unique_ptr<ID3D11ShaderResourceView*> texture;*/
 
 	ID3D11Resource* resource = 0;
-	
+
 	UINT width;
 	UINT height;
-	
+
 
 	HitArea* hitArea;
 };

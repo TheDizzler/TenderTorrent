@@ -23,23 +23,26 @@
     <ClCompile Include="Source\Engine\GameEngine.cpp" />
     <ClCompile Include="Source\Engine\GraphicsEngine.cpp" />
     <ClCompile Include="Source\Engine\Input.cpp" />
+    <ClCompile Include="Source\Engine\main.cpp" />
     <ClCompile Include="Source\GameObjects\Bullet.cpp" />
     <ClCompile Include="Source\GameObjects\EnemyBullet.cpp" />
     <ClCompile Include="Source\GameObjects\EnemyShip.cpp" />
     <ClCompile Include="Source\GameObjects\Graphics\FontSet.cpp" />
     <ClCompile Include="Source\GameObjects\Graphics\Sprite.cpp" />
+    <ClCompile Include="Source\GameObjects\GUIObjects\Button.cpp" />
+    <ClCompile Include="Source\GameObjects\GUIObjects\MouseController.cpp" />
+    <ClCompile Include="Source\GameObjects\GUIObjects\TextLabel.cpp" />
     <ClCompile Include="Source\GameObjects\LaserBolt.cpp" />
     <ClCompile Include="Source\GameObjects\LaserSystem.cpp" />
-    <ClCompile Include="Source\GameObjects\RearAttackShip.cpp" />
-    <ClCompile Include="Source\GameObjects\Tile.cpp" />
     <ClCompile Include="Source\GameObjects\PlayerShip.cpp" />
+    <ClCompile Include="Source\GameObjects\RearAttackShip.cpp" />
     <ClCompile Include="Source\GameObjects\WeaponSystem.cpp" />
-    <ClCompile Include="Source\LevelController\LevelManager.cpp" />
-    <ClCompile Include="Source\LevelController\RearAttackWave.cpp" />
-    <ClCompile Include="Source\LevelController\TextLabel.cpp" />
-    <ClCompile Include="Source\LevelController\Wave.cpp" />
-    <ClCompile Include="Source\LevelController\WaveManager.cpp" />
-    <ClCompile Include="Source\main.cpp" />
+    <ClCompile Include="Source\Managers\GameManager.cpp" />
+    <ClCompile Include="Source\Managers\LevelManager.cpp" />
+    <ClCompile Include="Source\Managers\MenuManager.cpp" />
+    <ClCompile Include="Source\Managers\RearAttackWave.cpp" />
+    <ClCompile Include="Source\Managers\Wave.cpp" />
+    <ClCompile Include="Source\Managers\WaveManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Engine\GameEngine.h" />
@@ -51,18 +54,22 @@
     <ClInclude Include="Source\GameObjects\Graphics\FontSet.h" />
     <ClInclude Include="Source\GameObjects\Graphics\IElement2D.h" />
     <ClInclude Include="Source\GameObjects\Graphics\Sprite.h" />
+    <ClInclude Include="Source\GameObjects\GUIObjects\Button.h" />
+    <ClInclude Include="Source\GameObjects\GUIObjects\MouseController.h" />
+    <ClInclude Include="Source\GameObjects\GUIObjects\TextLabel.h" />
     <ClInclude Include="Source\GameObjects\LaserBolt.h" />
     <ClInclude Include="Source\GameObjects\LaserSystem.h" />
-    <ClInclude Include="Source\GameObjects\RearAttackShip.h" />
-    <ClInclude Include="Source\GameObjects\Tile.h" />
     <ClInclude Include="Source\GameObjects\PlayerShip.h" />
+    <ClInclude Include="Source\GameObjects\RearAttackShip.h" />
     <ClInclude Include="Source\GameObjects\WeaponSystem.h" />
     <ClInclude Include="Source\globals.h" />
-    <ClInclude Include="Source\LevelController\LevelManager.h" />
-    <ClInclude Include="Source\LevelController\RearAttackWave.h" />
-    <ClInclude Include="Source\LevelController\TextLabel.h" />
-    <ClInclude Include="Source\LevelController\Wave.h" />
-    <ClInclude Include="Source\LevelController\WaveManager.h" />
+    <ClInclude Include="Source\Managers\GameManager.h" />
+    <ClInclude Include="Source\Managers\LevelManager.h" />
+    <ClInclude Include="Source\Managers\MenuManager.h" />
+    <ClInclude Include="Source\Managers\RearAttackWave.h" />
+    <ClInclude Include="Source\Managers\Screen.h" />
+    <ClInclude Include="Source\Managers\Wave.h" />
+    <ClInclude Include="Source\Managers\WaveManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

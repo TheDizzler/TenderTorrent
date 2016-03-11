@@ -31,23 +31,20 @@
     <Filter Include="Source Files\BaseClasses">
       <UniqueIdentifier>{f852081d-a23e-47ec-8088-f75a7ee21692}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Menus">
+      <UniqueIdentifier>{7a3b6f40-549b-4aa0-b14a-4ecce25e0eee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Menus">
+      <UniqueIdentifier>{472b628f-7c46-4a28-9503-08c27fd2e478}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine">
+      <UniqueIdentifier>{20c8a84b-cee4-4cfc-be3f-3b418c1ac444}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Engine">
+      <UniqueIdentifier>{7e6093ea-bc2b-41a2-a23a-5cf98d7e3e25}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\Engine\GameEngine.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\GraphicsEngine.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Input.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\LevelController\LevelManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source\GameObjects\Bullet.cpp">
       <Filter>Source Files\PlayerShip</Filter>
     </ClCompile>
@@ -66,47 +63,59 @@
     <ClCompile Include="Source\GameObjects\EnemyShip.cpp">
       <Filter>Source Files\EnemyShips</Filter>
     </ClCompile>
-    <ClCompile Include="Source\GameObjects\RearAttackShip.cpp">
-      <Filter>Source Files\EnemyShips</Filter>
-    </ClCompile>
     <ClCompile Include="Source\GameObjects\Graphics\FontSet.cpp">
       <Filter>Source Files\BaseClasses</Filter>
     </ClCompile>
     <ClCompile Include="Source\GameObjects\Graphics\Sprite.cpp">
       <Filter>Source Files\BaseClasses</Filter>
     </ClCompile>
-    <ClCompile Include="Source\LevelController\TextLabel.cpp">
-      <Filter>Source Files\BaseClasses</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\GameObjects\Tile.cpp">
-      <Filter>Source Files\BaseClasses</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\LevelController\WaveManager.cpp">
-      <Filter>Source Files\EnemyShips</Filter>
-    </ClCompile>
     <ClCompile Include="Source\GameObjects\EnemyBullet.cpp">
       <Filter>Source Files\EnemyShips</Filter>
     </ClCompile>
-    <ClCompile Include="Source\LevelController\Wave.cpp">
-      <Filter>Source Files\EnemyShips</Filter>
+    <ClCompile Include="Source\Managers\GameManager.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\LevelController\RearAttackWave.cpp">
+    <ClCompile Include="Source\Managers\LevelManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\GameEngine.cpp">
+      <Filter>Source Files\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\main.cpp">
+      <Filter>Source Files\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\GraphicsEngine.cpp">
+      <Filter>Source Files\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Input.cpp">
+      <Filter>Source Files\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameObjects\GUIObjects\Button.cpp">
+      <Filter>Source Files\Menus</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameObjects\GUIObjects\TextLabel.cpp">
+      <Filter>Source Files\Menus</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Managers\MenuManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameObjects\GUIObjects\MouseController.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Managers\RearAttackWave.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Managers\WaveManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Managers\Wave.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameObjects\RearAttackShip.cpp">
       <Filter>Source Files\EnemyShips</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\Engine\GameEngine.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\GraphicsEngine.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Engine\Input.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\LevelController\LevelManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Source\globals.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -128,34 +137,58 @@
     <ClInclude Include="Source\GameObjects\EnemyShip.h">
       <Filter>Header Files\EnemyShips</Filter>
     </ClInclude>
-    <ClInclude Include="Source\GameObjects\RearAttackShip.h">
-      <Filter>Header Files\EnemyShips</Filter>
-    </ClInclude>
     <ClInclude Include="Source\GameObjects\Graphics\FontSet.h">
       <Filter>Header Files\BaseClasses</Filter>
     </ClInclude>
     <ClInclude Include="Source\GameObjects\Graphics\IElement2D.h">
       <Filter>Header Files\BaseClasses</Filter>
     </ClInclude>
-    <ClInclude Include="Source\GameObjects\Tile.h">
-      <Filter>Header Files\BaseClasses</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\LevelController\TextLabel.h">
-      <Filter>Header Files\BaseClasses</Filter>
-    </ClInclude>
     <ClInclude Include="Source\GameObjects\Graphics\Sprite.h">
       <Filter>Header Files\BaseClasses</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\LevelController\WaveManager.h">
-      <Filter>Header Files\EnemyShips</Filter>
     </ClInclude>
     <ClInclude Include="Source\GameObjects\EnemyBullet.h">
       <Filter>Header Files\EnemyShips</Filter>
     </ClInclude>
-    <ClInclude Include="Source\LevelController\Wave.h">
-      <Filter>Header Files\EnemyShips</Filter>
+    <ClInclude Include="Source\Managers\GameManager.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\LevelController\RearAttackWave.h">
+    <ClInclude Include="Source\Managers\LevelManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\GameEngine.h">
+      <Filter>Header Files\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\GraphicsEngine.h">
+      <Filter>Header Files\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Input.h">
+      <Filter>Header Files\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameObjects\GUIObjects\Button.h">
+      <Filter>Header Files\Menus</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameObjects\GUIObjects\TextLabel.h">
+      <Filter>Header Files\Menus</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Managers\Screen.h">
+      <Filter>Header Files\BaseClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Managers\MenuManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameObjects\GUIObjects\MouseController.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Managers\RearAttackWave.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Managers\WaveManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Managers\Wave.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameObjects\RearAttackShip.h">
       <Filter>Header Files\EnemyShips</Filter>
     </ClInclude>
   </ItemGroup>

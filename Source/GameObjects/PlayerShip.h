@@ -2,6 +2,7 @@
 
 #include <dinput.h>
 
+#include "../GameObjects/GUIObjects/MouseController.h"
 #include "LaserSystem.h"
 #include "../globals.h"
 
@@ -16,7 +17,7 @@ public:
 	~PlayerShip();
 
 	bool loadBullet(ID3D11Device* device);
-	void update(double deltaTime, const BYTE keyboardState[256], DIMOUSESTATE mouseCurrentState, Vector2 mousePos);
+	void update(double deltaTime, const BYTE keyboardState[256], MouseController* mouse);
 
 	virtual void draw(SpriteBatch* batch);
 

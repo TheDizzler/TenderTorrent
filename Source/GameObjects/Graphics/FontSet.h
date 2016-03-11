@@ -17,7 +17,7 @@ public:
 	virtual const Color& getTint() const;
 	virtual const float getAlpha() const;
 
-	virtual void setPostion(const Vector2& position);
+	virtual void setPosition(const Vector2& position);
 	virtual void setOrigin(const Vector2& origin);
 	virtual void setScale(const Vector2& scale);
 	virtual void setRotation(const float rotation);

@@ -3,10 +3,12 @@
 #include "GraphicsEngine.h"
 #include "Input.h"
 
-#include "../LevelController/LevelManager.h"
+#include "../Managers/GameManager.h"
 
 
-
+/** The engine to connect higher level game code to the low level
+	graphic and OS software. This class should be reusable for any 2D game,
+	thus should not contain any game logic. */
 class GameEngine : public GraphicsEngine, public Input {
 public:
 
@@ -21,7 +23,7 @@ public:
 	virtual void render(double time);
 private:
 
-	std::unique_ptr<LevelManager> levelManager;
+	std::unique_ptr<GameManager> game;
 
 
 	POINT cursorPos;
@@ -29,7 +31,7 @@ private:
 	bool waitingForInput = true;
 
 	BYTE keyboardState[256];
-	DIMOUSESTATE mouseCurrentState;
+	
 	virtual void detectInput(double time);
 
 	void update(double time);

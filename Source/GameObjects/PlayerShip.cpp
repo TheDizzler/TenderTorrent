@@ -34,9 +34,8 @@ bool PlayerShip::loadBullet(ID3D11Device * device) {
 }
 
 
-#include "../globals.h"
 #include <algorithm>
-void PlayerShip::update(double deltaTime, const BYTE keyboardState[256], DIMOUSESTATE mouseCurrentState, Vector2 mousePos) {
+void PlayerShip::update(double deltaTime, const BYTE keyboardState[256], MouseController* mouse) {
 
 	// Movement
 	int currentSpeed = speed;

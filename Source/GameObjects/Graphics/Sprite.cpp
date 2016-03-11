@@ -127,7 +127,7 @@ void Sprite::setDimensions(Sprite* baseSprite) {
 		Vector2(width, height));
 }
 
-void Sprite::setPostion(const Vector2& pos) {
+void Sprite::setPosition(const Vector2& pos) {
 
 	position = pos;
 }

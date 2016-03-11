@@ -1,6 +1,5 @@
 #pragma once
 
-#include <dinput.h>
 
 #include "EnemyShip.h"
 #include "../globals.h"

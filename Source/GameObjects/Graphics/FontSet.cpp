@@ -70,7 +70,7 @@ const float FontSet::getAlpha() const {
 }
 
 
-void FontSet::setPostion(const Vector2& position) {
+void FontSet::setPosition(const Vector2& position) {
 
 }
 

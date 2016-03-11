@@ -39,8 +39,8 @@ bool GameEngine::initEngine(HWND hw, HINSTANCE hInstance) {
 bool GameEngine::initStage() {
 
 
-	levelManager.reset(new LevelManager(device));
-	if (!levelManager->initStage(device))
+	game.reset(new GameManager());
+	if (!game->initializeGame(device, mouse.get()))
 		return false;
 
 
@@ -61,20 +61,18 @@ void GameEngine::run(double deltaTime, int fps) {
 		if (MessageBox(0, L"Are you sure you want to exit?",
 			L"Really?", MB_YESNO | MB_ICONQUESTION) == IDYES)
 			DestroyWindow(hwnd);
-
 	}
 	//waitingForInput = false;
-	if (GetKeyState(VK_LBUTTON) & 0x8000)
-		waitingForInput = false;
-	if (!waitingForInput) {
+	/*if (GetKeyState(VK_LBUTTON) & 0x8000)
+		waitingForInput = false;*/
+	//if (!waitingForInput) {
 		update(deltaTime);
 		render(deltaTime);
-	} else {
-		batch->Begin(SpriteSortMode_Deferred);
-		levelManager->pauseScreen(deltaTime, batch.get());
-		batch->End();
-		swapChain->Present(0, 0);
-	}
+	//} else {
+
+	//	levelManager->updateMenu(deltaTime, keyboardState, mouseCurrentState, Vector2(cursorPos.x, cursorPos.y));
+	//	render(deltaTime);
+	//}
 }
 
 
@@ -84,18 +82,20 @@ void GameEngine::detectInput(double deltaTime) {
 	inputKB->Acquire();
 	inputMouse->Acquire();
 
-
-	inputMouse->GetDeviceState(sizeof(DIMOUSESTATE), (LPVOID) &mouseCurrentState);
+	//mouse->lastState = mouse->currentState;
+	inputMouse->GetDeviceState(sizeof(DIMOUSESTATE), (LPVOID) &mouse->setCurrentState());
 	inputKB->GetDeviceState(sizeof(keyboardState), (LPVOID) &keyboardState);
 
 
 	GetCursorPos(&cursorPos);
 
+	mouse->setPosition(Vector2(cursorPos.x, cursorPos.y));
 }
+
 
 void GameEngine::update(double deltaTime) {
 
-	levelManager->update(deltaTime, keyboardState, mouseCurrentState, Vector2(cursorPos.x, cursorPos.y));
+	game->update(deltaTime, keyboardState, mouse.get());
 }
 
 
@@ -103,15 +103,12 @@ void GameEngine::update(double deltaTime) {
 void GameEngine::render(double deltaTime) {
 
 
-	
-
 	deviceContext->ClearRenderTargetView(renderTargetView, Colors::CornflowerBlue);
 
 	batch->Begin(SpriteSortMode_Deferred);
 	{
-		
-		levelManager->draw(batch.get());
-
+		game->draw(batch.get());
+		mouse->draw(batch.get());
 	}
 	batch->End();
 
