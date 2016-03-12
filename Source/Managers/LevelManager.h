@@ -10,6 +10,10 @@
 
 using namespace std;
 
+enum PlayState {
+	LOADING, STARTING, PAUSED, PLAYING
+};
+
 
 class LevelManager : public Screen {
 public:
@@ -26,20 +30,24 @@ public:
 
 
 private:
+
+	PlayState playState = LOADING;
+
 	GameManager* game;
 
 	unique_ptr<WaveManager> waveManager;
 
 	DIMOUSESTATE mouseLastState;
 
-	Sprite* mouse;
+	//Sprite* mouse;
 	unique_ptr<FontSet> guiFont;
 	unique_ptr<FontSet> pauseFont;
-
+	unique_ptr<FontSet> warningFont;
 	unique_ptr<TextLabel> timerLabel;
 	unique_ptr<TextLabel> scoreLabel;
 	unique_ptr<TextLabel> energyLabel;
 	unique_ptr<TextLabel> pauseLabel;
+	unique_ptr<TextLabel> warningLabel;
 	vector<TextLabel* > textLabels;
 
 	unique_ptr<PlayerShip> playerShip;
@@ -49,8 +57,12 @@ private:
 	int velocityIterations = 8;
 	int positionIterations = 3;
 
-
+	double totalPlayTime = 0;
 	int score = 0;
 
 	bool isPaused;
+
+	double pauseDelay = 0;
+	void displayWarning(double deltaTime);
+	void displayPause(double deltaTime);
 };

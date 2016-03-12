@@ -14,9 +14,6 @@ public:
 	EnemyShip(const Vector2& position);
 	~EnemyShip();
 
-	//bool loadBullet(ID3D11Device* device, const wchar_t* textureFile);
-
-
 	virtual void update(double deltaTime, PlayerShip* player) = 0;
 	virtual void update(double deltaTime);
 	virtual void draw(SpriteBatch* batch, Sprite* baseShip);
@@ -24,10 +21,8 @@ public:
 	bool readyToFire();
 	EnemyBullet* launchBullet(Vector2 target);
 
-	
-	
-
-	//std::unique_ptr<Bullet> baseBulletSprite;
+	/** Points awarded for killing. */
+	int points = 100;
 
 protected:
 	

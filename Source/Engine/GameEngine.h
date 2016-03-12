@@ -15,12 +15,12 @@ public:
 	GameEngine();
 	~GameEngine();
 
-
-
 	bool initEngine(HWND hwnd, HINSTANCE hInstance);
 
 	void run(double time, int fps);
 	virtual void render(double time);
+
+	void quit();
 private:
 
 	std::unique_ptr<GameManager> game;

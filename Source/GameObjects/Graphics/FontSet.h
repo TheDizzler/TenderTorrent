@@ -10,6 +10,8 @@ public:
 
 	virtual bool load(ID3D11Device* device, const wchar_t* file);
 
+	XMVECTOR XM_CALLCONV measureString(_In_z_ wchar_t const* text) const;
+
 	virtual const Vector2& getPosition() const;
 	virtual const Vector2& getOrigin() const;
 	virtual const Vector2& getScale() const;
@@ -26,8 +28,6 @@ public:
 
 	virtual void draw(SpriteBatch* batch);
 	void draw(SpriteBatch* batch, const wchar_t* text, Vector2 position);
-
-	//void setText(wchar_t* txt);
 
 	float layerDepth;
 protected:

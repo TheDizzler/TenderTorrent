@@ -8,11 +8,14 @@ enum GameState {
 	menu, paused, playing
 };
 
+
+class GameEngine;
+
 /** The lowest level of class where game code should be included.
 	Everything below this (GameEngine downward) should generally go unmodified. */
 class GameManager {
 public:
-	GameManager();
+	GameManager(GameEngine* gameEngine);
 	~GameManager();
 
 
@@ -24,7 +27,8 @@ public:
 
 
 	void loadLevel();
-	void exit();
+	void loadMainMenu();
+	void quit();
 
 private:
 
@@ -32,6 +36,7 @@ private:
 	Screen* currentScreen;
 	Screen* lastScreen = 0;
 
+	GameEngine* gameEngine;
 	MouseController* mouse;
 	ID3D11Device* device;
 };

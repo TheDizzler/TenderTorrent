@@ -1,6 +1,8 @@
 #include "GameManager.h"
 
-GameManager::GameManager() {
+GameManager::GameManager(GameEngine* gmngn) {
+
+	gameEngine = gmngn;
 }
 
 GameManager::~GameManager() {
@@ -40,14 +42,26 @@ void GameManager::loadLevel() {
 	currentScreen = new LevelManager();
 
 	currentScreen->initialize(device, mouse);
+	currentScreen->setGameManager(this);
 
-	/*wostringstream ws;
-	ws << mouse->position.x;
-	OutputDebugString(ws.str().c_str());*/
 }
 
-void GameManager::exit() {
+void GameManager::loadMainMenu() {
 
-	OutputDebugString(L"exit");
+	if (lastScreen)
+		delete lastScreen;
+	lastScreen = currentScreen;
+	currentScreen = new MenuManager();
+
+	currentScreen->initialize(device, mouse);
+	currentScreen->setGameManager(this);
+}
+
+
+#include "../Engine/GameEngine.h"
+
+void GameManager::quit() {
+
+	gameEngine->quit();
 }
 

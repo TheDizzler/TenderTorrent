@@ -57,28 +57,16 @@ void WaveManager::update(double deltaTime, PlayerShip* player) {
 		}
 	}
 
-	/*enemyShips.erase(remove_if(enemyShips.begin(), enemyShips.end(),
-		[](const Sprite* sprite) { return !sprite->isAlive; }), enemyShips.end());*/
-	/*bullets.erase(remove_if(bullets.begin(), bullets.end(),
-		[](const Sprite* sprite) { return !sprite->isAlive; }), bullets.end());*/
-	/*player->bullets.erase(remove_if(player->bullets.begin(), player->bullets.end(),
-		[](const Sprite* sprite) { return !sprite->isAlive; }), player->bullets.end());*/
-
 
 	for (Wave* wave : waves) {
 		wave->update(deltaTime, player);
-		/*for (EnemyShip* enemy : wave->enemyShips) {
-			enemy->update(deltaTime, player);
-			if (enemy->readyToFire()) {
-				wave->bullets.push_back(enemy->launchBullet(player->position));
-			}
-		}*/
 
 		for (Bullet* bullet : wave->bullets) {
 			bullet->update(deltaTime);
 			if (bullet->getHitArea()->collision(player->getHitArea())) {
 
 				bullet->isAlive = false;
+				player->takeDamage(bullet->damage);
 			}
 		}
 	}

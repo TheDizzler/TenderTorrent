@@ -3,8 +3,6 @@
 
 FontSet::FontSet() {
 
-	//position = Vector2(200, 200);
-	
 	alpha = 1.0f;
 	rotation = 0.0f;
 	scale = Vector2(1, 1);
@@ -17,14 +15,24 @@ FontSet::~FontSet() {
 
 
 bool FontSet::load(ID3D11Device* device, const wchar_t* file) {
-	
+
 	font.reset(new SpriteFont(device, file));
+
+
 	return true;
+}
+
+XMVECTOR XM_CALLCONV FontSet::measureString(wchar_t const * text) const {
+
+	Vector2 measurement = font->MeasureString(text);
+	measurement.x *= scale.x;
+	measurement.y *= scale.y;
+	return measurement;
 }
 
 
 void FontSet::draw(SpriteBatch* batch, const wchar_t* text, Vector2 pos) {
-	
+
 	font->DrawString(batch, text, pos, tint, rotation, origin, scale, SpriteEffects_None, layerDepth);
 }
 
@@ -81,9 +89,9 @@ void FontSet::setOrigin(const Vector2& origin) {
 }
 
 
-void FontSet::setScale(const Vector2& scale) {
+void FontSet::setScale(const Vector2& scl) {
 
-
+	scale = scl;
 }
 
 

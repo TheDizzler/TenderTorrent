@@ -67,7 +67,7 @@ void MenuManager::update(double deltaTime, BYTE keyboardState[256], MouseControl
 			test->setText("Clicked!");
 			switch (button->action) {
 				case EXIT:
-					game->exit();
+					game->quit();
 					test->setText("Exit!");
 					break;
 				case PLAY:

@@ -3,6 +3,7 @@
 
 PlayerShip::PlayerShip(const Vector2& pos) : Sprite(pos) {
 
+	position = startPosition;
 
 	rightWeaponSlot = new WeaponSystem(Vector2(position.x + width / 2, position.y));
 	leftWeaponSlot = new WeaponSystem(Vector2(position.x - width / 2, position.y));
@@ -14,6 +15,8 @@ PlayerShip::PlayerShip(const Vector2& pos) : Sprite(pos) {
 		/*gunLocationRight = Vector2(position.x + width / 2, position.y);
 		gunLocationLeft = Vector2(position.x - width / 2, position.y);
 		gunLocationCenter = Vector2(position.x, position.y);*/
+
+
 }
 
 
@@ -33,11 +36,21 @@ bool PlayerShip::loadBullet(ID3D11Device * device) {
 	return true;
 }
 
+bool PlayerShip::startUpdate(double deltaTime) {
+
+	position.y -= firingSpeed * deltaTime;
+	return position.y < Globals::WINDOW_HEIGHT - 3 * height;
+}
+
 
 #include <algorithm>
 void PlayerShip::update(double deltaTime, const BYTE keyboardState[256], MouseController* mouse) {
 
-	// Movement
+	if (!isAlive) {
+
+		return;
+	}
+		// Movement
 	int currentSpeed = speed;
 	if (firing)
 		currentSpeed = firingSpeed;
@@ -77,13 +90,12 @@ void PlayerShip::update(double deltaTime, const BYTE keyboardState[256], MouseCo
 		for (WeaponSystem* weaponSlot : weaponSlots) {
 			if (energy >= weaponSlot->energyCost
 				&& weaponSlot->ready()) {
-
 				firing = true;
 				liveBullets.push_back(weaponSlot->fire());
 				energy -= weaponSlot->energyCost;
-			} else
-				firing = false;
+			}
 		}
+
 	} else {
 		firing = false;
 	}
@@ -118,4 +130,15 @@ void PlayerShip::draw(SpriteBatch * batch) {
 		centerWeaponSlot->draw(batch);*/
 
 	Sprite::draw(batch);
+}
+
+void PlayerShip::takeDamage(int damageTaken) {
+
+	maxEnergy -= damageTaken;
+	if (energy > maxEnergy)
+		energy = maxEnergy;
+	if (energy <= 0) {
+		energy = 0;
+		isAlive = false;
+	}
 }

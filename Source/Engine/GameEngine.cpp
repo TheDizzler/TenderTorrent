@@ -39,7 +39,7 @@ bool GameEngine::initEngine(HWND hw, HINSTANCE hInstance) {
 bool GameEngine::initStage() {
 
 
-	game.reset(new GameManager());
+	game.reset(new GameManager(this));
 	if (!game->initializeGame(device, mouse.get()))
 		return false;
 
@@ -57,22 +57,15 @@ void GameEngine::run(double deltaTime, int fps) {
 	detectInput(deltaTime);
 
 	if (keyboardState[DIK_ESCAPE]) {
-		waitingForInput = true;
-		if (MessageBox(0, L"Are you sure you want to exit?",
-			L"Really?", MB_YESNO | MB_ICONQUESTION) == IDYES)
-			DestroyWindow(hwnd);
+		quit();
 	}
 	//waitingForInput = false;
 	/*if (GetKeyState(VK_LBUTTON) & 0x8000)
 		waitingForInput = false;*/
-	//if (!waitingForInput) {
+
 		update(deltaTime);
 		render(deltaTime);
-	//} else {
 
-	//	levelManager->updateMenu(deltaTime, keyboardState, mouseCurrentState, Vector2(cursorPos.x, cursorPos.y));
-	//	render(deltaTime);
-	//}
 }
 
 
@@ -82,7 +75,6 @@ void GameEngine::detectInput(double deltaTime) {
 	inputKB->Acquire();
 	inputMouse->Acquire();
 
-	//mouse->lastState = mouse->currentState;
 	inputMouse->GetDeviceState(sizeof(DIMOUSESTATE), (LPVOID) &mouse->setCurrentState());
 	inputKB->GetDeviceState(sizeof(keyboardState), (LPVOID) &keyboardState);
 
@@ -114,5 +106,12 @@ void GameEngine::render(double deltaTime) {
 
 
 	swapChain->Present(0, 0);
+}
+
+void GameEngine::quit() {
+
+	if (MessageBox(0, L"Are you sure you want to exit?",
+		L"Really?", MB_YESNO | MB_ICONQUESTION) == IDYES)
+		DestroyWindow(hwnd);
 }
 

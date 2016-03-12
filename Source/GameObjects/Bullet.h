@@ -19,7 +19,9 @@ public:
 
 	/** Normalized direction vector of projectile. */
 	Vector2 direction;
-	
+
+
+	int damage = 10;
 protected:
 
 	float timeAlive = 0;
