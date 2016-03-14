@@ -16,7 +16,7 @@ void MenuManager::setGameManager(GameManager * gm) {
 bool MenuManager::initialize(ID3D11Device * device, MouseController* mouse) {
 
 	menuFont.reset(new FontSet());
-	if (!menuFont->load(device, L"assets/Arial.spritefont"))
+	if (!menuFont->load(device, Assets::arialFontFile))
 		return false;
 	menuFont->setTint(DirectX::Colors::Black.v);
 
@@ -24,8 +24,8 @@ bool MenuManager::initialize(ID3D11Device * device, MouseController* mouse) {
 		return false;
 
 	Button* button = new Button();
-	if (!button->load(device, L"assets/Arial.spritefont",
-		L"assets/button up (256x64).dds", L"assets/button down (256x64).dds"))
+	if (!button->load(device, Assets::arialFontFile,
+		Assets::buttonUpFile, Assets::buttonDownFile))
 		return false;
 	button->action = PLAY;
 	button->setText("Play");
@@ -33,8 +33,8 @@ bool MenuManager::initialize(ID3D11Device * device, MouseController* mouse) {
 	buttons.push_back(button);
 
 	button = new Button();
-	if (!button->load(device, L"assets/Arial.spritefont",
-		L"assets/button up (256x64).dds", L"assets/button down (256x64).dds"))
+	if (!button->load(device, Assets::arialFontFile,
+		Assets::buttonUpFile, Assets::buttonDownFile))
 		return false;
 	button->action = EXIT;
 	button->setText("Exit");
@@ -49,8 +49,19 @@ bool MenuManager::initialize(ID3D11Device * device, MouseController* mouse) {
 	mouseLabel.reset(new TextLabel(Vector2(10, 100), menuFont.get()));
 	textLabels.push_back(mouseLabel.get());
 
+
+	exitDialog.reset(new Dialog(
+		Vector2(Globals::WINDOW_WIDTH / 2, Globals::WINDOW_HEIGHT / 2)));
+	if (!exitDialog->initialize(device, Assets::arialFontFile)) {
+		MessageBox(0, L"Dialog init failed", L"Error", MB_OK);
+		return false;
+	}
+
+
 	return true;
 }
+
+bool lastStateDown;
 
 void MenuManager::update(double deltaTime, BYTE keyboardState[256], MouseController* mouse) {
 
@@ -58,27 +69,51 @@ void MenuManager::update(double deltaTime, BYTE keyboardState[256], MouseControl
 
 	wostringstream ws;
 	ws << "Mouse: " << mouse->position.x << ", " << mouse->position.y;
-	mouseLabel->label = ws.str();
+	mouseLabel->setText(ws);
 
 
-	for (Button* button : buttons) {
-		button->update(deltaTime, mouse);
-		if (button->clicked()) {
-			test->setText("Clicked!");
-			switch (button->action) {
-				case EXIT:
-					game->quit();
-					test->setText("Exit!");
-					break;
-				case PLAY:
-					game->loadLevel();
-					test->setText("Play!");
-					break;
+	if (keyboardState[DIK_ESCAPE] && !lastStateDown) {
+		if (exitDialog->isOpen)
+			//exitDialog->close();
+			game->exit();
+		else
+			confirmExit();
+	}
+
+	lastStateDown = keyboardState[DIK_ESCAPE];
+
+	if (exitDialog->isOpen) {
+		exitDialog->update(deltaTime, mouse);
+		switch (exitDialog->getResult()) {
+			case CONFIRM:
+				game->exit();
+				break;
+			case DialogResult::CANCEL_DIALOG:
+				exitDialog->close();
+				break;
+		}
+
+	} else {
+		for (Button* button : buttons) {
+			button->update(deltaTime, mouse);
+			if (button->clicked()) {
+				//test->setText("Clicked!");
+				switch (button->action) {
+					case EXIT:
+						//game->quit();
+						confirmExit();
+						//test->setText("Exit!");
+						break;
+					case PLAY:
+						game->loadLevel();
+						//test->setText("Play!");
+						break;
+				}
 			}
 		}
 	}
-
 }
+
 
 void MenuManager::draw(SpriteBatch * batch) {
 
@@ -87,4 +122,14 @@ void MenuManager::draw(SpriteBatch * batch) {
 
 	for (auto const& label : textLabels)
 		label->draw(batch);
+
+	if (exitDialog->isOpen)
+		exitDialog->draw(batch);
+}
+
+
+void MenuManager::confirmExit() {
+
+	exitDialog->open();
+
 }

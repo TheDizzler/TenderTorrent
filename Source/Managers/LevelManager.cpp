@@ -16,18 +16,18 @@ bool LevelManager::initialize(ID3D11Device* device, MouseController* mouse) {
 	playState = LOADING;
 
 	guiFont.reset(new FontSet());
-	if (!guiFont->load(device, L"assets/Arial.spritefont"))
+	if (!guiFont->load(device, Assets::arialFontFile))
 		return false;
 	guiFont->setTint(DirectX::Colors::Black.v);
 
 	pauseFont.reset(new FontSet());
-	if (!pauseFont->load(device, L"assets/Arial.spritefont"))
+	if (!pauseFont->load(device, Assets::arialFontFile))
 		return false;
 	pauseFont->setTint(Color(Vector3(0, 1, 1)));
 	pauseFont->setScale(Vector2(1.5, 1.5));
 
 	warningFont.reset(new FontSet());
-	if (!warningFont->load(device, L"assets/Arial.spritefont"))
+	if (!warningFont->load(device, Assets::arialFontFile))
 		return false;
 	warningFont->setTint(DirectX::Colors::White.v);
 	warningFont->setScale(Vector2(2, 2));
@@ -127,20 +127,20 @@ void LevelManager::update(double deltaTime, BYTE keyboardState[256], MouseContro
 	{
 		wostringstream ws;
 		ws << "Score: " << score;
-		scoreLabel->label = ws.str();
+		scoreLabel->setText(ws);
 	}
 
 	{
 		wostringstream ws;
 		ws << "Time: " << (int) totalPlayTime << "s";
-		timerLabel->label = ws.str();
+		timerLabel->setText(ws);
 	}
 
 
 	{
 		wostringstream ws;
 		ws << "Engery: " << playerShip->energy;
-		energyLabel->label = ws.str();
+		energyLabel->setText(ws);
 	}
 
 }

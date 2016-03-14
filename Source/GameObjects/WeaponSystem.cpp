@@ -7,7 +7,7 @@ WeaponSystem::WeaponSystem(Vector2 offset) {
 
 	locationOffset = offset;
 
-	weaponLocation = Vector2(locationOffset.x,locationOffset.y);
+	weaponLocation = Vector2(locationOffset.x, locationOffset.y);
 }
 
 WeaponSystem::~WeaponSystem() {
@@ -21,17 +21,19 @@ bool WeaponSystem::loadBulletTexture(ID3D11Device * device, const wchar_t* textu
 		return false;
 	}
 
-
-	for (int i = 0; i <= 24; ++i) {
-		Bullet* bullet = new Bullet(weaponStore);
-		//bullet->setHitArea(baseBulletSprite->getHitArea());
-		bullet->setDimensions(baseBulletSprite.get());
-		bulletStore.push_back(bullet);
-
-	}
-
+	fillBulletStore();
 
 	return true;
+}
+
+
+void WeaponSystem::fillBulletStore() {
+
+	for (int i = 0; i < maxStoreSize; ++i) {
+		Bullet* bullet = new Bullet(weaponStore);
+		bullet->setDimensions(baseBulletSprite.get());
+		bulletStore.push_back(bullet);
+	}
 }
 
 
@@ -64,7 +66,6 @@ bool WeaponSystem::ready() {
 
 	int size = bulletStore.size();
 	if (nextBullet >= size || bulletStore[nextBullet]->isAlive == true) {
-		//nextBullet = 0;
 		for (int i = 0; i < size; ++i) {
 			if (bulletStore[i]->isAlive == false) {
 				nextBullet = i;
@@ -79,7 +80,7 @@ bool WeaponSystem::ready() {
 
 
 Bullet* WeaponSystem::fire() {
-	
+
 	Bullet* bullet = bulletStore[nextBullet++];
 	bullet->position = weaponLocation;
 	bullet->isAlive = true;

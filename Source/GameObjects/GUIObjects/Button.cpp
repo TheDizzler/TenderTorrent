@@ -39,12 +39,15 @@ void Button::setPosition(Vector2& pos) {
 
 	hitArea = normalSprite->getHitArea();
 
-	buttonLabel->position = Vector2(position.x - hitArea->size.x / 3, position.y - hitArea->size.y / 3);
+	Vector2 size = buttonFont->measureString(buttonLabel->getText());
+	buttonLabel->position = Vector2(position.x - size.x / 2, position.y - size.y / 2 - 5);
 
-	
-	
+
+
 
 }
+
+
 
 void Button::update(double deltaTime, MouseController* mouse) {
 
@@ -54,10 +57,15 @@ void Button::update(double deltaTime, MouseController* mouse) {
 		isClicked = true;
 	else {
 		isClicked = false;
-		isSelected = isHover && GetKeyState(VK_LBUTTON) & 0x8000;
+		if (!isHover)
+			isSelected = false;
+		else
+			if (!lastButtonStateDown && (GetKeyState(VK_LBUTTON) & 0x8000))
+				isSelected = true;
 
 	}
 
+	lastButtonStateDown = GetKeyState(VK_LBUTTON) & 0x8000;
 }
 
 void Button::draw(SpriteBatch* batch) {
@@ -82,6 +90,20 @@ void Button::draw(SpriteBatch* batch) {
 void Button::setText(string text) {
 
 	buttonLabel->setText(text);
+}
+
+void Button::setScale(const Vector2 & scale) {
+
+	normalSprite->setScale(scale);
+	pressedSprite->setScale(scale);
+
+	hitArea = normalSprite->getHitArea();
+}
+
+int Button::getWidth() {
+
+
+	return hitArea->size.x;
 }
 
 bool Button::clicked() {

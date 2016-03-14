@@ -37,8 +37,8 @@ bool PlayerShip::loadBullet(ID3D11Device * device) {
 
 	if (!leftTurret->loadTurretTexture(device, L"assets/Turret(24x24).dds")
 		|| !rightTurret->loadTurretTexture(device, L"assets/Turret(24x24).dds")
-		|| !leftTurret->loadBulletTexture(device, L"assets/cross bullet.dds")
-		|| !rightTurret->loadBulletTexture(device, L"assets/cross bullet.dds"))
+		|| !leftTurret->loadBulletTexture(device, L"assets/sunball.dds")
+		|| !rightTurret->loadBulletTexture(device, L"assets/sunball.dds"))
 		return false;
 
 	return true;
@@ -113,6 +113,16 @@ void PlayerShip::update(double deltaTime, const BYTE keyboardState[256], MouseCo
 		firing = false;
 	}
 
+
+	if (GetKeyState(VK_LBUTTON) & 0x8000) {
+
+		if (rightTurret->ready()) {
+			liveBullets.push_back(rightTurret->fire());
+		}
+		if (leftTurret->ready()) {
+			liveBullets.push_back(leftTurret->fire());
+		}
+	}
 
 	// Energy recharge
 	if (energy < maxEnergy) {

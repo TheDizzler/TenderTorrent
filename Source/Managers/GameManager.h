@@ -4,6 +4,7 @@
 #include "MenuManager.h"
 
 
+
 enum GameState {
 	menu, paused, playing
 };
@@ -28,7 +29,7 @@ public:
 
 	void loadLevel();
 	void loadMainMenu();
-	void quit();
+	void exit();
 
 private:
 
@@ -39,4 +40,8 @@ private:
 	GameEngine* gameEngine;
 	MouseController* mouse;
 	ID3D11Device* device;
+	
+
+
+	
 };

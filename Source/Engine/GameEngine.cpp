@@ -56,9 +56,6 @@ void GameEngine::run(double deltaTime, int fps) {
 
 	detectInput(deltaTime);
 
-	if (keyboardState[DIK_ESCAPE]) {
-		quit();
-	}
 	//waitingForInput = false;
 	/*if (GetKeyState(VK_LBUTTON) & 0x8000)
 		waitingForInput = false;*/
@@ -78,7 +75,7 @@ void GameEngine::detectInput(double deltaTime) {
 	inputMouse->GetDeviceState(sizeof(DIMOUSESTATE), (LPVOID) &mouse->setCurrentState());
 	inputKB->GetDeviceState(sizeof(keyboardState), (LPVOID) &keyboardState);
 
-
+	POINT cursorPos;
 	GetCursorPos(&cursorPos);
 
 	mouse->setPosition(Vector2(cursorPos.x, cursorPos.y));
@@ -108,10 +105,10 @@ void GameEngine::render(double deltaTime) {
 	swapChain->Present(0, 0);
 }
 
-void GameEngine::quit() {
+void GameEngine::exit() {
 
-	if (MessageBox(0, L"Are you sure you want to exit?",
-		L"Really?", MB_YESNO | MB_ICONQUESTION) == IDYES)
+	/*if (MessageBox(0, L"Are you sure you want to exit?",
+		L"Really?", MB_YESNO | MB_ICONQUESTION) == IDYES)*/
 		DestroyWindow(hwnd);
 }
 

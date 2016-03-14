@@ -1,6 +1,9 @@
 #include "Turret.h"
 
 Turret::Turret(Vector2 locationOffset) : WeaponSystem(locationOffset) {
+
+	maxStoreSize = 12;
+	coolDownTime = .5;
 }
 
 Turret::~Turret() {
@@ -18,6 +21,24 @@ bool Turret::loadTurretTexture(ID3D11Device * device, const wchar_t * textureFil
 	return true;
 }
 
+Vector2 turretDirection;
+
+Bullet* Turret::fire() {
+
+	SunBullet* bullet = static_cast<SunBullet*>(WeaponSystem::fire());
+	bullet->direction = turretDirection;
+	return bullet;
+}
+
+void Turret::fillBulletStore() {
+
+	for (int i = 0; i < maxStoreSize; ++i) {
+		Bullet* bullet = new SunBullet(weaponStore);
+		bullet->setDimensions(baseBulletSprite.get());
+		bulletStore.push_back(bullet);
+	}
+}
+
 
 void Turret::update(double deltaTime, Vector2 positionUpdate, const Vector2& mousePosition) {
 
@@ -26,8 +47,8 @@ void Turret::update(double deltaTime, Vector2 positionUpdate, const Vector2& mou
 
 	int y = mousePosition.y - weaponLocation.y;
 	int x = mousePosition.x - weaponLocation.x;
-	Vector2 dir(x, y);
-	dir.Normalize();
+	turretDirection = Vector2(x, y);
+	turretDirection.Normalize();
 	turretSprite->rotation = atan2(y, x) + XM_PIDIV2;
 }
 

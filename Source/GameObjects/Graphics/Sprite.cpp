@@ -40,7 +40,7 @@ bool Sprite::load(ID3D11Device* device, const wchar_t* textureFile) {
 		return false;
 	}
 
-	Globals::getTextureDimensions(resource, &width, &height);
+	Assets::getTextureDimensions(resource, &width, &height);
 	origin = Vector2(width / 2.0f, height / 2.0f);
 	sourceRect.left = 0;
 	sourceRect.top = 0;
@@ -123,41 +123,48 @@ void Sprite::setDimensions(Sprite* baseSprite) {
 	width = baseSprite->width;
 	height = baseSprite->height;
 
-	hitArea = new HitArea(Vector2(position.x - width / 2, position.y - height / 2),
-		Vector2(width, height));
+	hitArea = new HitArea(
+		Vector2(position.x - width*scale.x / 2, position.y - height*scale.y / 2),
+		Vector2(width*scale.x, height*scale.y));
 }
 
 void Sprite::setPosition(const Vector2& pos) {
 
 	position = pos;
-	hitArea->position = Vector2(position.x - width / 2, position.y - height / 2);
+	hitArea->position = Vector2(position.x - width*scale.x / 2,
+		position.y - height*scale.y / 2);
+	hitArea->size = Vector2(width*scale.x, height*scale.y);
 }
 
 
-void Sprite::setOrigin(const Vector2& origin) {
+void Sprite::setOrigin(const Vector2& orgn) {
 
-
+	origin = orgn;
 }
 
 
-void Sprite::setScale(const Vector2& scale) {
+void Sprite::setScale(const Vector2& scl) {
 
-
+	scale = scl;
+	setPosition(position);
 }
 
 
-void Sprite::setRotation(const float rotation) {
+void Sprite::setRotation(const float rot) {
 
+	rotation = rot;
 }
 
 
-void Sprite::setTint(const Color& color) {
+void Sprite::setTint(const Color& colr) {
 
+	tint = colr;
 }
 
 
-void Sprite::setAlpha(const float alpha) {
+void Sprite::setAlpha(const float alph) {
 
+	alpha = alph;
 }
 
 

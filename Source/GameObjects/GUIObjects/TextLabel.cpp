@@ -29,3 +29,12 @@ void TextLabel::setText(string text) {
 	ws << text.c_str();
 	label = ws.str();
 }
+
+void TextLabel::setText(wostringstream& text) {
+
+	label = text.str();
+}
+
+const wchar_t * TextLabel::getText() {
+	return label.c_str();
+}

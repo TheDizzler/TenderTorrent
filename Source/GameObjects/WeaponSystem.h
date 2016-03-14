@@ -22,7 +22,7 @@ public:
 	virtual void draw(SpriteBatch* batch);
 
 	bool ready();
-	Bullet* fire();
+	virtual Bullet* fire();
 
 	int energyCost = 2;
 
@@ -34,13 +34,12 @@ protected:
 	float coolDownTime = .1;
 
 	Vector2 weaponLocation;
-private:
 
-	
-
+	int maxStoreSize = 24;
+	virtual void fillBulletStore();
 	std::vector<Bullet*> bulletStore;
-	int nextBullet = 0;
 
+	int nextBullet = 0;
 	float timeSinceFired = 0;
 
 

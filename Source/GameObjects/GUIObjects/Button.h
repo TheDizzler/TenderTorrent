@@ -5,7 +5,7 @@
 #include "../../globals.h"
 
 
-static enum Actions { EXIT, PLAY };
+static enum ButtonAction { EXIT, PLAY, CANCEL_BUTTON, OK };
 
 /** A visual and logical representation of a button.
 	Provides no actions on click; that must be handled else where.*/
@@ -18,7 +18,8 @@ public:
 		const wchar_t* upButtonFile, const wchar_t* downButtonFile);
 	virtual void setPosition(Vector2& position);
 	void setText(string text);
-
+	void setScale(const Vector2& scale);
+	int getWidth();
 
 	void update(double deltaTime, MouseController* mouse);
 	void draw(SpriteBatch* batch);
@@ -31,8 +32,10 @@ public:
 
 	bool clicked();
 
-	Actions action;
+	ButtonAction action;
 private:
+
+	bool lastButtonStateDown;
 
 	Vector2 position;
 	const HitArea* hitArea;

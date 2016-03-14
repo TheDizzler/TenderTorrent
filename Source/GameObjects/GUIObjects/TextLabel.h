@@ -17,12 +17,14 @@ public:
 	void draw(SpriteBatch* batch);
 
 	void setText(string text);
-
-	wstring label;
+	void setText(wostringstream& text);
+	const wchar_t* getText();
+	
 	Vector2 position;
 
 private:
 
+	wstring label;
 	FontSet* font;
 	
 };

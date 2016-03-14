@@ -20,13 +20,13 @@ public:
 	void run(double time, int fps);
 	virtual void render(double time);
 
-	void quit();
+	void exit();
 private:
 
 	std::unique_ptr<GameManager> game;
 
 
-	POINT cursorPos;
+	//POINT cursorPos;
 
 	bool waitingForInput = true;
 

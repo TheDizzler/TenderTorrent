@@ -30,12 +30,14 @@
     <ClCompile Include="Source\GameObjects\Graphics\FontSet.cpp" />
     <ClCompile Include="Source\GameObjects\Graphics\Sprite.cpp" />
     <ClCompile Include="Source\GameObjects\GUIObjects\Button.cpp" />
+    <ClCompile Include="Source\GameObjects\GUIObjects\Dialog.cpp" />
     <ClCompile Include="Source\GameObjects\GUIObjects\MouseController.cpp" />
     <ClCompile Include="Source\GameObjects\GUIObjects\TextLabel.cpp" />
     <ClCompile Include="Source\GameObjects\LaserBolt.cpp" />
     <ClCompile Include="Source\GameObjects\LaserSystem.cpp" />
     <ClCompile Include="Source\GameObjects\PlayerShip.cpp" />
     <ClCompile Include="Source\GameObjects\RearAttackShip.cpp" />
+    <ClCompile Include="Source\GameObjects\SunBullet.cpp" />
     <ClCompile Include="Source\GameObjects\Turret.cpp" />
     <ClCompile Include="Source\GameObjects\WeaponSystem.cpp" />
     <ClCompile Include="Source\Managers\GameManager.cpp" />
@@ -46,6 +48,7 @@
     <ClCompile Include="Source\Managers\WaveManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\assets.h" />
     <ClInclude Include="Source\Engine\GameEngine.h" />
     <ClInclude Include="Source\Engine\GraphicsEngine.h" />
     <ClInclude Include="Source\Engine\Input.h" />
@@ -56,12 +59,14 @@
     <ClInclude Include="Source\GameObjects\Graphics\IElement2D.h" />
     <ClInclude Include="Source\GameObjects\Graphics\Sprite.h" />
     <ClInclude Include="Source\GameObjects\GUIObjects\Button.h" />
+    <ClInclude Include="Source\GameObjects\GUIObjects\Dialog.h" />
     <ClInclude Include="Source\GameObjects\GUIObjects\MouseController.h" />
     <ClInclude Include="Source\GameObjects\GUIObjects\TextLabel.h" />
     <ClInclude Include="Source\GameObjects\LaserBolt.h" />
     <ClInclude Include="Source\GameObjects\LaserSystem.h" />
     <ClInclude Include="Source\GameObjects\PlayerShip.h" />
     <ClInclude Include="Source\GameObjects\RearAttackShip.h" />
+    <ClInclude Include="Source\GameObjects\SunBullet.h" />
     <ClInclude Include="Source\GameObjects\Turret.h" />
     <ClInclude Include="Source\GameObjects\WeaponSystem.h" />
     <ClInclude Include="Source\globals.h" />

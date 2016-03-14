@@ -3,15 +3,15 @@
 #include <vector>
 
 #include "Screen.h"
-#include "../GameObjects/GUIObjects/Button.h"
-
+//#include "../GameObjects/GUIObjects/Button.h"
+#include "../GameObjects/GUIObjects/Dialog.h"
 
 class MenuManager : public Screen {
 public:
 	MenuManager();
 	~MenuManager();
 
-	
+
 	virtual void setGameManager(GameManager* game);
 
 	virtual bool initialize(ID3D11Device* device, MouseController* mouse);
@@ -21,6 +21,9 @@ public:
 
 private:
 
+	void confirmExit();
+
+	unique_ptr<Dialog> exitDialog;
 	unique_ptr<FontSet> menuFont;
 
 	unique_ptr<TextLabel> test;

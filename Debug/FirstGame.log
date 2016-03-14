@@ -1,6 +1,5 @@
-﻿  Turret.cpp
-d:\github projects\firstgame\source\gameobjects\weaponsystem.h(34): warning C4305: 'initializing': truncation from 'double' to 'float'
-d:\github projects\firstgame\source\gameobjects\turret.cpp(32): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-d:\github projects\firstgame\source\gameobjects\turret.cpp(33): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-d:\github projects\firstgame\source\gameobjects\turret.cpp(35): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+﻿  Dialog.cpp
+  c:\program files (x86)\windows kits\8.1\include\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+d:\github projects\firstgame\source\gameobjects\guiobjects\button.h(8): warning C4091: 'static ': ignored on left of 'ButtonAction' when no variable is declared
+d:\github projects\firstgame\source\gameobjects\guiobjects\dialog.h(12): warning C4091: 'static ': ignored on left of 'DialogResult' when no variable is declared
   FirstGame.vcxproj -> D:\github projects\FirstGame\Debug\FirstGame.exe

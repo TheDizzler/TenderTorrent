@@ -49,14 +49,10 @@ EnemyBullet * EnemyShip::launchBullet(Vector2 target) {
 	EnemyBullet* bullet = new EnemyBullet(weaponLocation);
 	Vector2 direction = target - weaponLocation;
 	direction.Normalize();
-	//bullet->setDimensions(sharedBulletSprite.get());
 	bullet->direction = direction;
 	bullet->isAlive = true;
 
 	return bullet;
 }
 
-//ID3D11ShaderResourceView* EnemyShip::shareTexture() {
-//	return texture;
-//}
 

@@ -95,8 +95,9 @@ void FontSet::setScale(const Vector2& scl) {
 }
 
 
-void FontSet::setRotation(const float rotation) {
+void FontSet::setRotation(const float rot) {
 
+	rotation = rot;
 }
 
 
@@ -106,6 +107,7 @@ void FontSet::setTint(const Color& color) {
 }
 
 
-void FontSet::setAlpha(const float alpha) {
+void FontSet::setAlpha(const float alph) {
 
+	alpha = alph;
 }

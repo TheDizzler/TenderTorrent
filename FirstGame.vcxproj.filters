@@ -117,6 +117,12 @@
     <ClCompile Include="Source\GameObjects\Turret.cpp">
       <Filter>Source Files\PlayerShip</Filter>
     </ClCompile>
+    <ClCompile Include="Source\GameObjects\SunBullet.cpp">
+      <Filter>Source Files\PlayerShip</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameObjects\GUIObjects\Dialog.cpp">
+      <Filter>Source Files\Menus</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\globals.h">
@@ -196,6 +202,15 @@
     </ClInclude>
     <ClInclude Include="Source\GameObjects\Turret.h">
       <Filter>Header Files\PlayerShip</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameObjects\SunBullet.h">
+      <Filter>Header Files\PlayerShip</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameObjects\GUIObjects\Dialog.h">
+      <Filter>Header Files\Menus</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\assets.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
