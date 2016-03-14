@@ -5,22 +5,24 @@ PlayerShip::PlayerShip(const Vector2& pos) : Sprite(pos) {
 
 	position = startPosition;
 
-	rightWeaponSlot = new WeaponSystem(Vector2(position.x + width / 2, position.y));
-	leftWeaponSlot = new WeaponSystem(Vector2(position.x - width / 2, position.y));
-	centerWeaponSlot = new LaserSystem(Vector2(position.x, position.y));
+	rightWeaponSlot = new WeaponSystem(Vector2(26, -15));
+	leftWeaponSlot = new WeaponSystem(Vector2(-26, -15));
+	centerWeaponSlot = new LaserSystem(Vector2(0, 0));
 
 	weaponSlots.push_back(rightWeaponSlot);
 	weaponSlots.push_back(leftWeaponSlot);
 	weaponSlots.push_back(centerWeaponSlot);
-		/*gunLocationRight = Vector2(position.x + width / 2, position.y);
-		gunLocationLeft = Vector2(position.x - width / 2, position.y);
-		gunLocationCenter = Vector2(position.x, position.y);*/
 
-
+	rightTurret.reset(new Turret(Vector2(12, -8)));
+	leftTurret.reset(new Turret(Vector2(-13, -8)));
 }
 
 
 PlayerShip::~PlayerShip() {
+
+	delete rightWeaponSlot;
+	delete leftWeaponSlot;
+	delete centerWeaponSlot;
 }
 
 
@@ -28,17 +30,25 @@ PlayerShip::~PlayerShip() {
 bool PlayerShip::loadBullet(ID3D11Device * device) {
 
 
-	if (!rightWeaponSlot->loadWeaponTexture(device, L"assets/cross bullet.dds")
-		|| !leftWeaponSlot->loadWeaponTexture(device, L"assets/cross bullet.dds")
-		|| !centerWeaponSlot->loadWeaponTexture(device, L"assets/laserbolt(24x24).dds"))
+	if (!rightWeaponSlot->loadBulletTexture(device, L"assets/cross bullet.dds")
+		|| !leftWeaponSlot->loadBulletTexture(device, L"assets/cross bullet.dds")
+		|| !centerWeaponSlot->loadBulletTexture(device, L"assets/laserbolt(24x24).dds"))
+		return false;
+
+	if (!leftTurret->loadTurretTexture(device, L"assets/Turret(24x24).dds")
+		|| !rightTurret->loadTurretTexture(device, L"assets/Turret(24x24).dds")
+		|| !leftTurret->loadBulletTexture(device, L"assets/cross bullet.dds")
+		|| !rightTurret->loadBulletTexture(device, L"assets/cross bullet.dds"))
 		return false;
 
 	return true;
 }
 
-bool PlayerShip::startUpdate(double deltaTime) {
+bool PlayerShip::startUpdate(double deltaTime, MouseController* mouse) {
 
 	position.y -= firingSpeed * deltaTime;
+	rightTurret->update(deltaTime, position, mouse->position);
+	leftTurret->update(deltaTime, position, mouse->position);
 	return position.y < Globals::WINDOW_HEIGHT - 3 * height;
 }
 
@@ -78,9 +88,12 @@ void PlayerShip::update(double deltaTime, const BYTE keyboardState[256], MouseCo
 	Sprite::update(deltaTime);
 
 	// Weapons
-	rightWeaponSlot->update(deltaTime, Vector2(position.x + 26, position.y - 15));
-	leftWeaponSlot->update(deltaTime, Vector2(position.x - 26, position.y - 15));
-	centerWeaponSlot->update(deltaTime, Vector2(position.x, position.y));
+	rightWeaponSlot->update(deltaTime, position);
+	leftWeaponSlot->update(deltaTime, position);
+	centerWeaponSlot->update(deltaTime, position);
+
+	rightTurret->update(deltaTime, position, mouse->position);
+	leftTurret->update(deltaTime, position, mouse->position);
 
 	liveBullets.erase(remove_if(liveBullets.begin(), liveBullets.end(),
 		[](const Sprite* sprite) { return !sprite->isAlive; }), liveBullets.end());
@@ -125,11 +138,11 @@ void PlayerShip::draw(SpriteBatch * batch) {
 	for (WeaponSystem* weaponSlot : weaponSlots)
 		weaponSlot->draw(batch);
 
-		/*rightWeaponSlot->draw(batch);
-		leftWeaponSlot->draw(batch);
-		centerWeaponSlot->draw(batch);*/
 
 	Sprite::draw(batch);
+
+	rightTurret->draw(batch);
+	leftTurret->draw(batch);
 }
 
 void PlayerShip::takeDamage(int damageTaken) {

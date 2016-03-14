@@ -8,30 +8,35 @@
 class WeaponSystem {
 public:
 
-	WeaponSystem();
-	WeaponSystem(Vector2 position);
+	//WeaponSystem();
+	WeaponSystem(Vector2 locationOffset);
 	~WeaponSystem();
 
-	virtual bool loadWeaponTexture(ID3D11Device* device, const wchar_t* textureFile);
+	virtual bool loadBulletTexture(ID3D11Device* device, const wchar_t* textureFile);
 
 	virtual void setWeaponStats(int energyCost, float coolDownTime);
 
 
 
 	void update(double deltaTime, Vector2 positionUpdate);
-	void draw(SpriteBatch* batch);
+	virtual void draw(SpriteBatch* batch);
 
 	bool ready();
 	Bullet* fire();
 
 	int energyCost = 2;
 
+	/* Position from center where weapon is located. */
+	Vector2 locationOffset;
+
 protected:
 	std::unique_ptr<Sprite> baseBulletSprite;
 	float coolDownTime = .1;
-private:
 
 	Vector2 weaponLocation;
+private:
+
+	
 
 	std::vector<Bullet*> bulletStore;
 	int nextBullet = 0;

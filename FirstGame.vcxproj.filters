@@ -114,6 +114,9 @@
     <ClCompile Include="Source\GameObjects\RearAttackShip.cpp">
       <Filter>Source Files\EnemyShips</Filter>
     </ClCompile>
+    <ClCompile Include="Source\GameObjects\Turret.cpp">
+      <Filter>Source Files\PlayerShip</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\globals.h">
@@ -190,6 +193,9 @@
     </ClInclude>
     <ClInclude Include="Source\GameObjects\RearAttackShip.h">
       <Filter>Header Files\EnemyShips</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameObjects\Turret.h">
+      <Filter>Header Files\PlayerShip</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

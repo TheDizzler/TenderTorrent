@@ -5,6 +5,8 @@
 #include "../GameObjects/GUIObjects/MouseController.h"
 #include "LaserSystem.h"
 #include "../globals.h"
+#include "Turret.h"
+
 
 static Vector2 startPosition(Globals::WINDOW_WIDTH / 2, Globals::WINDOW_HEIGHT + 175);
 
@@ -19,7 +21,7 @@ public:
 	bool loadBullet(ID3D11Device* device);
 	/** Update to perform before action starts.
 		Return true when ship has moved into position. */
-	bool startUpdate(double deltaTime);
+	bool startUpdate(double deltaTime, MouseController* mouse);
 	void update(double deltaTime, const BYTE keyboardState[256], MouseController* mouse);
 	virtual void draw(SpriteBatch* batch);
 
@@ -43,7 +45,8 @@ protected:
 	WeaponSystem* rightWeaponSlot;
 	WeaponSystem* centerWeaponSlot;
 
-
+	std::unique_ptr<Turret> leftTurret;
+	std::unique_ptr<Turret> rightTurret;
 
 	bool firing = false;
 

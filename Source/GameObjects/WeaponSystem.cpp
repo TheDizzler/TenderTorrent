@@ -1,20 +1,19 @@
 #include "WeaponSystem.h"
 
-WeaponSystem::WeaponSystem() {
-}
+//WeaponSystem::WeaponSystem() {
+//}
 
-WeaponSystem::WeaponSystem(Vector2 position) {
+WeaponSystem::WeaponSystem(Vector2 offset) {
 
-	weaponLocation = position;
+	locationOffset = offset;
 
-	
-
+	weaponLocation = Vector2(locationOffset.x,locationOffset.y);
 }
 
 WeaponSystem::~WeaponSystem() {
 }
 
-bool WeaponSystem::loadWeaponTexture(ID3D11Device * device, const wchar_t* textureFile) {
+bool WeaponSystem::loadBulletTexture(ID3D11Device * device, const wchar_t* textureFile) {
 
 	baseBulletSprite.reset(new Sprite());
 	if (!baseBulletSprite->load(device, textureFile)) {
@@ -46,13 +45,9 @@ void WeaponSystem::setWeaponStats(int nrgCst, float coolTime) {
 	Only live bullets need to be updated. */
 void WeaponSystem::update(double deltaTime, Vector2 positionUpdate) {
 
-	weaponLocation = positionUpdate;
+	weaponLocation = Vector2(positionUpdate.x + locationOffset.x, positionUpdate.y + locationOffset.y);
 	timeSinceFired -= deltaTime;
 
-
-	/*for (Bullet* bullet : bullets) {
-		bullet->update(deltaTime);
-	}*/
 }
 
 void WeaponSystem::draw(SpriteBatch * batch) {

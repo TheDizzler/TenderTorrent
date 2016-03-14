@@ -41,7 +41,10 @@ void GameManager::loadLevel() {
 	lastScreen = currentScreen;
 	currentScreen = new LevelManager();
 
-	currentScreen->initialize(device, mouse);
+	if (!currentScreen->initialize(device, mouse)) {
+		MessageBox(NULL, L"Failed to load level", L"ERROR", MB_OK);
+		quit();
+	}
 	currentScreen->setGameManager(this);
 
 }
@@ -53,7 +56,10 @@ void GameManager::loadMainMenu() {
 	lastScreen = currentScreen;
 	currentScreen = new MenuManager();
 
-	currentScreen->initialize(device, mouse);
+	if (!currentScreen->initialize(device, mouse)) {
+		MessageBox(NULL, L"Failed to load main menu", L"ERROR", MB_OK);
+		quit();
+	}
 	currentScreen->setGameManager(this);
 }
 

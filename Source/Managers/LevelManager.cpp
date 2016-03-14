@@ -41,7 +41,7 @@ bool LevelManager::initialize(ID3D11Device* device, MouseController* mouse) {
 	waveManager->initialize(device);
 
 	playerShip.reset(new PlayerShip(startPosition));
-	if (!playerShip->load(device, L"assets/Heroship Complete.dds")) {
+	if (!playerShip->load(device, L"assets/Heroship.dds")) {
 		MessageBox(NULL, L"Failed to load playership", L"ERROR", MB_OK);
 		return false;
 	}
@@ -106,7 +106,7 @@ void LevelManager::update(double deltaTime, BYTE keyboardState[256], MouseContro
 				game->loadMainMenu();
 			break;
 		case STARTING:
-			if (playerShip->startUpdate(deltaTime)) {
+			if (playerShip->startUpdate(deltaTime, mouse)) {
 				playState = PLAYING;
 				textLabels.pop_back();
 			} else
