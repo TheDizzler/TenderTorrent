@@ -123,6 +123,12 @@
     <ClCompile Include="Source\GameObjects\GUIObjects\Dialog.cpp">
       <Filter>Source Files\Menus</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Managers\StarEnemyShipWave.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameObjects\StarEnemyShip.cpp">
+      <Filter>Source Files\EnemyShips</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\globals.h">
@@ -211,6 +217,12 @@
     </ClInclude>
     <ClInclude Include="Source\assets.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Managers\StarEnemyShipWave.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameObjects\StarEnemyShip.h">
+      <Filter>Header Files\EnemyShips</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

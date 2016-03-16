@@ -26,9 +26,7 @@ private:
 	std::unique_ptr<GameManager> game;
 
 
-	//POINT cursorPos;
-
-	bool waitingForInput = true;
+	//bool waitingForInput = true;
 
 	BYTE keyboardState[256];
 	

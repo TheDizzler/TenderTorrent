@@ -1,7 +1,7 @@
 #pragma once
 
 #include "RearAttackWave.h"
-
+#include "StarEnemyShipWave.h"
 
 using namespace std;
 
@@ -16,16 +16,9 @@ public:
 	void update(double deltaTime, PlayerShip* player);
 	void draw(SpriteBatch* batch);
 
-	//vector<EnemyBullet*> bullets;
-	//vector<RearAttackShip*> enemyShips;
+
 	vector<Wave*> waves;
 private:
 
-	/*unique_ptr<Sprite> sharedEnemyShipA;
-	unique_ptr<Sprite> sharedEnemyShipB;
-
-
-	unique_ptr<Sprite> yellowBullet;*/
-	
 
 };

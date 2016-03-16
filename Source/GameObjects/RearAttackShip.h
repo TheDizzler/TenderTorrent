@@ -33,8 +33,7 @@ private:
 
 	double timeAlive = 0;
 
-	double timeSinceFired = 0;
-	int timesFired = 0;
+	
 
-	void checkReturned();
+	//void checkReturned();
 };

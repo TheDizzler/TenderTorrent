@@ -3,7 +3,6 @@
 #include <vector>
 
 #include "Screen.h"
-//#include "../GameObjects/GUIObjects/Button.h"
 #include "../GameObjects/GUIObjects/Dialog.h"
 
 class MenuManager : public Screen {

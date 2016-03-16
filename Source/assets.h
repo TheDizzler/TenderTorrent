@@ -12,7 +12,12 @@ namespace Assets {
 	const static wchar_t* buttonUpFile = L"assets/button up (256x64).dds";
 	const static wchar_t* buttonDownFile = L"assets/button down (256x64).dds";
 
-	
+
+	const static wchar_t* rearAttackShipFile = L"assets/enemy ship A.dds";
+	const static wchar_t* starEnemyShip = L"assets/enemy ship B.dds";
+
+	const static wchar_t* enemyBulletA = L"assets/bullet yellow.dds";
+
 	static void getTextureDimensions(ID3D11Resource* res, UINT* width, UINT* height) {
 
 		D3D11_RESOURCE_DIMENSION dim;

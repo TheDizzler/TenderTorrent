@@ -48,11 +48,11 @@ void RearAttackShip::update(double deltaTime, PlayerShip* player) {
 
 	if (onScreen) {
 		onScreenTime += deltaTime;
-		if (onScreenTime > 1 && timesFired <= 3) {
+		if (onScreenTime > 1.75 && timesFired <= 3) {
 
 			timeSinceFired += deltaTime;
 
-			if (timeSinceFired >= 1) {
+			if (timeSinceFired >= .5) {
 				timeSinceFired = 0;
 				++timesFired;
 				fireReady = true;
@@ -68,9 +68,4 @@ void RearAttackShip::update(double deltaTime, PlayerShip* player) {
 }
 
 
-//void RearAttackShip::fire(PlayerShip * player) {
-//
-//
-//
-//}
 

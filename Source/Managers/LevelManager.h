@@ -5,6 +5,7 @@
 //#include <strsafe.h>
 
 #include "Screen.h"
+#include "../GameObjects/GUIObjects/Button.h"
 #include "../GameObjects/PlayerShip.h"
 #include "WaveManager.h"
 
@@ -39,7 +40,8 @@ private:
 
 	DIMOUSESTATE mouseLastState;
 
-	//Sprite* mouse;
+	unique_ptr<Button> exitButton;
+	unique_ptr<Button> continueButton;
 	unique_ptr<FontSet> guiFont;
 	unique_ptr<FontSet> pauseFont;
 	unique_ptr<FontSet> warningFont;
@@ -61,8 +63,8 @@ private:
 	int score = 0;
 
 	bool isPaused;
-
-	double pauseDelay = 0;
+	bool pauseDownLast = false;
+	//double pauseDelay = 0;
 	void displayWarning(double deltaTime);
 	void displayPause(double deltaTime);
 };

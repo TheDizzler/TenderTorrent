@@ -8,20 +8,20 @@ Wave::~Wave() {
 		delete enemy;
 }
 
+
 #include <algorithm>
-#include <random>
 
 void Wave::update(double deltaTime, PlayerShip* player) {
 
 	timeSinceLastLaunch += deltaTime;
+	timeUntilNextCheck -= deltaTime;
 
-	if (((int) timeSinceLastLaunch) % 3 == 2) {
-		mt19937 rng;
-		rng.seed(random_device{}());
-		uniform_int_distribution<mt19937::result_type> rand((int) 0, maxTimeBetweenLaunches);
-		if (rand(rng) == 14)
+	if (timeUntilNextCheck <= 0) {
+		timeUntilNextCheck = timeBetweenChecks;
+		if (checkForLaunch())
 			launchNewWave();
 	}
+
 	enemyShips.erase(remove_if(enemyShips.begin(), enemyShips.end(),
 		[](const Sprite* sprite) { return !sprite->isAlive; }), enemyShips.end());
 	bullets.erase(remove_if(bullets.begin(), bullets.end(),

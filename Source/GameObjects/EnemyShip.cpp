@@ -6,21 +6,11 @@ EnemyShip::EnemyShip() :Sprite(SimpleMath::Vector2(0, 0)) {
 
 EnemyShip::EnemyShip(const Vector2 & position) : Sprite(position) {
 
-	
+
 }
 
 EnemyShip::~EnemyShip() {
 }
-
-//bool EnemyShip::loadBullet(ID3D11Device* device, const wchar_t* textureFile) {
-//
-//	baseBulletSprite.reset(new Bullet());
-//	if (!baseBulletSprite->load(device, textureFile)) {
-//		MessageBox(NULL, L"Failed to load bullet", L"ERROR", MB_OK);
-//		return false;
-//	}
-//}
-
 
 
 void EnemyShip::update(double deltaTime) {
@@ -53,6 +43,13 @@ EnemyBullet * EnemyShip::launchBullet(Vector2 target) {
 	bullet->isAlive = true;
 
 	return bullet;
+}
+
+void EnemyShip::takeDamage(int damageTaken) {
+
+	health -= damageTaken;
+
+	isAlive = health > 0;
 }
 
 

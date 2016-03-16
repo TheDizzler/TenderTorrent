@@ -37,6 +37,7 @@
     <ClCompile Include="Source\GameObjects\LaserSystem.cpp" />
     <ClCompile Include="Source\GameObjects\PlayerShip.cpp" />
     <ClCompile Include="Source\GameObjects\RearAttackShip.cpp" />
+    <ClCompile Include="Source\GameObjects\StarEnemyShip.cpp" />
     <ClCompile Include="Source\GameObjects\SunBullet.cpp" />
     <ClCompile Include="Source\GameObjects\Turret.cpp" />
     <ClCompile Include="Source\GameObjects\WeaponSystem.cpp" />
@@ -44,6 +45,7 @@
     <ClCompile Include="Source\Managers\LevelManager.cpp" />
     <ClCompile Include="Source\Managers\MenuManager.cpp" />
     <ClCompile Include="Source\Managers\RearAttackWave.cpp" />
+    <ClCompile Include="Source\Managers\StarEnemyShipWave.cpp" />
     <ClCompile Include="Source\Managers\Wave.cpp" />
     <ClCompile Include="Source\Managers\WaveManager.cpp" />
   </ItemGroup>
@@ -66,6 +68,7 @@
     <ClInclude Include="Source\GameObjects\LaserSystem.h" />
     <ClInclude Include="Source\GameObjects\PlayerShip.h" />
     <ClInclude Include="Source\GameObjects\RearAttackShip.h" />
+    <ClInclude Include="Source\GameObjects\StarEnemyShip.h" />
     <ClInclude Include="Source\GameObjects\SunBullet.h" />
     <ClInclude Include="Source\GameObjects\Turret.h" />
     <ClInclude Include="Source\GameObjects\WeaponSystem.h" />
@@ -75,6 +78,7 @@
     <ClInclude Include="Source\Managers\MenuManager.h" />
     <ClInclude Include="Source\Managers\RearAttackWave.h" />
     <ClInclude Include="Source\Managers\Screen.h" />
+    <ClInclude Include="Source\Managers\StarEnemyShipWave.h" />
     <ClInclude Include="Source\Managers\Wave.h" />
     <ClInclude Include="Source\Managers\WaveManager.h" />
   </ItemGroup>

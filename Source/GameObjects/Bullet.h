@@ -21,7 +21,7 @@ public:
 	Vector2 direction;
 
 
-	int damage = 10;
+	int damage = 1;
 protected:
 
 	float timeAlive = 0;

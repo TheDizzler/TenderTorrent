@@ -21,6 +21,8 @@ public:
 	bool readyToFire();
 	EnemyBullet* launchBullet(Vector2 target);
 
+	void takeDamage(int damageTaken);
+
 	/** Points awarded for killing. */
 	int points = 100;
 
@@ -32,5 +34,8 @@ protected:
 	int speed = 200;
 
 	Vector2 weaponLocation;
+
+	double timeSinceFired = 0;
+	int timesFired = 0;
 	
 };

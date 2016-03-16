@@ -4,6 +4,9 @@ WaveManager::WaveManager() {
 }
 
 WaveManager::~WaveManager() {
+
+	for (Wave* wave : waves)
+		delete wave;
 }
 
 bool WaveManager::initialize(ID3D11Device* device) {
@@ -11,32 +14,14 @@ bool WaveManager::initialize(ID3D11Device* device) {
 	Wave* wave = new RearAttackWave();
 	if (!wave->initialize(device))
 		return false;
-
-	wave->launchNewWave();
 	waves.push_back(wave);
 
-	/*sharedEnemyShipA.reset(new Sprite());
-	if (!sharedEnemyShipA->load(device, L"assets/enemy ship A.dds")) {
-		MessageBox(NULL, L"Failed to load enemy ship A", L"ERROR", MB_OK);
+	wave = new StarEnemyShipWave();
+	if (!wave->initialize(device))
 		return false;
-	}
+		wave->launchNewWave();
+	waves.push_back(wave);
 
-	yellowBullet.reset(new Sprite());
-	if (!yellowBullet->load(device, L"assets/bullet yellow.dds")) {
-		MessageBox(NULL, L"Failed to load bullet yellow", L"ERROR", MB_OK);
-		return false;
-	}*/
-	/*baseEnemyShipB.reset(new EnemyShip());
-	if (!baseEnemyShipB->load(device, L"assets/enemy ship B.dds")) {
-	MessageBox(NULL, L"Failed to load enemy ship B", L"ERROR", MB_OK);
-	return false;
-	}*/
-
-
-	/*RearAttackShip* enemy = new RearAttackShip(false);
-	enemyShips.push_back(enemy);
-	enemy = new RearAttackShip(true);
-	enemyShips.push_back(enemy);*/
 
 	return true;
 }
@@ -50,7 +35,7 @@ void WaveManager::update(double deltaTime, PlayerShip* player) {
 		for (Wave* wave : waves) {
 			for (EnemyShip* enemy : wave->enemyShips) {
 				if (bullet->getHitArea()->collision(enemy->getHitArea())) {
-					enemy->isAlive = false;
+					enemy->takeDamage(bullet->damage);
 					bullet->isAlive = false;
 				}
 			}
@@ -81,10 +66,5 @@ void WaveManager::draw(SpriteBatch * batch) {
 
 	for (Wave* wave : waves)
 		wave->draw(batch);
-			/*for (EnemyShip* enemy : enemyShips) {
-				enemy->draw(batch, baseEnemyShipA.get());
-			}*/
 
-	/*for (Bullet* bullet : bullets)
-		bullet->draw(batch, baseEnemyShipA->baseBulletSprite.get());*/
 }

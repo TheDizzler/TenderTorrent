@@ -21,5 +21,6 @@ protected:
 
 private:
 
+	Vector2 turretDirection;
 	std::unique_ptr<Sprite> turretSprite;
 };

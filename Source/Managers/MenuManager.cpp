@@ -74,8 +74,8 @@ void MenuManager::update(double deltaTime, BYTE keyboardState[256], MouseControl
 
 	if (keyboardState[DIK_ESCAPE] && !lastStateDown) {
 		if (exitDialog->isOpen)
-			//exitDialog->close();
-			game->exit();
+			exitDialog->close();
+			//game->exit();
 		else
 			confirmExit();
 	}

@@ -70,6 +70,24 @@ bool LevelManager::initialize(ID3D11Device* device, MouseController* mouse) {
 		pauseFont.get()));
 	pauseLabel->setText("Paused");
 
+	exitButton.reset(new Button());
+	if (!exitButton->load(device, Assets::arialFontFile,
+		Assets::buttonUpFile, Assets::buttonDownFile))
+		return false;
+	exitButton->action = ButtonAction::EXIT;
+	exitButton->setText("Exit");
+	exitButton->setPosition(
+		Vector2(Globals::WINDOW_WIDTH / 4, Globals::WINDOW_HEIGHT * 3 / 4));
+
+	continueButton.reset(new Button());
+	if (!continueButton->load(device, Assets::arialFontFile,
+		Assets::buttonUpFile, Assets::buttonDownFile))
+		return false;
+	continueButton->action = ButtonAction::CANCEL_BUTTON;
+	continueButton->setText("Continue");
+	continueButton->setPosition(
+		Vector2(Globals::WINDOW_WIDTH * 3 / 4, Globals::WINDOW_HEIGHT * 3 / 4));
+
 
 	size = warningFont->measureString(L"GET READY!");
 	warningLabel.reset(new TextLabel(
@@ -95,11 +113,10 @@ void LevelManager::update(double deltaTime, BYTE keyboardState[256], MouseContro
 			playerShip->update(deltaTime, keyboardState, mouse);
 			waveManager->update(deltaTime, playerShip.get());
 
-			pauseDelay += deltaTime;
-			if (pauseDelay >= .25 && keyboardState[DIK_P]) {
+			if (!pauseDownLast && (keyboardState[DIK_P] || keyboardState[DIK_ESCAPE])) {
 				textLabels.push_back(pauseLabel.get());
 				playState = PAUSED;
-				pauseDelay = 0;
+				pauseDownLast = true;
 			}
 
 			if (!playerShip->isAlive)
@@ -114,11 +131,17 @@ void LevelManager::update(double deltaTime, BYTE keyboardState[256], MouseContro
 			break;
 		case PAUSED:
 			displayPause(deltaTime);
-			pauseDelay += deltaTime;
-			if (pauseDelay >= 1 && keyboardState[DIK_P]) {
+
+			exitButton->update(deltaTime, mouse);
+			if (exitButton->clicked())
+				game->loadMainMenu();
+
+			continueButton->update(deltaTime, mouse);
+			if (continueButton->clicked()
+				|| (!pauseDownLast && (keyboardState[DIK_P] || keyboardState[DIK_ESCAPE]))) {
 				playState = PLAYING;
 				textLabels.pop_back();
-				pauseDelay = 0;
+				pauseDownLast = true;
 			}
 			break;
 
@@ -143,6 +166,7 @@ void LevelManager::update(double deltaTime, BYTE keyboardState[256], MouseContro
 		energyLabel->setText(ws);
 	}
 
+	pauseDownLast = keyboardState[DIK_P] || keyboardState[DIK_ESCAPE];
 }
 
 
@@ -157,6 +181,12 @@ void LevelManager::draw(SpriteBatch* batch) {
 
 	waveManager->draw(batch);
 
+
+	if (playState == PAUSED) {
+		exitButton->draw(batch);
+		continueButton->draw(batch);
+
+	}
 
 
 }

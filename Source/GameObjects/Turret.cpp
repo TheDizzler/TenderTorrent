@@ -3,7 +3,7 @@
 Turret::Turret(Vector2 locationOffset) : WeaponSystem(locationOffset) {
 
 	maxStoreSize = 12;
-	coolDownTime = .5;
+	coolDownTime = .25;
 }
 
 Turret::~Turret() {
@@ -21,7 +21,6 @@ bool Turret::loadTurretTexture(ID3D11Device * device, const wchar_t * textureFil
 	return true;
 }
 
-Vector2 turretDirection;
 
 Bullet* Turret::fire() {
 

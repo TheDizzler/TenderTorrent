@@ -54,4 +54,7 @@ protected:
 	float speed = 200.0f;
 	float firingSpeed = 150;
 
+
+private:
+	bool lastStateVKLButtonDown;
 };
