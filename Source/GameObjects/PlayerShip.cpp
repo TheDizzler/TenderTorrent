@@ -47,8 +47,8 @@ bool PlayerShip::loadBullet(ID3D11Device * device) {
 bool PlayerShip::startUpdate(double deltaTime, MouseController* mouse) {
 
 	position.y -= firingSpeed * deltaTime;
-	rightTurret->update(deltaTime, position, mouse->position);
-	leftTurret->update(deltaTime, position, mouse->position);
+	rightTurret->update(deltaTime, position, mouse->getPosition());
+	leftTurret->update(deltaTime, position, mouse->getPosition());
 	return position.y < Globals::WINDOW_HEIGHT - 3 * height;
 }
 
@@ -92,8 +92,8 @@ void PlayerShip::update(double deltaTime, const BYTE keyboardState[256], MouseCo
 	leftWeaponSlot->update(deltaTime, position);
 	centerWeaponSlot->update(deltaTime, position);
 
-	rightTurret->update(deltaTime, position, mouse->position);
-	leftTurret->update(deltaTime, position, mouse->position);
+	rightTurret->update(deltaTime, position, mouse->getPosition());
+	leftTurret->update(deltaTime, position, mouse->getPosition());
 
 	liveBullets.erase(remove_if(liveBullets.begin(), liveBullets.end(),
 		[](const Sprite* sprite) { return !sprite->isAlive; }), liveBullets.end());

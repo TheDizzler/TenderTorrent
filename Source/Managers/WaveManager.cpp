@@ -30,7 +30,7 @@ bool WaveManager::initialize(ID3D11Device* device) {
 
 void WaveManager::update(double deltaTime, PlayerShip* player) {
 
-	for (Bullet* bullet : player->liveBullets) {
+	/*for (Bullet* bullet : player->liveBullets) {
 		bullet->update(deltaTime);
 		for (Wave* wave : waves) {
 			for (EnemyShip* enemy : wave->enemyShips) {
@@ -40,7 +40,7 @@ void WaveManager::update(double deltaTime, PlayerShip* player) {
 				}
 			}
 		}
-	}
+	}*/
 
 
 	for (Wave* wave : waves) {

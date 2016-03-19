@@ -51,7 +51,7 @@ void Button::setPosition(Vector2& pos) {
 
 void Button::update(double deltaTime, MouseController* mouse) {
 
-	isHover = hitArea->contains(mouse->position);
+	isHover = hitArea->contains(mouse->getPosition());
 
 	if (isSelected && !(GetKeyState(VK_LBUTTON) & 0x8000))
 		isClicked = true;

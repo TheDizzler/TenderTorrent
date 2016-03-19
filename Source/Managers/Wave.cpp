@@ -31,7 +31,7 @@ void Wave::update(double deltaTime, PlayerShip* player) {
 	for (EnemyShip* enemy : enemyShips) {
 		enemy->update(deltaTime, player);
 		if (enemy->readyToFire()) {
-			Bullet* bullet = enemy->launchBullet(player->position);
+			Bullet* bullet = enemy->launchBullet(player->getPosition());
 			bullet->setDimensions(sharedBulletSprite.get());
 			bullets.push_back(bullet);
 		}

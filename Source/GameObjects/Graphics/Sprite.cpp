@@ -36,7 +36,7 @@ bool Sprite::load(ID3D11Device* device, const wchar_t* textureFile) {
 
 
 	if (Globals::reportError(CreateDDSTextureFromFile(device, textureFile, &resource, &texture))) {
-		MessageBox(NULL, L"Failed to load sprite", L"ERROR", MB_OK);
+		//MessageBox(NULL, L"Failed to load sprite", L"ERROR", MB_OK);
 		return false;
 	}
 

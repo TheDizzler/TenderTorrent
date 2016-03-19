@@ -33,12 +33,16 @@ bool LevelManager::initialize(ID3D11Device* device, MouseController* mouse) {
 	warningFont->setScale(Vector2(2, 2));
 
 
-	if (!mouse->load(device, L"assets/reticle (16x16).dds"))
+	if (!mouse->load(device, Assets::mouseReticle))
 		return false;
 
+	bgManager.reset(new BackgroundManager());
+	if (!bgManager->initialize(device))
+		return false;
 
 	waveManager.reset(new WaveManager());
-	waveManager->initialize(device);
+	if (!waveManager->initialize(device))
+		return false;
 
 	playerShip.reset(new PlayerShip(startPosition));
 	if (!playerShip->load(device, L"assets/Heroship.dds")) {
@@ -97,6 +101,14 @@ bool LevelManager::initialize(ID3D11Device* device, MouseController* mouse) {
 	textLabels.push_back(warningLabel.get());
 
 
+	pauseOverlay.reset(new Sprite(Vector2(0, 0)));
+	if (!pauseOverlay->load(device, Assets::pauseOverlayFile)) {
+		MessageBox(NULL, L"Failed to pause overlay", L"ERROR", MB_OK);
+		return false;
+	}
+	pauseOverlay->setTint(Color(Vector4(1, 1, 1, .25)));
+
+
 	playState = STARTING;
 
 	return true;
@@ -110,6 +122,29 @@ void LevelManager::update(double deltaTime, BYTE keyboardState[256], MouseContro
 		case PLAYING:
 			totalPlayTime += deltaTime;
 
+			// player's bullet hit detection
+			for (Bullet* bullet : playerShip->liveBullets) {
+				bullet->update(deltaTime);
+				for (Wave* wave : waveManager->waves) {
+					for (EnemyShip* enemy : wave->enemyShips) {
+						if (bullet->getHitArea()->collision(enemy->getHitArea())) {
+							enemy->takeDamage(bullet->damage);
+							bullet->isAlive = false;
+						}
+					}
+				}
+
+				for (BackgroundLayer* layer : bgManager->getLayers()) {
+
+					if (bullet->getHitArea()->collision(layer->getHitArea())) {
+						layer->takeDamage(bullet->damage);
+						bullet->isAlive = false;
+					}
+				}
+			}
+
+
+			bgManager->update(deltaTime, playerShip.get());
 			playerShip->update(deltaTime, keyboardState, mouse);
 			waveManager->update(deltaTime, playerShip.get());
 
@@ -123,6 +158,7 @@ void LevelManager::update(double deltaTime, BYTE keyboardState[256], MouseContro
 				game->loadMainMenu();
 			break;
 		case STARTING:
+			bgManager->startUpdate(deltaTime);
 			if (playerShip->startUpdate(deltaTime, mouse)) {
 				playState = PLAYING;
 				textLabels.pop_back();
@@ -172,6 +208,7 @@ void LevelManager::update(double deltaTime, BYTE keyboardState[256], MouseContro
 
 void LevelManager::draw(SpriteBatch* batch) {
 
+	bgManager->draw(batch);
 
 	for (auto const& label : textLabels)
 		label->draw(batch);
@@ -183,6 +220,11 @@ void LevelManager::draw(SpriteBatch* batch) {
 
 
 	if (playState == PAUSED) {
+		for (int w = 0; w <= Globals::WINDOW_WIDTH; w += 16)
+			for (int h = 0; h <= Globals::WINDOW_HEIGHT; h += 16) {
+				pauseOverlay->setPosition(Vector2(w, h));
+				pauseOverlay->draw(batch);
+			}
 		exitButton->draw(batch);
 		continueButton->draw(batch);
 

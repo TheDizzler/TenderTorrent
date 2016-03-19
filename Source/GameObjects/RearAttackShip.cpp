@@ -14,6 +14,8 @@ RearAttackShip::RearAttackShip(bool isRght) : EnemyShip(position) {
 		position = startPosLeftSide;
 
 	weaponLocation = position;
+
+	health = 6;
 }
 
 RearAttackShip::~RearAttackShip() {

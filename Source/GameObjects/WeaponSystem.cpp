@@ -82,7 +82,7 @@ bool WeaponSystem::ready() {
 Bullet* WeaponSystem::fire() {
 
 	Bullet* bullet = bulletStore[nextBullet++];
-	bullet->position = weaponLocation;
+	bullet->setPosition(weaponLocation);
 	bullet->isAlive = true;
 	timeSinceFired = coolDownTime;
 

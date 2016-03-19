@@ -1,13 +1,10 @@
 #pragma once
 
-//#include <tchar.h>
-//#include <sstream>
-//#include <strsafe.h>
-
 #include "Screen.h"
 #include "../GameObjects/GUIObjects/Button.h"
 #include "../GameObjects/PlayerShip.h"
 #include "WaveManager.h"
+#include "BackgroundManager.h"
 
 using namespace std;
 
@@ -36,6 +33,7 @@ private:
 
 	GameManager* game;
 
+	unique_ptr<BackgroundManager> bgManager;
 	unique_ptr<WaveManager> waveManager;
 
 	DIMOUSESTATE mouseLastState;
@@ -53,6 +51,9 @@ private:
 	vector<TextLabel* > textLabels;
 
 	unique_ptr<PlayerShip> playerShip;
+
+	unique_ptr<Sprite> pauseOverlay;
+
 
 	float timeStep = 1.0f / 60.0f;
 	float timeSinceLastStep = 0;

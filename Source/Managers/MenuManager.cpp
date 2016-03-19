@@ -68,7 +68,7 @@ void MenuManager::update(double deltaTime, BYTE keyboardState[256], MouseControl
 	// GUI updates
 
 	wostringstream ws;
-	ws << "Mouse: " << mouse->position.x << ", " << mouse->position.y;
+	ws << "Mouse: " << mouse->getPosition().x << ", " << mouse->getPosition().y;
 	mouseLabel->setText(ws);
 
 

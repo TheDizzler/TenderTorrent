@@ -32,7 +32,7 @@ struct HitArea {
 			&& position.y < point.y && position.y + size.y > point.y;
 	}
 
-	Vector2 position; // top left position
+	Vector2 position; // top left position NOT center/origin
 	Vector2 size; // (width, height)
 };
 
@@ -43,15 +43,14 @@ public:
 	Sprite(const Vector2& position);
 	virtual ~Sprite();
 
-	Vector2 position;
+	ID3D11ShaderResourceView* texture = 0;
 	Vector2 origin;
-	Vector2 scale;
 	Color tint;
 	float alpha;
 	float rotation;
 	float layerDepth;
 
-	ID3D11ShaderResourceView* texture = 0;
+	
 	RECT sourceRect;
 
 	virtual bool load(ID3D11Device* device, const wchar_t* file);
@@ -82,15 +81,17 @@ public:
 
 
 protected:
-	/*std::unique_ptr<ID3D11Resource*> resource;
-	std::unique_ptr<ID3D11ShaderResourceView*> texture;*/
+	//std::unique_ptr<ID3D11Resource*> resource;
+	//std::unique_ptr<ID3D11ShaderResourceView*> texture;
 
 	ID3D11Resource* resource = 0;
+	
 
 	UINT width;
 	UINT height;
-
-
+	Vector2 position;
+	
+	Vector2 scale;
 	HitArea* hitArea;
 };
 

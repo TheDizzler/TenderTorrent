@@ -42,7 +42,7 @@ void Turret::fillBulletStore() {
 void Turret::update(double deltaTime, Vector2 positionUpdate, const Vector2& mousePosition) {
 
 	WeaponSystem::update(deltaTime, positionUpdate);
-	turretSprite->position = weaponLocation;
+	turretSprite->setPosition(weaponLocation);
 
 	int y = mousePosition.y - weaponLocation.y;
 	int x = mousePosition.x - weaponLocation.x;

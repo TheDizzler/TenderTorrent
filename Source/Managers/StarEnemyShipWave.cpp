@@ -22,7 +22,7 @@ bool StarEnemyShipWave::initialize(ID3D11Device * device) {
 
 
 	maxTimeBetweenLaunches = 25;
-
+	
 	return true;
 }
 

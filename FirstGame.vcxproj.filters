@@ -43,6 +43,12 @@
     <Filter Include="Header Files\Engine">
       <UniqueIdentifier>{7e6093ea-bc2b-41a2-a23a-5cf98d7e3e25}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Backgrounds">
+      <UniqueIdentifier>{e2a00f17-06f3-4a25-aabb-beac1787c4ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Backgrounds">
+      <UniqueIdentifier>{5fe34bbf-a561-430c-8aa6-4bc6fbff7eaf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\GameObjects\Bullet.cpp">
@@ -128,6 +134,15 @@
     </ClCompile>
     <ClCompile Include="Source\GameObjects\StarEnemyShip.cpp">
       <Filter>Source Files\EnemyShips</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameObjects\Graphics\BackgroundLayer.cpp">
+      <Filter>Source Files\Backgrounds</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Managers\BackgroundManager.cpp">
+      <Filter>Source Files\Backgrounds</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameObjects\Graphics\Background.cpp">
+      <Filter>Source Files\Backgrounds</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -223,6 +238,15 @@
     </ClInclude>
     <ClInclude Include="Source\GameObjects\StarEnemyShip.h">
       <Filter>Header Files\EnemyShips</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameObjects\Graphics\BackgroundLayer.h">
+      <Filter>Header Files\Backgrounds</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Managers\BackgroundManager.h">
+      <Filter>Header Files\Backgrounds</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameObjects\Graphics\Background.h">
+      <Filter>Header Files\Backgrounds</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

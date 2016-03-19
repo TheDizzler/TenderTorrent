@@ -12,6 +12,8 @@ StarEnemyShip::StarEnemyShip(bool isRght) {
 		position = startPosLeftSide;
 
 	weaponLocation = position;
+
+	health = 10;
 }
 
 StarEnemyShip::~StarEnemyShip() {

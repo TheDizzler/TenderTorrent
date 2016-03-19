@@ -1,0 +1,27 @@
+#pragma once
+
+#include "../GameObjects/PlayerShip.h"
+#include "../GameObjects/Graphics/Background.h"
+
+
+using namespace std;
+
+
+class BackgroundManager {
+public:
+	BackgroundManager();
+	~BackgroundManager();
+
+	bool initialize(ID3D11Device* device);
+
+	void startUpdate(double deltaTime);
+	void update(double deltaTime, PlayerShip* player);
+	void draw(SpriteBatch* batch);
+
+
+	vector<BackgroundLayer*> getLayers();
+
+private:
+
+	unique_ptr<Background> bg;
+};

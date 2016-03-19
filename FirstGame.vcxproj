@@ -27,6 +27,8 @@
     <ClCompile Include="Source\GameObjects\Bullet.cpp" />
     <ClCompile Include="Source\GameObjects\EnemyBullet.cpp" />
     <ClCompile Include="Source\GameObjects\EnemyShip.cpp" />
+    <ClCompile Include="Source\GameObjects\Graphics\Background.cpp" />
+    <ClCompile Include="Source\GameObjects\Graphics\BackgroundLayer.cpp" />
     <ClCompile Include="Source\GameObjects\Graphics\FontSet.cpp" />
     <ClCompile Include="Source\GameObjects\Graphics\Sprite.cpp" />
     <ClCompile Include="Source\GameObjects\GUIObjects\Button.cpp" />
@@ -41,6 +43,7 @@
     <ClCompile Include="Source\GameObjects\SunBullet.cpp" />
     <ClCompile Include="Source\GameObjects\Turret.cpp" />
     <ClCompile Include="Source\GameObjects\WeaponSystem.cpp" />
+    <ClCompile Include="Source\Managers\BackgroundManager.cpp" />
     <ClCompile Include="Source\Managers\GameManager.cpp" />
     <ClCompile Include="Source\Managers\LevelManager.cpp" />
     <ClCompile Include="Source\Managers\MenuManager.cpp" />
@@ -57,6 +60,8 @@
     <ClInclude Include="Source\GameObjects\Bullet.h" />
     <ClInclude Include="Source\GameObjects\EnemyBullet.h" />
     <ClInclude Include="Source\GameObjects\EnemyShip.h" />
+    <ClInclude Include="Source\GameObjects\Graphics\Background.h" />
+    <ClInclude Include="Source\GameObjects\Graphics\BackgroundLayer.h" />
     <ClInclude Include="Source\GameObjects\Graphics\FontSet.h" />
     <ClInclude Include="Source\GameObjects\Graphics\IElement2D.h" />
     <ClInclude Include="Source\GameObjects\Graphics\Sprite.h" />
@@ -73,6 +78,7 @@
     <ClInclude Include="Source\GameObjects\Turret.h" />
     <ClInclude Include="Source\GameObjects\WeaponSystem.h" />
     <ClInclude Include="Source\globals.h" />
+    <ClInclude Include="Source\Managers\BackgroundManager.h" />
     <ClInclude Include="Source\Managers\GameManager.h" />
     <ClInclude Include="Source\Managers\LevelManager.h" />
     <ClInclude Include="Source\Managers\MenuManager.h" />
