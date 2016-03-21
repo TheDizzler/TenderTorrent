@@ -23,7 +23,7 @@ bool GameManager::initializeGame(ID3D11Device* dvc, MouseController* ms) {
 	return true;
 }
 
-#include "../Engine/GameEngine.h"
+
 
 void GameManager::update(double deltaTime, BYTE keyboardState[256],
 	MouseController* mouse) {
@@ -72,7 +72,7 @@ void GameManager::loadMainMenu() {
 }
 
 
-
+#include "../Engine/GameEngine.h"
 
 void GameManager::exit() {
 

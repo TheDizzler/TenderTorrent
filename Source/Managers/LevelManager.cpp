@@ -137,8 +137,10 @@ void LevelManager::update(double deltaTime, BYTE keyboardState[256], MouseContro
 				for (BackgroundLayer* layer : bgManager->getLayers()) {
 
 					if (bullet->getHitArea()->collision(layer->getHitArea())) {
-						layer->takeDamage(bullet->damage);
-						bullet->isAlive = false;
+						if (layer->isAlive) {
+							layer->takeDamage(bullet->damage);
+							bullet->isAlive = false;
+						}
 					}
 				}
 			}

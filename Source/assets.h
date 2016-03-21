@@ -36,7 +36,12 @@ namespace Assets {
 	const static Vector2 fSize(146, 37);
 	const static Vector2 fPos(298, 714);
 
-
+	const static Vector2 gSize(26, 25);
+	const static Vector2 gPos(101, 438);
+	const static Vector2 hSize(26, 26);
+	const static Vector2 hPos(289, 594);
+	const static Vector2 iSize(310, 138);
+	const static Vector2 iPos(151, 837);
 	static void getTextureDimensions(ID3D11Resource* res, UINT* width, UINT* height) {
 
 		D3D11_RESOURCE_DIMENSION dim;

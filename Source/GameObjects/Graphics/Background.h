@@ -19,7 +19,6 @@ public:
 
 private:
 
-	
-
 	Vector2 startPos;
+	unique_ptr<FontSet> healthFont;
 };
