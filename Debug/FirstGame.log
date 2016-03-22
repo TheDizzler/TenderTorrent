@@ -1,4 +1,130 @@
-﻿  BackgroundLayer.cpp
+﻿  WaveManager.cpp
   c:\program files (x86)\windows kits\8.1\include\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
 d:\github projects\firstgame\source\gameobjects\weaponsystem.h(34): warning C4305: 'initializing': truncation from 'double' to 'float'
+  Wave.cpp
+  c:\program files (x86)\windows kits\8.1\include\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+d:\github projects\firstgame\source\gameobjects\weaponsystem.h(34): warning C4305: 'initializing': truncation from 'double' to 'float'
+  StarEnemyShipWave.cpp
+  c:\program files (x86)\windows kits\8.1\include\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+d:\github projects\firstgame\source\gameobjects\weaponsystem.h(34): warning C4305: 'initializing': truncation from 'double' to 'float'
+d:\github projects\firstgame\source\managers\starenemyshipwave.cpp(48): warning C4018: '>=': signed/unsigned mismatch
+  RearAttackWave.cpp
+  c:\program files (x86)\windows kits\8.1\include\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+d:\github projects\firstgame\source\gameobjects\weaponsystem.h(34): warning C4305: 'initializing': truncation from 'double' to 'float'
+d:\github projects\firstgame\source\managers\rearattackwave.cpp(58): warning C4018: '>=': signed/unsigned mismatch
+  MenuManager.cpp
+  c:\program files (x86)\windows kits\8.1\include\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+d:\github projects\firstgame\source\gameobjects\guiobjects\button.h(8): warning C4091: 'static ': ignored on left of 'ButtonAction' when no variable is declared
+d:\github projects\firstgame\source\gameobjects\guiobjects\dialog.h(12): warning C4091: 'static ': ignored on left of 'DialogResult' when no variable is declared
+d:\github projects\firstgame\source\gameobjects\weaponsystem.h(34): warning C4305: 'initializing': truncation from 'double' to 'float'
+d:\github projects\firstgame\source\managers\menumanager.cpp(83): warning C4800: 'BYTE': forcing value to bool 'true' or 'false' (performance warning)
+  LevelManager.cpp
+  c:\program files (x86)\windows kits\8.1\include\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+d:\github projects\firstgame\source\gameobjects\guiobjects\button.h(8): warning C4091: 'static ': ignored on left of 'ButtonAction' when no variable is declared
+d:\github projects\firstgame\source\gameobjects\weaponsystem.h(34): warning C4305: 'initializing': truncation from 'double' to 'float'
+d:\github projects\firstgame\source\gameobjects\guiobjects\dialog.h(12): warning C4091: 'static ': ignored on left of 'DialogResult' when no variable is declared
+d:\github projects\firstgame\source\managers\levelmanager.cpp(227): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+d:\github projects\firstgame\source\managers\levelmanager.cpp(249): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+d:\github projects\firstgame\source\managers\levelmanager.cpp(253): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
+d:\github projects\firstgame\source\managers\levelmanager.cpp(267): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+d:\github projects\firstgame\source\managers\levelmanager.cpp(271): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  GameManager.cpp
+  c:\program files (x86)\windows kits\8.1\include\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+d:\github projects\firstgame\source\gameobjects\guiobjects\button.h(8): warning C4091: 'static ': ignored on left of 'ButtonAction' when no variable is declared
+d:\github projects\firstgame\source\gameobjects\weaponsystem.h(34): warning C4305: 'initializing': truncation from 'double' to 'float'
+d:\github projects\firstgame\source\gameobjects\guiobjects\dialog.h(12): warning C4091: 'static ': ignored on left of 'DialogResult' when no variable is declared
+  BackgroundManager.cpp
+  c:\program files (x86)\windows kits\8.1\include\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+d:\github projects\firstgame\source\gameobjects\weaponsystem.h(34): warning C4305: 'initializing': truncation from 'double' to 'float'
+  WeaponSystem.cpp
+d:\github projects\firstgame\source\gameobjects\weaponsystem.h(34): warning C4305: 'initializing': truncation from 'double' to 'float'
+d:\github projects\firstgame\source\gameobjects\weaponsystem.cpp(51): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
+  Turret.cpp
+d:\github projects\firstgame\source\gameobjects\weaponsystem.h(34): warning C4305: 'initializing': truncation from 'double' to 'float'
+d:\github projects\firstgame\source\gameobjects\turret.cpp(47): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\github projects\firstgame\source\gameobjects\turret.cpp(48): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\github projects\firstgame\source\gameobjects\turret.cpp(49): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+d:\github projects\firstgame\source\gameobjects\turret.cpp(51): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+  SunBullet.cpp
+d:\github projects\firstgame\source\gameobjects\sunbullet.cpp(18): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  StarEnemyShip.cpp
+  c:\program files (x86)\windows kits\8.1\include\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+d:\github projects\firstgame\source\gameobjects\weaponsystem.h(34): warning C4305: 'initializing': truncation from 'double' to 'float'
+d:\github projects\firstgame\source\gameobjects\starenemyship.cpp(25): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
+d:\github projects\firstgame\source\gameobjects\starenemyship.cpp(27): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+  RearAttackShip.cpp
+  c:\program files (x86)\windows kits\8.1\include\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+d:\github projects\firstgame\source\gameobjects\weaponsystem.h(34): warning C4305: 'initializing': truncation from 'double' to 'float'
+d:\github projects\firstgame\source\gameobjects\rearattackship.cpp(29): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
+d:\github projects\firstgame\source\gameobjects\rearattackship.cpp(30): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
+d:\github projects\firstgame\source\gameobjects\rearattackship.cpp(32): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+d:\github projects\firstgame\source\gameobjects\rearattackship.cpp(33): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
+  PlayerShip.cpp
+  c:\program files (x86)\windows kits\8.1\include\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+d:\github projects\firstgame\source\gameobjects\weaponsystem.h(34): warning C4305: 'initializing': truncation from 'double' to 'float'
+d:\github projects\firstgame\source\gameobjects\playership.cpp(49): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
+d:\github projects\firstgame\source\gameobjects\playership.cpp(64): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\github projects\firstgame\source\gameobjects\playership.cpp(66): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+d:\github projects\firstgame\source\gameobjects\playership.cpp(69): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
+d:\github projects\firstgame\source\gameobjects\playership.cpp(71): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+d:\github projects\firstgame\source\gameobjects\playership.cpp(74): warning C4244: '=': conversion from 'UINT' to 'float', possible loss of data
+d:\github projects\firstgame\source\gameobjects\playership.cpp(76): warning C4244: '=': conversion from 'UINT' to 'float', possible loss of data
+d:\github projects\firstgame\source\gameobjects\playership.cpp(79): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
+d:\github projects\firstgame\source\gameobjects\playership.cpp(81): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+d:\github projects\firstgame\source\gameobjects\playership.cpp(84): warning C4244: '=': conversion from 'UINT' to 'float', possible loss of data
+d:\github projects\firstgame\source\gameobjects\playership.cpp(86): warning C4244: '=': conversion from 'UINT' to 'float', possible loss of data
+d:\github projects\firstgame\source\gameobjects\playership.cpp(143): warning C4800: 'int': forcing value to bool 'true' or 'false' (performance warning)
+  LaserSystem.cpp
+d:\github projects\firstgame\source\gameobjects\weaponsystem.h(34): warning C4305: 'initializing': truncation from 'double' to 'float'
+  LaserBolt.cpp
+d:\github projects\firstgame\source\gameobjects\laserbolt.cpp(8): warning C4244: 'argument': conversion from 'UINT' to 'float', possible loss of data
+  Sprite.cpp
+d:\github projects\firstgame\source\gameobjects\graphics\sprite.cpp(51): warning C4244: 'argument': conversion from 'UINT' to 'float', possible loss of data
+  Background.cpp
+  c:\program files (x86)\windows kits\8.1\include\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+d:\github projects\firstgame\source\gameobjects\weaponsystem.h(34): warning C4305: 'initializing': truncation from 'double' to 'float'
+d:\github projects\firstgame\source\gameobjects\graphics\background.cpp(105): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  MouseController.cpp
+  c:\program files (x86)\windows kits\8.1\include\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  Dialog.cpp
+  c:\program files (x86)\windows kits\8.1\include\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+d:\github projects\firstgame\source\gameobjects\guiobjects\button.h(8): warning C4091: 'static ': ignored on left of 'ButtonAction' when no variable is declared
+d:\github projects\firstgame\source\gameobjects\guiobjects\dialog.h(12): warning C4091: 'static ': ignored on left of 'DialogResult' when no variable is declared
+  Generating Code...
+  Compiling...
+  Button.cpp
+  c:\program files (x86)\windows kits\8.1\include\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+d:\github projects\firstgame\source\gameobjects\guiobjects\button.h(8): warning C4091: 'static ': ignored on left of 'ButtonAction' when no variable is declared
+d:\github projects\firstgame\source\gameobjects\guiobjects\button.cpp(68): warning C4800: 'int': forcing value to bool 'true' or 'false' (performance warning)
+d:\github projects\firstgame\source\gameobjects\guiobjects\button.cpp(106): warning C4244: 'return': conversion from 'const float' to 'int', possible loss of data
+  EnemyShip.cpp
+  c:\program files (x86)\windows kits\8.1\include\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+d:\github projects\firstgame\source\gameobjects\weaponsystem.h(34): warning C4305: 'initializing': truncation from 'double' to 'float'
+  EnemyBullet.cpp
+d:\github projects\firstgame\source\gameobjects\enemybullet.cpp(16): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+d:\github projects\firstgame\source\gameobjects\enemybullet.cpp(16): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  Bullet.cpp
+d:\github projects\firstgame\source\gameobjects\bullet.cpp(9): warning C4244: 'argument': conversion from 'UINT' to 'float', possible loss of data
+d:\github projects\firstgame\source\gameobjects\bullet.cpp(18): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
+d:\github projects\firstgame\source\gameobjects\bullet.cpp(19): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+  main.cpp
+  c:\program files (x86)\windows kits\8.1\include\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+d:\github projects\firstgame\source\gameobjects\guiobjects\button.h(8): warning C4091: 'static ': ignored on left of 'ButtonAction' when no variable is declared
+d:\github projects\firstgame\source\gameobjects\weaponsystem.h(34): warning C4305: 'initializing': truncation from 'double' to 'float'
+d:\github projects\firstgame\source\gameobjects\guiobjects\dialog.h(12): warning C4091: 'static ': ignored on left of 'DialogResult' when no variable is declared
+d:\github projects\firstgame\source\engine\main.cpp(209): warning C4244: '=': conversion from 'float' to '__int64', possible loss of data
+  Input.cpp
+  c:\program files (x86)\windows kits\8.1\include\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  GameEngine.cpp
+  c:\program files (x86)\windows kits\8.1\include\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+d:\github projects\firstgame\source\gameobjects\guiobjects\button.h(8): warning C4091: 'static ': ignored on left of 'ButtonAction' when no variable is declared
+d:\github projects\firstgame\source\gameobjects\weaponsystem.h(34): warning C4305: 'initializing': truncation from 'double' to 'float'
+d:\github projects\firstgame\source\gameobjects\guiobjects\dialog.h(12): warning C4091: 'static ': ignored on left of 'DialogResult' when no variable is declared
+d:\github projects\firstgame\source\engine\gameengine.cpp(81): warning C4244: 'argument': conversion from 'LONG' to 'float', possible loss of data
+  Generating Code...
+  Compiling...
+  BackgroundLayer.cpp
+  c:\program files (x86)\windows kits\8.1\include\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+d:\github projects\firstgame\source\gameobjects\weaponsystem.h(34): warning C4305: 'initializing': truncation from 'double' to 'float'
+  Generating Code...
   FirstGame.vcxproj -> D:\github projects\FirstGame\Debug\FirstGame.exe

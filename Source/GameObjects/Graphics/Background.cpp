@@ -28,6 +28,10 @@ bool Background::load(ID3D11Device * device, const wchar_t * file) {
 		return false;
 	healthFont->setTint(DirectX::Colors::Black.v);
 
+	cornerFrame.reset(new Sprite());
+	if (!cornerFrame->load(device, Assets::cornerFrameFile))
+		return false;
+
 	BackgroundLayer* bgLayer = new BackgroundLayer();
 	if (!bgLayer->load(device, L"assets/bg/mako01a.dds"))
 		return false;
@@ -109,7 +113,7 @@ void Background::draw(SpriteBatch * batch) {
 
 	Sprite::draw(batch);
 	for (BackgroundLayer* layer : bgLayers)
-		layer->draw(batch);
+		layer->draw(batch, cornerFrame.get());
 }
 
 

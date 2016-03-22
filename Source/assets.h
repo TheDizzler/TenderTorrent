@@ -20,6 +20,7 @@ namespace Assets {
 
 	const static wchar_t* enemyBulletA = L"assets/bullet yellow.dds";
 
+	const static wchar_t* cornerFrameFile = L"assets/bg/corner frame.dds";
 	const static wchar_t* bgMakoBGFile = L"assets/bg/mako00.dds";
 	const static wchar_t* bgMako01File = L"assets/bg/mako01";
 	const static int numMako01Files = 9;

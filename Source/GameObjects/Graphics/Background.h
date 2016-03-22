@@ -21,4 +21,6 @@ private:
 
 	Vector2 startPos;
 	unique_ptr<FontSet> healthFont;
+
+	unique_ptr<Sprite> cornerFrame;
 };
