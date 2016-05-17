@@ -19,7 +19,7 @@ public:
 	virtual void draw(SpriteBatch* batch, Sprite* baseShip);
 
 	bool readyToFire();
-	EnemyBullet* launchBullet(Vector2 target);
+	virtual EnemyBullet* launchBullet(Vector2 target);
 
 	void takeDamage(int damageTaken);
 

@@ -17,7 +17,7 @@ bool Background::load(ID3D11Device * device, const wchar_t * file) {
 
 
 	position.x += width*scale.x / 2; // set initial position of level
-	position.y -= height*scale.y / 4;
+	position.y -= height*scale.y / 2;
 
 	/*for (int i = 0; i < Assets::numMako01Files; ++i) {
 		wchar_t* filename = Assets::bgMako01File + L"a";
@@ -102,7 +102,7 @@ bool Background::load(ID3D11Device * device, const wchar_t * file) {
 
 void Background::update(double deltaTime, PlayerShip* player) {
 
-	Vector2 posChange = Vector2(0, 10 * deltaTime);
+	Vector2 posChange = Vector2(0, 15 * deltaTime);
 	position += posChange;
 
 	for (BackgroundLayer* layer : bgLayers)

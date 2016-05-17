@@ -11,6 +11,8 @@ public:
 
 	virtual void update(double deltaTime, PlayerShip* player);
 
+	virtual EnemyBullet* launchBullet(Vector2 target);
+
 
 private:
 
