@@ -1,13 +1,9 @@
-﻿  LevelManager.cpp
+﻿  MenuManager.cpp
   c:\program files (x86)\windows kits\8.1\include\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
 d:\github projects\firstgame\source\assets.h(53): warning C4996: 'mbstowcs': This function or variable may be unsafe. Consider using mbstowcs_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdlib.h(920): note: see declaration of 'mbstowcs'
 d:\github projects\firstgame\source\gameobjects\guiobjects\button.h(8): warning C4091: 'static ': ignored on left of 'ButtonAction' when no variable is declared
-d:\github projects\firstgame\source\gameobjects\weaponsystem.h(34): warning C4305: 'initializing': truncation from 'double' to 'float'
 d:\github projects\firstgame\source\gameobjects\guiobjects\dialog.h(12): warning C4091: 'static ': ignored on left of 'DialogResult' when no variable is declared
-d:\github projects\firstgame\source\managers\levelmanager.cpp(236): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-d:\github projects\firstgame\source\managers\levelmanager.cpp(258): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
-d:\github projects\firstgame\source\managers\levelmanager.cpp(262): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
-d:\github projects\firstgame\source\managers\levelmanager.cpp(276): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-d:\github projects\firstgame\source\managers\levelmanager.cpp(280): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+d:\github projects\firstgame\source\gameobjects\weaponsystem.h(34): warning C4305: 'initializing': truncation from 'double' to 'float'
+d:\github projects\firstgame\source\managers\menumanager.cpp(148): warning C4800: 'BYTE': forcing value to bool 'true' or 'false' (performance warning)
   FirstGame.vcxproj -> D:\github projects\FirstGame\Debug\FirstGame.exe

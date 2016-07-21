@@ -5,7 +5,7 @@
 #include "../../globals.h"
 
 
-static enum ButtonAction { EXIT, PLAY, CANCEL_BUTTON, OK };
+static enum ButtonAction { EXIT, PLAY, SETTINGS, CANCEL_BUTTON, OK };
 
 /** A visual and logical representation of a button.
 	Provides no actions on click; that must be handled else where.*/

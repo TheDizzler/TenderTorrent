@@ -11,6 +11,8 @@ MenuManager::~MenuManager() {
 void MenuManager::setGameManager(GameManager * gm) {
 
 	game = gm;
+	mainScreen->setGameManager(game);
+	configScreen->setGameManager(game);
 }
 
 bool MenuManager::initialize(ID3D11Device* device, MouseController* mouse) {
@@ -23,14 +25,79 @@ bool MenuManager::initialize(ID3D11Device* device, MouseController* mouse) {
 	if (!mouse->load(device, L"assets/mouse icon.dds"))
 		return false;
 
+	mainScreen.reset(new MainScreen(this, menuFont.get()));
+	if (!mainScreen->initialize(device, mouse))
+		return false;
+
+
+	currentScreen = mainScreen.get();
+	return true;
+}
+
+bool lastStateDown;
+
+void MenuManager::update(double deltaTime, BYTE keyboardState[256], MouseController* mouse) {
+
+	// GUI updates
+	currentScreen->update(deltaTime, keyboardState, mouse);
+
+}
+
+
+void MenuManager::draw(SpriteBatch* batch) {
+
+	currentScreen->draw(batch);
+		/*for (Button* button : buttons)
+			button->draw(batch);
+
+		for (auto const& label : textLabels)
+			label->draw(batch);
+
+		if (exitDialog->isOpen)
+			exitDialog->draw(batch);*/
+}
+
+
+
+/** **** MainScreen **** **/
+MainScreen::MainScreen(MenuManager* mngr, FontSet* fntst) {
+
+	manager = mngr;
+	menuFont = fntst;
+}
+
+
+MainScreen::~MainScreen() {
+
+	/*for each (TextLabel* label in textLabels)
+		delete label;*/
+
+	for each (Button* button in buttons)
+		delete button;
+}
+
+
+bool MainScreen::initialize(ID3D11Device* device, MouseController* mouse) {
+
 	Button* button = new Button();
 	if (!button->load(device, Assets::arialFontFile,
 		Assets::buttonUpFile, Assets::buttonDownFile))
 		return false;
 	button->action = PLAY;
 	button->setText("Play");
-	button->setPosition(Vector2(200, 200));
+	button->setPosition(Vector2(400, 200));
 	buttons.push_back(button);
+
+
+	button = new Button();
+	if (!button->load(device, Assets::arialFontFile,
+		Assets::buttonUpFile, Assets::buttonDownFile))
+		return false;
+	button->action = SETTINGS;
+	button->setText("Settings");
+	button->setPosition(Vector2(400, 350));
+	buttons.push_back(button);
+
 
 	button = new Button();
 	if (!button->load(device, Assets::arialFontFile,
@@ -38,15 +105,15 @@ bool MenuManager::initialize(ID3D11Device* device, MouseController* mouse) {
 		return false;
 	button->action = EXIT;
 	button->setText("Exit");
-	button->setPosition(Vector2(600, 200));
+	button->setPosition(Vector2(400, 500));
 	buttons.push_back(button);
 
 
-	test.reset(new TextLabel(Vector2(10, 10), menuFont.get()));
+	test.reset(new TextLabel(Vector2(10, 10), menuFont));
 
 	textLabels.push_back(test.get());
 
-	mouseLabel.reset(new TextLabel(Vector2(10, 100), menuFont.get()));
+	mouseLabel.reset(new TextLabel(Vector2(10, 100), menuFont));
 	textLabels.push_back(mouseLabel.get());
 
 
@@ -57,15 +124,17 @@ bool MenuManager::initialize(ID3D11Device* device, MouseController* mouse) {
 		return false;
 	}
 
-
 	return true;
 }
 
-bool lastStateDown;
 
-void MenuManager::update(double deltaTime, BYTE keyboardState[256], MouseController* mouse) {
+void MainScreen::setGameManager(GameManager* gmMng) {
 
-	// GUI updates
+	game = gmMng;
+}
+
+
+void MainScreen::update(double deltaTime, BYTE keyboardState[256], MouseController* mouse) {
 
 	wostringstream ws;
 	ws << "Mouse: " << mouse->getPosition().x << ", " << mouse->getPosition().y;
@@ -75,7 +144,6 @@ void MenuManager::update(double deltaTime, BYTE keyboardState[256], MouseControl
 	if (keyboardState[DIK_ESCAPE] && !lastStateDown) {
 		if (exitDialog->isOpen)
 			exitDialog->close();
-			//game->exit();
 		else
 			confirmExit();
 	}
@@ -107,6 +175,10 @@ void MenuManager::update(double deltaTime, BYTE keyboardState[256], MouseControl
 						game->loadLevel(Assets::levelMakoXML);
 						//test->setText("Play!");
 						break;
+					case SETTINGS:
+
+
+						break;
 				}
 			}
 		}
@@ -114,7 +186,7 @@ void MenuManager::update(double deltaTime, BYTE keyboardState[256], MouseControl
 }
 
 
-void MenuManager::draw(SpriteBatch * batch) {
+void MainScreen::draw(SpriteBatch* batch) {
 
 	for (Button* button : buttons)
 		button->draw(batch);
@@ -127,8 +199,37 @@ void MenuManager::draw(SpriteBatch * batch) {
 }
 
 
-void MenuManager::confirmExit() {
+void MainScreen::confirmExit() {
 
 	exitDialog->open();
+}
+
+
+/** **** ConfigScreen **** **/
+ConfigScreen::ConfigScreen(MenuManager* mngr, FontSet* fntst) {
+
+	manager = mngr;
+	menuFont = fntst;
+}
+
+ConfigScreen::~ConfigScreen() {
+}
+
+bool ConfigScreen::initialize(ID3D11Device* device, MouseController* mouse) {
+	return false;
+}
+
+void ConfigScreen::setGameManager(GameManager* gmMng) {
+
+	game = gmMng;
+
+}
+
+void ConfigScreen::update(double deltaTime, BYTE keyboardState[256],
+	MouseController* mouse) {
+
+}
+
+void ConfigScreen::draw(SpriteBatch * batch) {
 
 }
