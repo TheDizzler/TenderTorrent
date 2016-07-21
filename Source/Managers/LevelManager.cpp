@@ -37,8 +37,8 @@ bool LevelManager::initialize(ID3D11Device* device, MouseController* mouse) {
 		return false;
 
 	bgManager.reset(new BackgroundManager());
-	if (!bgManager->initialize(device))
-		return false;
+	/*if (!bgManager->initialize(device))
+		return false;*/
 
 	waveManager.reset(new WaveManager());
 	if (!waveManager->initialize(device))
@@ -54,9 +54,6 @@ bool LevelManager::initialize(ID3D11Device* device, MouseController* mouse) {
 		return false;
 	}
 	playerShip->setDimensions(playerShip.get());
-
-
-
 
 
 	timerLabel.reset(new TextLabel(Vector2(500, 10), guiFont.get()));
@@ -98,7 +95,6 @@ bool LevelManager::initialize(ID3D11Device* device, MouseController* mouse) {
 		Vector2((Globals::WINDOW_WIDTH - size.x) / 2, (Globals::WINDOW_HEIGHT - size.y) / 2),
 		warningFont.get()));
 	warningLabel->setText("GET READY!");
-	textLabels.push_back(warningLabel.get());
 
 
 	pauseOverlay.reset(new Sprite(Vector2(0, 0)));
@@ -108,9 +104,16 @@ bool LevelManager::initialize(ID3D11Device* device, MouseController* mouse) {
 	}
 	pauseOverlay->setTint(Color(Vector4(1, 1, 1, .25)));
 
+	return true;
+}
 
+bool LevelManager::loadLevel(ID3D11Device* device, const wchar_t* file) {
+
+	if (!bgManager->loadLevel(device, file))
+		return false;
+
+	textLabels.push_back(warningLabel.get());
 	playState = STARTING;
-
 	return true;
 }
 
@@ -160,7 +163,7 @@ void LevelManager::update(double deltaTime, BYTE keyboardState[256], MouseContro
 				game->loadMainMenu();
 			break;
 		case STARTING:
-			bgManager->startUpdate(deltaTime);
+			//bgManager->startUpdate(deltaTime);
 			if (playerShip->startUpdate(deltaTime, mouse)) {
 				playState = PLAYING;
 				textLabels.pop_back();
@@ -171,8 +174,16 @@ void LevelManager::update(double deltaTime, BYTE keyboardState[256], MouseContro
 			displayPause(deltaTime);
 
 			exitButton->update(deltaTime, mouse);
-			if (exitButton->clicked())
+			if (exitButton->clicked()) {
+				waveManager->clear();
+				bgManager->clear();
+				playerShip->clear();
+
+				textLabels.pop_back();
+				pauseDownLast = true;
+				
 				game->loadMainMenu();
+			}
 
 			continueButton->update(deltaTime, mouse);
 			if (continueButton->clicked()
@@ -215,9 +226,7 @@ void LevelManager::draw(SpriteBatch* batch) {
 	for (auto const& label : textLabels)
 		label->draw(batch);
 
-
 	playerShip->draw(batch);
-
 	waveManager->draw(batch);
 
 

@@ -92,7 +92,7 @@ void GameEngine::update(double deltaTime) {
 void GameEngine::render(double deltaTime) {
 
 
-	deviceContext->ClearRenderTargetView(renderTargetView, Colors::White);
+	deviceContext->ClearRenderTargetView(renderTargetView, Colors::PeachPuff);
 
 	batch->Begin(SpriteSortMode_Deferred);
 	{

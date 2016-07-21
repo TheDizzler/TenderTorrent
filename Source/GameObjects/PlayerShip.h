@@ -18,6 +18,8 @@ public:
 	PlayerShip(const Vector2& position);
 	~PlayerShip();
 
+	void clear();
+
 	bool loadBullet(ID3D11Device* device);
 	/** Update to perform before action starts.
 		Return true when ship has moved into position. */

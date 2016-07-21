@@ -3,7 +3,8 @@
 
 /* Global variables and includes */
 #include <comdef.h>
-
+#include <algorithm> 
+#include <cctype>
 
 namespace Assets {
 
@@ -21,7 +22,9 @@ namespace Assets {
 	const static wchar_t* enemyBulletA = L"assets/bullet yellow.dds";
 
 	const static wchar_t* cornerFrameFile = L"assets/bg/corner frame.dds";
-	const static wchar_t* bgMakoBGFile = L"assets/bg/mako00.dds";
+
+	const static wchar_t* levelMakoXML = L"assets/bg/mako.xml";
+	/*const static wchar_t* bgMakoBGFile = L"assets/bg/mako00.dds";
 	const static wchar_t* bgMako01File = L"assets/bg/mako01";
 	const static int numMako01Files = 9;
 	const static Vector2 aSize(121, 98);
@@ -36,13 +39,40 @@ namespace Assets {
 	const static Vector2 ePos(87, 535);
 	const static Vector2 fSize(146, 37);
 	const static Vector2 fPos(298, 714);
-
 	const static Vector2 gSize(26, 25);
 	const static Vector2 gPos(101, 438);
 	const static Vector2 hSize(26, 26);
 	const static Vector2 hPos(289, 594);
 	const static Vector2 iSize(310, 138);
-	const static Vector2 iPos(151, 837);
+	const static Vector2 iPos(151, 837);*/
+
+	inline wchar_t* convertCharStarToWCharT(const char* text) {
+
+		const size_t cSize = strlen(text) + 1;
+		wchar_t* wc = new wchar_t[cSize];
+		mbstowcs(wc, text, cSize);
+
+		return wc;
+	}
+
+	// trim from start (in place)
+	static inline void ltrim(std::string &s) {
+		s.erase(s.begin(), std::find_if(s.begin(), s.end(),
+			std::not1(std::ptr_fun<int, int>(std::isspace))));
+	}
+
+	// trim from end (in place)
+	static inline void rtrim(std::string &s) {
+		s.erase(std::find_if(s.rbegin(), s.rend(),
+			std::not1(std::ptr_fun<int, int>(std::isspace))).base(), s.end());
+	}
+
+	// trim from both ends (in place)
+	static inline void trim(std::string &s) {
+		ltrim(s);
+		rtrim(s);
+	}
+
 	static void getTextureDimensions(ID3D11Resource* res, UINT* width, UINT* height) {
 
 		D3D11_RESOURCE_DIMENSION dim;

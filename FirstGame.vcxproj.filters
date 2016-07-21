@@ -49,6 +49,9 @@
     <Filter Include="Source Files\Backgrounds">
       <UniqueIdentifier>{5fe34bbf-a561-430c-8aa6-4bc6fbff7eaf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Backgrounds\levels">
+      <UniqueIdentifier>{e57a88ac-c0b4-45af-8d5c-623ecb07332f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\GameObjects\Bullet.cpp">
@@ -251,5 +254,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="assets\bg\mako.xml">
+      <Filter>Source Files\Backgrounds\levels</Filter>
+    </Xml>
   </ItemGroup>
 </Project>

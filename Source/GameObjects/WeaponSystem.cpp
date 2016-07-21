@@ -11,6 +11,10 @@ WeaponSystem::WeaponSystem(Vector2 offset) {
 }
 
 WeaponSystem::~WeaponSystem() {
+
+	for each (Bullet* bullet in bulletStore)
+		delete bullet;
+
 }
 
 bool WeaponSystem::loadBulletTexture(ID3D11Device * device, const wchar_t* textureFile) {

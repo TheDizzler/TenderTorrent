@@ -23,6 +23,17 @@ PlayerShip::~PlayerShip() {
 	delete rightWeaponSlot;
 	delete leftWeaponSlot;
 	delete centerWeaponSlot;
+
+	liveBullets.clear();
+}
+
+void PlayerShip::clear() {
+
+	for each (Bullet* bullet in liveBullets)
+		bullet->isAlive = false;
+	liveBullets.clear();
+
+	position = startPosition;
 }
 
 

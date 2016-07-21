@@ -19,29 +19,24 @@ bool WaveManager::initialize(ID3D11Device* device) {
 	wave = new StarEnemyShipWave();
 	if (!wave->initialize(device))
 		return false;
-		wave->launchNewWave();
+	wave->launchNewWave();
 	waves.push_back(wave);
 
 
 	return true;
 }
 
+void WaveManager::clear() {
+
+	for each (Wave* wave in waves)
+		wave->clear();
+
+	waves.clear();
+}
+
 
 
 void WaveManager::update(double deltaTime, PlayerShip* player) {
-
-	/*for (Bullet* bullet : player->liveBullets) {
-		bullet->update(deltaTime);
-		for (Wave* wave : waves) {
-			for (EnemyShip* enemy : wave->enemyShips) {
-				if (bullet->getHitArea()->collision(enemy->getHitArea())) {
-					enemy->takeDamage(bullet->damage);
-					bullet->isAlive = false;
-				}
-			}
-		}
-	}*/
-
 
 	for (Wave* wave : waves) {
 		wave->update(deltaTime, player);
@@ -55,14 +50,11 @@ void WaveManager::update(double deltaTime, PlayerShip* player) {
 			}
 		}
 	}
-
-
 }
 
 
 
 void WaveManager::draw(SpriteBatch * batch) {
-
 
 	for (Wave* wave : waves)
 		wave->draw(batch);

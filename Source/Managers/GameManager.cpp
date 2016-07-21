@@ -14,10 +14,22 @@ bool GameManager::initializeGame(ID3D11Device* dvc, MouseController* ms) {
 	mouse = ms;
 
 	//currentScreen.reset(new MenuManager());
-	currentScreen = new MenuManager();
+	/*currentScreen = new MenuManager();
 	if (!currentScreen->initialize(device, mouse))
 		return false;
-	currentScreen->setGameManager(this);
+	currentScreen->setGameManager(this);*/
+
+	menuScreen.reset(new MenuManager());
+	if (!menuScreen->initialize(device, mouse))
+		return false;
+	menuScreen->setGameManager(this);
+
+	levelScreen.reset(new LevelManager());
+	if (!levelScreen->initialize(device, mouse))
+		return false;
+	levelScreen->setGameManager(this);
+
+	currentScreen = menuScreen.get();
 
 
 	return true;
@@ -42,33 +54,34 @@ void GameManager::draw(SpriteBatch * batch) {
 
 }
 
-void GameManager::loadLevel() {
+void GameManager::loadLevel(const wchar_t* file) {
 
-	if (lastScreen)
-		delete lastScreen;
+	/*if (lastScreen)
+		delete lastScreen;*/
 	lastScreen = currentScreen;
-	currentScreen = new LevelManager();
+	//levelScreen.reset(new LevelManager());
+	//levelScreen->initialize(device, mouse);
 
-	if (!currentScreen->initialize(device, mouse)) {
+	currentScreen = levelScreen.get();
+	if (!levelScreen->loadLevel(device, file)) {
 		MessageBox(NULL, L"Failed to load level", L"ERROR", MB_OK);
 		exit();
 	}
-	currentScreen->setGameManager(this);
 
 }
 
 void GameManager::loadMainMenu() {
 
-	if (lastScreen)
-		delete lastScreen;
+	/*if (lastScreen)
+		delete lastScreen;*/
 	lastScreen = currentScreen;
-	currentScreen = new MenuManager();
+	currentScreen = menuScreen.get();
 
-	if (!currentScreen->initialize(device, mouse)) {
+	/*if (!currentScreen->initialize(device, mouse)) {
 		MessageBox(NULL, L"Failed to load main menu", L"ERROR", MB_OK);
 		exit();
 	}
-	currentScreen->setGameManager(this);
+	currentScreen->setGameManager(this);*/
 }
 
 

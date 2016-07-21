@@ -12,6 +12,7 @@ public:
 	~WaveManager();
 
 	bool initialize(ID3D11Device* device);
+	void clear();
 
 	void update(double deltaTime, PlayerShip* player);
 	void draw(SpriteBatch* batch);

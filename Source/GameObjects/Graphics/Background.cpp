@@ -6,22 +6,34 @@ Background::Background() : Sprite() {
 }
 
 Background::~Background() {
+
+	for each (BackgroundLayer* bgLayer in bgLayers)
+		delete bgLayer;
 }
 
-bool Background::load(ID3D11Device * device, const wchar_t * file) {
+bool Background::load(ID3D11Device* device, const wchar_t* file) {
 
-	if (!Sprite::load(device, file))
+	xml_document doc;
+
+	if (!doc.load_file(file)) {
+		MessageBox(NULL, L"Failed to load xml file", L"ERROR", MB_OK);
+		return false;
+	}
+
+	xml_node levelRoot = doc.first_child();
+
+	const char_t* baseFile = levelRoot.child("base").text().as_string();
+
+	if (!Sprite::load(device, Assets::convertCharStarToWCharT(baseFile)))
 		return false;
 
-	scale = Vector2(1.5, 1.5);
+	float scaleFactor = levelRoot.attribute("scale").as_float();
+	scale = Vector2(scaleFactor, scaleFactor);
 
 
 	position.x += width*scale.x / 2; // set initial position of level
 	position.y -= height*scale.y / 2;
 
-	/*for (int i = 0; i < Assets::numMako01Files; ++i) {
-		wchar_t* filename = Assets::bgMako01File + L"a";
-	}*/
 
 	healthFont.reset(new FontSet());
 	if (!healthFont->load(device, Assets::arialFontFile))
@@ -32,69 +44,42 @@ bool Background::load(ID3D11Device * device, const wchar_t * file) {
 	if (!cornerFrame->load(device, Assets::cornerFrameFile))
 		return false;
 
-	BackgroundLayer* bgLayer = new BackgroundLayer();
-	if (!bgLayer->load(device, L"assets/bg/mako01a.dds"))
-		return false;
-	bgLayer->setInitialPosition(position, scale);
-	bgLayer->setHitArea(Assets::aPos, Assets::aSize, healthFont.get());
-	bgLayers.push_back(bgLayer);
+	return loadLevel(device, levelRoot);
+}
 
-	bgLayer = new BackgroundLayer();
-	if (!bgLayer->load(device, L"assets/bg/mako01b.dds"))
-		return false;
-	bgLayer->setInitialPosition(position, scale);
-	bgLayer->setHitArea(Assets::bPos, Assets::bSize, healthFont.get());
-	bgLayers.push_back(bgLayer);
+void Background::clear() {
 
-	bgLayer = new BackgroundLayer();
-	if (!bgLayer->load(device, L"assets/bg/mako01c.dds"))
-		return false;
-	bgLayer->setInitialPosition(position, scale);
-	bgLayer->setHitArea(Assets::cPos, Assets::cSize, healthFont.get());
-	bgLayers.push_back(bgLayer);
+	for each (BackgroundLayer* bgLayer in bgLayers)
+		delete bgLayer;
 
-	bgLayer = new BackgroundLayer();
-	if (!bgLayer->load(device, L"assets/bg/mako01d.dds"))
-		return false;
-	bgLayer->setInitialPosition(position, scale);
-	bgLayer->setHitArea(Assets::dPos, Assets::dSize, healthFont.get());
+	bgLayers.clear();
+}
 
-	bgLayers.push_back(bgLayer);
 
-	bgLayer = new BackgroundLayer();
-	if (!bgLayer->load(device, L"assets/bg/mako01e.dds"))
-		return false;
-	bgLayer->setInitialPosition(position, scale);
-	bgLayer->setHitArea(Assets::ePos, Assets::eSize, healthFont.get());
-	bgLayers.push_back(bgLayer);
+bool Background::loadLevel(ID3D11Device * device, xml_node levelRoot) {
 
-	bgLayer = new BackgroundLayer();
-	if (!bgLayer->load(device, L"assets/bg/mako01f.dds"))
-		return false;
-	bgLayer->setInitialPosition(position, scale);
-	bgLayer->setHitArea(Assets::fPos, Assets::fSize, healthFont.get());
-	bgLayers.push_back(bgLayer);
 
-	bgLayer = new BackgroundLayer();
-	if (!bgLayer->load(device, L"assets/bg/mako01g.dds"))
-		return false;
-	bgLayer->setInitialPosition(position, scale);
-	bgLayer->setHitArea(Assets::gPos, Assets::gSize, healthFont.get());
-	bgLayers.push_back(bgLayer);
+	for each (xml_node layerNode in levelRoot.children("backgroundLayer")) {
 
-	bgLayer = new BackgroundLayer();
-	if (!bgLayer->load(device, L"assets/bg/mako01h.dds"))
-		return false;
-	bgLayer->setInitialPosition(position, scale);
-	bgLayer->setHitArea(Assets::hPos, Assets::hSize, healthFont.get());
-	bgLayers.push_back(bgLayer);
+		BackgroundLayer* bgLayer = new BackgroundLayer();
+		string file = layerNode.text().as_string();
 
-	bgLayer = new BackgroundLayer();
-	if (!bgLayer->load(device, L"assets/bg/mako01i.dds"))
-		return false;
-	bgLayer->setInitialPosition(position, scale);
-	bgLayer->setHitArea(Assets::iPos, Assets::iSize, healthFont.get());
-	bgLayers.push_back(bgLayer);
+		Assets::trim(file);
+		if (!bgLayer->load(device, Assets::convertCharStarToWCharT(file.c_str())))
+			return false;
+		bgLayer->setInitialPosition(position, scale);
+
+		Vector2 pos = Vector2(layerNode.child("position").attribute("x").as_int(),
+			layerNode.child("position").attribute("y").as_int());
+
+		Vector2 size = Vector2(layerNode.child("size").attribute("x").as_int(),
+			layerNode.child("size").attribute("y").as_int());
+
+
+		bgLayer->setHitArea(pos, size, healthFont.get());
+		bgLayers.push_back(bgLayer);
+
+	}
 
 	return true;
 }

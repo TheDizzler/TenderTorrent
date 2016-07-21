@@ -13,6 +13,7 @@ public:
 	~Wave();
 
 	virtual bool initialize(ID3D11Device* device) = 0;
+	void clear();
 	virtual void launchNewWave() = 0;
 
 	/** Updates ships only. Removes dead enemy bullets. */

@@ -13,7 +13,7 @@ void MenuManager::setGameManager(GameManager * gm) {
 	game = gm;
 }
 
-bool MenuManager::initialize(ID3D11Device * device, MouseController* mouse) {
+bool MenuManager::initialize(ID3D11Device* device, MouseController* mouse) {
 
 	menuFont.reset(new FontSet());
 	if (!menuFont->load(device, Assets::arialFontFile))
@@ -100,12 +100,11 @@ void MenuManager::update(double deltaTime, BYTE keyboardState[256], MouseControl
 				//test->setText("Clicked!");
 				switch (button->action) {
 					case EXIT:
-						//game->quit();
 						confirmExit();
 						//test->setText("Exit!");
 						break;
 					case PLAY:
-						game->loadLevel();
+						game->loadLevel(Assets::levelMakoXML);
 						//test->setText("Play!");
 						break;
 				}

@@ -131,8 +131,6 @@ bool GraphicsEngine::initD3D(HWND hwnd) {
 
 	deviceContext->RSSetViewports(1, &viewport);
 
-
-
 	batch.reset(new SpriteBatch(deviceContext));
 
 

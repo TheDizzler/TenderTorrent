@@ -6,17 +6,23 @@ BackgroundManager::BackgroundManager() {
 BackgroundManager::~BackgroundManager() {
 }
 
-bool BackgroundManager::initialize(ID3D11Device * device) {
+
+bool BackgroundManager::loadLevel(ID3D11Device* device, const wchar_t* file) {
 
 	bg.reset(new Background());
-	if (!bg->load(device, Assets::bgMakoBGFile))
+	if (!bg->load(device, file))
 		return false;
 
 	return true;
 }
 
-void BackgroundManager::startUpdate(double deltaTime) {
+void BackgroundManager::clear() {
+
+	bg->clear();
 }
+
+//void BackgroundManager::startUpdate(double deltaTime) {
+//}
 
 void BackgroundManager::update(double deltaTime, PlayerShip* player) {
 

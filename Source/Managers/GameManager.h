@@ -1,5 +1,6 @@
 #pragma once
 
+//#include <pugixml.hpp>
 #include "LevelManager.h"
 #include "MenuManager.h"
 
@@ -27,15 +28,17 @@ public:
 	void draw(SpriteBatch* batch);
 
 
-	void loadLevel();
+	void loadLevel(const wchar_t* file);
 	void loadMainMenu();
 	void exit();
 
 private:
 
-	//unique_ptr<Screen> currentScreen;
 	Screen* currentScreen;
 	Screen* lastScreen = 0;
+	unique_ptr<LevelManager> levelScreen;
+	unique_ptr<MenuManager> menuScreen;
+
 
 	GameEngine* gameEngine;
 	MouseController* mouse;

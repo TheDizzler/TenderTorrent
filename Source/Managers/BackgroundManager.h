@@ -6,15 +6,17 @@
 
 using namespace std;
 
-
+/** This manager seems unnecessary. */
 class BackgroundManager {
 public:
 	BackgroundManager();
 	~BackgroundManager();
 
-	bool initialize(ID3D11Device* device);
+	//bool initialize(ID3D11Device* device);
+	bool loadLevel(ID3D11Device* device, const wchar_t* file);
+	void clear();
 
-	void startUpdate(double deltaTime);
+	//void startUpdate(double deltaTime);
 	void update(double deltaTime, PlayerShip* player);
 	void draw(SpriteBatch* batch);
 

@@ -4,8 +4,24 @@ Wave::Wave() {
 }
 
 Wave::~Wave() {
+
 	for (EnemyShip* enemy : enemyShips)
 		delete enemy;
+
+	for (Bullet* bullet : bullets)
+		delete bullet;
+}
+
+void Wave::clear() {
+
+	for (EnemyShip* enemy : enemyShips)
+		delete enemy;
+
+	for (Bullet* bullet : bullets)
+		delete bullet;
+
+	enemyShips.clear();
+	bullets.clear();
 }
 
 
