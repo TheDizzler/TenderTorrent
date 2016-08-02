@@ -1,14 +1,23 @@
 #pragma once
 #pragma comment (lib, "D3D11.lib")
+#pragma comment(lib, "DXGI.lib")
 
+#include <dxgi1_2.h>
+
+#include <wrl.h>
 #include <Windows.h>
 #include <memory>
+#include <vector>
+#include <sstream>
 
 #include "SpriteBatch.h"
 #include "../globals.h"
 
 
 using namespace DirectX;
+using namespace std;
+using namespace Microsoft::WRL;
+
 
 class GraphicsEngine {
 public:
@@ -21,22 +30,43 @@ public:
 	virtual void render(double time) = 0;
 
 
+	vector<wstring> getDisplayModeDescriptions();
+
 protected:
 
-	std::unique_ptr<SpriteBatch> batch;
+	unique_ptr<SpriteBatch> batch;
 
+	/* Adapter currently being used. */
+	ComPtr<IDXGIAdapter> selectedAdapter;
+	ComPtr<IDXGIOutput> selectedOutput;
+	DXGI_MODE_DESC selectedDisplayMode;
+	DXGI_MODE_DESC* displayModeList; // all possible display modes with this monitor/video card 
+	
+
+
+	unsigned int numModes = 0;
 	/* Changes backbuffer to front buffer. */
-	IDXGISwapChain* swapChain = 0;
+	ComPtr<IDXGISwapChain> swapChain;
 	/* GPU object */
-	ID3D11Device* device = 0;
+	ComPtr<ID3D11Device> device;
 	/* GPU interface */
-	ID3D11DeviceContext* deviceContext;
+	ComPtr<ID3D11DeviceContext> deviceContext;
 	/* The backbuffer that gets drawn to. */
-	ID3D11RenderTargetView* renderTargetView = 0;
+	ComPtr<ID3D11RenderTargetView> renderTargetView;
 
 	D3D_DRIVER_TYPE driverType;
 	D3D_FEATURE_LEVEL featureLevel;
 	D3D11_VIEWPORT viewport;
+	vector<ComPtr<IDXGIAdapter> > adapters;
+	vector<ComPtr<IDXGIOutput> > adapterOutputs;
+
+
+	bool getDisplayAdapters();
+	bool initializeAdapter(HWND hwnd, int adapterIndex);
+	bool initializeRenderTarget();
+	void initializeViewport();
+	bool getDisplayModeList(ComPtr<IDXGIOutput> adapterOut);
+	
 
 };
 

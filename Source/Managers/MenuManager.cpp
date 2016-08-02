@@ -11,8 +11,9 @@ MenuManager::~MenuManager() {
 void MenuManager::setGameManager(GameManager * gm) {
 
 	game = gm;
-	mainScreen->setGameManager(game);
 	configScreen->setGameManager(game);
+	mainScreen->setGameManager(game);
+
 }
 
 bool MenuManager::initialize(ID3D11Device* device, MouseController* mouse) {
@@ -29,6 +30,10 @@ bool MenuManager::initialize(ID3D11Device* device, MouseController* mouse) {
 	if (!mainScreen->initialize(device, mouse))
 		return false;
 
+	configScreen.reset(new ConfigScreen(this, menuFont.get()));
+	if (!configScreen->initialize(device, mouse))
+		return false;
+
 
 	currentScreen = mainScreen.get();
 	return true;
@@ -38,7 +43,6 @@ bool lastStateDown;
 
 void MenuManager::update(double deltaTime, BYTE keyboardState[256], MouseController* mouse) {
 
-	// GUI updates
 	currentScreen->update(deltaTime, keyboardState, mouse);
 
 }
@@ -47,33 +51,51 @@ void MenuManager::update(double deltaTime, BYTE keyboardState[256], MouseControl
 void MenuManager::draw(SpriteBatch* batch) {
 
 	currentScreen->draw(batch);
-		/*for (Button* button : buttons)
-			button->draw(batch);
 
-		for (auto const& label : textLabels)
-			label->draw(batch);
+}
 
-		if (exitDialog->isOpen)
-			exitDialog->draw(batch);*/
+void MenuManager::openMainMenu() {
+
+	currentScreen = mainScreen.get();
+
+}
+
+void MenuManager::openConfigMenu() {
+
+	currentScreen = configScreen.get();
 }
 
 
+/** **** MenuScreen abstract class **** */
+MenuScreen::MenuScreen(MenuManager * mngr, FontSet * fntst) {
 
-/** **** MainScreen **** **/
-MainScreen::MainScreen(MenuManager* mngr, FontSet* fntst) {
-
-	manager = mngr;
+	menuManager = mngr;
 	menuFont = fntst;
 }
 
+MenuScreen::~MenuScreen() {
 
-MainScreen::~MainScreen() {
-
+// textlabels are unique_ptrs
 	/*for each (TextLabel* label in textLabels)
-		delete label;*/
+		if (label)
+			delete label;*/
 
 	for each (Button* button in buttons)
 		delete button;
+}
+
+void MenuScreen::setGameManager(GameManager* gmMng) {
+
+	game = gmMng;
+}
+
+
+/** **** MainMenuScreen **** **/
+MainScreen::MainScreen(MenuManager* mngr, FontSet* fntst) : MenuScreen(mngr, fntst) {
+
+}
+
+MainScreen::~MainScreen() {
 }
 
 
@@ -128,12 +150,6 @@ bool MainScreen::initialize(ID3D11Device* device, MouseController* mouse) {
 }
 
 
-void MainScreen::setGameManager(GameManager* gmMng) {
-
-	game = gmMng;
-}
-
-
 void MainScreen::update(double deltaTime, BYTE keyboardState[256], MouseController* mouse) {
 
 	wostringstream ws;
@@ -176,8 +192,8 @@ void MainScreen::update(double deltaTime, BYTE keyboardState[256], MouseControll
 						//test->setText("Play!");
 						break;
 					case SETTINGS:
-
-
+						menuManager->openConfigMenu();
+						//test->setText("Settings!!");
 						break;
 				}
 			}
@@ -205,31 +221,51 @@ void MainScreen::confirmExit() {
 }
 
 
-/** **** ConfigScreen **** **/
-ConfigScreen::ConfigScreen(MenuManager* mngr, FontSet* fntst) {
 
-	manager = mngr;
-	menuFont = fntst;
+/** **** ConfigScreen **** **/
+ConfigScreen::ConfigScreen(MenuManager* mngr, FontSet* fntst) : MenuScreen(mngr, fntst) {
+
 }
 
 ConfigScreen::~ConfigScreen() {
 }
 
-bool ConfigScreen::initialize(ID3D11Device* device, MouseController* mouse) {
-	return false;
+
+bool ConfigScreen::initialize(ID3D11Device * device, MouseController * mouse) {
+
+	Button* button = new Button();
+	if (!button->load(device, Assets::arialFontFile,
+		Assets::buttonUpFile, Assets::buttonDownFile))
+		return false;
+	button->action = ButtonAction::CANCEL_BUTTON;
+	button->setText("Back");
+	button->setPosition(Vector2(400, 200));
+	buttons.push_back(button);
+
+
+	return true;
 }
 
-void ConfigScreen::setGameManager(GameManager* gmMng) {
-
-	game = gmMng;
-
-}
 
 void ConfigScreen::update(double deltaTime, BYTE keyboardState[256],
 	MouseController* mouse) {
 
+	for (Button* button : buttons) {
+		button->update(deltaTime, mouse);
+		if (button->clicked()) {
+			//test->setText("Clicked!");
+			switch (button->action) {
+				case CANCEL_BUTTON:
+					menuManager->openMainMenu();
+					break;
+			}
+		}
+	}
 }
 
-void ConfigScreen::draw(SpriteBatch * batch) {
+void ConfigScreen::draw(SpriteBatch* batch) {
 
+	for (Button* button : buttons)
+		button->draw(batch);
 }
+

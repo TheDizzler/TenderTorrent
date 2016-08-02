@@ -32,6 +32,9 @@ LRESULT CALLBACK wndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 void releaseResources() {
 
+	if (Globals::FULL_SCREEN)
+		ChangeDisplaySettings(NULL, 0);
+
 	if (gameEngine)
 		delete gameEngine;
 }
@@ -55,8 +58,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		return 0;
 	}
 
-	
-	
+
+
 
 	messageLoop(); /* Main program loop */
 	releaseResources();
@@ -87,7 +90,7 @@ int messageLoop() {
 			}
 
 			double frameTime = getFrameTime();
-			
+
 
 			gameEngine->run(frameTime, fps);
 
@@ -123,12 +126,40 @@ bool initWindow(HINSTANCE hInstance, int showWnd, int width, int height, bool wi
 		return false;
 	}
 
+	int posX, posY;
+	posX = posY = 0;
+
+	if (Globals::FULL_SCREEN) {
+
+		// Determine the resolution of the clients desktop screen.
+		Globals::WINDOW_WIDTH = GetSystemMetrics(SM_CXSCREEN);
+		Globals::WINDOW_HEIGHT = GetSystemMetrics(SM_CYSCREEN);
+
+		DEVMODE dmScreenSettings;
+		memset(&dmScreenSettings, 0, sizeof(dmScreenSettings));
+		dmScreenSettings.dmSize = sizeof(dmScreenSettings);
+		dmScreenSettings.dmPelsWidth = (unsigned long) Globals::WINDOW_WIDTH;
+		dmScreenSettings.dmPelsHeight = (unsigned long) Globals::WINDOW_HEIGHT;
+		dmScreenSettings.dmBitsPerPel = 32;
+		dmScreenSettings.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
+		ChangeDisplaySettings(&dmScreenSettings, CDS_FULLSCREEN);
+
+		// Set the position of the window to the top left corner.
+
+	} else {
+		// If windowed then set it to global default resolution
+		// and place the window in the middle of the screen.
+		posX = (GetSystemMetrics(SM_CXSCREEN) - Globals::WINDOW_WIDTH) / 2;
+		posY = (GetSystemMetrics(SM_CYSCREEN) - Globals::WINDOW_HEIGHT) / 2;
+	}
+
+
 	hwnd = CreateWindowEx(
 		NULL,							// extended style, check em out here http://msdn.microsoft.com/en-us/library/61fe4bte(VS.71).aspx
 		wndClassName,
-		wndClassName,				// title bar text
+		wndClassName,					// title bar text
 		WS_OVERLAPPEDWINDOW,			// window style, mo' styles http://msdn.microsoft.com/zh-cn/library/czada357.aspx
-		CW_USEDEFAULT, CW_USEDEFAULT,	// top left of window
+		posX, posY,						// top left of window
 		Globals::WINDOW_WIDTH, Globals::WINDOW_HEIGHT,
 		NULL,							// handle to parent window
 		NULL,							// handle to a menu

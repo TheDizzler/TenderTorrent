@@ -7,8 +7,13 @@
 
 namespace Globals {
 
-	const int WINDOW_WIDTH = 800;	// in pixels
-	const int WINDOW_HEIGHT = 600;	// in pixels
+	static int WINDOW_WIDTH = 800;	// in pixels
+	static int WINDOW_HEIGHT = 600;	// in pixels
+
+	/**	0 = Present as fast as possible.
+		1 = Lock to screen refresh rate. */
+	static int vsync_enabled = 1;
+	static bool FULL_SCREEN = true;
 
 
 	inline bool reportError(HRESULT hr) {

@@ -40,7 +40,7 @@ bool GameEngine::initStage() {
 
 
 	game.reset(new GameManager(this));
-	if (!game->initializeGame(device, mouse.get()))
+	if (!game->initializeGame(device.Get(), mouse.get()))
 		return false;
 
 
@@ -92,7 +92,7 @@ void GameEngine::update(double deltaTime) {
 void GameEngine::render(double deltaTime) {
 
 
-	deviceContext->ClearRenderTargetView(renderTargetView, Colors::PeachPuff);
+	deviceContext->ClearRenderTargetView(renderTargetView.Get(), Colors::PeachPuff);
 
 	batch->Begin(SpriteSortMode_Deferred);
 	{

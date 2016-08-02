@@ -5,6 +5,7 @@
 #include "Screen.h"
 #include "../GameObjects/GUIObjects/Dialog.h"
 
+class MenuScreen;
 class MainScreen;
 class ConfigScreen;
 
@@ -21,6 +22,9 @@ public:
 		MouseController* mouse);
 	virtual void draw(SpriteBatch* batch);
 
+	void openMainMenu();
+	void openConfigMenu();
+
 	unique_ptr<FontSet> menuFont;
 
 private:
@@ -34,56 +38,57 @@ private:
 };
 
 
-class MainScreen : public Screen {
 
+class MenuScreen : public Screen {
 public:
 
-	MainScreen(MenuManager* manager, FontSet* fontSet);
-	~MainScreen();
+	MenuScreen(MenuManager* manager, FontSet* fontSet);
+	~MenuScreen();
 
 	// Inherited via Screen
-	virtual bool initialize(ID3D11Device* device, MouseController* mouse) override;
 	virtual void setGameManager(GameManager* game) override;
-	virtual void update(double deltaTime, BYTE keyboardState[256], MouseController* mouse) override;
-	virtual void draw(SpriteBatch* batch) override;
 
-private:
+protected:
 
 	GameManager* game;
-	MenuManager* manager;
+	MenuManager* menuManager;
 	FontSet* menuFont;
 	vector<TextLabel*> textLabels;
 	vector<Button*> buttons;
 
+
+};
+
+
+class ConfigScreen : public MenuScreen {
+public:
+	ConfigScreen(MenuManager* manager, FontSet* fontSet);
+	~ConfigScreen();
+
+	// Inherited via MenuScreen
+	virtual bool initialize(ID3D11Device * device, MouseController * mouse) override;
+	virtual void update(double deltaTime, BYTE keyboardState[256], MouseController * mouse) override;
+	virtual void draw(SpriteBatch * batch) override;
+
+private:
+};
+
+class MainScreen : public MenuScreen {
+public:
+	MainScreen(MenuManager* manager, FontSet* fontSet);
+	~MainScreen();
+
+	// Inherited via MenuScreen
+	virtual bool initialize(ID3D11Device * device, MouseController * mouse) override;
+	virtual void update(double deltaTime, BYTE keyboardState[256], MouseController * mouse) override;
+	virtual void draw(SpriteBatch * batch) override;
+
+private:
 	unique_ptr<Dialog> exitDialog;
 	unique_ptr<TextLabel> test;
 	unique_ptr<TextLabel> mouseLabel;
 
 	void confirmExit();
-};
-
-
-class ConfigScreen : Screen {
-public:
-	ConfigScreen(MenuManager* manager, FontSet* fontSet);
-	~ConfigScreen();
-
-	// Inherited via Screen
-	virtual bool initialize(ID3D11Device* device, MouseController* mouse) override;
-	virtual void setGameManager(GameManager* game) override;
-	virtual void update(double deltaTime, BYTE keyboardState[256], MouseController* mouse) override;
-	virtual void draw(SpriteBatch * batch) override;
-
-private:
-
-	GameManager* game;
-	MenuManager* manager;
-	FontSet* menuFont;
-	vector<TextLabel*> textLabels;
-	vector<Button*> buttons;
-
-	unique_ptr<Dialog> exitDialog;
-	unique_ptr<TextLabel> test;
-	unique_ptr<TextLabel> mouseLabel;
 
 };
+
