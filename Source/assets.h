@@ -2,9 +2,15 @@
 
 
 /* Global variables and includes */
+#include <wrl.h>
 #include <comdef.h>
 #include <algorithm> 
 #include <cctype>
+
+//#include "GameObjects\Graphics\Sprite.h"
+
+using namespace Microsoft::WRL;
+
 
 namespace Assets {
 
@@ -13,6 +19,15 @@ namespace Assets {
 	const static wchar_t* mouseReticle = L"assets/reticle (16x16).dds";
 	const static wchar_t* buttonUpFile = L"assets/button up (256x64).dds";
 	const static wchar_t* buttonDownFile = L"assets/button down (256x64).dds";
+
+	const static wchar_t* whitePixelFile = L"assets/GUI/WhitePixel.dds";
+
+	const static wchar_t* comboButtonClosed = L"assets/GUI/ComboButtonClosed.dds";
+	const static wchar_t* comboButtonPressedClosed
+		= L"assets/GUI/ComboButtonPressedClosed.dds";
+	const static wchar_t* comboButtonOpen = L"assets/GUI/ComboButtonOpen.dds";
+	const static wchar_t* comboButtonPressedOpen
+		= L"assets/GUI/ComboButtonPressedOpen.dds";
 
 	const static wchar_t* pauseOverlayFile = L"assets/pinkblock(16x16).dds";
 
@@ -24,27 +39,7 @@ namespace Assets {
 	const static wchar_t* cornerFrameFile = L"assets/bg/corner frame.dds";
 
 	const static wchar_t* levelMakoXML = L"assets/bg/mako.xml";
-	/*const static wchar_t* bgMakoBGFile = L"assets/bg/mako00.dds";
-	const static wchar_t* bgMako01File = L"assets/bg/mako01";
-	const static int numMako01Files = 9;
-	const static Vector2 aSize(121, 98);
-	const static Vector2 aPos(118, 347);
-	const static Vector2 bSize(87, 90);
-	const static Vector2 bPos(30, 449);
-	const static Vector2 cSize(133, 243);
-	const static Vector2 cPos(303, 360);
-	const static Vector2 dSize(97, 116);
-	const static Vector2 dPos(212, 610);
-	const static Vector2 eSize(131, 136);
-	const static Vector2 ePos(87, 535);
-	const static Vector2 fSize(146, 37);
-	const static Vector2 fPos(298, 714);
-	const static Vector2 gSize(26, 25);
-	const static Vector2 gPos(101, 438);
-	const static Vector2 hSize(26, 26);
-	const static Vector2 hPos(289, 594);
-	const static Vector2 iSize(310, 138);
-	const static Vector2 iPos(151, 837);*/
+	
 
 	inline wchar_t* convertCharStarToWCharT(const char* text) {
 

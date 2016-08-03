@@ -6,7 +6,7 @@ Bullet::Bullet() :Sprite(SimpleMath::Vector2(0, 0)) {
 
 Bullet::Bullet(const Vector2 &position) : Sprite(position) {
 
-	hitArea = new HitArea(position, Vector2(width, height));
+	hitArea.reset(new HitArea(position, Vector2(width, height)));
 	isAlive = false;
 }
 
@@ -29,7 +29,7 @@ void Bullet::update(double deltaTime) {
 
 void Bullet::draw(SpriteBatch* batch, Sprite* baseSprite) {
 
-	batch->Draw(baseSprite->texture, position, &(baseSprite->sourceRect), tint, rotation, baseSprite->origin, scale, SpriteEffects_None, layerDepth);
+	batch->Draw(baseSprite->texture.Get(), position, &(baseSprite->sourceRect), tint, rotation, baseSprite->origin, scale, SpriteEffects_None, layerDepth);
 
 }
 

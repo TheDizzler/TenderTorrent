@@ -1,7 +1,10 @@
 #pragma once
 
+
+
 #include "IElement2D.h"
 #include "../../assets.h"
+
 
 
 
@@ -43,7 +46,7 @@ public:
 	Sprite(const Vector2& position);
 	virtual ~Sprite();
 
-	ID3D11ShaderResourceView* texture = 0;
+	ComPtr<ID3D11ShaderResourceView> texture;
 	Vector2 origin;
 	Color tint;
 	float alpha;
@@ -63,6 +66,7 @@ public:
 	virtual const Color& getTint() const;
 	virtual const float getAlpha() const;
 	virtual const RECT getRect() const;
+	const int getWidth() const;
 
 	//virtual void setHitArea(const HitArea* hitarea);
 	virtual void setDimensions(Sprite* baseSprite);
@@ -83,7 +87,7 @@ public:
 protected:
 	//std::unique_ptr<ID3D11Resource*> resource;
 	//std::unique_ptr<ID3D11ShaderResourceView*> texture;
-
+	
 	ID3D11Resource* resource = 0;
 	
 
@@ -92,6 +96,9 @@ protected:
 	Vector2 position;
 	
 	Vector2 scale;
-	HitArea* hitArea;
+	std::unique_ptr<HitArea> hitArea;
 };
+
+
+
 

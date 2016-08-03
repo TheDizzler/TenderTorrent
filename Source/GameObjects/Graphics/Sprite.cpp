@@ -25,8 +25,8 @@ Sprite::Sprite(const Vector2& pos) {
 
 Sprite::~Sprite() {
 
-	if (texture)
-		texture->Release();
+	/*if (texture)
+		texture->Release();*/
 	if (resource)
 		resource->Release();
 }
@@ -35,7 +35,7 @@ Sprite::~Sprite() {
 bool Sprite::load(ID3D11Device* device, const wchar_t* textureFile) {
 
 
-	if (Globals::reportError(CreateDDSTextureFromFile(device, textureFile, &resource, &texture))) {
+	if (Globals::reportError(CreateDDSTextureFromFile(device, textureFile, &resource, texture.GetAddressOf()))) {
 		//MessageBox(NULL, L"Failed to load sprite", L"ERROR", MB_OK);
 		return false;
 	}
@@ -47,8 +47,9 @@ bool Sprite::load(ID3D11Device* device, const wchar_t* textureFile) {
 	sourceRect.bottom = height;
 	sourceRect.right = width;
 
-	hitArea = new HitArea(Vector2(position.x - width / 2, position.y - height / 2),
-		Vector2(width, height));
+	hitArea.reset(new HitArea(
+		Vector2(position.x - width / 2, position.y - height / 2),
+		Vector2(width, height)));
 
 
 	return true;
@@ -58,7 +59,8 @@ bool Sprite::load(ID3D11Device* device, const wchar_t* textureFile) {
 
 void Sprite::draw(SpriteBatch* batch) {
 
-	batch->Draw(texture, position, &sourceRect, tint, rotation, origin, scale, SpriteEffects_None, layerDepth);
+	batch->Draw(texture.Get(), position, &sourceRect, tint, rotation,
+		origin, scale, SpriteEffects_None, layerDepth);
 
 }
 
@@ -72,7 +74,7 @@ void Sprite::update(double deltaTime) {
 
 
 const HitArea* Sprite::getHitArea() const {
-	return hitArea;
+	return hitArea.get();
 }
 
 const Vector2& Sprite::getPosition() const {
@@ -111,6 +113,10 @@ const RECT Sprite::getRect() const {
 	return sourceRect;
 }
 
+const int Sprite::getWidth() const {
+	return width;
+}
+
 
 //void Sprite::setHitArea(const HitArea* hitarea) {
 //
@@ -123,9 +129,9 @@ void Sprite::setDimensions(Sprite* baseSprite) {
 	width = baseSprite->width;
 	height = baseSprite->height;
 
-	hitArea = new HitArea(
+	hitArea.reset(new HitArea(
 		Vector2(position.x - width*scale.x / 2, position.y - height*scale.y / 2),
-		Vector2(width*scale.x, height*scale.y));
+		Vector2(width*scale.x, height*scale.y)));
 }
 
 void Sprite::setPosition(const Vector2& pos) {

@@ -11,8 +11,7 @@ MenuManager::~MenuManager() {
 void MenuManager::setGameManager(GameManager * gm) {
 
 	game = gm;
-	configScreen->setGameManager(game);
-	mainScreen->setGameManager(game);
+	
 
 }
 
@@ -27,13 +26,16 @@ bool MenuManager::initialize(ID3D11Device* device, MouseController* mouse) {
 		return false;
 
 	mainScreen.reset(new MainScreen(this, menuFont.get()));
+	mainScreen->setGameManager(game);
 	if (!mainScreen->initialize(device, mouse))
 		return false;
 
 	configScreen.reset(new ConfigScreen(this, menuFont.get()));
+	configScreen->setGameManager(game);
 	if (!configScreen->initialize(device, mouse))
 		return false;
-
+	
+	
 
 	currentScreen = mainScreen.get();
 	return true;
@@ -57,7 +59,6 @@ void MenuManager::draw(SpriteBatch* batch) {
 void MenuManager::openMainMenu() {
 
 	currentScreen = mainScreen.get();
-
 }
 
 void MenuManager::openConfigMenu() {
@@ -146,6 +147,9 @@ bool MainScreen::initialize(ID3D11Device* device, MouseController* mouse) {
 		return false;
 	}
 
+
+
+
 	return true;
 }
 
@@ -156,6 +160,23 @@ void MainScreen::update(double deltaTime, BYTE keyboardState[256], MouseControll
 	ws << "Mouse: " << mouse->getPosition().x << ", " << mouse->getPosition().y;
 	mouseLabel->setText(ws);
 
+	Vector2 mousePos = mouse->getPosition();
+	if (mousePos.x > Globals::WINDOW_WIDTH) {
+		mousePos.x = Globals::WINDOW_WIDTH;
+		SetCursorPos(mousePos.x, mousePos.y);
+	}
+	if (mousePos.y > Globals::WINDOW_HEIGHT) {
+		mousePos.y = Globals::WINDOW_HEIGHT;
+		SetCursorPos(mousePos.x, mousePos.y);
+	}
+	if (mousePos.x < 0) {
+		mousePos.x = 0;
+		SetCursorPos(mousePos.x, mousePos.y);
+	}
+	if (mousePos.y < 0) {
+		mousePos.y = 0;
+		SetCursorPos(mousePos.x, mousePos.y);
+	}
 
 	if (keyboardState[DIK_ESCAPE] && !lastStateDown) {
 		if (exitDialog->isOpen)
@@ -165,6 +186,9 @@ void MainScreen::update(double deltaTime, BYTE keyboardState[256], MouseControll
 	}
 
 	lastStateDown = keyboardState[DIK_ESCAPE];
+
+
+
 
 	if (exitDialog->isOpen) {
 		exitDialog->update(deltaTime, mouse);
@@ -212,6 +236,7 @@ void MainScreen::draw(SpriteBatch* batch) {
 
 	if (exitDialog->isOpen)
 		exitDialog->draw(batch);
+
 }
 
 
@@ -231,7 +256,13 @@ ConfigScreen::~ConfigScreen() {
 }
 
 
-bool ConfigScreen::initialize(ID3D11Device * device, MouseController * mouse) {
+bool ConfigScreen::initialize(ID3D11Device* device, MouseController* mouse) {
+
+	ListBox* listbox = new ListBox(Vector2(100, 100), 400);
+	listbox->initialize(device, Assets::arialFontFile);
+	listbox->addItems(game->getAdapters());
+
+	listBoxes.push_back(listbox);
 
 	Button* button = new Button();
 	if (!button->load(device, Assets::arialFontFile,
@@ -239,7 +270,7 @@ bool ConfigScreen::initialize(ID3D11Device * device, MouseController * mouse) {
 		return false;
 	button->action = ButtonAction::CANCEL_BUTTON;
 	button->setText("Back");
-	button->setPosition(Vector2(400, 200));
+	button->setPosition(Vector2(400, 600));
 	buttons.push_back(button);
 
 
@@ -261,11 +292,19 @@ void ConfigScreen::update(double deltaTime, BYTE keyboardState[256],
 			}
 		}
 	}
+
+	for (ListBox* listbox : listBoxes) {
+
+		listbox->update(deltaTime, mouse);
+	}
 }
 
 void ConfigScreen::draw(SpriteBatch* batch) {
 
 	for (Button* button : buttons)
 		button->draw(batch);
+
+	for (ListBox* listbox : listBoxes)
+		listbox->draw(batch);
 }
 

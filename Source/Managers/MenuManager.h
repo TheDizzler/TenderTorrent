@@ -4,6 +4,7 @@
 
 #include "Screen.h"
 #include "../GameObjects/GUIObjects/Dialog.h"
+#include "../GameObjects/GUIObjects/ListBox.h"
 
 class MenuScreen;
 class MainScreen;
@@ -53,9 +54,11 @@ protected:
 	GameManager* game;
 	MenuManager* menuManager;
 	FontSet* menuFont;
+
 	vector<TextLabel*> textLabels;
 	vector<Button*> buttons;
 
+	vector<ListBox*> listBoxes; 
 
 };
 
@@ -71,6 +74,7 @@ public:
 	virtual void draw(SpriteBatch * batch) override;
 
 private:
+	
 };
 
 class MainScreen : public MenuScreen {
@@ -90,5 +94,6 @@ private:
 
 	void confirmExit();
 
+	
 };
 

@@ -32,6 +32,8 @@ public:
 	void loadMainMenu();
 	void exit();
 
+	vector<wstring> getAdapters();
+
 private:
 
 	Screen* currentScreen;

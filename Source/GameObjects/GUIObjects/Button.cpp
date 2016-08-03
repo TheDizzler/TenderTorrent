@@ -30,6 +30,7 @@ bool Button::load(ID3D11Device* device, const wchar_t* fontFile,
 	return true;
 }
 
+
 void Button::setPosition(Vector2& pos) {
 
 	position = pos;
@@ -68,6 +69,7 @@ void Button::update(double deltaTime, MouseController* mouse) {
 	lastButtonStateDown = GetKeyState(VK_LBUTTON) & 0x8000;
 }
 
+
 void Button::draw(SpriteBatch* batch) {
 
 	Sprite* drawSprite;
@@ -101,7 +103,6 @@ void Button::setScale(const Vector2 & scale) {
 }
 
 int Button::getWidth() {
-
 
 	return hitArea->size.x;
 }

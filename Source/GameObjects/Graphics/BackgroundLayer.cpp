@@ -54,19 +54,19 @@ void BackgroundLayer::setPosition(const Vector2& pos) {
 	bottomRightCorner += pos;
 }
 
-void BackgroundLayer::draw(SpriteBatch * batch, Sprite* frame) {
+void BackgroundLayer::draw(SpriteBatch* batch, Sprite* frame) {
 
 	if (isAlive) {
 		Sprite::draw(batch);
 		if (!labelHidden) {
 			healthLabel->draw(batch);
-			batch->Draw(frame->texture, topLeftCorner, &frame->sourceRect,
+			batch->Draw(frame->texture.Get(), topLeftCorner, &frame->sourceRect,
 				frame->tint, 0, frame->origin, scale, SpriteEffects_None, layerDepth);
-			batch->Draw(frame->texture, topRightCorner, &frame->sourceRect,
+			batch->Draw(frame->texture.Get(), topRightCorner, &frame->sourceRect,
 				frame->tint, XM_PI / 2, frame->origin, scale, SpriteEffects_None, layerDepth);
-			batch->Draw(frame->texture, bottomLeftCorner, &frame->sourceRect,
+			batch->Draw(frame->texture.Get(), bottomLeftCorner, &frame->sourceRect,
 				frame->tint, -XM_PI / 2, frame->origin, scale, SpriteEffects_None, layerDepth);
-			batch->Draw(frame->texture, bottomRightCorner, &frame->sourceRect,
+			batch->Draw(frame->texture.Get(), bottomRightCorner, &frame->sourceRect,
 				frame->tint, XM_PI, frame->origin, scale, SpriteEffects_None, layerDepth);
 
 		}

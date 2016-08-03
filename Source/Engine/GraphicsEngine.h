@@ -31,7 +31,8 @@ public:
 
 
 	vector<wstring> getDisplayModeDescriptions();
-
+	vector<wstring> getAdapterList();
+	vector<wstring> GraphicsEngine::getAdapterOutputList();
 protected:
 
 	unique_ptr<SpriteBatch> batch;

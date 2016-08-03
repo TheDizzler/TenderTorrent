@@ -43,7 +43,7 @@ private:
 	unique_ptr<Sprite> normalSprite;
 	unique_ptr<Sprite> pressedSprite;
 
-		/** Button is held down over button but has not been clicked */
+	/** Button is held down over button but has not been clicked */
 	bool isSelected = false;
 	bool isHover = false;
 	bool isClicked = false;

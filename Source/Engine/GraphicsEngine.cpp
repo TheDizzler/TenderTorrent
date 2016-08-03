@@ -139,9 +139,9 @@ bool GraphicsEngine::getDisplayAdapters() {
 	int i = 0;
 	while (factory->EnumAdapters(i++, &adapter) != DXGI_ERROR_NOT_FOUND) {
 		adapters.push_back(adapter);
-		DXGI_ADAPTER_DESC desc;
+		/*DXGI_ADAPTER_DESC desc;
 		ZeroMemory(&desc, sizeof(DXGI_ADAPTER_DESC));
-		adapter->GetDesc(&desc);
+		adapter->GetDesc(&desc);*/
 		//MessageBox(0, desc.Description, L"Adapter detected", MB_OK);
 		/* send adapter info to ConfigScreen */
 		//SendMessage(adapterCombo, CB_ADDSTRING, 0, (LPARAM) desc.Description);
@@ -158,9 +158,9 @@ bool GraphicsEngine::getDisplayAdapters() {
 
 			adapterOutputs.push_back(adapterOutput);
 
-			DXGI_OUTPUT_DESC desc;
+			/*DXGI_OUTPUT_DESC desc;
 			ZeroMemory(&desc, sizeof(DXGI_OUTPUT_DESC));
-			adapterOutput->GetDesc(&desc);
+			adapterOutput->GetDesc(&desc);*/
 			//MessageBox(0, desc.DeviceName, L"Device detected", MB_OK);
 			/* send adapter output info to ConfigScreen */
 			//SendMessage(outputCombo, CB_ADDSTRING, 0, (LPARAM) desc.DeviceName);
@@ -194,7 +194,7 @@ bool GraphicsEngine::initializeAdapter(HWND hwnd, int adapterIndex) {
 	}
 
 
-		/** **** Create SWAP CHAIN **** **/
+	/** **** Create SWAP CHAIN **** **/
 	DXGI_MODE_DESC bufferDesc;
 
 	ZeroMemory(&bufferDesc, sizeof(DXGI_MODE_DESC));
@@ -345,8 +345,11 @@ vector<wstring> GraphicsEngine::getDisplayModeDescriptions() {
 
 		wostringstream mode;
 		mode << "Format: " << displayModeList[i].Format;
-		mode << " Width: " << displayModeList[i].Width << " Height: " << displayModeList[i].Height << " ";
-		mode << "   Refresh Rate: " << displayModeList[i].RefreshRate.Numerator / displayModeList[i].RefreshRate.Denominator;
+		mode << " Width: " << displayModeList[i].Width
+			<< " Height: " << displayModeList[i].Height << " ";
+		mode << "   Refresh Rate: "
+			<< displayModeList[i].RefreshRate.Numerator
+			/ displayModeList[i].RefreshRate.Denominator;
 
 		displayModeDescriptions.push_back(mode.str());
 		/** Send info to ConfigScreen. **/
@@ -354,4 +357,32 @@ vector<wstring> GraphicsEngine::getDisplayModeDescriptions() {
 	}
 
 	return displayModeDescriptions;
+}
+
+vector<wstring> GraphicsEngine::getAdapterList() {
+
+	vector<wstring> list;
+	for each (ComPtr<IDXGIAdapter> adap in adapters) {
+
+		DXGI_ADAPTER_DESC desc;
+		ZeroMemory(&desc, sizeof(DXGI_ADAPTER_DESC));
+		adap->GetDesc(&desc);
+		list.push_back(desc.Description);
+
+	}
+	return list;
+}
+
+vector<wstring> GraphicsEngine::getAdapterOutputList() {
+
+	vector<wstring> list;
+	for each (ComPtr<IDXGIOutput> adap in adapterOutputs) {
+
+		DXGI_OUTPUT_DESC desc;
+		ZeroMemory(&desc, sizeof(DXGI_OUTPUT_DESC));
+		adap->GetDesc(&desc);
+		list.push_back(desc.DeviceName);
+
+	}
+	return list;
 }

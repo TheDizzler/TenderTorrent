@@ -31,12 +31,6 @@
     <Filter Include="Source Files\BaseClasses">
       <UniqueIdentifier>{f852081d-a23e-47ec-8088-f75a7ee21692}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Menus">
-      <UniqueIdentifier>{7a3b6f40-549b-4aa0-b14a-4ecce25e0eee}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Menus">
-      <UniqueIdentifier>{472b628f-7c46-4a28-9503-08c27fd2e478}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Engine">
       <UniqueIdentifier>{20c8a84b-cee4-4cfc-be3f-3b418c1ac444}</UniqueIdentifier>
     </Filter>
@@ -51,6 +45,12 @@
     </Filter>
     <Filter Include="Source Files\Backgrounds\levels">
       <UniqueIdentifier>{e57a88ac-c0b4-45af-8d5c-623ecb07332f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\MenuItems">
+      <UniqueIdentifier>{7a3b6f40-549b-4aa0-b14a-4ecce25e0eee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\MenuItems">
+      <UniqueIdentifier>{472b628f-7c46-4a28-9503-08c27fd2e478}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -100,10 +100,10 @@
       <Filter>Source Files\Engine</Filter>
     </ClCompile>
     <ClCompile Include="Source\GameObjects\GUIObjects\Button.cpp">
-      <Filter>Source Files\Menus</Filter>
+      <Filter>Source Files\MenuItems</Filter>
     </ClCompile>
     <ClCompile Include="Source\GameObjects\GUIObjects\TextLabel.cpp">
-      <Filter>Source Files\Menus</Filter>
+      <Filter>Source Files\MenuItems</Filter>
     </ClCompile>
     <ClCompile Include="Source\Managers\MenuManager.cpp">
       <Filter>Source Files</Filter>
@@ -130,7 +130,7 @@
       <Filter>Source Files\PlayerShip</Filter>
     </ClCompile>
     <ClCompile Include="Source\GameObjects\GUIObjects\Dialog.cpp">
-      <Filter>Source Files\Menus</Filter>
+      <Filter>Source Files\MenuItems</Filter>
     </ClCompile>
     <ClCompile Include="Source\Managers\StarEnemyShipWave.cpp">
       <Filter>Source Files</Filter>
@@ -146,6 +146,12 @@
     </ClCompile>
     <ClCompile Include="Source\GameObjects\Graphics\Background.cpp">
       <Filter>Source Files\Backgrounds</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameObjects\GUIObjects\ListBox.cpp">
+      <Filter>Source Files\MenuItems</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameObjects\GUIObjects\ComboBox.cpp">
+      <Filter>Source Files\MenuItems</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -198,10 +204,10 @@
       <Filter>Header Files\Engine</Filter>
     </ClInclude>
     <ClInclude Include="Source\GameObjects\GUIObjects\Button.h">
-      <Filter>Header Files\Menus</Filter>
+      <Filter>Header Files\MenuItems</Filter>
     </ClInclude>
     <ClInclude Include="Source\GameObjects\GUIObjects\TextLabel.h">
-      <Filter>Header Files\Menus</Filter>
+      <Filter>Header Files\MenuItems</Filter>
     </ClInclude>
     <ClInclude Include="Source\Managers\Screen.h">
       <Filter>Header Files\BaseClasses</Filter>
@@ -231,7 +237,7 @@
       <Filter>Header Files\PlayerShip</Filter>
     </ClInclude>
     <ClInclude Include="Source\GameObjects\GUIObjects\Dialog.h">
-      <Filter>Header Files\Menus</Filter>
+      <Filter>Header Files\MenuItems</Filter>
     </ClInclude>
     <ClInclude Include="Source\assets.h">
       <Filter>Header Files</Filter>
@@ -250,6 +256,12 @@
     </ClInclude>
     <ClInclude Include="Source\GameObjects\Graphics\Background.h">
       <Filter>Header Files\Backgrounds</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameObjects\GUIObjects\ListBox.h">
+      <Filter>Header Files\MenuItems</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameObjects\GUIObjects\ComboBox.h">
+      <Filter>Header Files\MenuItems</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

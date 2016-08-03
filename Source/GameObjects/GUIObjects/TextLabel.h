@@ -18,6 +18,8 @@ public:
 
 	void setText(string text);
 	void setText(wostringstream& text);
+	void setText(wstring text);
+
 	const wchar_t* getText();
 	
 	Vector2 position;

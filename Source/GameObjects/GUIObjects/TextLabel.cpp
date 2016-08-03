@@ -35,6 +35,11 @@ void TextLabel::setText(wostringstream& text) {
 	label = text.str();
 }
 
+void TextLabel::setText(wstring text) {
+
+	label = text;
+}
+
 const wchar_t * TextLabel::getText() {
 	return label.c_str();
 }

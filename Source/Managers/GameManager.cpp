@@ -8,6 +8,7 @@ GameManager::GameManager(GameEngine* gmngn) {
 GameManager::~GameManager() {
 }
 
+
 bool GameManager::initializeGame(ID3D11Device* dvc, MouseController* ms) {
 
 	device = dvc;
@@ -20,9 +21,10 @@ bool GameManager::initializeGame(ID3D11Device* dvc, MouseController* ms) {
 	currentScreen->setGameManager(this);*/
 
 	menuScreen.reset(new MenuManager());
+	menuScreen->setGameManager(this);
 	if (!menuScreen->initialize(device, mouse))
 		return false;
-	menuScreen->setGameManager(this);
+	
 
 	levelScreen.reset(new LevelManager());
 	if (!levelScreen->initialize(device, mouse))
@@ -40,9 +42,9 @@ bool GameManager::initializeGame(ID3D11Device* dvc, MouseController* ms) {
 void GameManager::update(double deltaTime, BYTE keyboardState[256],
 	MouseController* mouse) {
 
-	
+
 	currentScreen->update(deltaTime, keyboardState, mouse);
-	
+
 }
 
 
@@ -93,5 +95,9 @@ void GameManager::exit() {
 	//dialogs.push_back(exitDialog.get());
 
 	gameEngine->exit();
+}
+
+vector<wstring> GameManager::getAdapters() {
+	return gameEngine->getAdapterList();
 }
 

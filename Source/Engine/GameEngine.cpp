@@ -77,7 +77,7 @@ void GameEngine::detectInput(double deltaTime) {
 
 	POINT cursorPos;
 	GetCursorPos(&cursorPos);
-
+	
 	mouse->setPosition(Vector2(cursorPos.x, cursorPos.y));
 }
 
@@ -90,7 +90,6 @@ void GameEngine::update(double deltaTime) {
 
 
 void GameEngine::render(double deltaTime) {
-
 
 	deviceContext->ClearRenderTargetView(renderTargetView.Get(), Colors::PeachPuff);
 

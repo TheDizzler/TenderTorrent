@@ -13,7 +13,7 @@ namespace Globals {
 	/**	0 = Present as fast as possible.
 		1 = Lock to screen refresh rate. */
 	static int vsync_enabled = 1;
-	static bool FULL_SCREEN = true;
+	static bool FULL_SCREEN = false;
 
 
 	inline bool reportError(HRESULT hr) {

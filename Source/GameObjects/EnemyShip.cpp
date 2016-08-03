@@ -20,7 +20,7 @@ void EnemyShip::update(double deltaTime) {
 
 void EnemyShip::draw(SpriteBatch* batch, Sprite* baseShip) {
 
-	batch->Draw(baseShip->texture, position, &(baseShip->sourceRect), tint, rotation, baseShip->origin, scale, SpriteEffects_None, layerDepth);
+	batch->Draw(baseShip->texture.Get(), position, &(baseShip->sourceRect), tint, rotation, baseShip->origin, scale, SpriteEffects_None, layerDepth);
 
 }
 
