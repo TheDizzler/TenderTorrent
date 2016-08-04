@@ -15,6 +15,7 @@ public:
 	~TextLabel();
 
 	void draw(SpriteBatch* batch);
+	void draw(SpriteBatch* batch, Color tint);
 
 	void setText(string text);
 	void setText(wostringstream& text);

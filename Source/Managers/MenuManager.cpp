@@ -11,7 +11,7 @@ MenuManager::~MenuManager() {
 void MenuManager::setGameManager(GameManager * gm) {
 
 	game = gm;
-	
+
 
 }
 
@@ -34,8 +34,8 @@ bool MenuManager::initialize(ID3D11Device* device, MouseController* mouse) {
 	configScreen->setGameManager(game);
 	if (!configScreen->initialize(device, mouse))
 		return false;
-	
-	
+
+
 
 	currentScreen = mainScreen.get();
 	return true;
@@ -44,6 +44,24 @@ bool MenuManager::initialize(ID3D11Device* device, MouseController* mouse) {
 bool lastStateDown;
 
 void MenuManager::update(double deltaTime, BYTE keyboardState[256], MouseController* mouse) {
+
+	Vector2 mousePos = mouse->getPosition();
+	if (mousePos.x > Globals::WINDOW_WIDTH) {
+		mousePos.x = Globals::WINDOW_WIDTH;
+		SetCursorPos(mousePos.x, mousePos.y);
+	}
+	if (mousePos.y > Globals::WINDOW_HEIGHT) {
+		mousePos.y = Globals::WINDOW_HEIGHT;
+		SetCursorPos(mousePos.x, mousePos.y);
+	}
+	if (mousePos.x < 0) {
+		mousePos.x = 0;
+		SetCursorPos(mousePos.x, mousePos.y);
+	}
+	if (mousePos.y < 0) {
+		mousePos.y = 0;
+		SetCursorPos(mousePos.x, mousePos.y);
+	}
 
 	currentScreen->update(deltaTime, keyboardState, mouse);
 
@@ -81,8 +99,11 @@ MenuScreen::~MenuScreen() {
 		if (label)
 			delete label;*/
 
-	for each (Button* button in buttons)
+	for (TextButton* button : buttons)
 		delete button;
+
+	for (ListBox* list : listBoxes)
+		delete list;
 }
 
 void MenuScreen::setGameManager(GameManager* gmMng) {
@@ -102,33 +123,34 @@ MainScreen::~MainScreen() {
 
 bool MainScreen::initialize(ID3D11Device* device, MouseController* mouse) {
 
-	Button* button = new Button();
+	TextButton* button = new TextButton();
 	if (!button->load(device, Assets::arialFontFile,
 		Assets::buttonUpFile, Assets::buttonDownFile))
 		return false;
 	button->action = PLAY;
 	button->setText("Play");
-	button->setPosition(Vector2(400, 200));
+	button->setPosition(Vector2(Globals::WINDOW_WIDTH / 2, 200));
+		//Globals::WINDOW_HEIGHT - button->getHeight())
 	buttons.push_back(button);
 
 
-	button = new Button();
+	button = new TextButton();
 	if (!button->load(device, Assets::arialFontFile,
 		Assets::buttonUpFile, Assets::buttonDownFile))
 		return false;
 	button->action = SETTINGS;
 	button->setText("Settings");
-	button->setPosition(Vector2(400, 350));
+	button->setPosition(Vector2(Globals::WINDOW_WIDTH / 2, 350));
 	buttons.push_back(button);
 
 
-	button = new Button();
+	button = new TextButton();
 	if (!button->load(device, Assets::arialFontFile,
 		Assets::buttonUpFile, Assets::buttonDownFile))
 		return false;
 	button->action = EXIT;
 	button->setText("Exit");
-	button->setPosition(Vector2(400, 500));
+	button->setPosition(Vector2(Globals::WINDOW_WIDTH / 2, 500));
 	buttons.push_back(button);
 
 
@@ -160,23 +182,7 @@ void MainScreen::update(double deltaTime, BYTE keyboardState[256], MouseControll
 	ws << "Mouse: " << mouse->getPosition().x << ", " << mouse->getPosition().y;
 	mouseLabel->setText(ws);
 
-	Vector2 mousePos = mouse->getPosition();
-	if (mousePos.x > Globals::WINDOW_WIDTH) {
-		mousePos.x = Globals::WINDOW_WIDTH;
-		SetCursorPos(mousePos.x, mousePos.y);
-	}
-	if (mousePos.y > Globals::WINDOW_HEIGHT) {
-		mousePos.y = Globals::WINDOW_HEIGHT;
-		SetCursorPos(mousePos.x, mousePos.y);
-	}
-	if (mousePos.x < 0) {
-		mousePos.x = 0;
-		SetCursorPos(mousePos.x, mousePos.y);
-	}
-	if (mousePos.y < 0) {
-		mousePos.y = 0;
-		SetCursorPos(mousePos.x, mousePos.y);
-	}
+
 
 	if (keyboardState[DIK_ESCAPE] && !lastStateDown) {
 		if (exitDialog->isOpen)
@@ -186,8 +192,6 @@ void MainScreen::update(double deltaTime, BYTE keyboardState[256], MouseControll
 	}
 
 	lastStateDown = keyboardState[DIK_ESCAPE];
-
-
 
 
 	if (exitDialog->isOpen) {
@@ -202,7 +206,7 @@ void MainScreen::update(double deltaTime, BYTE keyboardState[256], MouseControll
 		}
 
 	} else {
-		for (Button* button : buttons) {
+		for (TextButton* button : buttons) {
 			button->update(deltaTime, mouse);
 			if (button->clicked()) {
 				//test->setText("Clicked!");
@@ -228,7 +232,7 @@ void MainScreen::update(double deltaTime, BYTE keyboardState[256], MouseControll
 
 void MainScreen::draw(SpriteBatch* batch) {
 
-	for (Button* button : buttons)
+	for (TextButton* button : buttons)
 		button->draw(batch);
 
 	for (auto const& label : textLabels)
@@ -258,19 +262,38 @@ ConfigScreen::~ConfigScreen() {
 
 bool ConfigScreen::initialize(ID3D11Device* device, MouseController* mouse) {
 
-	ListBox* listbox = new ListBox(Vector2(100, 100), 400);
+	ListBox* listbox = new ListBox(Vector2(50, 100), 400);
 	listbox->initialize(device, Assets::arialFontFile);
 	listbox->addItems(game->getAdapters());
-
 	listBoxes.push_back(listbox);
 
-	Button* button = new Button();
+	// Selected adapter display mode list
+	listbox = new ListBox(Vector2(475, 100), 150);
+	listbox->initialize(device, Assets::arialFontFile);
+	listbox->addItems(game->getDisplayModeList(game->getSelectedAdapterIndex()));
+	listBoxes.push_back(listbox);
+
+
+	TextButton* button = new TextButton();
 	if (!button->load(device, Assets::arialFontFile,
 		Assets::buttonUpFile, Assets::buttonDownFile))
 		return false;
 	button->action = ButtonAction::CANCEL_BUTTON;
 	button->setText("Back");
-	button->setPosition(Vector2(400, 600));
+	button->setPosition(
+		Vector2(Globals::WINDOW_WIDTH / 2 - button->getWidth(),
+			Globals::WINDOW_HEIGHT - button->getHeight()));
+	buttons.push_back(button);
+
+	button = new TextButton();
+	if (!button->load(device, Assets::arialFontFile,
+		Assets::buttonUpFile, Assets::buttonDownFile))
+		return false;
+	button->action = ButtonAction::OK;
+	button->setText("ACCEPT");
+	button->setPosition(
+		Vector2(Globals::WINDOW_WIDTH / 2 + button->getWidth(),
+			Globals::WINDOW_HEIGHT - button->getHeight()));
 	buttons.push_back(button);
 
 
@@ -281,7 +304,7 @@ bool ConfigScreen::initialize(ID3D11Device* device, MouseController* mouse) {
 void ConfigScreen::update(double deltaTime, BYTE keyboardState[256],
 	MouseController* mouse) {
 
-	for (Button* button : buttons) {
+	for (TextButton* button : buttons) {
 		button->update(deltaTime, mouse);
 		if (button->clicked()) {
 			//test->setText("Clicked!");
@@ -301,7 +324,7 @@ void ConfigScreen::update(double deltaTime, BYTE keyboardState[256],
 
 void ConfigScreen::draw(SpriteBatch* batch) {
 
-	for (Button* button : buttons)
+	for (TextButton* button : buttons)
 		button->draw(batch);
 
 	for (ListBox* listbox : listBoxes)

@@ -4,10 +4,10 @@
 
 TextLabel::TextLabel(Vector2 pos, FontSet* fnt) {
 
-	wostringstream ws;
+	/*wostringstream ws;
 	ws << "Blank Texxt";
 	wstring setupText = ws.str();
-	label = setupText;
+	label = setupText;*/
 	position = pos;
 	font = fnt;
 }
@@ -18,9 +18,14 @@ TextLabel::~TextLabel() {
 
 
 
-void TextLabel::draw(SpriteBatch * batch) {
+void TextLabel::draw(SpriteBatch* batch) {
 
 	font->draw(batch, label.c_str(), position);
+}
+
+void TextLabel::draw(SpriteBatch* batch, Color color) {
+
+	font->draw(batch, label.c_str(), position, color);
 }
 
 void TextLabel::setText(string text) {

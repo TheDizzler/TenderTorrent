@@ -26,8 +26,10 @@ public:
 	virtual void setTint(const Color& color);
 	virtual void setAlpha(const float alpha);
 
+	/** Don't use this draw function except for testing!! */
 	virtual void draw(SpriteBatch* batch);
 	void draw(SpriteBatch* batch, const wchar_t* text, Vector2 position);
+	void draw(SpriteBatch* batch, const wchar_t* text, Vector2 pos, Color newTint);
 
 	float layerDepth;
 protected:

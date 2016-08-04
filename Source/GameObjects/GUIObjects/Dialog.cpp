@@ -6,7 +6,7 @@ Dialog::Dialog(const Vector2& position) : Sprite(position) {
 }
 
 Dialog::~Dialog() {
-	for (Button* button : buttons)
+	for (TextButton* button : buttons)
 		delete button;
 
 	for (TextLabel* label : labels)
@@ -40,7 +40,7 @@ bool Dialog::initialize(ID3D11Device * device, const wchar_t* fontFile) {
 
 
 	Vector2 scaleFactor = Vector2(.75, 1);
-	Button* button = new Button();
+	TextButton* button = new TextButton();
 	if (!button->load(device, fontFile,
 		Assets::buttonUpFile, Assets::buttonDownFile))
 		return false;
@@ -53,7 +53,7 @@ bool Dialog::initialize(ID3D11Device * device, const wchar_t* fontFile) {
 	buttons.push_back(button);
 
 
-	button = new Button();
+	button = new TextButton();
 	if (!button->load(device, fontFile,
 		Assets::buttonUpFile, Assets::buttonDownFile))
 		return false;
@@ -72,7 +72,7 @@ void Dialog::update(double deltaTime, MouseController* mouse) {
 
 	result = NONE;
 
-	for (Button* button : buttons) {
+	for (TextButton* button : buttons) {
 		button->update(deltaTime, mouse);
 		if (button->clicked()) {
 			switch (button->action) {
@@ -103,7 +103,7 @@ void Dialog::draw(SpriteBatch* batch) {
 
 	Sprite::draw(batch);
 
-	for (Button* button : buttons)
+	for (TextButton* button : buttons)
 		button->draw(batch);
 
 	for (TextLabel* label : labels)

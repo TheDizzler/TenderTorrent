@@ -36,6 +36,11 @@ void FontSet::draw(SpriteBatch* batch, const wchar_t* text, Vector2 pos) {
 	font->DrawString(batch, text, pos, tint, rotation, origin, scale, SpriteEffects_None, layerDepth);
 }
 
+void FontSet::draw(SpriteBatch* batch, const wchar_t* text, Vector2 pos, Color newTint) {
+
+	font->DrawString(batch, text, pos, newTint, rotation, origin, scale, SpriteEffects_None, layerDepth);
+}
+
 
 /** Don't use this draw function except for testing!! */
 void FontSet::draw(SpriteBatch* batch) {

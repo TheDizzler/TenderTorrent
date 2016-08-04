@@ -3,15 +3,21 @@
 #include <dinput.h>
 #include "../Graphics/Sprite.h"
 
+class MouseButton {
+public:
+	bool leftButtonDown = false;
+	bool midButtonDown = false;
+	bool rightButtonDown = false;
+
+};
+
 
 class MouseController : public Sprite {
 public:
 
-	/*typedef struct MouseState {
+	MouseButton currentButtons;
+	MouseButton lastButtons;
 
-		bool buttonDown[3];
-
-	};*/
 
 	MouseController();
 	~MouseController();
@@ -20,7 +26,12 @@ public:
 	DIMOUSESTATE currentState;
 	DIMOUSESTATE lastState;
 
-	//MouseState lastState;
+	bool leftButtonDown();
+	bool midButtonDown();
+	bool rightButtonDown();
+
+	void leftButtonHandled();
+
 private:
 
 	

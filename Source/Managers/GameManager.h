@@ -33,6 +33,8 @@ public:
 	void exit();
 
 	vector<wstring> getAdapters();
+	vector<wstring> getDisplayModeList(size_t adapterIndex);
+	size_t getSelectedAdapterIndex();
 
 private:
 

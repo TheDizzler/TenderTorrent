@@ -117,6 +117,9 @@ const int Sprite::getWidth() const {
 	return width;
 }
 
+const int Sprite::getHeight() const {
+	return height;
+}
 
 //void Sprite::setHitArea(const HitArea* hitarea) {
 //

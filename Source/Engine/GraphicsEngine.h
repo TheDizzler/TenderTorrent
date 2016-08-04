@@ -32,7 +32,9 @@ public:
 
 	vector<wstring> getDisplayModeDescriptions();
 	vector<wstring> getAdapterList();
-	vector<wstring> GraphicsEngine::getAdapterOutputList();
+	vector<wstring> getDisplayModeList(size_t adapterIndex);
+	vector<wstring> getAdapterOutputList();
+	size_t getSelectedAdapterIndex();
 protected:
 
 	unique_ptr<SpriteBatch> batch;
@@ -60,7 +62,7 @@ protected:
 	D3D11_VIEWPORT viewport;
 	vector<ComPtr<IDXGIAdapter> > adapters;
 	vector<ComPtr<IDXGIOutput> > adapterOutputs;
-
+	size_t selectedAdapterIndex;
 
 	bool getDisplayAdapters();
 	bool initializeAdapter(HWND hwnd, int adapterIndex);

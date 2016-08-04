@@ -5,7 +5,7 @@
 
 class ComboBox {
 public:
-	ComboBox(const Vector2& position, const int length);
+	ComboBox(const Vector2& position, const int width);
 	~ComboBox();
 
 	virtual bool initialize(ID3D11Device* device, const wchar_t* fontFile);
@@ -22,17 +22,16 @@ public:
 private:
 	unique_ptr<ListBox> listBox;
 
-	// unique_ptr<Sprite> buttonSprite;
-	unique_ptr<Button> buttonClosed;
-	unique_ptr<Button> buttonOpen;
-	Button* button;
+	unique_ptr<ImageButton> buttonClosed;
+	unique_ptr<ImageButton> buttonOpen;
+	ImageButton* button;
 
 	Vector2 position;
 
-	Vector2 selectedPosition;
+	Vector2 selectedDisplayPosition;
 
-	// length of combobox
-	int length;
+	// width of combobox
+	int width;
 
 	size_t textMarginX = 10;
 	size_t textMarginY = 10;

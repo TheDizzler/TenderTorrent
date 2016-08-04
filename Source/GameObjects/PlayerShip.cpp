@@ -125,7 +125,7 @@ void PlayerShip::update(double deltaTime, const BYTE keyboardState[256], MouseCo
 	}
 
 
-	if (!lastStateVKLButtonDown && (GetKeyState(VK_LBUTTON) & 0x8000)) {
+	if (!lastStateVKLButtonDown && mouse->leftButtonDown()) {
 
 		if (rightTurret->ready()) {
 			liveBullets.push_back(rightTurret->fire());
@@ -151,7 +151,7 @@ void PlayerShip::update(double deltaTime, const BYTE keyboardState[256], MouseCo
 		timeSinceRecharge = 0;
 	}
 
-	lastStateVKLButtonDown = GetKeyState(VK_LBUTTON) & 0x8000;
+	lastStateVKLButtonDown = mouse->leftButtonDown();
 }
 
 void PlayerShip::draw(SpriteBatch * batch) {

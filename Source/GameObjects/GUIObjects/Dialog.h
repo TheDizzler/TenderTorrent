@@ -4,7 +4,7 @@
 
 
 #include "../Graphics/Sprite.h"
-#include "Button.h"
+#include "TextButton.h"
 
 
 static enum DialogResult {
@@ -32,7 +32,7 @@ private:
 
 	unique_ptr<FontSet> font;
 	vector<TextLabel*> labels;
-	vector<Button*> buttons;
+	vector<TextButton*> buttons;
 
 	
 	DialogResult result = NONE;

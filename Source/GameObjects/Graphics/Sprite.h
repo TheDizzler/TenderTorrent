@@ -67,6 +67,7 @@ public:
 	virtual const float getAlpha() const;
 	virtual const RECT getRect() const;
 	const int getWidth() const;
+	const int getHeight() const;
 
 	//virtual void setHitArea(const HitArea* hitarea);
 	virtual void setDimensions(Sprite* baseSprite);

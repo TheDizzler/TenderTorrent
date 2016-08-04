@@ -101,3 +101,16 @@ vector<wstring> GameManager::getAdapters() {
 	return gameEngine->getAdapterList();
 }
 
+vector<wstring> GameManager::getDisplayModeList(size_t adapterIndex) {
+	return gameEngine->getDisplayModeList(adapterIndex);
+}
+
+size_t GameManager::getSelectedAdapterIndex() {
+	return gameEngine->getSelectedAdapterIndex();
+}
+
+
+
+
+
+

@@ -22,12 +22,19 @@ namespace Assets {
 
 	const static wchar_t* whitePixelFile = L"assets/GUI/WhitePixel.dds";
 
-	const static wchar_t* comboButtonClosed = L"assets/GUI/ComboButtonClosed.dds";
-	const static wchar_t* comboButtonPressedClosed
+	const static wchar_t* comboButtonClosedFile
+		= L"assets/GUI/ComboButtonClosed.dds";
+	const static wchar_t* comboButtonPressedClosedFile
 		= L"assets/GUI/ComboButtonPressedClosed.dds";
-	const static wchar_t* comboButtonOpen = L"assets/GUI/ComboButtonOpen.dds";
-	const static wchar_t* comboButtonPressedOpen
+	const static wchar_t* comboButtonOpenFile = L"assets/GUI/ComboButtonOpen.dds";
+	const static wchar_t* comboButtonPressedOpenFile
 		= L"assets/GUI/ComboButtonPressedOpen.dds";
+	const static wchar_t* scrollBarUpFile = L"assets/GUI/ScrollBarUp.dds";
+	const static wchar_t* scrollBarUpPressedFile
+		= L"assets/GUI/ScrollBarUpPressed.dds";
+	const static wchar_t* scrollBarDownFile = L"assets/GUI/ScrollBarDown.dds";
+	const static wchar_t* scrollBarDownPressedFile
+		= L"assets/GUI/ScrollBarDownPressed.dds";
 
 	const static wchar_t* pauseOverlayFile = L"assets/pinkblock(16x16).dds";
 
@@ -39,7 +46,7 @@ namespace Assets {
 	const static wchar_t* cornerFrameFile = L"assets/bg/corner frame.dds";
 
 	const static wchar_t* levelMakoXML = L"assets/bg/mako.xml";
-	
+
 
 	inline wchar_t* convertCharStarToWCharT(const char* text) {
 

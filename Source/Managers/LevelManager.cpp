@@ -71,7 +71,7 @@ bool LevelManager::initialize(ID3D11Device* device, MouseController* mouse) {
 		pauseFont.get()));
 	pauseLabel->setText("Paused");
 
-	exitButton.reset(new Button());
+	exitButton.reset(new TextButton());
 	if (!exitButton->load(device, Assets::arialFontFile,
 		Assets::buttonUpFile, Assets::buttonDownFile))
 		return false;
@@ -80,7 +80,7 @@ bool LevelManager::initialize(ID3D11Device* device, MouseController* mouse) {
 	exitButton->setPosition(
 		Vector2(Globals::WINDOW_WIDTH / 4, Globals::WINDOW_HEIGHT * 3 / 4));
 
-	continueButton.reset(new Button());
+	continueButton.reset(new TextButton());
 	if (!continueButton->load(device, Assets::arialFontFile,
 		Assets::buttonUpFile, Assets::buttonDownFile))
 		return false;

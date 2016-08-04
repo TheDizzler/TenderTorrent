@@ -34,85 +34,6 @@ bool GraphicsEngine::initD3D(HWND hwnd) {
 	}
 
 
-
-
-//	UINT createDeviceFlags = 0;
-//
-//#ifdef _DEBUG
-//	createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
-//#endif
-//
-//	D3D_DRIVER_TYPE driverTypes[] = {
-//		D3D_DRIVER_TYPE_HARDWARE,
-//		D3D_DRIVER_TYPE_WARP,
-//		D3D_DRIVER_TYPE_REFERENCE
-//	};
-//
-//	UINT numDriverTypes = ARRAYSIZE(driverTypes);
-//
-//	D3D_FEATURE_LEVEL featureLevels[] = {
-//		D3D_FEATURE_LEVEL_11_0,
-//		D3D_FEATURE_LEVEL_10_1,
-//		D3D_FEATURE_LEVEL_10_0,
-//		D3D_FEATURE_LEVEL_9_3
-//
-//	};
-//
-//	UINT numFeatureLevels = ARRAYSIZE(featureLevels);
-//
-//
-//	/** **** Create SWAP CHAIN **** **/
-//	DXGI_MODE_DESC bufferDesc;
-//
-//	ZeroMemory(&bufferDesc, sizeof(DXGI_MODE_DESC));
-//
-//	bufferDesc.Width = Globals::WINDOW_WIDTH;
-//	bufferDesc.Height = Globals::WINDOW_HEIGHT;
-//	bufferDesc.RefreshRate.Numerator = 60;
-//	bufferDesc.RefreshRate.Denominator = 1;
-//	bufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-//	bufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
-//	bufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
-//
-//
-//	DXGI_SWAP_CHAIN_DESC swapChainDesc;
-//	ZeroMemory(&swapChainDesc, sizeof(DXGI_SWAP_CHAIN_DESC));
-//
-//	swapChainDesc.BufferDesc = bufferDesc;
-//	swapChainDesc.SampleDesc.Count = 1;
-//	swapChainDesc.SampleDesc.Quality = 0;
-//	swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-//	swapChainDesc.BufferCount = 1;
-//	swapChainDesc.OutputWindow = hwnd;
-//	swapChainDesc.Windowed = TRUE;
-//	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
-//	swapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH; // alt-enter fullscreen
-//
-//	HRESULT hr;
-//
-//
-//	for (int i = 0; i < numDriverTypes; ++i) {
-//
-//		hr = D3D11CreateDeviceAndSwapChain(NULL, driverTypes[i], NULL,
-//			createDeviceFlags, featureLevels, numFeatureLevels,
-//			D3D11_SDK_VERSION, &swapChainDesc,
-//			swapChain.GetAddressOf(), device.GetAddressOf(),
-//			&featureLevel, deviceContext.GetAddressOf());
-//
-//		if (SUCCEEDED(hr)) {
-//
-//			driverType = driverTypes[i];
-//			break;
-//		}
-//	}
-//
-//	if (FAILED(hr)) {
-//		OutputDebugString(L"Failed to create Swap Chain");
-//		return false;
-//	}
-//
-
-
 	if (!initializeRenderTarget())
 		return false;
 	initializeViewport();
@@ -137,6 +58,7 @@ bool GraphicsEngine::getDisplayAdapters() {
 
 
 	int i = 0;
+	// get all adapters (gfx cards)
 	while (factory->EnumAdapters(i++, &adapter) != DXGI_ERROR_NOT_FOUND) {
 		adapters.push_back(adapter);
 		/*DXGI_ADAPTER_DESC desc;
@@ -170,8 +92,8 @@ bool GraphicsEngine::getDisplayAdapters() {
 	}
 
 	// set defaults
-	adapter = adapters[1];
-	selectedOutput = adapterOutputs[1];
+	adapter = adapters[0];
+	selectedOutput = adapterOutputs[0];
 
 	return true;
 }
@@ -179,6 +101,7 @@ bool GraphicsEngine::getDisplayAdapters() {
 
 bool GraphicsEngine::initializeAdapter(HWND hwnd, int adapterIndex) {
 
+	selectedAdapterIndex = adapterIndex;
 
 	/*unsigned int numerator = 0, denominator = 1;*/
 	DXGI_RATIONAL refreshRate = {0, 1};
@@ -317,13 +240,15 @@ void GraphicsEngine::initializeViewport() {
 bool GraphicsEngine::getDisplayModeList(ComPtr<IDXGIOutput> adapterOut) {
 
 	// Find total modes that fit the DXGI_FORMAT_R8G8B8A8_UNORM display format
-	if (Globals::reportError(adapterOut->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &numModes, NULL))) {
+	if (Globals::reportError(adapterOut->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM,
+		DXGI_ENUM_MODES_INTERLACED, &numModes, NULL))) {
 		MessageBox(NULL, L"Error enumerating display modes.", L"ERROR", MB_OK);
 		return false;
 	}
 
 	displayModeList = new DXGI_MODE_DESC[numModes];
-	if (Globals::reportError(adapterOut->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &numModes, displayModeList))) {
+	if (Globals::reportError(adapterOut->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM,
+		DXGI_ENUM_MODES_INTERLACED, &numModes, displayModeList))) {
 		MessageBox(NULL, L"Error getting display mode list.", L"ERROR", MB_OK);
 		return false;
 	}
@@ -340,16 +265,26 @@ vector<wstring> GraphicsEngine::getDisplayModeDescriptions() {
 
 	vector<wstring> displayModeDescriptions;
 
+	UINT lastWidth = 0;
+	UINT lastHeight = 0;
 	int i = 0;
 	for (i; i < numModes; i++) {
 
+		UINT width = displayModeList[i].Width;
+		UINT height = displayModeList[i].Height;
+
+		if (width == lastWidth && height == lastHeight)
+			continue;
 		wostringstream mode;
-		mode << "Format: " << displayModeList[i].Format;
-		mode << " Width: " << displayModeList[i].Width
-			<< " Height: " << displayModeList[i].Height << " ";
-		mode << "   Refresh Rate: "
+		//mode << "Format: " << displayModeList[i].Format;
+		mode  << width
+			<< " x " << height;
+		/*mode << "   Refresh Rate: "
 			<< displayModeList[i].RefreshRate.Numerator
-			/ displayModeList[i].RefreshRate.Denominator;
+			/ displayModeList[i].RefreshRate.Denominator;*/
+
+		lastWidth = width;
+		lastHeight = height;
 
 		displayModeDescriptions.push_back(mode.str());
 		/** Send info to ConfigScreen. **/
@@ -373,6 +308,28 @@ vector<wstring> GraphicsEngine::getAdapterList() {
 	return list;
 }
 
+vector<wstring> GraphicsEngine::getDisplayModeList(size_t adapterIndex) {
+
+
+	ComPtr<IDXGIOutput> adapterOut = adapterOutputs[adapterIndex];
+	// Find total modes that fit the DXGI_FORMAT_R8G8B8A8_UNORM display format
+	if (Globals::reportError(adapterOut->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &numModes, NULL))) {
+		MessageBox(NULL, L"Error enumerating display modes.", L"ERROR", MB_OK);
+		vector<wstring> list;
+		list.push_back(L"ERROR enumerating display modes");
+		return list;
+	}
+
+	displayModeList = new DXGI_MODE_DESC[numModes];
+	if (Globals::reportError(adapterOut->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &numModes, displayModeList))) {
+		MessageBox(NULL, L"Error getting display mode list.", L"ERROR", MB_OK);
+		vector<wstring> list;
+		list.push_back(L"ERROR getting display mode list");
+		return list;
+	}
+	return getDisplayModeDescriptions();
+}
+
 vector<wstring> GraphicsEngine::getAdapterOutputList() {
 
 	vector<wstring> list;
@@ -385,4 +342,8 @@ vector<wstring> GraphicsEngine::getAdapterOutputList() {
 
 	}
 	return list;
+}
+
+size_t GraphicsEngine::getSelectedAdapterIndex() {
+	return selectedAdapterIndex;
 }

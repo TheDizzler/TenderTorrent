@@ -32,8 +32,10 @@
     <ClCompile Include="Source\GameObjects\Graphics\FontSet.cpp" />
     <ClCompile Include="Source\GameObjects\Graphics\Sprite.cpp" />
     <ClCompile Include="Source\GameObjects\GUIObjects\Button.cpp" />
+    <ClCompile Include="Source\GameObjects\GUIObjects\TextButton.cpp" />
     <ClCompile Include="Source\GameObjects\GUIObjects\ComboBox.cpp" />
     <ClCompile Include="Source\GameObjects\GUIObjects\Dialog.cpp" />
+    <ClCompile Include="Source\GameObjects\GUIObjects\ImageButton.cpp" />
     <ClCompile Include="Source\GameObjects\GUIObjects\ListBox.cpp" />
     <ClCompile Include="Source\GameObjects\GUIObjects\MouseController.cpp" />
     <ClCompile Include="Source\GameObjects\GUIObjects\TextLabel.cpp" />
@@ -68,8 +70,10 @@
     <ClInclude Include="Source\GameObjects\Graphics\IElement2D.h" />
     <ClInclude Include="Source\GameObjects\Graphics\Sprite.h" />
     <ClInclude Include="Source\GameObjects\GUIObjects\Button.h" />
+    <ClInclude Include="Source\GameObjects\GUIObjects\TextButton.h" />
     <ClInclude Include="Source\GameObjects\GUIObjects\ComboBox.h" />
     <ClInclude Include="Source\GameObjects\GUIObjects\Dialog.h" />
+    <ClInclude Include="Source\GameObjects\GUIObjects\ImageButton.h" />
     <ClInclude Include="Source\GameObjects\GUIObjects\ListBox.h" />
     <ClInclude Include="Source\GameObjects\GUIObjects\MouseController.h" />
     <ClInclude Include="Source\GameObjects\GUIObjects\TextLabel.h" />

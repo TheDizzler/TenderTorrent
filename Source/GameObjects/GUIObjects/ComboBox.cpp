@@ -3,10 +3,10 @@
 ComboBox::ComboBox(const Vector2& pos, const int len) {
 
 	position = pos;
-	length = len;
-	selectedPosition = Vector2(position.x + textMarginX, position.y + textMarginY);
+	width = len;
+	selectedDisplayPosition = Vector2(position.x + textMarginX, position.y + textMarginY);
 	listBox.reset(new ListBox(
-		Vector2(position.x, position.y + textMarginY), length));
+		Vector2(position.x, position.y + textMarginY), width));
 }
 
 
@@ -25,26 +25,26 @@ bool ComboBox::initialize(ID3D11Device* device, const wchar_t* fontFile) {
 	   }
 	   buttonSprite->setRotation(XM_PI);
 	   buttonSprite->setPosition(
-	   Vector2(position.x + length - buttonSprite->getWidth(), position.y));*/
+	   Vector2(position.x + width - buttonSprite->getWidth(), position.y));*/
 
-	buttonClosed.reset(new Button());
-	if (!buttonClosed->load(device, fontFile,
-		Assets::comboButtonClosed, Assets::comboButtonPressedClosed))
+	buttonClosed.reset(new ImageButton());
+	if (!buttonClosed->load(device,
+		Assets::comboButtonClosedFile, Assets::comboButtonPressedClosedFile))
 		return false;
 	//button->action = ButtonAction::CANCEL_BUTTON;
 	//button->setText("Keep Playing!");
 	buttonClosed->setPosition(
-		Vector2(position.x + length - buttonClosed->getWidth(), position.y));
+		Vector2(position.x + width - buttonClosed->getWidth(), position.y));
 
 
-	buttonOpen.reset(new Button());
-	if (!buttonOpen->load(device, fontFile,
-		Assets::comboButtonOpen, Assets::comboButtonPressedOpen))
+	buttonOpen.reset(new ImageButton());
+	if (!buttonOpen->load(device,
+		Assets::comboButtonOpenFile, Assets::comboButtonPressedOpenFile))
 		return false;
 	//button->action = ButtonAction::CANCEL_BUTTON;
 	//button->setText("Keep Playing!");
 	buttonOpen->setPosition(
-		Vector2(position.x + length - buttonOpen->getWidth(), position.y));
+		Vector2(position.x + width - buttonOpen->getWidth(), position.y));
 
 	button = buttonClosed.get();
 
@@ -77,7 +77,7 @@ void ComboBox::draw(SpriteBatch* batch) {
 	}
 
 	// draw the basic box, selected item and button
-	listBox->drawSelected(batch, selectedPosition);
+	listBox->drawSelected(batch, selectedDisplayPosition);
 	button->draw(batch);
 }
 

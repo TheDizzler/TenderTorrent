@@ -1,30 +1,30 @@
 #pragma once
 
 #include "MouseController.h"
-#include "TextLabel.h"
-#include "../../globals.h"
+
+using namespace std;
 
 
-static enum ButtonAction { EXIT, PLAY, SETTINGS, CANCEL_BUTTON, OK };
+static enum ButtonAction {
+	EXIT, PLAY, SETTINGS, CANCEL_BUTTON, OK, UP, DOWN
+};
 
 /** A visual and logical representation of a button.
-	Provides no actions on click; that must be handled else where.*/
+Provides no actions on click; that must be handled else where.*/
+
 class Button {
 public:
 	Button();
 	~Button();
 
-	bool load(ID3D11Device* device, const wchar_t* fontFile,
-		const wchar_t* upButtonFile, const wchar_t* downButtonFile);
+	void update(double deltaTime, MouseController* mouse);
+	virtual void draw(SpriteBatch* batch) = 0;
+
 	virtual void setPosition(Vector2& position);
-	void setText(string text);
+
 	void setScale(const Vector2& scale);
 	int getWidth();
-
-	void update(double deltaTime, MouseController* mouse);
-	void draw(SpriteBatch* batch);
-
-
+	int getHeight();
 
 	Color normalColor = Color((Vector3(1, 1, 1)));
 	Color hoverColor = Color((Vector3(.5, .75, 1)));;
@@ -33,7 +33,8 @@ public:
 	bool clicked();
 
 	ButtonAction action;
-private:
+
+protected:
 
 	bool lastButtonStateDown;
 
@@ -48,6 +49,4 @@ private:
 	bool isHover = false;
 	bool isClicked = false;
 
-	unique_ptr<FontSet> buttonFont;
-	unique_ptr<TextLabel> buttonLabel;
 };

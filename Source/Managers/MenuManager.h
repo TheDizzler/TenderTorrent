@@ -5,6 +5,8 @@
 #include "Screen.h"
 #include "../GameObjects/GUIObjects/Dialog.h"
 #include "../GameObjects/GUIObjects/ListBox.h"
+#include "../GameObjects/GUIObjects/TextButton.h"
+
 
 class MenuScreen;
 class MainScreen;
@@ -56,7 +58,7 @@ protected:
 	FontSet* menuFont;
 
 	vector<TextLabel*> textLabels;
-	vector<Button*> buttons;
+	vector<TextButton*> buttons;
 
 	vector<ListBox*> listBoxes; 
 

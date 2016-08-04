@@ -99,25 +99,13 @@
     <ClCompile Include="Source\Engine\Input.cpp">
       <Filter>Source Files\Engine</Filter>
     </ClCompile>
-    <ClCompile Include="Source\GameObjects\GUIObjects\Button.cpp">
-      <Filter>Source Files\MenuItems</Filter>
-    </ClCompile>
     <ClCompile Include="Source\GameObjects\GUIObjects\TextLabel.cpp">
       <Filter>Source Files\MenuItems</Filter>
     </ClCompile>
     <ClCompile Include="Source\Managers\MenuManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\GameObjects\GUIObjects\MouseController.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Managers\RearAttackWave.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Managers\WaveManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Managers\Wave.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\GameObjects\RearAttackShip.cpp">
@@ -131,9 +119,6 @@
     </ClCompile>
     <ClCompile Include="Source\GameObjects\GUIObjects\Dialog.cpp">
       <Filter>Source Files\MenuItems</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Managers\StarEnemyShipWave.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\GameObjects\StarEnemyShip.cpp">
       <Filter>Source Files\EnemyShips</Filter>
@@ -151,6 +136,27 @@
       <Filter>Source Files\MenuItems</Filter>
     </ClCompile>
     <ClCompile Include="Source\GameObjects\GUIObjects\ComboBox.cpp">
+      <Filter>Source Files\MenuItems</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameObjects\GUIObjects\ImageButton.cpp">
+      <Filter>Source Files\MenuItems</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Managers\RearAttackWave.cpp">
+      <Filter>Source Files\EnemyShips</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Managers\StarEnemyShipWave.cpp">
+      <Filter>Source Files\EnemyShips</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Managers\Wave.cpp">
+      <Filter>Source Files\EnemyShips</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameObjects\GUIObjects\MouseController.cpp">
+      <Filter>Source Files\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameObjects\GUIObjects\TextButton.cpp">
+      <Filter>Source Files\MenuItems</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameObjects\GUIObjects\Button.cpp">
       <Filter>Source Files\MenuItems</Filter>
     </ClCompile>
   </ItemGroup>
@@ -203,9 +209,6 @@
     <ClInclude Include="Source\Engine\Input.h">
       <Filter>Header Files\Engine</Filter>
     </ClInclude>
-    <ClInclude Include="Source\GameObjects\GUIObjects\Button.h">
-      <Filter>Header Files\MenuItems</Filter>
-    </ClInclude>
     <ClInclude Include="Source\GameObjects\GUIObjects\TextLabel.h">
       <Filter>Header Files\MenuItems</Filter>
     </ClInclude>
@@ -215,16 +218,7 @@
     <ClInclude Include="Source\Managers\MenuManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\GameObjects\GUIObjects\MouseController.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Managers\RearAttackWave.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Managers\WaveManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Managers\Wave.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\GameObjects\RearAttackShip.h">
@@ -240,9 +234,6 @@
       <Filter>Header Files\MenuItems</Filter>
     </ClInclude>
     <ClInclude Include="Source\assets.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Managers\StarEnemyShipWave.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\GameObjects\StarEnemyShip.h">
@@ -261,6 +252,27 @@
       <Filter>Header Files\MenuItems</Filter>
     </ClInclude>
     <ClInclude Include="Source\GameObjects\GUIObjects\ComboBox.h">
+      <Filter>Header Files\MenuItems</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameObjects\GUIObjects\ImageButton.h">
+      <Filter>Header Files\MenuItems</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Managers\RearAttackWave.h">
+      <Filter>Header Files\EnemyShips</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Managers\StarEnemyShipWave.h">
+      <Filter>Header Files\EnemyShips</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Managers\Wave.h">
+      <Filter>Header Files\EnemyShips</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameObjects\GUIObjects\MouseController.h">
+      <Filter>Header Files\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameObjects\GUIObjects\TextButton.h">
+      <Filter>Header Files\MenuItems</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameObjects\GUIObjects\Button.h">
       <Filter>Header Files\MenuItems</Filter>
     </ClInclude>
   </ItemGroup>

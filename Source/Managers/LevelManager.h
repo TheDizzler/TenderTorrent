@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Screen.h"
-#include "../GameObjects/GUIObjects/Button.h"
+#include "../GameObjects/GUIObjects/TextButton.h"
 #include "../GameObjects/PlayerShip.h"
 #include "WaveManager.h"
 #include "BackgroundManager.h"
@@ -40,8 +40,8 @@ private:
 
 	DIMOUSESTATE mouseLastState;
 
-	unique_ptr<Button> exitButton;
-	unique_ptr<Button> continueButton;
+	unique_ptr<TextButton> exitButton;
+	unique_ptr<TextButton> continueButton;
 	unique_ptr<FontSet> guiFont;
 	unique_ptr<FontSet> pauseFont;
 	unique_ptr<FontSet> warningFont;
