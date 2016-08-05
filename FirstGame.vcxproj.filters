@@ -159,6 +159,9 @@
     <ClCompile Include="Source\GameObjects\GUIObjects\Button.cpp">
       <Filter>Source Files\MenuItems</Filter>
     </ClCompile>
+    <ClCompile Include="Source\GameObjects\Graphics\RectangleSprite.cpp">
+      <Filter>Source Files\MenuItems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\globals.h">
@@ -273,6 +276,9 @@
       <Filter>Header Files\MenuItems</Filter>
     </ClInclude>
     <ClInclude Include="Source\GameObjects\GUIObjects\Button.h">
+      <Filter>Header Files\MenuItems</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameObjects\Graphics\RectangleSprite.h">
       <Filter>Header Files\MenuItems</Filter>
     </ClInclude>
   </ItemGroup>

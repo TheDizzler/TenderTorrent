@@ -30,6 +30,11 @@ public:
 	bool midButtonDown();
 	bool rightButtonDown();
 
+	bool leftButtonLastDown();
+	bool midButtonLastDown();
+	bool rightButtonLastDown();
+
+
 	void leftButtonHandled();
 
 private:

@@ -4,6 +4,7 @@
 
 #include "TextLabel.h"
 #include "ImageButton.h"
+#include "../Graphics/RectangleSprite.h"
 
 using namespace std;
 
@@ -38,6 +39,41 @@ private:
 
 };
 
+class Scrubber : public RectangleSprite {
+public:
+	Scrubber(ID3D11ShaderResourceView* pixel);
+	~Scrubber();
+
+	virtual void setDimensions(const Vector2& startPosition,
+		const Vector2& size, const int scrollBarHeight);
+	void setSize(const Vector2& size);
+
+	virtual void update(double deltaTime, MouseController* mouse);
+	//virtual void draw(SpriteBatch* batch);
+
+	bool pressed();
+
+
+	Color normalColor = Color((Vector3(1, 1, 0)));
+	Color hoverColor = Color((Vector3(.5, .75, 1)));;
+	Color selectedColor = Color((Vector3(0, .5, 1)));;
+
+
+
+private:
+
+	Vector2 minPosition;
+	Vector2 maxPosition;
+
+	int scrollBarHeight;
+
+	bool isHover = false;
+	bool isPressed = false;
+
+	int pressedPosition;
+};
+
+
 class ScrollBar {
 public:
 	ScrollBar(Vector2 position);
@@ -49,16 +85,24 @@ public:
 	void update(double deltaTime, MouseController* mouse);
 	void draw(SpriteBatch* batch);
 
+	void setScrollBar(int totalListHeight);
+
 	int getWidth();
 
 private:
 
+	/* Position of entire scrollbar area. */
 	Vector2 position;
 
-	RECT scrollbarRect;
+	RECT scrollBarRect;
+	/* Position of bar part of scroll bar (minus buttons) */
 	Vector2 scrollBarPosition;
-	RECT scrubberRect;
-	Vector2 scrubberPositon;
+	/*RECT scrubberRect;
+	Vector2 scrubberPosition;
+	unique_ptr<HitArea> scrubberHitArea;*/
+	unique_ptr<Scrubber> scrubber;
+
+	int maxHeight;
 
 	unique_ptr<ImageButton> scrollBarUpButton;
 	unique_ptr<ImageButton> scrollBarDownButton;

@@ -35,6 +35,18 @@ bool MouseController::rightButtonDown() {
 	return currentButtons.rightButtonDown;
 }
 
+bool MouseController::leftButtonLastDown() {
+	return lastButtons.leftButtonDown;
+}
+
+bool MouseController::midButtonLastDown() {
+	return lastButtons.midButtonDown;
+}
+
+bool MouseController::rightButtonLastDown() {
+	return lastButtons.rightButtonDown;
+}
+
 void MouseController::leftButtonHandled() {
 
 	currentButtons.leftButtonDown = false;

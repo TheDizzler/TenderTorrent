@@ -71,6 +71,8 @@ void ListBox::addItems(vector<wstring> items) {
 	itemsToDisplay = maxDisplayItems;
 	if (listItems.size() < itemsToDisplay)
 		itemsToDisplay = listItems.size();
+
+	scrollBar->setScrollBar(listItems.size() * itemHeight);
 }
 
 
@@ -150,17 +152,15 @@ void ListBox::drawFrame(SpriteBatch* batch) {
 
 }
 
+
 void ListBox::drawSelected(SpriteBatch* batch, const Vector2& selectedPosition) {
 
 	font->draw(batch, listItems[itemSelected]->getText(), selectedPosition);
 }
+/** **** ListBox END **** **/
 
 
-
-
-
-
-
+/** **** ListItem **** **/
 ListItem::ListItem(Vector2 pos, const int width, const int height,
 	FontSet* font, ID3D11ShaderResourceView* pixelTexture) : TextLabel(pos, font) {
 
@@ -226,6 +226,8 @@ void ListItem::draw(SpriteBatch* batch) {
 		TextLabel::draw(batch);
 	}
 }
+/** **** ListItem END **** **/
+
 
 
 /** **** SCROLLBAR **** **/
@@ -238,7 +240,9 @@ ScrollBar::~ScrollBar() {
 }
 
 bool ScrollBar::initialize(ID3D11Device* device,
-	ID3D11ShaderResourceView* pixelTexture, size_t maxHeight) {
+	ID3D11ShaderResourceView* pixelTexture, size_t maxHght) {
+
+	maxHeight = maxHght;
 
 	scrollBarDownButton.reset(new ImageButton());
 	if (!scrollBarDownButton->load(device, Assets::scrollBarDownFile,
@@ -272,16 +276,30 @@ bool ScrollBar::initialize(ID3D11Device* device,
 	scrollBarPosition =
 		Vector2(position.x - scrollBarUpButton->getWidth(),
 			position.y + scrollBarUpButton->getHeight());
-	scrollbarRect.left = 0;
-	scrollbarRect.top = 0;
-	scrollbarRect.bottom = maxHeight
+	scrollBarRect.left = 0;
+	scrollBarRect.top = 0;
+	scrollBarRect.bottom = maxHeight
 		- scrollBarUpButton->getHeight() * 2;
-	scrollbarRect.right = scrollBarUpButton->getWidth();
+	scrollBarRect.right = scrollBarUpButton->getWidth();
+
+
+	/*scrubberPosition = scrollBarPosition;
+	scrubberRect = scrollbarRect;*/
 
 	pixel = pixelTexture;
 
+	Vector2 scrubberStartPos(
+		scrollBarPosition.x,
+		scrollBarPosition.y);
+
+	scrubber.reset(new Scrubber(pixel));
+	scrubber->setDimensions(scrubberStartPos,
+		Vector2(scrollBarRect.right, scrollBarRect.bottom),
+		scrollBarRect.bottom);
+
 	return true;
 }
+
 
 void ScrollBar::update(double deltaTime, MouseController* mouse) {
 
@@ -296,19 +314,134 @@ void ScrollBar::update(double deltaTime, MouseController* mouse) {
 	}
 
 	// update scrubber
+	scrubber->update(deltaTime, mouse);
 }
 
 void ScrollBar::draw(SpriteBatch * batch) {
 
 	scrollBarDownButton->draw(batch);
 	scrollBarUpButton->draw(batch);
-	batch->Draw(pixel, scrollBarPosition, &scrollbarRect,
+
+	// draw bar
+	batch->Draw(pixel, scrollBarPosition, &scrollBarRect,
 		DirectX::Colors::Gray.v, 0.0f, Vector2(0, 0), Vector2(1, 1),
 		SpriteEffects_None, 0.0f);
 
 	// draw scrubber
+	scrubber->draw(batch);
+
 }
+
+void ScrollBar::setScrollBar(int totalListHeight) {
+
+	float percentToShow = maxHeight / (float) totalListHeight;
+
+	//scrubberRect.bottom *= percentToShow;
+	Vector2 newSize(scrubber->getWidth(), scrubber->getHeight() * percentToShow);
+	scrubber->setSize(newSize);
+	/*wostringstream ws;
+	ws << "%: " << percentToShow;
+	ws << "    bottom: " << scrubberRect.bottom;
+	MessageBox(0, ws.str().c_str(), L"Test", MB_OK);*/
+}
+
 
 int ScrollBar::getWidth() {
 	return scrollBarDownButton->getWidth();
 }
+/** **** ScrollBar END **** **/
+
+
+/** **** Scrubber **** **/
+Scrubber::Scrubber(ID3D11ShaderResourceView* pixel)
+	: RectangleSprite(pixel) {
+}
+
+Scrubber::~Scrubber() {
+}
+
+void Scrubber::setDimensions(const Vector2& startPos, const Vector2& size,
+	const int scrllBrHght) {
+
+	width = size.x;
+	height = size.y;
+
+	minPosition = startPos;
+
+	scrollBarHeight = scrllBrHght;
+
+	maxPosition = startPos;
+	maxPosition.y += scrollBarHeight - height / 2;
+
+	position = minPosition;
+
+
+	sourceRect.left = 0;
+	sourceRect.top = 0;
+	sourceRect.bottom = height;
+	sourceRect.right = width;
+
+	hitArea.reset(new HitArea(minPosition,
+		Vector2(width*scale.x, height*scale.y)));
+
+}
+
+
+void Scrubber::setSize(const Vector2& size) {
+
+	width = size.x;
+	height = size.y;
+
+	sourceRect.left = 0;
+	sourceRect.top = 0;
+	sourceRect.bottom = height;
+	sourceRect.right = width;
+
+	maxPosition = minPosition;
+	maxPosition.y += scrollBarHeight - height;
+
+	hitArea.reset(new HitArea(minPosition,
+		Vector2(width*scale.x, height*scale.y)));
+}
+
+
+void Scrubber::update(double deltaTime, MouseController* mouse) {
+
+	isHover = hitArea->contains(mouse->getPosition());
+
+	if (isHover && mouse->leftButtonDown() && !mouse->leftButtonLastDown()) {
+		isPressed = true;
+		pressedPosition = mouse->getPosition().y - position.y;
+	} else if (!mouse->leftButtonDown())
+		isPressed = false;
+
+	if (isPressed) {
+		tint = selectedColor;
+		position.y = mouse->getPosition().y - pressedPosition;
+
+		if (position.y < minPosition.y)
+			position.y = minPosition.y;
+		else if (position.y > maxPosition.y)
+			position.y = maxPosition.y;
+
+	} else if (isHover)
+		tint = hoverColor;
+	else
+		tint = normalColor;
+}
+
+//void Scrubber::draw(SpriteBatch* batch) {
+//
+//
+//}
+
+
+
+bool Scrubber::pressed() {
+	/*if (isPressed) {
+		isPressed = false;
+		return true;
+	}*/
+	return isPressed;
+}
+/** **** Scrubber END **** **/
