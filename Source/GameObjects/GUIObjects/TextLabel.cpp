@@ -13,6 +13,11 @@ TextLabel::TextLabel(Vector2 pos, FontSet* fnt) {
 }
 
 
+TextLabel::TextLabel(FontSet* fnt) {
+
+	font = fnt;
+}
+
 TextLabel::~TextLabel() {
 }
 

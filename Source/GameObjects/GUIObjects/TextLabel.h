@@ -12,6 +12,8 @@ using namespace std;
 class TextLabel {
 public:
 	TextLabel(Vector2 position, FontSet* font);
+	/** A Textlabel with no set position. */
+	TextLabel(FontSet* font);
 	~TextLabel();
 
 	void draw(SpriteBatch* batch);

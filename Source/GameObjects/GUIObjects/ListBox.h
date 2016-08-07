@@ -11,13 +11,15 @@ using namespace std;
 class ListItem : public TextLabel {
 public:
 
-	ListItem(Vector2 pos, const int width, const int height,
+	ListItem(/*Vector2 pos, */const int width, const int height,
 		FontSet* fnt, ID3D11ShaderResourceView* pixelTexture);
 	~ListItem();
 
 
 	bool update(double deltaTime, MouseController* mouse);
-	virtual void draw(SpriteBatch* batch);
+	void updatePosition(const Vector2& position);
+	/*virtual */void draw(SpriteBatch* batch);
+
 
 	bool isSelected = false;
 
@@ -26,7 +28,8 @@ private:
 	RECT itemRect;
 	unique_ptr<HitArea> hitArea;
 
-	// position is for actual text only
+	/** itemPosition: position of entire Item.
+			position: for actual text only. */
 	Vector2 itemPosition;
 
 	size_t textMarginX = 10;
@@ -58,12 +61,13 @@ public:
 	Color hoverColor = Color((Vector3(.5, .75, 1)));;
 	Color selectedColor = Color((Vector3(0, .5, 1)));;
 
-
+	float percentAt = 0;
 
 private:
 
 	Vector2 minPosition;
 	Vector2 maxPosition;
+
 
 	int scrollBarHeight;
 
@@ -71,6 +75,8 @@ private:
 	bool isPressed = false;
 
 	int pressedPosition;
+	/* Difference between max position and min position. */
+	float minMaxDifference;
 };
 
 
@@ -89,6 +95,7 @@ public:
 
 	int getWidth();
 
+	float percentScroll = 0;
 private:
 
 	/* Position of entire scrollbar area. */
@@ -152,7 +159,7 @@ private:
 
 	unique_ptr<ScrollBar> scrollBar;
 
-
+	int firstItemToDisplay = 0;
 
 	ComPtr<ID3D11ShaderResourceView> whiteBG;
 

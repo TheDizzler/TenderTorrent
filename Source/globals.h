@@ -27,4 +27,12 @@ namespace Globals {
 		return false;
 	}
 
+	/* For reference purposes only. */
+	/*wstring convertIntToWString(float number) {
+
+		wostringstream ws;
+		ws << "The number: " << number;
+
+		return ws.str();
+	}*/
 };

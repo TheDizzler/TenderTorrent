@@ -290,7 +290,7 @@ bool ConfigScreen::initialize(ID3D11Device* device, MouseController* mouse) {
 		Assets::buttonUpFile, Assets::buttonDownFile))
 		return false;
 	button->action = ButtonAction::OK;
-	button->setText("ACCEPT");
+	button->setText("Apply");
 	button->setPosition(
 		Vector2(Globals::WINDOW_WIDTH / 2 + button->getWidth(),
 			Globals::WINDOW_HEIGHT - button->getHeight()));
