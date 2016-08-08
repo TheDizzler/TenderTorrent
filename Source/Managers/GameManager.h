@@ -32,7 +32,8 @@ public:
 	void loadMainMenu();
 	void exit();
 
-	vector<wstring> getAdapters();
+	vector<wstring> getAdapterListDescriptions();
+	vector<ComPtr<IDXGIAdapter> > getAdapterList();
 	vector<wstring> getDisplayModeList(size_t adapterIndex);
 	size_t getSelectedAdapterIndex();
 

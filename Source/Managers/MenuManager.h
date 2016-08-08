@@ -91,8 +91,8 @@ public:
 
 private:
 	unique_ptr<Dialog> exitDialog;
-	unique_ptr<TextLabel> test;
-	unique_ptr<TextLabel> mouseLabel;
+	TextLabel* test;
+	TextLabel* mouseLabel;
 
 	void confirmExit();
 

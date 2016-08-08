@@ -13,7 +13,7 @@ public:
 	virtual void draw(SpriteBatch* batch);
 
 
-	void addItems(vector<wstring> items);
+	//void addItems(vector<wstring> items);
 
 	void open();
 	void close();

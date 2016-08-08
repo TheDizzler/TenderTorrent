@@ -60,18 +60,23 @@ bool ListBox::initialize(ID3D11Device* device, const wchar_t* fontFile) {
 
 
 
-void ListBox::addItems(vector<wstring> items) {
+void ListBox::addItems(vector<ListItem*> items) {
 
-	//Vector2 pos = firstItemPos;
-
-	for (wstring item : items) {
+	/*for (wstring item : items) {
 
 		ListItem* listItem = new ListItem(
 			width - scrollBar->getWidth(), itemHeight,
 			font.get(), whiteBG.Get());
 		listItem->setText(item);
 		listItems.push_back(listItem);
-		//pos.y += itemHeight;
+	}*/
+
+	//listItems.insert(listItems.end(), items.begin(), items.end());
+
+	for (ListItem* item : items) {
+		item->initialize(width - scrollBar->getWidth(), itemHeight,
+			font.get(), whiteBG.Get());
+		listItems.push_back(item);
 	}
 
 	itemsToDisplay = maxDisplayItems;
@@ -104,8 +109,8 @@ void ListBox::update(double deltaTime, MouseController* mouse) {
 		ws << "\n" << "%: " << scrollBar->percentScroll;
 		OutputDebugString(ws.str().c_str());*/
 
-		if (firstItemToDisplay > listItems.size() - maxDisplayItems)
-			firstItemToDisplay = listItems.size() - maxDisplayItems;
+		/*if (firstItemToDisplay > listItems.size() - maxDisplayItems)
+			firstItemToDisplay = listItems.size() - maxDisplayItems;*/
 	}
 
 	Vector2 pos = firstItemPos;
@@ -122,16 +127,11 @@ void ListBox::update(double deltaTime, MouseController* mouse) {
 void ListBox::draw(SpriteBatch* batch) {
 
 	size_t shown = 0;
-	//for (ListItem* listItem : listItems) {
 	for (int i = firstItemToDisplay;
 		i < firstItemToDisplay + itemsToDisplay; ++i) {
 
 		listItems[i]->draw(batch);
-		//if (++shown >= maxDisplayItems) {
-		//	// display scrollbar
-		//	scrollBar->draw(batch);
-		//	break;
-		//}
+
 	}
 
 	if (itemsToDisplay == maxDisplayItems)
@@ -146,11 +146,17 @@ void ListBox::draw(SpriteBatch* batch) {
 
 void ListBox::drawFrame(SpriteBatch* batch) {
 
-	// upper horizontal frame
+	int realWidth;
+	if (listItems.size() > maxDisplayItems)
+		realWidth = width;
+	else
+		realWidth = width - scrollBar->getWidth();
+		// upper horizontal frame
 	RECT frame;
 	frame.left = 0;
 	frame.top = 0;
-	frame.right = width;
+
+	frame.right = realWidth;
 	frame.bottom = frameThickness; // thickness of frame
 	Vector2 framePos(position.x, position.y);
 
@@ -176,7 +182,7 @@ void ListBox::drawFrame(SpriteBatch* batch) {
 		SpriteEffects_None, 0.0f);
 
 	// right vertical frame
-	framePos.x += width;
+	framePos.x += realWidth;
 
 	batch->Draw(whiteBG.Get(), framePos, &frame,
 		DirectX::Colors::Black.v, 0.0f, Vector2(0, 0), Vector2(1, 1),
@@ -192,9 +198,30 @@ void ListBox::drawSelected(SpriteBatch* batch, const Vector2& selectedPosition) 
 /** **** ListBox END **** **/
 
 
+
+
+
 /** **** ListItem **** **/
-ListItem::ListItem(/*Vector2 pos, */const int width, const int height,
-	FontSet* font, ID3D11ShaderResourceView* pixelTexture) : TextLabel(font) {
+ListItem::ListItem(/*const int width, const int height,
+	FontSet* font, ID3D11ShaderResourceView* pixelTexture) : TextLabel(font*/) {
+
+	/*itemRect.left = 0;
+	itemRect.top = 0;
+	itemRect.bottom = height;
+	itemRect.right = width;
+
+	hitArea.reset(new HitArea(
+		Vector2::Zero, Vector2(width, height)));
+
+	pixel = pixelTexture;
+	itemPosition = Vector2::Zero;*/
+
+}
+
+ListItem::~ListItem() {
+}
+
+void ListItem::initialize(const int width, const int height, FontSet * fnt, ID3D11ShaderResourceView * pixelTexture) {
 
 	itemRect.left = 0;
 	itemRect.top = 0;
@@ -207,12 +234,19 @@ ListItem::ListItem(/*Vector2 pos, */const int width, const int height,
 	pixel = pixelTexture;
 	itemPosition = Vector2::Zero;
 
-	/*position.x += textMarginX;
-	position.y += textMarginY;*/
+	textLabel.reset(new TextLabel(fnt));
+
+	setText();
 }
 
-ListItem::~ListItem() {
+const wchar_t* ListItem::getText() {
+	return textLabel->getText();
 }
+
+
+//void ListItem<T>::initialize(T * itm) {
+//	item.reset(t);
+//}
 
 bool ListItem::update(double deltaTime, MouseController* mouse) {
 
@@ -239,9 +273,10 @@ void ListItem::updatePosition(const Vector2 & pos) {
 	itemPosition = pos;
 	hitArea->position = itemPosition;
 
-	position = pos;
+	Vector2 position(pos);
 	position.x += textMarginX;
 	position.y += textMarginY;
+	textLabel->position = position;
 }
 
 
@@ -252,24 +287,26 @@ void ListItem::draw(SpriteBatch* batch) {
 		batch->Draw(pixel, itemPosition, &itemRect,
 			DirectX::Colors::White.v, 0.0f, Vector2(0, 0), Vector2(1, 1),
 			SpriteEffects_None, 0.0f);
-		TextLabel::draw(batch, DirectX::Colors::Black.v);
+		textLabel->draw(batch, DirectX::Colors::Black.v);
 
 	} else if (isHover) { // draw hover color bg
 
 		batch->Draw(pixel, itemPosition, &itemRect,
 			DirectX::Colors::Aqua.v, 0.0f, Vector2(0, 0), Vector2(1, 1),
 			SpriteEffects_None, 0.0f);
-		TextLabel::draw(batch);
+		textLabel->draw(batch);
 
 	} else { // draw basic bg
 
 		batch->Draw(pixel, itemPosition, &itemRect,
 			DirectX::Colors::BurlyWood.v, 0.0f, Vector2(0, 0), Vector2(1, 1),
 			SpriteEffects_None, 0.0f);
-		TextLabel::draw(batch);
+		textLabel->draw(batch);
 	}
 }
 /** **** ListItem END **** **/
+
+
 
 
 
@@ -396,6 +433,8 @@ int ScrollBar::getWidth() {
 /** **** ScrollBar END **** **/
 
 
+
+
 /** **** Scrubber **** **/
 Scrubber::Scrubber(ID3D11ShaderResourceView* pixel)
 	: RectangleSprite(pixel) {
@@ -498,3 +537,29 @@ bool Scrubber::pressed() {
 	return isPressed;
 }
 /** **** Scrubber END **** **/
+
+
+
+
+
+void AdapterItem::setText() {
+
+	DXGI_ADAPTER_DESC desc;
+	ZeroMemory(&desc, sizeof(DXGI_ADAPTER_DESC));
+	adapter->GetDesc(&desc);
+	textLabel->setText(desc.Description);
+}
+
+
+void DisplayModeItem::setText() {
+
+	UINT width = modeDesc.Width;
+	UINT height = modeDesc.Height;
+
+	wostringstream mode;
+	//mode << "Format: " << displayModeList[i].Format;
+	mode << width << " x " << height;
+
+	textLabel->setText(mode.str());
+
+}

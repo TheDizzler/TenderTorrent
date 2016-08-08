@@ -97,7 +97,11 @@ void GameManager::exit() {
 	gameEngine->exit();
 }
 
-vector<wstring> GameManager::getAdapters() {
+vector<wstring> GameManager::getAdapterListDescriptions() {
+	return gameEngine->getAdapterListDescriptions();
+}
+
+vector<ComPtr<IDXGIAdapter>> GameManager::getAdapterList() {
 	return gameEngine->getAdapterList();
 }
 

@@ -8,22 +8,32 @@
 
 using namespace std;
 
-class ListItem : public TextLabel {
+//template<class T>
+class ListItem {
 public:
 
-	ListItem(/*Vector2 pos, */const int width, const int height,
-		FontSet* fnt, ID3D11ShaderResourceView* pixelTexture);
+	ListItem();
 	~ListItem();
 
+	void initialize(const int width, const int height,
+		FontSet* fnt, ID3D11ShaderResourceView* pixelTexture);
+
+
+	const wchar_t* getText();
 
 	bool update(double deltaTime, MouseController* mouse);
 	void updatePosition(const Vector2& position);
-	/*virtual */void draw(SpriteBatch* batch);
+	virtual void draw(SpriteBatch* batch);
 
 
 	bool isSelected = false;
 
-private:
+protected:
+
+	virtual void setText() = 0;
+
+	//unique_ptr<T> item;
+	unique_ptr<TextLabel> textLabel;
 
 	RECT itemRect;
 	unique_ptr<HitArea> hitArea;
@@ -39,6 +49,24 @@ private:
 	bool buttonDownLast = false;
 
 	ID3D11ShaderResourceView* pixel;
+
+};
+
+class DisplayModeItem : public ListItem {
+public:
+	DXGI_MODE_DESC modeDesc;
+
+protected:
+	virtual void setText();
+
+};
+
+class AdapterItem : public ListItem {
+public:
+	IDXGIAdapter* adapter;
+
+protected:
+	virtual void setText();
 
 };
 
@@ -126,7 +154,7 @@ public:
 
 	bool initialize(ID3D11Device* device, const wchar_t* fontFile);
 
-	void addItems(vector<wstring> items);
+	void addItems(vector<ListItem*> items);
 
 	void update(double deltaTime, MouseController* mouse);
 	void draw(SpriteBatch* batch);

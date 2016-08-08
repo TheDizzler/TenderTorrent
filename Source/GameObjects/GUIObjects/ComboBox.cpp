@@ -81,10 +81,10 @@ void ComboBox::draw(SpriteBatch* batch) {
 	button->draw(batch);
 }
 
-void ComboBox::addItems(vector<wstring> items) {
-
-	listBox->addItems(items);
-}
+//void ComboBox::addItems(vector<wstring> items) {
+//
+//	listBox->addItems(items);
+//}
 
 void ComboBox::open() {
 

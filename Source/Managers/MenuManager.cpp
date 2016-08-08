@@ -95,9 +95,8 @@ MenuScreen::MenuScreen(MenuManager * mngr, FontSet * fntst) {
 MenuScreen::~MenuScreen() {
 
 // textlabels are unique_ptrs
-	/*for each (TextLabel* label in textLabels)
-		if (label)
-			delete label;*/
+	for each (TextLabel* label in textLabels)
+		delete label;
 
 	for (TextButton* button : buttons)
 		delete button;
@@ -154,12 +153,12 @@ bool MainScreen::initialize(ID3D11Device* device, MouseController* mouse) {
 	buttons.push_back(button);
 
 
-	test.reset(new TextLabel(Vector2(10, 10), menuFont));
+	test = new TextLabel(Vector2(10, 10), menuFont);
 
-	textLabels.push_back(test.get());
+	textLabels.push_back(test);
 
-	mouseLabel.reset(new TextLabel(Vector2(10, 100), menuFont));
-	textLabels.push_back(mouseLabel.get());
+	mouseLabel = new TextLabel(Vector2(10, 100), menuFont);
+	textLabels.push_back(mouseLabel);
 
 
 	exitDialog.reset(new Dialog(
@@ -262,19 +261,43 @@ ConfigScreen::~ConfigScreen() {
 
 bool ConfigScreen::initialize(ID3D11Device* device, MouseController* mouse) {
 
+	// Labels for displaying selected info
+	TextLabel* label = new TextLabel(Vector2(50, 50), menuFont);
+	label->setText(L"test");
+	textLabels.push_back(label);
+
+	label = new TextLabel(Vector2(475, 50), menuFont);
+	label->setText(L"test 2");
+	textLabels.push_back(label);
+
 	ListBox* listbox = new ListBox(Vector2(50, 100), 400);
 	listbox->initialize(device, Assets::arialFontFile);
-	listbox->addItems(game->getAdapters());
+
+	vector<ListItem*> adapterItems;
+	for (ComPtr<IDXGIAdapter> adap : game->getAdapterList()) {
+		AdapterItem* item = new AdapterItem();
+		item->adapter = adap.Get();
+		adapterItems.push_back(item);
+	}
+
+	listbox->addItems(adapterItems);
 	listBoxes.push_back(listbox);
 
+	//listItems.clear();
+
+	
 	// Selected adapter display mode list
-	listbox = new ListBox(Vector2(475, 100), 150);
+	/*listbox = new ListBox(Vector2(475, 100), 175);
 	listbox->initialize(device, Assets::arialFontFile);
+
+	vector<ListItem*> displayModeItems;
+	for (
 	listbox->addItems(game->getDisplayModeList(game->getSelectedAdapterIndex()));
 	listBoxes.push_back(listbox);
 
+	textLabels[0]->setText(listBoxes[0]->getSelected())*/
 
-	TextButton* button = new TextButton();
+		TextButton* button = new TextButton();
 	if (!button->load(device, Assets::arialFontFile,
 		Assets::buttonUpFile, Assets::buttonDownFile))
 		return false;
@@ -320,6 +343,8 @@ void ConfigScreen::update(double deltaTime, BYTE keyboardState[256],
 
 		listbox->update(deltaTime, mouse);
 	}
+
+
 }
 
 void ConfigScreen::draw(SpriteBatch* batch) {
@@ -329,5 +354,8 @@ void ConfigScreen::draw(SpriteBatch* batch) {
 
 	for (ListBox* listbox : listBoxes)
 		listbox->draw(batch);
+
+	for (TextLabel* label : textLabels)
+		label->draw(batch);
 }
 

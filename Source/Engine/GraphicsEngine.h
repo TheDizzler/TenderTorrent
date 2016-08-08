@@ -31,7 +31,8 @@ public:
 
 
 	vector<wstring> getDisplayModeDescriptions();
-	vector<wstring> getAdapterList();
+	vector<wstring> getAdapterListDescriptions();
+	vector<ComPtr<IDXGIAdapter> > getAdapterList();
 	vector<wstring> getDisplayModeList(size_t adapterIndex);
 	vector<wstring> getAdapterOutputList();
 	size_t getSelectedAdapterIndex();
@@ -42,9 +43,11 @@ protected:
 	/* Adapter currently being used. */
 	ComPtr<IDXGIAdapter> selectedAdapter;
 	ComPtr<IDXGIOutput> selectedOutput;
+	size_t displayModeIndex = 0;
+	size_t lastDisplayModeIndex;
 	DXGI_MODE_DESC selectedDisplayMode;
-	DXGI_MODE_DESC* displayModeList; // all possible display modes with this monitor/video card 
-	
+	//DXGI_MODE_DESC* displayModeList; 
+
 
 
 	unsigned int numModes = 0;
@@ -62,14 +65,16 @@ protected:
 	D3D11_VIEWPORT viewport;
 	vector<ComPtr<IDXGIAdapter> > adapters;
 	vector<ComPtr<IDXGIOutput> > adapterOutputs;
+	vector<DXGI_MODE_DESC> displayModeList; // all possible display modes with this monitor/video card 
 	size_t selectedAdapterIndex;
+
 
 	bool getDisplayAdapters();
 	bool initializeAdapter(HWND hwnd, int adapterIndex);
 	bool initializeRenderTarget();
 	void initializeViewport();
 	bool getDisplayModeList(ComPtr<IDXGIOutput> adapterOut);
-	
+	void setDisplayMode(size_t selectedIndex);
 
 };
 
