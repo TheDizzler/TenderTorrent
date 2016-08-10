@@ -12,6 +12,24 @@ class MenuScreen;
 class MainScreen;
 class ConfigScreen;
 
+class DisplayModeItem : public ListItem {
+public:
+	DXGI_MODE_DESC modeDesc;
+
+protected:
+	virtual void setText();
+
+};
+
+class AdapterItem : public ListItem {
+public:
+	IDXGIAdapter* adapter;
+
+protected:
+	virtual void setText();
+
+};
+
 class MenuManager : public Screen {
 public:
 	MenuManager();

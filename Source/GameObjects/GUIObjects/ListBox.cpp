@@ -53,25 +53,12 @@ bool ListBox::initialize(ID3D11Device* device, const wchar_t* fontFile) {
 		return false;
 	}
 
-
-
 	return true;
 }
 
 
 
 void ListBox::addItems(vector<ListItem*> items) {
-
-	/*for (wstring item : items) {
-
-		ListItem* listItem = new ListItem(
-			width - scrollBar->getWidth(), itemHeight,
-			font.get(), whiteBG.Get());
-		listItem->setText(item);
-		listItems.push_back(listItem);
-	}*/
-
-	//listItems.insert(listItems.end(), items.begin(), items.end());
 
 	for (ListItem* item : items) {
 		item->initialize(width - scrollBar->getWidth(), itemHeight,
@@ -83,27 +70,34 @@ void ListBox::addItems(vector<ListItem*> items) {
 	if (listItems.size() < itemsToDisplay)
 		itemsToDisplay = listItems.size();
 
-	scrollBar->setScrollBar(listItems.size() * itemHeight);
+	scrollBar->setScrollBar(listItems.size(), itemHeight, maxDisplayItems);
+
 }
 
 
-void ListBox::update(double deltaTime, MouseController* mouse) {
+bool ListBox::update(double deltaTime, MouseController* mouse) {
 
-
+	bool changesMade = false;
 	for (ListItem* item : listItems) {
-		if (item->update(deltaTime, mouse) && !multiSelect) {
-			for (ListItem* unselect : listItems) {
-				if (unselect == item)
-					continue;
-				unselect->isSelected = false;
+		if (item->update(deltaTime, mouse)) {
+			if (!multiSelect) {
+				for (int i = 0; i < listItems.size(); ++i) {
+					if (listItems[i] == item) {
+						selectedIndex = i;
+						continue;
+					}
+					listItems[i]->isSelected = false;
+				}
 			}
+			changesMade = true;
 		}
 	}
 
-	if (itemsToDisplay == maxDisplayItems) {
+
+	if (itemsToDisplay == maxDisplayItems || alwaysShowScrollBar) {
 		scrollBar->update(deltaTime, mouse);
 		firstItemToDisplay = (scrollBar->percentScroll)
-			* listItems.size();
+			* (listItems.size() - maxDisplayItems);
 
 		/*wostringstream ws;
 		ws << "\n" << "%: " << scrollBar->percentScroll;
@@ -121,6 +115,8 @@ void ListBox::update(double deltaTime, MouseController* mouse) {
 		listItems[i]->updatePosition(pos);
 		pos.y += itemHeight;
 	}
+
+	return changesMade;
 }
 
 
@@ -134,7 +130,7 @@ void ListBox::draw(SpriteBatch* batch) {
 
 	}
 
-	if (itemsToDisplay == maxDisplayItems)
+	if (itemsToDisplay == maxDisplayItems || alwaysShowScrollBar)
 		scrollBar->draw(batch);
 
 	if (listItems.size() > 0) { // draw frame
@@ -143,11 +139,11 @@ void ListBox::draw(SpriteBatch* batch) {
 
 }
 
-
+/** THIS CAN BE OPTIMIZED. **/
 void ListBox::drawFrame(SpriteBatch* batch) {
 
 	int realWidth;
-	if (listItems.size() > maxDisplayItems)
+	if (listItems.size() > maxDisplayItems || alwaysShowScrollBar)
 		realWidth = width;
 	else
 		realWidth = width - scrollBar->getWidth();
@@ -193,7 +189,24 @@ void ListBox::drawFrame(SpriteBatch* batch) {
 
 void ListBox::drawSelected(SpriteBatch* batch, const Vector2& selectedPosition) {
 
-	font->draw(batch, listItems[itemSelected]->getText(), selectedPosition);
+	font->draw(batch, listItems[selectedIndex]->toString(), selectedPosition);
+}
+
+
+void ListBox::setSelected(size_t newIndex) {
+
+	selectedIndex = newIndex;
+	if (!multiSelect) {
+		for (ListItem* unselect : listItems) {
+			unselect->isSelected = false;
+		}
+	}
+	listItems[selectedIndex]->isSelected = true;
+}
+
+
+ListItem * ListBox::getSelected() {
+	return listItems[selectedIndex];
 }
 /** **** ListBox END **** **/
 
@@ -202,20 +215,7 @@ void ListBox::drawSelected(SpriteBatch* batch, const Vector2& selectedPosition) 
 
 
 /** **** ListItem **** **/
-ListItem::ListItem(/*const int width, const int height,
-	FontSet* font, ID3D11ShaderResourceView* pixelTexture) : TextLabel(font*/) {
-
-	/*itemRect.left = 0;
-	itemRect.top = 0;
-	itemRect.bottom = height;
-	itemRect.right = width;
-
-	hitArea.reset(new HitArea(
-		Vector2::Zero, Vector2(width, height)));
-
-	pixel = pixelTexture;
-	itemPosition = Vector2::Zero;*/
-
+ListItem::ListItem() {
 }
 
 ListItem::~ListItem() {
@@ -239,18 +239,12 @@ void ListItem::initialize(const int width, const int height, FontSet * fnt, ID3D
 	setText();
 }
 
-const wchar_t* ListItem::getText() {
+const wchar_t* ListItem::toString() {
 	return textLabel->getText();
 }
 
 
-//void ListItem<T>::initialize(T * itm) {
-//	item.reset(t);
-//}
-
 bool ListItem::update(double deltaTime, MouseController* mouse) {
-
-
 
 	if ((isHover = hitArea->contains(mouse->getPosition())) == true) {
 
@@ -381,22 +375,62 @@ bool ScrollBar::initialize(ID3D11Device* device,
 }
 
 
+void ScrollBar::setScrollBar(int totalItems, int itemHeight, int maxDisplayItems) {
+
+	//float totalListHeight = totalItems*itemHeight;
+	percentForOneItem = (double) 1 / (totalItems - maxDisplayItems);
+	//float percentToShow = maxHeight / (float) totalListHeight;
+	double percentToShow;
+	if (totalItems < maxDisplayItems) {
+		percentToShow = 1;
+		percentForOneItem = 0;
+		scrollBarRect.bottom = (totalItems * itemHeight)
+			- scrollBarUpButton->getHeight() * 2;
+
+		Vector2 newButtonPos = scrollBarDownButton->getPosition();
+		newButtonPos.y = scrollBarPosition.y + scrollBarRect.bottom + scrollBarDownButton->getHeight() / 2;
+		scrollBarDownButton->setPosition(newButtonPos);
+
+	} else {
+		percentToShow = percentForOneItem * maxDisplayItems;
+		scrollBarRect.bottom = maxHeight
+			- scrollBarUpButton->getHeight() * 2;
+	}
+	/*wostringstream ws;
+	ws << "\n" << "percentForOneItem: " << percentForOneItem;
+	ws << " increment: " << increment;
+	OutputDebugString(ws.str().c_str());*/
+
+
+	scrubber->setDimensions(
+		Vector2(scrollBarPosition.x, scrollBarPosition.y),
+		Vector2(scrollBarRect.right, scrollBarRect.bottom * percentToShow),
+		scrollBarRect.bottom);
+}
+
+
 void ScrollBar::update(double deltaTime, MouseController* mouse) {
+
+	// update scrubber
+	scrubber->update(deltaTime, mouse);
 
 	scrollBarDownButton->update(deltaTime, mouse);
 	if (scrollBarDownButton->clicked()) {
 		// scroll down
+		scrubber->scroll(percentForOneItem);
+		//OutputDebugString(L"Clicked down!");
 	}
 
 	scrollBarUpButton->update(deltaTime, mouse);
 	if (scrollBarUpButton->clicked()) {
 		// scroll up
+		scrubber->scroll(-percentForOneItem);
+		//OutputDebugString(L"Clicked up!!");
 	}
 
-	// update scrubber
-	scrubber->update(deltaTime, mouse);
 	percentScroll = scrubber->percentAt;
 }
+
 
 void ScrollBar::draw(SpriteBatch * batch) {
 
@@ -413,18 +447,6 @@ void ScrollBar::draw(SpriteBatch * batch) {
 
 }
 
-void ScrollBar::setScrollBar(int totalListHeight) {
-
-	float percentToShow = maxHeight / (float) totalListHeight;
-
-	//scrubberRect.bottom *= percentToShow;
-	Vector2 newSize(scrubber->getWidth(), scrubber->getHeight() * percentToShow);
-	scrubber->setSize(newSize);
-	/*wostringstream ws;
-	ws << "%: " << percentToShow;
-	ws << "    bottom: " << scrubberRect.bottom;
-	MessageBox(0, ws.str().c_str(), L"Test", MB_OK);*/
-}
 
 
 int ScrollBar::getWidth() {
@@ -454,7 +476,7 @@ void Scrubber::setDimensions(const Vector2& startPos, const Vector2& size,
 	scrollBarHeight = scrllBrHght;
 
 	maxPosition = startPos;
-	maxPosition.y += scrollBarHeight - height / 2;
+	maxPosition.y += scrollBarHeight - height;
 
 	position = minPosition;
 
@@ -467,28 +489,44 @@ void Scrubber::setDimensions(const Vector2& startPos, const Vector2& size,
 	hitArea.reset(new HitArea(minPosition,
 		Vector2(width*scale.x, height*scale.y)));
 
-}
-
-
-void Scrubber::setSize(const Vector2& size) {
-
-	width = size.x;
-	height = size.y;
-
-	sourceRect.left = 0;
-	sourceRect.top = 0;
-	sourceRect.bottom = height;
-	sourceRect.right = width;
-
-	maxPosition = minPosition;
-	maxPosition.y += scrollBarHeight - height;
-
-	hitArea.reset(new HitArea(minPosition,
-		Vector2(width*scale.x, height*scale.y)));
-
 	minMaxDifference = maxPosition.y - minPosition.y;
 }
 
+
+//void Scrubber::setSize(const Vector2& size) {
+//
+//	width = size.x;
+//	height = size.y;
+//
+//	sourceRect.left = 0;
+//	sourceRect.top = 0;
+//	sourceRect.bottom = height;
+//	sourceRect.right = width;
+//
+//	maxPosition = minPosition;
+//	maxPosition.y += scrollBarHeight - height;
+//
+//	hitArea.reset(new HitArea(minPosition,
+//		Vector2(width*scale.x, height*scale.y)));
+//
+//	minMaxDifference = maxPosition.y - minPosition.y;
+//}
+
+
+//void Scrubber::setScrubberHeight(double newHeight) {
+//
+//	height = newHeight;
+//
+//	sourceRect.bottom = newHeight;
+//
+//	maxPosition.y += scrollBarHeight - newHeight;
+//
+//	hitArea.reset(new HitArea(minPosition,
+//		Vector2(width*scale.x, newHeight*scale.y)));
+//
+//	minMaxDifference = maxPosition.y - minPosition.y;
+//
+//}
 
 void Scrubber::update(double deltaTime, MouseController* mouse) {
 
@@ -503,6 +541,8 @@ void Scrubber::update(double deltaTime, MouseController* mouse) {
 
 	if (isPressed) {
 		tint = selectedColor;
+		if (minMaxDifference == 0)
+			return;
 		position.y = mouse->getPosition().y - pressedPosition;
 
 		if (position.y < minPosition.y)
@@ -510,11 +550,22 @@ void Scrubber::update(double deltaTime, MouseController* mouse) {
 		else if (position.y > maxPosition.y)
 			position.y = maxPosition.y;
 
-		hitArea->position = Vector2(position.x, position.y);
+		//hitArea->position = Vector2(position.x, position.y);
+		hitArea->position.y = position.y;
 
-		float distanceBetweenPosAndMax = maxPosition.y - position.y;
+		double distanceBetweenPosAndMax = maxPosition.y - position.y;
+		/*if (minMaxDifference == 0)
+			percentAt = 0;
+		else*/
 		percentAt = (minMaxDifference - distanceBetweenPosAndMax)
-			/ (minMaxDifference * 2);
+			/ (minMaxDifference);
+
+		/*wostringstream ws;
+		ws << "percentAt: " << percentAt;
+		ws << " distanceBetweenPosAndMax: " << distanceBetweenPosAndMax;
+		ws << " position.y: " << position.y;
+		ws << " maxPosition.y: " << maxPosition.y << "\n";
+		OutputDebugString(ws.str().c_str());*/
 
 	} else if (isHover)
 		tint = hoverColor;
@@ -522,11 +573,22 @@ void Scrubber::update(double deltaTime, MouseController* mouse) {
 		tint = normalColor;
 }
 
-//void Scrubber::draw(SpriteBatch* batch) {
-//
-//
-//}
+void Scrubber::scroll(double increment) {
 
+	percentAt += increment;
+	if (percentAt < 0)
+		percentAt = 0;
+	else if (percentAt > 1)
+		percentAt = 1;
+
+	position.y = (minMaxDifference * percentAt) + minPosition.y;
+	hitArea->position.y = position.y;
+
+	//wostringstream ws;
+	//ws << "percentAt: " << percentAt;
+	//ws << " increment: " << increment << "\n";
+	//OutputDebugString(ws.str().c_str());
+}
 
 
 bool Scrubber::pressed() {
@@ -537,29 +599,3 @@ bool Scrubber::pressed() {
 	return isPressed;
 }
 /** **** Scrubber END **** **/
-
-
-
-
-
-void AdapterItem::setText() {
-
-	DXGI_ADAPTER_DESC desc;
-	ZeroMemory(&desc, sizeof(DXGI_ADAPTER_DESC));
-	adapter->GetDesc(&desc);
-	textLabel->setText(desc.Description);
-}
-
-
-void DisplayModeItem::setText() {
-
-	UINT width = modeDesc.Width;
-	UINT height = modeDesc.Height;
-
-	wostringstream mode;
-	//mode << "Format: " << displayModeList[i].Format;
-	mode << width << " x " << height;
-
-	textLabel->setText(mode.str());
-
-}

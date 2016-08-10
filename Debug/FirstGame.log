@@ -3,15 +3,16 @@
 d:\github projects\firstgame\source\assets.h(55): warning C4996: 'mbstowcs': This function or variable may be unsafe. Consider using mbstowcs_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdlib.h(920): note: see declaration of 'mbstowcs'
 d:\github projects\firstgame\source\gameobjects\guiobjects\button.h(10): warning C4091: 'static ': ignored on left of 'ButtonAction' when no variable is declared
-d:\github projects\firstgame\source\gameobjects\guiobjects\listbox.cpp(106): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-d:\github projects\firstgame\source\gameobjects\guiobjects\listbox.cpp(119): warning C4018: '<': signed/unsigned mismatch
-d:\github projects\firstgame\source\gameobjects\guiobjects\listbox.cpp(131): warning C4018: '<': signed/unsigned mismatch
+d:\github projects\firstgame\source\gameobjects\guiobjects\listbox.cpp(84): warning C4018: '<': signed/unsigned mismatch
+d:\github projects\firstgame\source\gameobjects\guiobjects\listbox.cpp(100): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+d:\github projects\firstgame\source\gameobjects\guiobjects\listbox.cpp(113): warning C4018: '<': signed/unsigned mismatch
+d:\github projects\firstgame\source\gameobjects\guiobjects\listbox.cpp(127): warning C4018: '<': signed/unsigned mismatch
 d:\github projects\firstgame\source\gameobjects\guiobjects\listbox.cpp(232): warning C4244: 'argument': conversion from 'const int' to 'float', possible loss of data
-d:\github projects\firstgame\source\gameobjects\guiobjects\listbox.cpp(377): warning C4244: 'argument': conversion from 'LONG' to 'float', possible loss of data
-d:\github projects\firstgame\source\gameobjects\guiobjects\listbox.cpp(421): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-d:\github projects\firstgame\source\gameobjects\guiobjects\listbox.cpp(449): warning C4244: '=': conversion from 'const float' to 'UINT', possible loss of data
-d:\github projects\firstgame\source\gameobjects\guiobjects\listbox.cpp(450): warning C4244: '=': conversion from 'const float' to 'UINT', possible loss of data
-d:\github projects\firstgame\source\gameobjects\guiobjects\listbox.cpp(475): warning C4244: '=': conversion from 'const float' to 'UINT', possible loss of data
-d:\github projects\firstgame\source\gameobjects\guiobjects\listbox.cpp(476): warning C4244: '=': conversion from 'const float' to 'UINT', possible loss of data
-d:\github projects\firstgame\source\gameobjects\guiobjects\listbox.cpp(499): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+d:\github projects\firstgame\source\gameobjects\guiobjects\listbox.cpp(371): warning C4244: 'argument': conversion from 'LONG' to 'float', possible loss of data
+d:\github projects\firstgame\source\gameobjects\guiobjects\listbox.cpp(407): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+d:\github projects\firstgame\source\gameobjects\guiobjects\listbox.cpp(407): warning C4244: 'argument': conversion from 'LONG' to 'float', possible loss of data
+d:\github projects\firstgame\source\gameobjects\guiobjects\listbox.cpp(471): warning C4244: '=': conversion from 'const float' to 'UINT', possible loss of data
+d:\github projects\firstgame\source\gameobjects\guiobjects\listbox.cpp(472): warning C4244: '=': conversion from 'const float' to 'UINT', possible loss of data
+d:\github projects\firstgame\source\gameobjects\guiobjects\listbox.cpp(537): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+d:\github projects\firstgame\source\gameobjects\guiobjects\listbox.cpp(584): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
   FirstGame.vcxproj -> D:\github projects\FirstGame\Debug\FirstGame.exe

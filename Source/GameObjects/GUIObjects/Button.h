@@ -21,6 +21,7 @@ public:
 	virtual void draw(SpriteBatch* batch) = 0;
 
 	virtual void setPosition(Vector2& position);
+	const Vector2& getPosition();
 
 	void setScale(const Vector2& scale);
 	int getWidth();

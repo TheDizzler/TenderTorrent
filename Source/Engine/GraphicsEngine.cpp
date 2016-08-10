@@ -26,7 +26,7 @@ bool GraphicsEngine::initD3D(HWND hwnd) {
 	}
 
 
-	if (!initializeAdapter(hwnd, 0)) {
+	if (!initializeAdapter(hwnd, selectedAdapterIndex)) {
 		MessageBox(NULL, L"Error initializing Adapter", L"ERROR", MB_OK);
 		return false;
 	}
@@ -91,7 +91,7 @@ bool GraphicsEngine::getDisplayAdapters() {
 	}
 
 	// set defaults
-	adapter = adapters[0];
+	adapter = adapters[selectedAdapterIndex];
 	selectedOutput = adapterOutputs[0];
 
 	return true;
@@ -116,7 +116,7 @@ bool GraphicsEngine::initializeAdapter(HWND hwnd, int adapterIndex) {
 	}*/
 
 	/** **** Create SWAP CHAIN **** **/
-	setDisplayMode(displayModeIndex);
+	setDisplayMode(selectedDisplayModeIndex);
 
 	//DXGI_MODE_DESC bufferDesc;
 
@@ -259,7 +259,7 @@ bool GraphicsEngine::getDisplayModeList(ComPtr<IDXGIOutput> adapterOut) {
 	for (int i = 0; i < displayModeList.size(); ++i) {
 		if (displayModeList[i].Height == Globals::WINDOW_HEIGHT
 			&& displayModeList[i].Width == Globals::WINDOW_WIDTH) {
-			displayModeIndex = i;
+			selectedDisplayModeIndex = i;
 			selectedDisplayMode = displayModeList[i];
 			break;
 		}
@@ -308,12 +308,12 @@ bool GraphicsEngine::getDisplayModeList(ComPtr<IDXGIOutput> adapterOut) {
 
 void GraphicsEngine::setDisplayMode(size_t selectedIndex) {
 
-	lastDisplayModeIndex = displayModeIndex;
+	lastDisplayModeIndex = selectedDisplayModeIndex;
 		//ZeroMemory(&lastDisplayMode, sizeof(DXGI_MODE_DESC));
 		//lastDisplayMode = selectedDisplayMode;
 	//ZeroMemory(&selectedDisplayMode, sizeof(DXGI_MODE_DESC));
-	displayModeIndex = selectedIndex;
-	selectedDisplayMode = displayModeList[displayModeIndex];
+	selectedDisplayModeIndex = selectedIndex;
+	selectedDisplayMode = displayModeList[selectedDisplayModeIndex];
 	if (Globals::vsync_enabled != 1) {
 		selectedDisplayMode.RefreshRate.Numerator = 60;
 		selectedDisplayMode.RefreshRate.Denominator = 1;
@@ -375,7 +375,7 @@ vector<ComPtr<IDXGIAdapter>> GraphicsEngine::getAdapterList() {
 
 
 
-vector<wstring> GraphicsEngine::getDisplayModeList(size_t adapterIndex) {
+vector<wstring> GraphicsEngine::getDisplayModeListDescriptions(size_t adapterIndex) {
 
 
 	ComPtr<IDXGIOutput> adapterOut = adapterOutputs[adapterIndex];
@@ -403,6 +403,34 @@ vector<wstring> GraphicsEngine::getDisplayModeList(size_t adapterIndex) {
 	return getDisplayModeDescriptions();
 }
 
+/* Deprecate? */
+vector<DXGI_MODE_DESC> GraphicsEngine::getDisplayModeList(size_t adapterIndex) {
+
+	UINT totalModes;
+	ComPtr<IDXGIOutput> adapterOut = adapterOutputs[adapterIndex];
+	// Find total modes that fit the DXGI_FORMAT_R8G8B8A8_UNORM display format
+	if (Globals::reportError(
+		adapterOut->GetDisplayModeList(
+			DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED,
+			&totalModes, NULL))) {
+		MessageBox(NULL, L"Error enumerating display modes.", L"ERROR", MB_OK);
+		return vector<DXGI_MODE_DESC>();
+	}
+
+	vector<DXGI_MODE_DESC> modeList;
+	modeList.resize(numModes);
+	if (Globals::reportError(
+		adapterOut->GetDisplayModeList(
+			DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED,
+			&totalModes, &modeList[0]))) {
+
+		MessageBox(NULL, L"Error getting display mode list.", L"ERROR", MB_OK);
+		return vector<DXGI_MODE_DESC>();
+	}
+
+	return modeList;
+}
+
 
 vector<wstring> GraphicsEngine::getAdapterOutputList() {
 
@@ -420,4 +448,8 @@ vector<wstring> GraphicsEngine::getAdapterOutputList() {
 
 size_t GraphicsEngine::getSelectedAdapterIndex() {
 	return selectedAdapterIndex;
+}
+
+size_t GraphicsEngine::getSelectedDisplayModeIndex() {
+	return selectedDisplayModeIndex;
 }

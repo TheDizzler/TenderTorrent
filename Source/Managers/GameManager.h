@@ -34,8 +34,10 @@ public:
 
 	vector<wstring> getAdapterListDescriptions();
 	vector<ComPtr<IDXGIAdapter> > getAdapterList();
-	vector<wstring> getDisplayModeList(size_t adapterIndex);
+	vector<wstring> getDisplayModeListDescriptions(size_t adapterIndex);
+	vector<DXGI_MODE_DESC> getDisplayModeList(size_t adapterIndex);
 	size_t getSelectedAdapterIndex();
+	size_t getSelectedDisplayMode();
 
 private:
 

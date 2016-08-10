@@ -33,9 +33,11 @@ public:
 	vector<wstring> getDisplayModeDescriptions();
 	vector<wstring> getAdapterListDescriptions();
 	vector<ComPtr<IDXGIAdapter> > getAdapterList();
-	vector<wstring> getDisplayModeList(size_t adapterIndex);
+	vector<wstring> getDisplayModeListDescriptions(size_t adapterIndex);
+	vector<DXGI_MODE_DESC> getDisplayModeList(size_t adapterIndex);
 	vector<wstring> getAdapterOutputList();
 	size_t getSelectedAdapterIndex();
+	size_t getSelectedDisplayModeIndex();
 protected:
 
 	unique_ptr<SpriteBatch> batch;
@@ -43,9 +45,10 @@ protected:
 	/* Adapter currently being used. */
 	ComPtr<IDXGIAdapter> selectedAdapter;
 	ComPtr<IDXGIOutput> selectedOutput;
-	size_t displayModeIndex = 0;
-	size_t lastDisplayModeIndex;
 	DXGI_MODE_DESC selectedDisplayMode;
+	size_t selectedDisplayModeIndex = 0;
+	size_t lastDisplayModeIndex = 0;
+	size_t selectedAdapterIndex = 0;
 	//DXGI_MODE_DESC* displayModeList; 
 
 
@@ -66,7 +69,7 @@ protected:
 	vector<ComPtr<IDXGIAdapter> > adapters;
 	vector<ComPtr<IDXGIOutput> > adapterOutputs;
 	vector<DXGI_MODE_DESC> displayModeList; // all possible display modes with this monitor/video card 
-	size_t selectedAdapterIndex;
+	
 
 
 	bool getDisplayAdapters();

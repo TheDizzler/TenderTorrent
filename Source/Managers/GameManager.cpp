@@ -24,7 +24,7 @@ bool GameManager::initializeGame(ID3D11Device* dvc, MouseController* ms) {
 	menuScreen->setGameManager(this);
 	if (!menuScreen->initialize(device, mouse))
 		return false;
-	
+
 
 	levelScreen.reset(new LevelManager());
 	if (!levelScreen->initialize(device, mouse))
@@ -105,12 +105,21 @@ vector<ComPtr<IDXGIAdapter>> GameManager::getAdapterList() {
 	return gameEngine->getAdapterList();
 }
 
-vector<wstring> GameManager::getDisplayModeList(size_t adapterIndex) {
+vector<wstring> GameManager::getDisplayModeListDescriptions(size_t adapterIndex) {
+	return gameEngine->getDisplayModeListDescriptions(adapterIndex);
+}
+
+vector<DXGI_MODE_DESC> GameManager::getDisplayModeList(size_t adapterIndex) {
 	return gameEngine->getDisplayModeList(adapterIndex);
 }
 
+
 size_t GameManager::getSelectedAdapterIndex() {
 	return gameEngine->getSelectedAdapterIndex();
+}
+
+size_t GameManager::getSelectedDisplayMode() {
+	return gameEngine->getSelectedDisplayModeIndex();
 }
 
 

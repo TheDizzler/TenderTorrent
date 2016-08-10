@@ -19,8 +19,9 @@ public:
 		FontSet* fnt, ID3D11ShaderResourceView* pixelTexture);
 
 
-	const wchar_t* getText();
+	const wchar_t* toString();
 
+	/** Returns true if item selected. */
 	bool update(double deltaTime, MouseController* mouse);
 	void updatePosition(const Vector2& position);
 	virtual void draw(SpriteBatch* batch);
@@ -52,35 +53,21 @@ protected:
 
 };
 
-class DisplayModeItem : public ListItem {
-public:
-	DXGI_MODE_DESC modeDesc;
 
-protected:
-	virtual void setText();
-
-};
-
-class AdapterItem : public ListItem {
-public:
-	IDXGIAdapter* adapter;
-
-protected:
-	virtual void setText();
-
-};
 
 class Scrubber : public RectangleSprite {
 public:
 	Scrubber(ID3D11ShaderResourceView* pixel);
 	~Scrubber();
 
-	virtual void setDimensions(const Vector2& startPosition,
+	void setDimensions(const Vector2& startPosition,
 		const Vector2& size, const int scrollBarHeight);
-	void setSize(const Vector2& size);
-
+	//void setSize(const Vector2& size);
+	//void setScrubberHeight(double newHeight);
 	virtual void update(double deltaTime, MouseController* mouse);
 	//virtual void draw(SpriteBatch* batch);
+
+	void scroll(double increment);
 
 	bool pressed();
 
@@ -89,7 +76,7 @@ public:
 	Color hoverColor = Color((Vector3(.5, .75, 1)));;
 	Color selectedColor = Color((Vector3(0, .5, 1)));;
 
-	float percentAt = 0;
+	double percentAt = 0;
 
 private:
 
@@ -104,7 +91,7 @@ private:
 
 	int pressedPosition;
 	/* Difference between max position and min position. */
-	float minMaxDifference;
+	double minMaxDifference;
 };
 
 
@@ -115,15 +102,17 @@ public:
 
 	bool initialize(ID3D11Device* device,
 		ID3D11ShaderResourceView* pixelTexture, size_t maxHeight);
+	void setScrollBar(int totalItems, int itemHeight, int maxDisplayItems);
 
 	void update(double deltaTime, MouseController* mouse);
 	void draw(SpriteBatch* batch);
 
-	void setScrollBar(int totalListHeight);
+	//void setScrollBar(int totalListHeight);
+	
 
 	int getWidth();
 
-	float percentScroll = 0;
+	double percentScroll = 0;
 private:
 
 	/* Position of entire scrollbar area. */
@@ -132,12 +121,13 @@ private:
 	RECT scrollBarRect;
 	/* Position of bar part of scroll bar (minus buttons) */
 	Vector2 scrollBarPosition;
-	/*RECT scrubberRect;
-	Vector2 scrubberPosition;
-	unique_ptr<HitArea> scrubberHitArea;*/
 	unique_ptr<Scrubber> scrubber;
 
 	int maxHeight;
+
+	/* What percent of scroll is equivalent to one item. */
+	double percentForOneItem;
+
 
 	unique_ptr<ImageButton> scrollBarUpButton;
 	unique_ptr<ImageButton> scrollBarDownButton;
@@ -156,15 +146,19 @@ public:
 
 	void addItems(vector<ListItem*> items);
 
-	void update(double deltaTime, MouseController* mouse);
+	/** Returns true if selection changed. */
+	bool update(double deltaTime, MouseController* mouse);
 	void draw(SpriteBatch* batch);
 	void drawFrame(SpriteBatch* batch);
 
 	void drawSelected(SpriteBatch* batch, const Vector2& selectedPosition);
 
+	void setSelected(size_t newIndex);
+	ListItem* getSelected();
 
 
 	bool multiSelect = false;
+	bool alwaysShowScrollBar = false;
 	/* Max items to display before showing scroll bar. */
 	size_t maxDisplayItems = 7;
 
@@ -177,10 +171,11 @@ private:
 	Vector2 position;
 	/* Always smaller or equal to maxDisplayItems. */
 	size_t itemsToDisplay;
+	
 
 	unique_ptr<FontSet> font;
 	vector<ListItem*> listItems;
-	size_t itemSelected;
+	size_t selectedIndex = 0;
 
 	size_t itemHeight = 32;
 	Vector2 firstItemPos;

@@ -20,9 +20,9 @@ void Button::update(double deltaTime, MouseController* mouse) {
 		if (!isHover)
 			isSelected = false;
 		else if (!lastButtonStateDown && mouse->leftButtonDown()) {
-				isSelected = true;
-				//mouse->leftButtonHandled();
-			}
+			isSelected = true;
+			//mouse->leftButtonHandled();
+		}
 
 	}
 
@@ -38,6 +38,10 @@ void Button::setPosition(Vector2& pos) {
 	pressedSprite->setPosition(position);
 
 	hitArea = normalSprite->getHitArea();
+}
+
+const Vector2& Button::getPosition() {
+	return position;
 }
 
 

@@ -281,23 +281,31 @@ bool ConfigScreen::initialize(ID3D11Device* device, MouseController* mouse) {
 	}
 
 	listbox->addItems(adapterItems);
+	listbox->setSelected(game->getSelectedAdapterIndex());
 	listBoxes.push_back(listbox);
 
+	textLabels[0]->setText(listBoxes[0]->getSelected()->toString());
 	//listItems.clear();
 
-	
+
 	// Selected adapter display mode list
-	/*listbox = new ListBox(Vector2(475, 100), 175);
+	listbox = new ListBox(Vector2(475, 100), 175);
 	listbox->initialize(device, Assets::arialFontFile);
 
 	vector<ListItem*> displayModeItems;
-	for (
-	listbox->addItems(game->getDisplayModeList(game->getSelectedAdapterIndex()));
+	for (DXGI_MODE_DESC mode : game->getDisplayModeList(game->getSelectedAdapterIndex())) {
+		DisplayModeItem* item = new DisplayModeItem();
+		item->modeDesc = mode;
+		displayModeItems.push_back(item);
+	}
+	listbox->addItems(displayModeItems);
+	listbox->setSelected(game->getSelectedDisplayMode());
 	listBoxes.push_back(listbox);
 
-	textLabels[0]->setText(listBoxes[0]->getSelected())*/
+	textLabels[1]->setText(listBoxes[1]->getSelected()->toString());
 
-		TextButton* button = new TextButton();
+
+	TextButton* button = new TextButton();
 	if (!button->load(device, Assets::arialFontFile,
 		Assets::buttonUpFile, Assets::buttonDownFile))
 		return false;
@@ -339,9 +347,13 @@ void ConfigScreen::update(double deltaTime, BYTE keyboardState[256],
 		}
 	}
 
-	for (ListBox* listbox : listBoxes) {
+	//for (ListBox* listbox : listBoxes) {
+	for (int i = 0; i < listBoxes.size(); ++i) {
 
-		listbox->update(deltaTime, mouse);
+		if (listBoxes[i]->update(deltaTime, mouse)) {
+
+			textLabels[i]->setText(listBoxes[i]->getSelected()->toString());
+		}
 	}
 
 
@@ -359,3 +371,26 @@ void ConfigScreen::draw(SpriteBatch* batch) {
 		label->draw(batch);
 }
 
+
+
+void AdapterItem::setText() {
+
+	DXGI_ADAPTER_DESC desc;
+	ZeroMemory(&desc, sizeof(DXGI_ADAPTER_DESC));
+	adapter->GetDesc(&desc);
+	textLabel->setText(desc.Description);
+}
+
+static int num = 0;
+void DisplayModeItem::setText() {
+
+	UINT width = modeDesc.Width;
+	UINT height = modeDesc.Height;
+
+	wostringstream mode;
+	//mode << "Format: " << displayModeList[i].Format;
+	mode << num++ << ": " << width << " x " << height ;
+
+	textLabel->setText(mode.str());
+
+}
