@@ -16,7 +16,7 @@ Dialog::~Dialog() {
 
 bool Dialog::initialize(ID3D11Device * device, const wchar_t* fontFile) {
 
-	if (!Sprite::load(device, L"assets/dialog pink (200x200).dds"))
+	if (!Sprite::load(device, Assets::uglyDialogBox))
 		return false;
 
 	setScale(Vector2(3, 1.5));
@@ -44,7 +44,7 @@ bool Dialog::initialize(ID3D11Device * device, const wchar_t* fontFile) {
 	if (!button->load(device, fontFile,
 		Assets::buttonUpFile, Assets::buttonDownFile))
 		return false;
-	button->action = ButtonAction::OK;
+	button->action = Button::OK;
 	button->setScale(scaleFactor);
 	button->setText("Quit");
 	okBtn = Vector2(position.x - width + button->getWidth() / 3,
@@ -57,7 +57,7 @@ bool Dialog::initialize(ID3D11Device * device, const wchar_t* fontFile) {
 	if (!button->load(device, fontFile,
 		Assets::buttonUpFile, Assets::buttonDownFile))
 		return false;
-	button->action = ButtonAction::CANCEL_BUTTON;
+	button->action = Button::CANCEL;
 	button->setScale(scaleFactor);
 	button->setText("Keep Playing!");
 	cancelBtn = Vector2(position.x + width - button->getWidth() / 3,
@@ -76,11 +76,11 @@ void Dialog::update(double deltaTime, MouseController* mouse) {
 		button->update(deltaTime, mouse);
 		if (button->clicked()) {
 			switch (button->action) {
-				case OK:
+				case Button::OK:
 					result = CONFIRM;
 					break;
-				case ButtonAction::CANCEL_BUTTON:
-					result = DialogResult::CANCEL_DIALOG;
+				case Button::CANCEL:
+					result = DialogResult::CANCEL;
 					break;
 			}
 		}
@@ -95,7 +95,7 @@ void Dialog::close() {
 	isOpen = false;
 }
 
-DialogResult Dialog::getResult() {
+Dialog::DialogResult Dialog::getResult() {
 	return result;
 }
 

@@ -33,7 +33,7 @@ bool LevelManager::initialize(ID3D11Device* device, MouseController* mouse) {
 	warningFont->setScale(Vector2(2, 2));
 
 
-	if (!mouse->load(device, Assets::mouseReticle))
+	if (!mouse->load(device, Assets::mouseReticleFile))
 		return false;
 
 	bgManager.reset(new BackgroundManager());
@@ -75,7 +75,7 @@ bool LevelManager::initialize(ID3D11Device* device, MouseController* mouse) {
 	if (!exitButton->load(device, Assets::arialFontFile,
 		Assets::buttonUpFile, Assets::buttonDownFile))
 		return false;
-	exitButton->action = ButtonAction::EXIT;
+	exitButton->action = Button::EXIT;
 	exitButton->setText("Exit");
 	exitButton->setPosition(
 		Vector2(Globals::WINDOW_WIDTH / 4, Globals::WINDOW_HEIGHT * 3 / 4));
@@ -84,7 +84,7 @@ bool LevelManager::initialize(ID3D11Device* device, MouseController* mouse) {
 	if (!continueButton->load(device, Assets::arialFontFile,
 		Assets::buttonUpFile, Assets::buttonDownFile))
 		return false;
-	continueButton->action = ButtonAction::CANCEL_BUTTON;
+	continueButton->action = Button::CANCEL;
 	continueButton->setText("Continue");
 	continueButton->setPosition(
 		Vector2(Globals::WINDOW_WIDTH * 3 / 4, Globals::WINDOW_HEIGHT * 3 / 4));
@@ -119,7 +119,7 @@ bool LevelManager::loadLevel(ID3D11Device* device, const wchar_t* file) {
 
 #include "GameManager.h"
 
-void LevelManager::update(double deltaTime, BYTE keyboardState[256], MouseController* mouse) {
+void LevelManager::update(double deltaTime, KeyboardController* keys, MouseController* mouse) {
 
 	switch (playState) {
 		case PLAYING:
@@ -150,13 +150,16 @@ void LevelManager::update(double deltaTime, BYTE keyboardState[256], MouseContro
 
 
 			bgManager->update(deltaTime, playerShip.get());
-			playerShip->update(deltaTime, keyboardState, mouse);
+			playerShip->update(deltaTime, keys, mouse);
 			waveManager->update(deltaTime, playerShip.get());
 
-			if (!pauseDownLast && (keyboardState[DIK_P] || keyboardState[DIK_ESCAPE])) {
+			//if (!pauseDownLast && (keyboardState[DIK_P] || keyboardState[DIK_ESCAPE])) {
+			if (!keys->lastDown[KeyboardController::PAUSE]
+				&& (keys->keyDown[KeyboardController::PAUSE])) {
+
 				textLabels.push_back(pauseLabel.get());
 				playState = PAUSED;
-				pauseDownLast = true;
+				//pauseDownLast = true;
 			}
 
 			if (!playerShip->isAlive)
@@ -180,17 +183,19 @@ void LevelManager::update(double deltaTime, BYTE keyboardState[256], MouseContro
 				playerShip->clear();
 
 				textLabels.pop_back();
-				pauseDownLast = true;
-				
+				//pauseDownLast = true;
+
 				game->loadMainMenu();
 			}
 
 			continueButton->update(deltaTime, mouse);
 			if (continueButton->clicked()
-				|| (!pauseDownLast && (keyboardState[DIK_P] || keyboardState[DIK_ESCAPE]))) {
+				//|| (!pauseDownLast && (keyboardState[DIK_P] || keyboardState[DIK_ESCAPE]))) {
+				|| (!keys->lastDown[KeyboardController::PAUSE]
+					&& (keys->keyDown[KeyboardController::PAUSE]))) {
 				playState = PLAYING;
 				textLabels.pop_back();
-				pauseDownLast = true;
+				//pauseDownLast = true;
 			}
 			break;
 
@@ -215,7 +220,7 @@ void LevelManager::update(double deltaTime, BYTE keyboardState[256], MouseContro
 		energyLabel->setText(ws);
 	}
 
-	pauseDownLast = keyboardState[DIK_P] || keyboardState[DIK_ESCAPE];
+	//pauseDownLast = keyboardState[DIK_P] || keyboardState[DIK_ESCAPE];
 }
 
 

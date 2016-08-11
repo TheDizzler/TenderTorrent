@@ -5,13 +5,13 @@ PlayerShip::PlayerShip(const Vector2& pos) : Sprite(pos) {
 
 	position = startPosition;
 
-	rightWeaponSlot = new WeaponSystem(Vector2(26, -15));
-	leftWeaponSlot = new WeaponSystem(Vector2(-26, -15));
-	centerWeaponSlot = new LaserSystem(Vector2(0, 0));
+	rightWeaponSlot.reset(new WeaponSystem(Vector2(26, -15)));
+	leftWeaponSlot.reset(new WeaponSystem(Vector2(-26, -15)));
+	centerWeaponSlot.reset(new LaserSystem(Vector2(0, 0)));
 
-	weaponSlots.push_back(rightWeaponSlot);
-	weaponSlots.push_back(leftWeaponSlot);
-	weaponSlots.push_back(centerWeaponSlot);
+	weaponSlots.push_back(rightWeaponSlot.get());
+	weaponSlots.push_back(leftWeaponSlot.get());
+	weaponSlots.push_back(centerWeaponSlot.get());
 
 	rightTurret.reset(new Turret(Vector2(12, -8)));
 	leftTurret.reset(new Turret(Vector2(-13, -8)));
@@ -20,9 +20,9 @@ PlayerShip::PlayerShip(const Vector2& pos) : Sprite(pos) {
 
 PlayerShip::~PlayerShip() {
 
-	delete rightWeaponSlot;
+	/*delete rightWeaponSlot;
 	delete leftWeaponSlot;
-	delete centerWeaponSlot;
+	delete centerWeaponSlot;*/
 
 	liveBullets.clear();
 }
@@ -65,7 +65,8 @@ bool PlayerShip::startUpdate(double deltaTime, MouseController* mouse) {
 
 
 #include <algorithm>
-void PlayerShip::update(double deltaTime, const BYTE keyboardState[256], MouseController* mouse) {
+void PlayerShip::update(double deltaTime,
+	const KeyboardController* keys, MouseController* mouse) {
 
 	if (!isAlive) {
 
@@ -76,9 +77,11 @@ void PlayerShip::update(double deltaTime, const BYTE keyboardState[256], MouseCo
 	if (firing)
 		currentSpeed = firingSpeed;
 
-	if (keyboardState[DIK_A] & 0x80)
+	//if (keyboardState[DIK_A] & 0x80)
+	if (keys->keyDown[KeyboardController::LEFT])
 		position.x -= currentSpeed * deltaTime;
-	if (keyboardState[DIK_D] & 0x80)
+	//if (keyboardState[DIK_D] & 0x80)
+	if (keys->keyDown[KeyboardController::RIGHT])
 		position.x += currentSpeed * deltaTime;
 
 	if (position.x < 0 + width / 2)
@@ -86,9 +89,12 @@ void PlayerShip::update(double deltaTime, const BYTE keyboardState[256], MouseCo
 	if (position.x > Globals::WINDOW_WIDTH - width / 2)
 		position.x = Globals::WINDOW_WIDTH - width / 2;
 
-	if (keyboardState[DIK_W] & 0x80)
+	
+	//if (keyboardState[DIK_W] & 0x80)
+	if (keys->keyDown[KeyboardController::UP])
 		position.y -= currentSpeed * deltaTime;
-	if (keyboardState[DIK_S] & 0x80)
+	//if (keyboardState[DIK_S] & 0x80)
+	if (keys->keyDown[KeyboardController::DOWN])
 		position.y += currentSpeed * deltaTime;
 
 	if (position.y < 0 + height / 2)
@@ -110,7 +116,8 @@ void PlayerShip::update(double deltaTime, const BYTE keyboardState[256], MouseCo
 		[](const Sprite* sprite) { return !sprite->isAlive; }), liveBullets.end());
 
 
-	if (keyboardState[DIK_SPACE] & 0x80) {
+	//if (keyboardState[DIK_SPACE] & 0x80) {
+	if (keys->keyDown[KeyboardController::FIRE]) {
 		for (WeaponSystem* weaponSlot : weaponSlots) {
 			if (energy >= weaponSlot->energyCost
 				&& weaponSlot->ready()) {
@@ -125,7 +132,8 @@ void PlayerShip::update(double deltaTime, const BYTE keyboardState[256], MouseCo
 	}
 
 
-	if (!lastStateVKLButtonDown && mouse->leftButtonDown()) {
+	//if (!lastStateVKLButtonDown && mouse->leftButtonDown()) {
+	if (!mouse->leftButtonLastDown() && mouse->leftButtonDown()) {
 
 		if (rightTurret->ready()) {
 			liveBullets.push_back(rightTurret->fire());
@@ -151,7 +159,7 @@ void PlayerShip::update(double deltaTime, const BYTE keyboardState[256], MouseCo
 		timeSinceRecharge = 0;
 	}
 
-	lastStateVKLButtonDown = mouse->leftButtonDown();
+	//lastStateVKLButtonDown = mouse->leftButtonDown();
 }
 
 void PlayerShip::draw(SpriteBatch * batch) {

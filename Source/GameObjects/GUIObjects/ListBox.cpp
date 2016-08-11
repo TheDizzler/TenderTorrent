@@ -330,7 +330,7 @@ bool ScrollBar::initialize(ID3D11Device* device,
 			position.y + maxHeight
 			- scrollBarDownButton->getHeight() / 2));
 
-	scrollBarDownButton->action = DOWN;
+	scrollBarDownButton->action = Button::DOWN;
 
 
 	scrollBarUpButton.reset(new ImageButton());
@@ -345,7 +345,7 @@ bool ScrollBar::initialize(ID3D11Device* device,
 			position.y + scrollBarUpButton->getHeight() / 2));
 
 
-	scrollBarUpButton->action = UP;
+	scrollBarUpButton->action = Button::UP;
 
 	scrollBarPosition =
 		Vector2(position.x - scrollBarUpButton->getWidth(),

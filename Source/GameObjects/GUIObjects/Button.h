@@ -1,19 +1,24 @@
 #pragma once
 
-#include "MouseController.h"
+#include "../../Engine/MouseController.h"
 
 using namespace std;
 
 
-static enum ButtonAction {
-	EXIT, PLAY, SETTINGS, CANCEL_BUTTON, OK, UP, DOWN
-};
+//static enum ButtonAction {
+//	EXIT, PLAY, SETTINGS, CANCEL_BUTTON, OK, UP_BUTTON, DOWN_BUTTON
+//};
 
 /** A visual and logical representation of a button.
 Provides no actions on click; that must be handled else where.*/
 
 class Button {
 public:
+
+	enum ButtonAction {
+		EXIT, PLAY, SETTINGS, CANCEL, OK, UP, DOWN
+
+	};
 	Button();
 	~Button();
 
@@ -37,7 +42,7 @@ public:
 
 protected:
 
-	bool lastButtonStateDown;
+	//bool lastButtonStateDown;
 
 	Vector2 position;
 	const HitArea* hitArea;

@@ -23,7 +23,9 @@
     <ClCompile Include="Source\Engine\GameEngine.cpp" />
     <ClCompile Include="Source\Engine\GraphicsEngine.cpp" />
     <ClCompile Include="Source\Engine\Input.cpp" />
+    <ClCompile Include="Source\Engine\KeyboardController.cpp" />
     <ClCompile Include="Source\Engine\main.cpp" />
+    <ClCompile Include="Source\Engine\MouseController.cpp" />
     <ClCompile Include="Source\GameObjects\Bullet.cpp" />
     <ClCompile Include="Source\GameObjects\EnemyBullet.cpp" />
     <ClCompile Include="Source\GameObjects\EnemyShip.cpp" />
@@ -38,7 +40,6 @@
     <ClCompile Include="Source\GameObjects\GUIObjects\Dialog.cpp" />
     <ClCompile Include="Source\GameObjects\GUIObjects\ImageButton.cpp" />
     <ClCompile Include="Source\GameObjects\GUIObjects\ListBox.cpp" />
-    <ClCompile Include="Source\GameObjects\GUIObjects\MouseController.cpp" />
     <ClCompile Include="Source\GameObjects\GUIObjects\TextLabel.cpp" />
     <ClCompile Include="Source\GameObjects\LaserBolt.cpp" />
     <ClCompile Include="Source\GameObjects\LaserSystem.cpp" />
@@ -62,6 +63,8 @@
     <ClInclude Include="Source\Engine\GameEngine.h" />
     <ClInclude Include="Source\Engine\GraphicsEngine.h" />
     <ClInclude Include="Source\Engine\Input.h" />
+    <ClInclude Include="Source\Engine\KeyboardController.h" />
+    <ClInclude Include="Source\Engine\MouseController.h" />
     <ClInclude Include="Source\GameObjects\Bullet.h" />
     <ClInclude Include="Source\GameObjects\EnemyBullet.h" />
     <ClInclude Include="Source\GameObjects\EnemyShip.h" />
@@ -77,7 +80,6 @@
     <ClInclude Include="Source\GameObjects\GUIObjects\Dialog.h" />
     <ClInclude Include="Source\GameObjects\GUIObjects\ImageButton.h" />
     <ClInclude Include="Source\GameObjects\GUIObjects\ListBox.h" />
-    <ClInclude Include="Source\GameObjects\GUIObjects\MouseController.h" />
     <ClInclude Include="Source\GameObjects\GUIObjects\TextLabel.h" />
     <ClInclude Include="Source\GameObjects\LaserBolt.h" />
     <ClInclude Include="Source\GameObjects\LaserSystem.h" />

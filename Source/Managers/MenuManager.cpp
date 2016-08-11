@@ -22,7 +22,7 @@ bool MenuManager::initialize(ID3D11Device* device, MouseController* mouse) {
 		return false;
 	menuFont->setTint(DirectX::Colors::Black.v);
 
-	if (!mouse->load(device, L"assets/mouse icon.dds"))
+	if (!mouse->load(device, Assets::mouseReticleFile))
 		return false;
 
 	mainScreen.reset(new MainScreen(this, menuFont.get()));
@@ -43,9 +43,10 @@ bool MenuManager::initialize(ID3D11Device* device, MouseController* mouse) {
 
 bool lastStateDown;
 
-void MenuManager::update(double deltaTime, BYTE keyboardState[256], MouseController* mouse) {
+void MenuManager::update(double deltaTime,
+	KeyboardController* keys, MouseController* mouse) {
 
-	Vector2 mousePos = mouse->getPosition();
+	/*Vector2 mousePos = mouse->getPosition();
 	if (mousePos.x > Globals::WINDOW_WIDTH) {
 		mousePos.x = Globals::WINDOW_WIDTH;
 		SetCursorPos(mousePos.x, mousePos.y);
@@ -61,9 +62,9 @@ void MenuManager::update(double deltaTime, BYTE keyboardState[256], MouseControl
 	if (mousePos.y < 0) {
 		mousePos.y = 0;
 		SetCursorPos(mousePos.x, mousePos.y);
-	}
+	}*/
 
-	currentScreen->update(deltaTime, keyboardState, mouse);
+	currentScreen->update(deltaTime, keys, mouse);
 
 }
 
@@ -126,10 +127,9 @@ bool MainScreen::initialize(ID3D11Device* device, MouseController* mouse) {
 	if (!button->load(device, Assets::arialFontFile,
 		Assets::buttonUpFile, Assets::buttonDownFile))
 		return false;
-	button->action = PLAY;
+	button->action = Button::PLAY;
 	button->setText("Play");
 	button->setPosition(Vector2(Globals::WINDOW_WIDTH / 2, 200));
-		//Globals::WINDOW_HEIGHT - button->getHeight())
 	buttons.push_back(button);
 
 
@@ -137,7 +137,7 @@ bool MainScreen::initialize(ID3D11Device* device, MouseController* mouse) {
 	if (!button->load(device, Assets::arialFontFile,
 		Assets::buttonUpFile, Assets::buttonDownFile))
 		return false;
-	button->action = SETTINGS;
+	button->action = Button::SETTINGS;
 	button->setText("Settings");
 	button->setPosition(Vector2(Globals::WINDOW_WIDTH / 2, 350));
 	buttons.push_back(button);
@@ -147,7 +147,7 @@ bool MainScreen::initialize(ID3D11Device* device, MouseController* mouse) {
 	if (!button->load(device, Assets::arialFontFile,
 		Assets::buttonUpFile, Assets::buttonDownFile))
 		return false;
-	button->action = EXIT;
+	button->action = Button::EXIT;
 	button->setText("Exit");
 	button->setPosition(Vector2(Globals::WINDOW_WIDTH / 2, 500));
 	buttons.push_back(button);
@@ -175,7 +175,8 @@ bool MainScreen::initialize(ID3D11Device* device, MouseController* mouse) {
 }
 
 
-void MainScreen::update(double deltaTime, BYTE keyboardState[256], MouseController* mouse) {
+void MainScreen::update(double deltaTime,
+	KeyboardController* keys, MouseController* mouse) {
 
 	wostringstream ws;
 	ws << "Mouse: " << mouse->getPosition().x << ", " << mouse->getPosition().y;
@@ -183,23 +184,25 @@ void MainScreen::update(double deltaTime, BYTE keyboardState[256], MouseControll
 
 
 
-	if (keyboardState[DIK_ESCAPE] && !lastStateDown) {
+	//if (keyboardState[DIK_ESCAPE] && !lastStateDown) {
+	if (keys->keyDown[KeyboardController::ESC]
+		&& !keys->lastDown[KeyboardController::ESC]) {
 		if (exitDialog->isOpen)
 			exitDialog->close();
 		else
 			confirmExit();
 	}
 
-	lastStateDown = keyboardState[DIK_ESCAPE];
+	//lastStateDown = keyboardState[DIK_ESCAPE];
 
 
 	if (exitDialog->isOpen) {
 		exitDialog->update(deltaTime, mouse);
 		switch (exitDialog->getResult()) {
-			case CONFIRM:
+			case Dialog::CONFIRM:
 				game->exit();
 				break;
-			case DialogResult::CANCEL_DIALOG:
+			case Dialog::CANCEL:
 				exitDialog->close();
 				break;
 		}
@@ -210,15 +213,15 @@ void MainScreen::update(double deltaTime, BYTE keyboardState[256], MouseControll
 			if (button->clicked()) {
 				//test->setText("Clicked!");
 				switch (button->action) {
-					case EXIT:
+					case Button::EXIT:
 						confirmExit();
 						//test->setText("Exit!");
 						break;
-					case PLAY:
+					case Button::PLAY:
 						game->loadLevel(Assets::levelMakoXML);
 						//test->setText("Play!");
 						break;
-					case SETTINGS:
+					case Button::SETTINGS:
 						menuManager->openConfigMenu();
 						//test->setText("Settings!!");
 						break;
@@ -309,7 +312,7 @@ bool ConfigScreen::initialize(ID3D11Device* device, MouseController* mouse) {
 	if (!button->load(device, Assets::arialFontFile,
 		Assets::buttonUpFile, Assets::buttonDownFile))
 		return false;
-	button->action = ButtonAction::CANCEL_BUTTON;
+	button->action = Button::ButtonAction::CANCEL;
 	button->setText("Back");
 	button->setPosition(
 		Vector2(Globals::WINDOW_WIDTH / 2 - button->getWidth(),
@@ -320,7 +323,7 @@ bool ConfigScreen::initialize(ID3D11Device* device, MouseController* mouse) {
 	if (!button->load(device, Assets::arialFontFile,
 		Assets::buttonUpFile, Assets::buttonDownFile))
 		return false;
-	button->action = ButtonAction::OK;
+	button->action = Button::ButtonAction::OK;
 	button->setText("Apply");
 	button->setPosition(
 		Vector2(Globals::WINDOW_WIDTH / 2 + button->getWidth(),
@@ -332,7 +335,7 @@ bool ConfigScreen::initialize(ID3D11Device* device, MouseController* mouse) {
 }
 
 
-void ConfigScreen::update(double deltaTime, BYTE keyboardState[256],
+void ConfigScreen::update(double deltaTime, KeyboardController* keys,
 	MouseController* mouse) {
 
 	for (TextButton* button : buttons) {
@@ -340,7 +343,7 @@ void ConfigScreen::update(double deltaTime, BYTE keyboardState[256],
 		if (button->clicked()) {
 			//test->setText("Clicked!");
 			switch (button->action) {
-				case CANCEL_BUTTON:
+				case Button::CANCEL:
 					menuManager->openMainMenu();
 					break;
 			}
@@ -389,7 +392,7 @@ void DisplayModeItem::setText() {
 
 	wostringstream mode;
 	//mode << "Format: " << displayModeList[i].Format;
-	mode << num++ << ": " << width << " x " << height ;
+	mode << num++ << ": " << width << " x " << height;
 
 	textLabel->setText(mode.str());
 

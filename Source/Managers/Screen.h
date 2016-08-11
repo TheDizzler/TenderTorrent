@@ -4,7 +4,8 @@
 
 
 #include "../GameObjects/GUIObjects/TextLabel.h"
-#include "../GameObjects/GUIObjects/MouseController.h"
+#include "../Engine/MouseController.h"
+#include "../Engine/KeyboardController.h"
 
 
 class GameManager;
@@ -15,7 +16,7 @@ interface Screen {
 public:
 	virtual bool initialize(ID3D11Device* device, MouseController* mouse) = 0;
 	virtual void setGameManager(GameManager* game) = 0;
-	virtual void update(double deltaTime, BYTE keyboardState[256],
+	virtual void update(double deltaTime, KeyboardController* keys,
 		MouseController* mouse) = 0;
 	virtual void draw(SpriteBatch* batch) = 0;
 };

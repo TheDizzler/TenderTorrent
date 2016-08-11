@@ -150,9 +150,6 @@
     <ClCompile Include="Source\Managers\Wave.cpp">
       <Filter>Source Files\EnemyShips</Filter>
     </ClCompile>
-    <ClCompile Include="Source\GameObjects\GUIObjects\MouseController.cpp">
-      <Filter>Source Files\Engine</Filter>
-    </ClCompile>
     <ClCompile Include="Source\GameObjects\GUIObjects\TextButton.cpp">
       <Filter>Source Files\MenuItems</Filter>
     </ClCompile>
@@ -161,6 +158,12 @@
     </ClCompile>
     <ClCompile Include="Source\GameObjects\Graphics\RectangleSprite.cpp">
       <Filter>Source Files\MenuItems</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\KeyboardController.cpp">
+      <Filter>Source Files\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\MouseController.cpp">
+      <Filter>Source Files\Engine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -269,9 +272,6 @@
     <ClInclude Include="Source\Managers\Wave.h">
       <Filter>Header Files\EnemyShips</Filter>
     </ClInclude>
-    <ClInclude Include="Source\GameObjects\GUIObjects\MouseController.h">
-      <Filter>Header Files\Engine</Filter>
-    </ClInclude>
     <ClInclude Include="Source\GameObjects\GUIObjects\TextButton.h">
       <Filter>Header Files\MenuItems</Filter>
     </ClInclude>
@@ -280,6 +280,12 @@
     </ClInclude>
     <ClInclude Include="Source\GameObjects\Graphics\RectangleSprite.h">
       <Filter>Header Files\MenuItems</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\KeyboardController.h">
+      <Filter>Header Files\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\MouseController.h">
+      <Filter>Header Files\Engine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

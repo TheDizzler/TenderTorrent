@@ -19,14 +19,15 @@ void Button::update(double deltaTime, MouseController* mouse) {
 		isClicked = false;
 		if (!isHover)
 			isSelected = false;
-		else if (!lastButtonStateDown && mouse->leftButtonDown()) {
+		//else if (!lastButtonStateDown && mouse->leftButtonDown()) {
+		else if (!mouse->leftButtonLastDown() && mouse->leftButtonDown()) {
 			isSelected = true;
 			//mouse->leftButtonHandled();
 		}
 
 	}
 
-	lastButtonStateDown = mouse->leftButtonDown();
+	//lastButtonStateDown = mouse->leftButtonDown();
 }
 
 

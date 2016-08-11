@@ -4,7 +4,7 @@
 
 
 
-LPCTSTR wndClassName = L"My first Game Engine";
+LPCTSTR wndClassName = L"Tender Torrent";
 HWND hwnd;
 
 GameEngine* gameEngine;
@@ -184,6 +184,9 @@ bool initWindow(HINSTANCE hInstance, int showWnd, int width, int height, bool wi
 
 LRESULT CALLBACK wndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 
+	LPBYTE lpb;
+	UINT dwSize;
+
 	switch (msg) {
 		case WM_CREATE:
 			return 0;
@@ -194,6 +197,23 @@ LRESULT CALLBACK wndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 				DestroyWindow(hwnd);
 				}
 				return 0;*/
+		case WM_INPUT:
+
+			GetRawInputData((HRAWINPUT) lParam, RID_INPUT, NULL,
+				&dwSize, sizeof(RAWINPUTHEADER));
+			lpb = new BYTE[dwSize];
+			if (lpb == NULL)
+				return 0;
+
+			if (GetRawInputData((HRAWINPUT) lParam, RID_INPUT, lpb,
+				&dwSize, sizeof(RAWINPUTHEADER)) != dwSize) {
+				delete[] lpb;
+				return 0;
+			}
+
+			gameEngine->setRawInput((RAWINPUT*) lpb);
+
+			return 0;
 		case WM_DESTROY:	// top right x button pressed
 
 

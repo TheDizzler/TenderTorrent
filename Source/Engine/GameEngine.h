@@ -28,9 +28,9 @@ private:
 
 	//bool waitingForInput = true;
 
-	BYTE keyboardState[256];
+	//KeyboardController* keys;
 	
-	virtual void detectInput(double time);
+	//virtual void detectInput(double time);
 
 	void update(double time);
 

@@ -8,13 +8,16 @@
 
 using namespace std;
 
-enum PlayState {
-	LOADING, STARTING, PAUSED, PLAYING
-};
 
 
 class LevelManager : public Screen {
 public:
+
+	enum PlayState {
+		LOADING, STARTING, PAUSED, PLAYING
+	};
+
+
 	LevelManager();
 	~LevelManager();
 
@@ -24,7 +27,7 @@ public:
 	bool loadLevel(ID3D11Device* device, const wchar_t* file);
 
 
-	virtual void update(double deltaTime, BYTE keyboardState[256],
+	virtual void update(double deltaTime, KeyboardController* keys,
 		MouseController* mouse);
 	virtual void draw(SpriteBatch* batch);
 
@@ -66,7 +69,7 @@ private:
 	int score = 0;
 
 	bool isPaused;
-	bool pauseDownLast = false;
+	//bool pauseDownLast = false;
 	//double pauseDelay = 0;
 	void displayWarning(double deltaTime);
 	void displayPause(double deltaTime);

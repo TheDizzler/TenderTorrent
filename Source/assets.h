@@ -16,9 +16,10 @@ namespace Assets {
 
 	const static wchar_t* arialFontFile = L"assets/Arial.spritefont";
 
-	const static wchar_t* mouseReticle = L"assets/reticle (16x16).dds";
-	const static wchar_t* buttonUpFile = L"assets/button up (256x64).dds";
-	const static wchar_t* buttonDownFile = L"assets/button down (256x64).dds";
+	const static wchar_t* mouseIconFile = L"assets/GUI/mouse icon.dds";
+	const static wchar_t* mouseReticleFile = L"assets/GUI/reticle (16x16).dds";
+	const static wchar_t* buttonUpFile = L"assets/GUI/button up (256x64).dds";
+	const static wchar_t* buttonDownFile = L"assets/GUI/button down (256x64).dds";
 
 	const static wchar_t* whitePixelFile = L"assets/GUI/WhitePixel.dds";
 
@@ -36,7 +37,10 @@ namespace Assets {
 	const static wchar_t* scrollBarDownPressedFile
 		= L"assets/GUI/ScrollBarDownPressed.dds";
 
-	const static wchar_t* pauseOverlayFile = L"assets/pinkblock(16x16).dds";
+	/** This needs to be rejiggered. */
+	const static wchar_t* pauseOverlayFile = L"assets/GUI/pinkblock(16x16).dds";
+	const static wchar_t* uglyDialogBox = L"assets/GUI/dialog pink (200x200).dds";
+
 
 	const static wchar_t* rearAttackShipFile = L"assets/enemy ship A.dds";
 	const static wchar_t* starEnemyShip = L"assets/enemy ship B.dds";

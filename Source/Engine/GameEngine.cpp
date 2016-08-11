@@ -21,8 +21,8 @@ bool GameEngine::initEngine(HWND hw, HINSTANCE hInstance) {
 		return false;
 	}
 
-	if (!initDirectInput(hInstance, hwnd)) {
-		MessageBox(0, L"Input Init failed", L"Error", MB_OK);
+	if (!initRawInput(hwnd)) {
+		MessageBox(0, L"Raw Input Init failed", L"Error", MB_OK);
 		return false;
 	}
 
@@ -31,7 +31,6 @@ bool GameEngine::initEngine(HWND hw, HINSTANCE hInstance) {
 		return false;
 	}
 
-	SetCursorPos(200, 200);
 
 	return true;
 }
@@ -49,23 +48,21 @@ bool GameEngine::initStage() {
 
 
 
-
-
-
 void GameEngine::run(double deltaTime, int fps) {
 
-	detectInput(deltaTime);
+	//detectInput(deltaTime);
 
 	//waitingForInput = false;
 	/*if (GetKeyState(VK_LBUTTON) & 0x8000)
 		waitingForInput = false;*/
+
 
 		update(deltaTime);
 		render(deltaTime);
 
 }
 
-
+/* This is DirectInput junk! Deprecated!!
 void GameEngine::detectInput(double deltaTime) {
 
 
@@ -79,12 +76,12 @@ void GameEngine::detectInput(double deltaTime) {
 	GetCursorPos(&cursorPos);
 	
 	mouse->setPosition(Vector2(cursorPos.x, cursorPos.y));
-}
+} */
 
 
 void GameEngine::update(double deltaTime) {
 
-	game->update(deltaTime, keyboardState, mouse.get());
+	game->update(deltaTime, keys.get(), mouse.get());
 }
 
 

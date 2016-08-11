@@ -7,13 +7,18 @@
 #include "TextButton.h"
 
 
-static enum DialogResult {
-	NONE, CONFIRM, CANCEL_DIALOG
-};
+//static enum DialogResult {
+//	NONE, CONFIRM, CANCEL_DIALOG
+//};
 
 
 class Dialog : public Sprite {
 public:
+
+	enum DialogResult {
+		NONE, CONFIRM, CANCEL
+	};
+
 	Dialog(const Vector2& position);
 	~Dialog();
 
