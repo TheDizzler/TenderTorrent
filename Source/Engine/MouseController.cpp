@@ -1,6 +1,8 @@
 #include "MouseController.h"
 
-MouseController::MouseController() {
+MouseController::MouseController(HWND hWnd) {
+
+	hwnd = hWnd;
 }
 
 MouseController::~MouseController() {
@@ -23,7 +25,7 @@ void MouseController::getRawInput(RAWMOUSE* raw) {
 		currentButtons.midButtonDown = true;
 	else if (bUp)
 		currentButtons.midButtonDown = false;
-	
+
 	bDown = raw->usButtonFlags & RI_MOUSE_RIGHT_BUTTON_DOWN;
 	bUp = raw->usButtonFlags & RI_MOUSE_RIGHT_BUTTON_UP;
 	if (bDown && !bUp)
@@ -33,7 +35,9 @@ void MouseController::getRawInput(RAWMOUSE* raw) {
 
 	POINT cursorPos;
 	GetCursorPos(&cursorPos);
-	setPosition(Vector2(cursorPos.x, cursorPos.y));
+	ScreenToClient(hwnd, &cursorPos);
+	//SetCursorPos(cursorPos.x, cursorPos.y);
+	setPosition(Vector2(cursorPos.x, cursorPos.y + 30));
 
 }
 

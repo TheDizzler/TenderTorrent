@@ -22,6 +22,8 @@ public:
 
 	void getInput(RAWKEYBOARD* rawKeys);
 
+	bool setIsDown(bool keyLastDown, bool keyNewState);
+
 	bool keyDown[KEYCOUNT] = {false, false, false, false, false, false, false, false};
 	bool lastDown[KEYCOUNT] = {false, false, false, false, false, false, false, false};
 private:

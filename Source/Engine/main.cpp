@@ -155,7 +155,7 @@ bool initWindow(HINSTANCE hInstance, int showWnd, int width, int height, bool wi
 
 
 	hwnd = CreateWindowEx(
-		NULL,							// extended style, check em out here http://msdn.microsoft.com/en-us/library/61fe4bte(VS.71).aspx
+		NULL,					// extended style, check em out here https://msdn.microsoft.com/en-us/library/61fe4bte(v=vs.140).aspx
 		wndClassName,
 		wndClassName,					// title bar text
 		WS_OVERLAPPEDWINDOW,			// window style, mo' styles http://msdn.microsoft.com/zh-cn/library/czada357.aspx
@@ -187,6 +187,8 @@ LRESULT CALLBACK wndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	LPBYTE lpb;
 	UINT dwSize;
 
+
+
 	switch (msg) {
 		case WM_CREATE:
 			return 0;
@@ -214,11 +216,53 @@ LRESULT CALLBACK wndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 			gameEngine->setRawInput((RAWINPUT*) lpb);
 
 			return 0;
-		case WM_DESTROY:	// top right x button pressed
 
+		//case WM_SETFOCUS:
+		//{
+		//	wostringstream ws;
+		//	ws << "Got focus\n";
+		//	OutputDebugString(ws.str().c_str());
+		//	//SetCapture(hwnd);
+		//	return 0;
+		//}
+
+
+		//case WM_KILLFOCUS:
+		//{
+		//	wostringstream ws;
+		//	ws << "Lost focus\n";
+		//	OutputDebugString(ws.str().c_str());
+		//	//ReleaseCapture();
+		//}
+		//return 0;
+
+		//case WM_ACTIVATE:
+		//{
+		//	wostringstream ws;
+		//	if (LOWORD(wParam) == WA_ACTIVE) {
+
+		//		ws << "ACTVATED\n";
+		//		OutputDebugString(ws.str().c_str());
+		//		//SetCapture(hwnd);
+		//	} else {
+		//		ws << "DEACTIVATED!\n";
+		//		OutputDebugString(ws.str().c_str());
+		//		//ReleaseCapture();
+		//	}
+		//}
+		//return 0;
+
+		case WM_DESTROY:	// top right x button pressed
 
 			PostQuitMessage(0);
 			return 0;
+
+		/*default:
+		{
+			wostringstream ws;
+			ws << "msg: " << msg << "\n";
+			OutputDebugString(ws.str().c_str());
+		}*/
 	}
 
 	return DefWindowProc(hwnd, msg, wParam, lParam);

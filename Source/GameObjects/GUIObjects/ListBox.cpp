@@ -356,10 +356,6 @@ bool ScrollBar::initialize(ID3D11Device* device,
 		- scrollBarUpButton->getHeight() * 2;
 	scrollBarRect.right = scrollBarUpButton->getWidth();
 
-
-	/*scrubberPosition = scrollBarPosition;
-	scrubberRect = scrollbarRect;*/
-
 	pixel = pixelTexture;
 
 	Vector2 scrubberStartPos(

@@ -18,7 +18,7 @@ public:
 	MouseButton currentButtons;
 	MouseButton lastButtons;
 
-	MouseController();
+	MouseController(HWND hwnd);
 	~MouseController();
 
 	/** RawInput should be used for moving cameras, etc. 
@@ -40,6 +40,6 @@ public:
 
 private:
 
-	
+	HWND hwnd;
 
 };

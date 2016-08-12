@@ -11,6 +11,9 @@ Input::~Input() {
 	//inputMouse->Unacquire();
 	//inputJoystick->Unacquire();
 	//directInput->Release();
+
+	ReleaseCapture();
+	ShowCursor(true);
 }
 
 bool Input::initRawInput(HWND hwnd) {
@@ -23,17 +26,15 @@ bool Input::initRawInput(HWND hwnd) {
 
 	rid[1].usUsagePage = 0x01;
 	rid[1].usUsage = 0x02; // mouse
-	rid[1].dwFlags = RIDEV_INPUTSINK;
-	rid[1].hwndTarget = hwnd; // 0??
-
+	rid[1].dwFlags = /*RIDEV_CAPTUREMOUSE|*/ RIDEV_INPUTSINK;
+	rid[1].hwndTarget = hwnd;
+	
 	if (!RegisterRawInputDevices(rid, 2, sizeof(RAWINPUTDEVICE)))
 		return false;
 
 	keys.reset(new KeyboardController());
-	mouse.reset(new MouseController());
-
-	//SetCursorPos(200, 200);
-	//mouse->setPosition(
+	mouse.reset(new MouseController(hwnd));
+	
 
 	return true;
 }

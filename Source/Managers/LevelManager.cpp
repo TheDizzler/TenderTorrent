@@ -37,8 +37,6 @@ bool LevelManager::initialize(ID3D11Device* device, MouseController* mouse) {
 		return false;
 
 	bgManager.reset(new BackgroundManager());
-	/*if (!bgManager->initialize(device))
-		return false;*/
 
 	waveManager.reset(new WaveManager());
 	if (!waveManager->initialize(device))
@@ -216,7 +214,7 @@ void LevelManager::update(double deltaTime, KeyboardController* keys, MouseContr
 
 	{
 		wostringstream ws;
-		ws << "Engery: " << playerShip->energy;
+		ws << "Energy: " << playerShip->energy;
 		energyLabel->setText(ws);
 	}
 

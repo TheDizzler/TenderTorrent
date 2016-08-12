@@ -7,19 +7,14 @@ d:\github projects\firstgame\source\gameobjects\playership.h(12): warning C4244:
 d:\github projects\firstgame\source\gameobjects\rearattackship.h(31): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
 d:\github projects\firstgame\source\gameobjects\rearattackship.h(32): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
 d:\github projects\firstgame\source\gameobjects\starenemyship.h(23): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-d:\github projects\firstgame\source\managers\menumanager.cpp(132): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-d:\github projects\firstgame\source\managers\menumanager.cpp(142): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-d:\github projects\firstgame\source\managers\menumanager.cpp(152): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-d:\github projects\firstgame\source\managers\menumanager.cpp(165): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-d:\github projects\firstgame\source\managers\menumanager.cpp(319): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-d:\github projects\firstgame\source\managers\menumanager.cpp(330): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-d:\github projects\firstgame\source\managers\menumanager.cpp(354): warning C4018: '<': signed/unsigned mismatch
-  MouseController.cpp
-d:\github projects\firstgame\source\assets.h(59): warning C4996: 'mbstowcs': This function or variable may be unsafe. Consider using mbstowcs_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdlib.h(920): note: see declaration of 'mbstowcs'
-d:\github projects\firstgame\source\engine\mousecontroller.cpp(14): warning C4800: 'int': forcing value to bool 'true' or 'false' (performance warning)
-d:\github projects\firstgame\source\engine\mousecontroller.cpp(21): warning C4800: 'int': forcing value to bool 'true' or 'false' (performance warning)
-d:\github projects\firstgame\source\engine\mousecontroller.cpp(22): warning C4800: 'int': forcing value to bool 'true' or 'false' (performance warning)
-d:\github projects\firstgame\source\engine\mousecontroller.cpp(26): warning C4244: 'argument': conversion from 'LONG' to 'float', possible loss of data
-  Generating Code...
+d:\github projects\firstgame\source\managers\menumanager.cpp(52): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+d:\github projects\firstgame\source\managers\menumanager.cpp(57): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+d:\github projects\firstgame\source\managers\menumanager.cpp(137): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+d:\github projects\firstgame\source\managers\menumanager.cpp(147): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+d:\github projects\firstgame\source\managers\menumanager.cpp(157): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+d:\github projects\firstgame\source\managers\menumanager.cpp(170): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+d:\github projects\firstgame\source\managers\menumanager.cpp(324): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+d:\github projects\firstgame\source\managers\menumanager.cpp(335): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+d:\github projects\firstgame\source\managers\menumanager.cpp(359): warning C4018: '<': signed/unsigned mismatch
+cl : Command line warning D9028: minimal rebuild failure, reverting to normal build
   FirstGame.vcxproj -> D:\github projects\FirstGame\Debug\FirstGame.exe

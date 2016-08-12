@@ -10,6 +10,9 @@ Sprite::Sprite() {
 	scale = Vector2(1, 1);
 	tint = DirectX::Colors::White.v;
 	layerDepth = 0.0f;
+
+	width = 0;
+	height = 0;
 }
 
 Sprite::Sprite(const Vector2& pos) {
@@ -20,6 +23,8 @@ Sprite::Sprite(const Vector2& pos) {
 	scale = Vector2(1, 1);
 	tint = DirectX::Colors::White.v;
 	layerDepth = 0.0f;
+	width = 0;
+	height = 0;
 
 }
 

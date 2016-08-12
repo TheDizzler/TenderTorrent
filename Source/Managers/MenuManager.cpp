@@ -46,23 +46,28 @@ bool lastStateDown;
 void MenuManager::update(double deltaTime,
 	KeyboardController* keys, MouseController* mouse) {
 
-	/*Vector2 mousePos = mouse->getPosition();
+	ShowCursor(false);
+	Vector2 mousePos = mouse->getPosition();
 	if (mousePos.x > Globals::WINDOW_WIDTH) {
 		mousePos.x = Globals::WINDOW_WIDTH;
-		SetCursorPos(mousePos.x, mousePos.y);
+		//SetCursorPos(mousePos.x, mousePos.y);
+		ShowCursor(true);
 	}
 	if (mousePos.y > Globals::WINDOW_HEIGHT) {
 		mousePos.y = Globals::WINDOW_HEIGHT;
-		SetCursorPos(mousePos.x, mousePos.y);
+		//SetCursorPos(mousePos.x, mousePos.y);
+		ShowCursor(true);
 	}
 	if (mousePos.x < 0) {
 		mousePos.x = 0;
-		SetCursorPos(mousePos.x, mousePos.y);
+		//SetCursorPos(mousePos.x, mousePos.y);
+		ShowCursor(true);
 	}
 	if (mousePos.y < 0) {
 		mousePos.y = 0;
-		SetCursorPos(mousePos.x, mousePos.y);
-	}*/
+		//SetCursorPos(mousePos.x, mousePos.y);
+		ShowCursor(true);
+	}
 
 	currentScreen->update(deltaTime, keys, mouse);
 
