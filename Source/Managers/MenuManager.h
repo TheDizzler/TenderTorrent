@@ -43,6 +43,8 @@ public:
 		MouseController* mouse);
 	virtual void draw(SpriteBatch* batch);
 
+	virtual void pause() override;
+
 	void openMainMenu();
 	void openConfigMenu();
 
@@ -69,6 +71,7 @@ public:
 	// Inherited via Screen
 	virtual void setGameManager(GameManager* game) override;
 
+	virtual void pause() override;
 protected:
 
 	GameManager* game;

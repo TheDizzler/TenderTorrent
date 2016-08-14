@@ -11,7 +11,7 @@ public:
 	bool load(ID3D11Device* device,
 		const wchar_t* upButtonFile, const wchar_t* downButtonFile);
 
-	// Inherited via Button
+
 	virtual void draw(SpriteBatch * batch) override;
 
 };

@@ -6,9 +6,9 @@
 
 
 
-enum GameState {
-	menu, paused, playing
-};
+//enum GameState {
+//	menu, paused, playing
+//};
 
 
 class GameEngine;
@@ -30,6 +30,8 @@ public:
 
 	void loadLevel(const wchar_t* file);
 	void loadMainMenu();
+
+	void pause();
 	void exit();
 
 	vector<wstring> getAdapterListDescriptions();

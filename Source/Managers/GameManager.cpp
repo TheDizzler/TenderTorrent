@@ -89,6 +89,11 @@ void GameManager::loadMainMenu() {
 
 #include "../Engine/GameEngine.h"
 
+void GameManager::pause() {
+
+	currentScreen->pause();
+}
+
 void GameManager::exit() {
 
 

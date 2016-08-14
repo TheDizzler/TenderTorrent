@@ -227,14 +227,16 @@ LRESULT CALLBACK wndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 		//}
 
 
-		//case WM_KILLFOCUS:
-		//{
-		//	wostringstream ws;
-		//	ws << "Lost focus\n";
-		//	OutputDebugString(ws.str().c_str());
-		//	//ReleaseCapture();
-		//}
-		//return 0;
+		case WM_KILLFOCUS:
+		{
+			/*wostringstream ws;
+			ws << "Lost focus\n";
+			OutputDebugString(ws.str().c_str());*/
+			//ReleaseCapture();
+
+			gameEngine->pause();
+		}
+		return 0;
 
 		//case WM_ACTIVATE:
 		//{

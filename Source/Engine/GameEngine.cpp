@@ -57,8 +57,8 @@ void GameEngine::run(double deltaTime, int fps) {
 		waitingForInput = false;*/
 
 
-		update(deltaTime);
-		render(deltaTime);
+	update(deltaTime);
+	render(deltaTime);
 
 }
 
@@ -74,7 +74,7 @@ void GameEngine::detectInput(double deltaTime) {
 
 	POINT cursorPos;
 	GetCursorPos(&cursorPos);
-	
+
 	mouse->setPosition(Vector2(cursorPos.x, cursorPos.y));
 } */
 
@@ -101,10 +101,14 @@ void GameEngine::render(double deltaTime) {
 	swapChain->Present(0, 0);
 }
 
+void GameEngine::pause() {
+	game->pause();
+}
+
 void GameEngine::exit() {
 
 	/*if (MessageBox(0, L"Are you sure you want to exit?",
 		L"Really?", MB_YESNO | MB_ICONQUESTION) == IDYES)*/
-		DestroyWindow(hwnd);
+	DestroyWindow(hwnd);
 }
 

@@ -405,24 +405,45 @@ void ScrollBar::setScrollBar(int totalItems, int itemHeight, int maxDisplayItems
 }
 
 
+
+
 void ScrollBar::update(double deltaTime, MouseController* mouse) {
 
 	// update scrubber
 	scrubber->update(deltaTime, mouse);
 
 	scrollBarDownButton->update(deltaTime, mouse);
-	if (scrollBarDownButton->clicked()) {
+	scrollBarUpButton->update(deltaTime, mouse);
+	if (scrollBarDownButton->selected()) {
 		// scroll down
-		scrubber->scroll(percentForOneItem);
-		//OutputDebugString(L"Clicked down!");
+		if (firstClickTimer == 0)
+			scrubber->scroll(percentForOneItem);
+
+		firstClickTimer += deltaTime;
+		if (firstClickTimer >= autoScrollStartDelay) {
+			// start autoscrolling
+			//OutputDebugString(L"Go gogogog!");
+			scrubber->scroll(percentForOneItem);
+			firstClickTimer = autoScrollDelay;
+		}
+	} else if (scrollBarUpButton->selected()) {
+		// scroll up
+		if (firstClickTimer == 0)
+			scrubber->scroll(-percentForOneItem);
+
+		firstClickTimer += deltaTime;
+		if (firstClickTimer >= autoScrollStartDelay) {
+			// start autoscrolling
+			scrubber->scroll(-percentForOneItem);
+			firstClickTimer = autoScrollDelay;
+		}
 	}
 
-	scrollBarUpButton->update(deltaTime, mouse);
-	if (scrollBarUpButton->clicked()) {
-		// scroll up
-		scrubber->scroll(-percentForOneItem);
-		//OutputDebugString(L"Clicked up!!");
-	}
+	if (scrollBarDownButton->clicked()
+		|| scrollBarUpButton->clicked()
+		|| !(scrollBarDownButton->hovering()
+			|| scrollBarUpButton->hovering()))
+		firstClickTimer = 0;
 
 	percentScroll = scrubber->percentAt;
 }

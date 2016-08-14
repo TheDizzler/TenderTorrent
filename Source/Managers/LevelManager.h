@@ -31,6 +31,8 @@ public:
 		MouseController* mouse);
 	virtual void draw(SpriteBatch* batch);
 
+	virtual void pause() override;
+
 
 private:
 
@@ -69,8 +71,11 @@ private:
 	int score = 0;
 
 	bool isPaused;
-	//bool pauseDownLast = false;
+	bool delayedPause = false;
+	bool pauseDownLast = false;
 	//double pauseDelay = 0;
 	void displayWarning(double deltaTime);
 	void displayPause(double deltaTime);
+
+	
 };

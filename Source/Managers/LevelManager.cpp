@@ -110,6 +110,13 @@ bool LevelManager::loadLevel(ID3D11Device* device, const wchar_t* file) {
 	if (!bgManager->loadLevel(device, file))
 		return false;
 
+	waveManager.reset(new WaveManager());
+	if (!waveManager->initialize(device))
+		return false;
+
+	totalPlayTime = 0;
+	playerShip->energy = playerShip->maxEnergy;
+
 	textLabels.push_back(warningLabel.get());
 	playState = STARTING;
 	return true;
@@ -151,22 +158,25 @@ void LevelManager::update(double deltaTime, KeyboardController* keys, MouseContr
 			playerShip->update(deltaTime, keys, mouse);
 			waveManager->update(deltaTime, playerShip.get());
 
-			//if (!pauseDownLast && (keyboardState[DIK_P] || keyboardState[DIK_ESCAPE])) {
-			if (!keys->lastDown[KeyboardController::PAUSE]
-				&& (keys->keyDown[KeyboardController::PAUSE])) {
+			if (!pauseDownLast && keys->keyDown[KeyboardController::PAUSE]) {
+			//if (!keys->lastDown[KeyboardController::CANCEL]
+				//&& keys->keyDown[KeyboardController::CANCEL]) {
 
-				textLabels.push_back(pauseLabel.get());
 				playState = PAUSED;
-				//pauseDownLast = true;
+				pauseDownLast = true;
 			}
 
 			if (!playerShip->isAlive)
 				game->loadMainMenu();
 			break;
 		case STARTING:
-			//bgManager->startUpdate(deltaTime);
+			
 			if (playerShip->startUpdate(deltaTime, mouse)) {
-				playState = PLAYING;
+				if (delayedPause) {
+					playState = PAUSED;
+					delayedPause = false;
+				} else
+					playState = PLAYING;
 				textLabels.pop_back();
 			} else
 				displayWarning(deltaTime);
@@ -180,20 +190,19 @@ void LevelManager::update(double deltaTime, KeyboardController* keys, MouseContr
 				bgManager->clear();
 				playerShip->clear();
 
-				textLabels.pop_back();
-				//pauseDownLast = true;
+
+				pauseDownLast = true;
 
 				game->loadMainMenu();
 			}
 
 			continueButton->update(deltaTime, mouse);
 			if (continueButton->clicked()
-				//|| (!pauseDownLast && (keyboardState[DIK_P] || keyboardState[DIK_ESCAPE]))) {
-				|| (!keys->lastDown[KeyboardController::PAUSE]
-					&& (keys->keyDown[KeyboardController::PAUSE]))) {
+				|| (!pauseDownLast && keys->keyDown[KeyboardController::PAUSE])) {
+				//|| (!keys->lastDown[KeyboardController::CANCEL]
+					//&& keys->keyDown[KeyboardController::CANCEL])) {
 				playState = PLAYING;
-				textLabels.pop_back();
-				//pauseDownLast = true;
+				pauseDownLast = true;
 			}
 			break;
 
@@ -218,7 +227,7 @@ void LevelManager::update(double deltaTime, KeyboardController* keys, MouseContr
 		energyLabel->setText(ws);
 	}
 
-	//pauseDownLast = keyboardState[DIK_P] || keyboardState[DIK_ESCAPE];
+	pauseDownLast = keys->keyDown[KeyboardController::PAUSE];
 }
 
 
@@ -241,10 +250,20 @@ void LevelManager::draw(SpriteBatch* batch) {
 			}
 		exitButton->draw(batch);
 		continueButton->draw(batch);
+		pauseLabel->draw(batch);
 
 	}
 
 
+}
+
+void LevelManager::pause() {
+
+	if (playState != STARTING)
+		playState = PAUSED;
+	else {
+		delayedPause = true;
+	}
 }
 
 
@@ -287,3 +306,4 @@ void LevelManager::displayPause(double deltaTime) {
 
 	pauseFont->setTint(color);
 }
+

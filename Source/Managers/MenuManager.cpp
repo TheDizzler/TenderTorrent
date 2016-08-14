@@ -80,6 +80,10 @@ void MenuManager::draw(SpriteBatch* batch) {
 
 }
 
+void MenuManager::pause() {
+	// do nothing?
+}
+
 void MenuManager::openMainMenu() {
 
 	currentScreen = mainScreen.get();
@@ -114,6 +118,10 @@ MenuScreen::~MenuScreen() {
 void MenuScreen::setGameManager(GameManager* gmMng) {
 
 	game = gmMng;
+}
+
+void MenuScreen::pause() {
+	// do nothing??
 }
 
 

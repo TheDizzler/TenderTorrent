@@ -19,4 +19,5 @@ public:
 	virtual void update(double deltaTime, KeyboardController* keys,
 		MouseController* mouse) = 0;
 	virtual void draw(SpriteBatch* batch) = 0;
+	virtual void pause() = 0;
 };

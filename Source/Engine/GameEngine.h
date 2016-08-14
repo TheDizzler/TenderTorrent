@@ -20,6 +20,7 @@ public:
 	void run(double time, int fps);
 	virtual void render(double time);
 
+	void pause();
 	void exit();
 private:
 

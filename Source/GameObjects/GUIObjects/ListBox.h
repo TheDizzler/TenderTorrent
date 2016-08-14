@@ -132,6 +132,10 @@ private:
 	unique_ptr<ImageButton> scrollBarUpButton;
 	unique_ptr<ImageButton> scrollBarDownButton;
 
+	double firstClickTimer = 0; // time since button clicked
+	double autoScrollStartDelay = .75; // time in seconds before scrollbar starts scrolling
+	double autoScrollDelay = autoScrollStartDelay * .75; // time between increments while autoscrolling
+
 	ID3D11ShaderResourceView* pixel;
 
 };

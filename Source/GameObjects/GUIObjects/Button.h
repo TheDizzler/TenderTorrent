@@ -11,7 +11,6 @@ using namespace std;
 
 /** A visual and logical representation of a button.
 Provides no actions on click; that must be handled else where.*/
-
 class Button {
 public:
 
@@ -22,7 +21,7 @@ public:
 	Button();
 	~Button();
 
-	void update(double deltaTime, MouseController* mouse);
+	virtual void update(double deltaTime, MouseController* mouse);
 	virtual void draw(SpriteBatch* batch) = 0;
 
 	virtual void setPosition(Vector2& position);
@@ -37,7 +36,8 @@ public:
 	Color selectedColor = Color((Vector3(0, .5, 1)));;
 
 	bool clicked();
-
+	bool selected();
+	bool hovering();
 	ButtonAction action;
 
 protected:
@@ -45,14 +45,16 @@ protected:
 	//bool lastButtonStateDown;
 
 	Vector2 position;
+	/* hitArea is taken from Sprite. */
 	const HitArea* hitArea;
 
 	unique_ptr<Sprite> normalSprite;
 	unique_ptr<Sprite> pressedSprite;
 
-	/** Button is held down over button but has not been clicked */
-	bool isSelected = false;
+	/** Mouse is over button but mousebutton has not been pressed. */
 	bool isHover = false;
+	/** Button is held down over mousebutton but has not been released. */
+	bool isSelected = false;
 	bool isClicked = false;
 
 };

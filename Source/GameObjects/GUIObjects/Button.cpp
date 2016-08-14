@@ -14,20 +14,14 @@ void Button::update(double deltaTime, MouseController* mouse) {
 
 	if (isSelected && !mouse->leftButtonDown()) {
 		isClicked = true;
-		//mouse->leftButtonHandled();
 	} else {
 		isClicked = false;
 		if (!isHover)
 			isSelected = false;
-		//else if (!lastButtonStateDown && mouse->leftButtonDown()) {
 		else if (!mouse->leftButtonLastDown() && mouse->leftButtonDown()) {
 			isSelected = true;
-			//mouse->leftButtonHandled();
 		}
-
 	}
-
-	//lastButtonStateDown = mouse->leftButtonDown();
 }
 
 
@@ -44,8 +38,6 @@ void Button::setPosition(Vector2& pos) {
 const Vector2& Button::getPosition() {
 	return position;
 }
-
-
 
 void Button::setScale(const Vector2 & scale) {
 
@@ -71,5 +63,15 @@ bool Button::clicked() {
 		isClicked = isSelected = false;
 		return true;
 	}
+
 	return false;
+}
+
+bool Button::selected() {
+
+	return isSelected;
+}
+
+bool Button::hovering() {
+	return isHover;
 }
