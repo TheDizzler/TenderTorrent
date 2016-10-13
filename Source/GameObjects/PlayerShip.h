@@ -2,8 +2,10 @@
 
 #include <dinput.h>
 
-#include "../Engine/MouseController.h"
-#include "../Engine/KeyboardController.h"
+#include "../Managers/GFXAssetManager.h"
+
+#include "../DXTKGui/Controllers/MouseController.h"
+#include "../DXTKGui/Controllers/KeyboardController.h"
 #include "LaserSystem.h"
 #include "../globals.h"
 #include "Turret.h"
@@ -11,10 +13,8 @@
 
 static Vector2 startPosition(Globals::WINDOW_WIDTH / 2, Globals::WINDOW_HEIGHT + 175);
 
-using namespace std;
 
 class PlayerShip : public Sprite {
-
 public:
 
 	PlayerShip(const Vector2& position);
@@ -22,7 +22,12 @@ public:
 
 	void clear();
 
-	bool loadBullet(ID3D11Device* device);
+	/*
+		TODO?
+			Loading bullets should be done internally of weapon system.
+	*/
+	bool loadBullet(GFXAssetManager* gfxAssets);
+
 	/** Update to perform before action starts.
 		Return true when ship has moved into position. */
 	bool startUpdate(double deltaTime, MouseController* mouse);

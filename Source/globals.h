@@ -16,7 +16,7 @@ namespace Globals {
 	static bool FULL_SCREEN = false;
 
 
-	inline bool reportError(HRESULT hr) {
+	/*inline bool reportError(HRESULT hr) {
 
 		if (FAILED(hr)) {
 			_com_error err(hr);
@@ -25,7 +25,7 @@ namespace Globals {
 		}
 
 		return false;
-	}
+	}*/
 
 	/* For reference purposes only. */
 	/*wstring convertIntToWString(float number) {

@@ -3,14 +3,14 @@
 #include "WeaponSystem.h"
 #include "LaserBolt.h"
 
-
+/** !!!!!!!!!!!!!!
+	TODO:
+		Put different WeaponSystems in XML files for live editing.
+	!!!!!!!!!!!!!!*/
 class LaserSystem : public WeaponSystem {
 public:
 	LaserSystem(Vector2 position);
 	~LaserSystem();
-
-	//virtual bool loadWeaponTexture(ID3D11Device* device, const wchar_t* textureFile);
-
 
 private:
 

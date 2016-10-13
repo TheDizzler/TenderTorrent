@@ -33,9 +33,10 @@ bool GUIFactory::initialize(ComPtr<ID3D11Device> dev,
 				L"Fatal Read Error!", MB_OK);
 			return false;
 		}
-	}
 
-	guiAssetsNode = docAssMan->child("root").child("gui");
+		guiAssetsNode = docAssMan->child("root").child("gui");
+	}
+	
 
 	device = dev;
 	deviceContext = devCon;

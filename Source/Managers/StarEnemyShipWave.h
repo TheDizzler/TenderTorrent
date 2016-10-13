@@ -7,7 +7,7 @@ class StarEnemyShipWave : public Wave {
 public:
 	StarEnemyShipWave();
 	~StarEnemyShipWave();
-	virtual bool initialize(ID3D11Device * device) override;
+	virtual bool initialize(GFXAssetManager* gfxAssets) override;
 
 	virtual void launchNewWave() override;
 

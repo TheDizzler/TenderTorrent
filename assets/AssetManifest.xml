@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root game="TenderTorrent" xml="AssetManifest" dir="assets/">
+
+	<gfx dir="gfx/">
+
+		<sprite name="Enemy Bullet A" file="bullet yellow.dds"/>
+		<sprite name="Cross Bullet" file="cross bullet.dds"/>
+		<sprite name="Laserbolt" file="laserbolt.dds"/>
+
+
+		<sprite name="EnemyShip RearAttack" file="enemy ship A.dds"/>
+		<sprite name="EnemyShip Star" file="enemy ship B.dds"/>
+		<sprite name="PlayerShip Hull" file="HeroShip.dds"/>
+		<sprite name="PlayerShip Turret" file="Turret(24x24).dds"/>
+
+		<sprite name="Sun Bullet" file="sunball.dds"/>
+		
+
+
+		<sprite name="Corner Frame" file="corner frame.dds"/>
+
+	</gfx>
+
+	<gui dir="gui/">
+		<spritefonts dir="fonts/">
+			<font name="Arial" file="Arial.spritefont" fontSize="16" />
+			<font name="Bookshelf" file="Bookshelf.spritefont" fontSize="42" />
+			<font name="BlackCloak" file="BlackCloak.spritefont" fontSize="32" />
+		</spritefonts>
+
+		<sprite name="Test BG" file="TestBG.dds" />
+		<sprite name="White Pixel" file="WhitePixel.dds" />
+		<sprite name="Mouse Icon" file="mouse icon.dds" />
+		<sprite name="Mouse Reticle" file="reticle (16x16).dds" />
+
+		<sprite name="Button Up" file="button up (256x64).dds" />
+		<sprite name="Button Down" file="button down (256x64).dds" />
+
+		<sprite name="CheckBox Unchecked B" file="CheckBox Unchecked.dds" />
+		<sprite name="CheckBox Checked B" file="CheckBox Checked.dds" />
+		<sprite name="CheckBox Unchecked" file="CheckBox Unchecked White.dds" />
+		<sprite name="CheckBox Checked" file="CheckBox Checked White.dds" />
+
+
+		<!-- Excessive buttons are excessive -->
+		<sprite name="Combo Button Closed" file="ComboButtonClosed.dds" />
+		<sprite name="Combo Button Opened" file="ComboButtonOpen.dds" />
+		<sprite name="ScrollBar Up" file="ScrollBarUp.dds" />
+		<sprite name="ScrollBar Up Pressed" file="ScrollBarUpPressed.dds" />
+		<sprite name="ScrollBar Down" file="ScrollBarDown.dds" />
+		<sprite name="ScrollBar Down Pressed" file="ScrollBarDownPressed.dds" />
+		<sprite name="ScrollBar Up Custom" file="ScrollBarUpCustom.dds" />
+		<sprite name="ScrollBar Up Pressed Custom" file="ScrollBarUpPressedCustom.dds" />
+		<sprite name="ScrollBar Track Custom" file="ScrollBarTrack.dds" />
+		<sprite name="Scrubber Custom" file="ScrubberCustom.dds" />
+
+
+		<sprite name="Ugly Dialog" file="dialog pink (200x200).dds" />
+
+		<!-->spritesheet file="LaunchButton Spritesheet.dds">
+			<animation name="Launch Button">
+				<sprite x="96"  y="0"  width="63" height="63" />
+				<sprite x="188" y="0"  width="71" height="63" />
+				<sprite x="313" y="0"  width="77" height="63" />
+				<sprite x="438" y="0"  width="83" height="63" />
+				<sprite x="83"  y="64" width="89" height="63" />
+				<sprite x="208" y="64" width="95" height="63" />
+				<sprite x="333" y="64" width="101" height="63" />
+				<sprite x="457" y="64" width="109" height="63" />
+				<sprite x="5"   y="128" width="117" height="63" />
+				<sprite x="128" y="128" width="127" height="63" />
+				<sprite x="256" y="128" width="127" height="63" />
+				<sprite x="384" y="128" width="127" height="63" />
+			</animation>
+		</spritesheet-->
+	</gui>
+</root>

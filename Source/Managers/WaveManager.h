@@ -11,7 +11,7 @@ public:
 	WaveManager();
 	~WaveManager();
 
-	bool initialize(ID3D11Device* device);
+	bool initialize(GFXAssetManager* gfxAssets);
 	void clear();
 
 	void update(double deltaTime, PlayerShip* player);

@@ -13,7 +13,7 @@ public:
 	Background();
 	~Background();
 
-	virtual bool load(ID3D11Device* device, const wchar_t* file) override;
+	virtual bool load(ComPtr<ID3D11Device> device, const wchar_t* file);
 	void clear();
 
 	void update(double deltaTime, PlayerShip* player);
@@ -27,6 +27,7 @@ private:
 	Vector2 startPos;
 	unique_ptr<FontSet> healthFont;
 	unique_ptr<Sprite> cornerFrame;
+	vector<unique_ptr<GraphicsAsset> > bgLayerAssets;
 
-	bool loadLevel(ID3D11Device* device, xml_node levelRoot);
+	bool loadLevel(ComPtr<ID3D11Device> device, xml_node levelRoot);
 };

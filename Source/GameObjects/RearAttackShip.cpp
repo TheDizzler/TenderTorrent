@@ -21,6 +21,7 @@ RearAttackShip::RearAttackShip(bool isRght) : EnemyShip(position) {
 RearAttackShip::~RearAttackShip() {
 }
 
+#include "../globals.h"
 void RearAttackShip::update(double deltaTime, PlayerShip* player) {
 
 	timeAlive += deltaTime / 2;
@@ -68,6 +69,3 @@ void RearAttackShip::update(double deltaTime, PlayerShip* player) {
 
 	EnemyShip::update(deltaTime);
 }
-
-
-

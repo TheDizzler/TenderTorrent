@@ -1,18 +1,19 @@
 #pragma once
 
-#include <vector>
-
 #include "Bullet.h"
-#include "../globals.h"
 
+/*
+!!!!!!!!!!!!!!
+	TODO:
+		Put different WeaponSystems in XML files for live editing.
+!!!!!!!!!!!!!!
+*/
 class WeaponSystem {
 public:
-
-	//WeaponSystem();
 	WeaponSystem(Vector2 locationOffset);
 	~WeaponSystem();
 
-	virtual bool loadBulletTexture(ID3D11Device* device, const wchar_t* textureFile);
+	virtual void loadBulletTexture(GraphicsAsset* bulletAsset);
 
 	virtual void setWeaponStats(int energyCost, float coolDownTime);
 
@@ -30,7 +31,7 @@ public:
 	Vector2 locationOffset;
 
 protected:
-	std::unique_ptr<Sprite> baseBulletSprite;
+	unique_ptr<Sprite> baseBulletSprite;
 	float coolDownTime = .1;
 
 	Vector2 weaponLocation;

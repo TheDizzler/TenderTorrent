@@ -9,40 +9,44 @@ MenuManager::~MenuManager() {
 }
 
 void MenuManager::setGameManager(GameManager * gm) {
-
 	game = gm;
-
-
 }
 
-bool MenuManager::initialize(ID3D11Device* device, MouseController* mouse) {
 
-	menuFont.reset(new FontSet());
-	if (!menuFont->load(device, Assets::arialFontFile))
-		return false;
-	menuFont->setTint(DirectX::Colors::Black.v);
 
-	if (!mouse->load(device, Assets::mouseReticleFile))
+bool MenuManager::initialize(ComPtr<ID3D11Device> device, MouseController* mouse) {
+
+
+	if (!mouse->loadMouseIcon(GameManager::guiFactory.get(), "Mouse Reticle"))
 		return false;
 
-	mainScreen.reset(new MainScreen(this, menuFont.get()));
+	mainScreen.reset(new MainScreen(this));
 	mainScreen->setGameManager(game);
 	if (!mainScreen->initialize(device, mouse))
 		return false;
 
-	configScreen.reset(new ConfigScreen(this, menuFont.get()));
+	configScreen.reset(new ConfigScreen(this));
 	configScreen->setGameManager(game);
 	if (!configScreen->initialize(device, mouse))
 		return false;
-
+	configScreen->update(0, NULL, mouse);
 
 
 	currentScreen = mainScreen.get();
+
+	transitionManager.reset(
+		new ScreenTransitions::ScreenTransitionManager(
+			GameManager::guiFactory.get(), "Test BG"));
+	transitionManager->setTransition(
+		//new ScreenTransitions::FlipScreenTransition(true));
+		//new ScreenTransitions::SquareFlipScreenTransition());
+		new ScreenTransitions::LineWipeScreenTransition());
+
 	return true;
 }
 
-bool lastStateDown;
 
+bool lastStateDown;
 void MenuManager::update(double deltaTime,
 	KeyboardController* keys, MouseController* mouse) {
 
@@ -69,7 +73,13 @@ void MenuManager::update(double deltaTime,
 		ShowCursor(true);
 	}
 
-	currentScreen->update(deltaTime, keys, mouse);
+	if (switchTo != NULL) {
+		if (transitionManager->runTransition(deltaTime)) {
+			currentScreen = switchTo;
+			switchTo = NULL;
+		}
+	} else
+		currentScreen->update(deltaTime, keys, mouse);
 
 }
 
@@ -95,24 +105,20 @@ void MenuManager::openConfigMenu() {
 }
 
 
+
+
 /** **** MenuScreen abstract class **** */
-MenuScreen::MenuScreen(MenuManager * mngr, FontSet * fntst) {
+MenuScreen::MenuScreen(MenuManager* mngr) {
 
 	menuManager = mngr;
-	menuFont = fntst;
 }
 
 MenuScreen::~MenuScreen() {
 
-// textlabels are unique_ptrs
-	for each (TextLabel* label in textLabels)
-		delete label;
+	for (GUIControl* control : guiControls)
+		delete control;
 
-	for (TextButton* button : buttons)
-		delete button;
-
-	for (ListBox* list : listBoxes)
-		delete list;
+	guiControls.clear();
 }
 
 void MenuScreen::setGameManager(GameManager* gmMng) {
@@ -126,7 +132,7 @@ void MenuScreen::pause() {
 
 
 /** **** MainMenuScreen **** **/
-MainScreen::MainScreen(MenuManager* mngr, FontSet* fntst) : MenuScreen(mngr, fntst) {
+MainScreen::MainScreen(MenuManager* mngr) : MenuScreen(mngr) {
 
 }
 
@@ -134,140 +140,115 @@ MainScreen::~MainScreen() {
 }
 
 
-bool MainScreen::initialize(ID3D11Device* device, MouseController* mouse) {
+bool MainScreen::initialize(ComPtr<ID3D11Device> device, MouseController* mouse) {
 
-	TextButton* button = new TextButton();
-	if (!button->load(device, Assets::arialFontFile,
-		Assets::buttonUpFile, Assets::buttonDownFile))
-		return false;
-	button->action = Button::PLAY;
-	button->setText("Play");
-	button->setPosition(Vector2(Globals::WINDOW_WIDTH / 2, 200));
-	buttons.push_back(button);
+	Vector2 buttonpos = Vector2(Globals::WINDOW_WIDTH / 2, 200);
+	Vector2 buttonsize =
+		Vector2(Globals::WINDOW_WIDTH / 4, Globals::WINDOW_HEIGHT / 4);
+	Button* button = GameManager::guiFactory->createButton(
+		buttonpos, buttonsize, L"Play");
 
+	button->setOnClickListener(new PlayButtonListener(game));
+	guiControls.push_back(button);
 
-	button = new TextButton();
-	if (!button->load(device, Assets::arialFontFile,
-		Assets::buttonUpFile, Assets::buttonDownFile))
-		return false;
-	button->action = Button::SETTINGS;
-	button->setText("Settings");
-	button->setPosition(Vector2(Globals::WINDOW_WIDTH / 2, 350));
-	buttons.push_back(button);
+	buttonpos.y += 150;
+	button = GameManager::guiFactory->createButton(
+		buttonpos, buttonsize, L"Setttings");
+	button->setOnClickListener(new SettingsButtonListener(this));
+	guiControls.push_back(button);
 
-
-	button = new TextButton();
-	if (!button->load(device, Assets::arialFontFile,
-		Assets::buttonUpFile, Assets::buttonDownFile))
-		return false;
-	button->action = Button::EXIT;
-	button->setText("Exit");
-	button->setPosition(Vector2(Globals::WINDOW_WIDTH / 2, 500));
-	buttons.push_back(button);
+	buttonpos.y += 150;
+	button = GameManager::guiFactory->createButton(
+		buttonpos, buttonsize, L"Exit");
+	guiControls.push_back(button);
 
 
-	test = new TextLabel(Vector2(10, 10), menuFont);
 
-	textLabels.push_back(test);
+	{
+		exitDialog.reset(GameManager::guiFactory->createDialog(true));
+		Vector2 dialogPos, dialogSize;
+		dialogSize = Vector2(Globals::WINDOW_WIDTH / 2, Globals::WINDOW_HEIGHT / 2);
+		dialogPos = dialogSize;
+		dialogPos.x -= dialogSize.x / 2;
+		dialogPos.y -= dialogSize.y / 2;
+		exitDialog->setDimensions(dialogPos, dialogSize);
+		exitDialog->setTint(Color(0, .5, 1, 1));
+		exitDialog->setTitle(L"Exit Test?", Vector2(1, 1), "BlackCloak");
+		//exitDialog->setTitleAreaDimensions(Vector2(0, 150));
+		exitDialog->setText(L"Really Quit The Test Project?");
+		unique_ptr<Button> quitButton;
+		quitButton.reset(GameManager::guiFactory->createButton());
+		quitButton->setOnClickListener(new OnClickListenerDialogQuitButton(this));
+		quitButton->setText(L"Quit");
+		exitDialog->setConfirmButton(move(quitButton));
+		exitDialog->setCancelButton(L"Keep Testing!");
+		exitDialog->open();
+		exitDialog->setOpenTransition(
+			/*new TransitionEffects::SpinGrowTransition(exitDialog.get(), .5));*/
+			new TransitionEffects::SplitTransition(exitDialog.get(), Globals::WINDOW_WIDTH));
+			//new TransitionEffects::BlindsTransition(exitDialog.get(), .5, false, true));
+		/*new TransitionEffects::TrueGrowTransition(exitDialog.get(),
+		Vector2(.001, .001), Vector2(1, 1)));*/
+		/*new TransitionEffects::SlideAndGrowTransition(
+		Vector2(-200, -200), exitDialog->getPosition(),
+		Vector2(.001, .001), Vector2(1, 1)));*/
+		/*new TransitionEffects::GrowTransition(
+		Vector2(.0001, 0001), Vector2(1, 1)));*/
+		/*new TransitionEffects::SlideTransition(
+		Vector2(-200, -200), exitDialog->getPosition()));*/
 
-	mouseLabel = new TextLabel(Vector2(10, 100), menuFont);
-	textLabels.push_back(mouseLabel);
-
-
-	exitDialog.reset(new Dialog(
-		Vector2(Globals::WINDOW_WIDTH / 2, Globals::WINDOW_HEIGHT / 2)));
-	if (!exitDialog->initialize(device, Assets::arialFontFile)) {
-		MessageBox(0, L"Dialog init failed", L"Error", MB_OK);
-		return false;
+		//exitDialog->setCloseTransition(
+		/*new TransitionEffects::ShrinkTransition(
+		Vector2(1, 1), Vector2(.001, .001)));*/
+		exitDialog->close();
 	}
-
 
 
 
 	return true;
 }
 
-
+Keyboard::KeyboardStateTracker keyTracker;
 void MainScreen::update(double deltaTime,
 	KeyboardController* keys, MouseController* mouse) {
 
-	wostringstream ws;
-	ws << "Mouse: " << mouse->getPosition().x << ", " << mouse->getPosition().y;
-	mouseLabel->setText(ws);
 
-
-
-	//if (keyboardState[DIK_ESCAPE] && !lastStateDown) {
-	if (keys->keyDown[KeyboardController::ESC]
-		&& !keys->lastDown[KeyboardController::ESC]) {
+	auto state = Keyboard::Get().GetState();
+	keyTracker.Update(state);
+	if (keyTracker.IsKeyReleased(Keyboard::Escape)) {
 		if (exitDialog->isOpen)
 			exitDialog->close();
 		else
-			confirmExit();
+			exitDialog->open();
 	}
-
-	//lastStateDown = keyboardState[DIK_ESCAPE];
 
 
 	if (exitDialog->isOpen) {
-		exitDialog->update(deltaTime, mouse);
-		switch (exitDialog->getResult()) {
-			case Dialog::CONFIRM:
-				game->exit();
-				break;
-			case Dialog::CANCEL:
-				exitDialog->close();
-				break;
-		}
-
+		exitDialog->update(deltaTime);
 	} else {
-		for (TextButton* button : buttons) {
-			button->update(deltaTime, mouse);
-			if (button->clicked()) {
-				//test->setText("Clicked!");
-				switch (button->action) {
-					case Button::EXIT:
-						confirmExit();
-						//test->setText("Exit!");
-						break;
-					case Button::PLAY:
-						game->loadLevel(Assets::levelMakoXML);
-						//test->setText("Play!");
-						break;
-					case Button::SETTINGS:
-						menuManager->openConfigMenu();
-						//test->setText("Settings!!");
-						break;
-				}
-			}
-		}
+		for (auto const& control : guiControls)
+			control->update(deltaTime);
 	}
 }
 
 
 void MainScreen::draw(SpriteBatch* batch) {
 
-	for (TextButton* button : buttons)
-		button->draw(batch);
+	for (auto const& control : guiControls)
+		control->draw(batch);
 
-	for (auto const& label : textLabels)
-		label->draw(batch);
-
-	if (exitDialog->isOpen)
-		exitDialog->draw(batch);
-
+	exitDialog->draw(batch);
 }
 
 
 void MainScreen::confirmExit() {
-
 	exitDialog->open();
 }
 
 
 
 /** **** ConfigScreen **** **/
-ConfigScreen::ConfigScreen(MenuManager* mngr, FontSet* fntst) : MenuScreen(mngr, fntst) {
+ConfigScreen::ConfigScreen(MenuManager* mngr) : MenuScreen(mngr) {
 
 }
 
@@ -275,138 +256,266 @@ ConfigScreen::~ConfigScreen() {
 }
 
 
-bool ConfigScreen::initialize(ID3D11Device* device, MouseController* mouse) {
+int MARGIN = 10;
+int itemHeight = 32;
+bool ConfigScreen::initialize(ComPtr<ID3D11Device> device, MouseController* mouse) {
 
-	// Labels for displaying selected info
-	TextLabel* label = new TextLabel(Vector2(50, 50), menuFont);
-	label->setText(L"test");
-	textLabels.push_back(label);
+	Vector2 controlPos = Vector2(50, 50);
+	// Labels for displaying pressed info
+	adapterLabel =
+		GameManager::guiFactory->createTextLabel(controlPos, L"Test");
+	adapterLabel->setHoverable(true);
+	guiControls.push_back(adapterLabel);
 
-	label = new TextLabel(Vector2(475, 50), menuFont);
-	label->setText(L"test 2");
-	textLabels.push_back(label);
+	controlPos.y += adapterLabel->getHeight() + MARGIN;
 
-	ListBox* listbox = new ListBox(Vector2(50, 100), 400);
-	listbox->initialize(device, Assets::arialFontFile);
-
+	// create listbox of gfx cards
+	adapterListbox =
+		GameManager::guiFactory->createListBox(controlPos, 400, itemHeight);
+	guiControls.push_back(adapterListbox);
 	vector<ListItem*> adapterItems;
 	for (ComPtr<IDXGIAdapter> adap : game->getAdapterList()) {
 		AdapterItem* item = new AdapterItem();
-		item->adapter = adap.Get();
+		item->adapter = adap;
 		adapterItems.push_back(item);
 	}
+	adapterListbox->addItems(adapterItems);
+	adapterListbox->setSelected(game->getSelectedAdapterIndex());
 
-	listbox->addItems(adapterItems);
-	listbox->setSelected(game->getSelectedAdapterIndex());
-	listBoxes.push_back(listbox);
+	OnClickListenerAdapterList* onClickAdapterList = new OnClickListenerAdapterList(this);
+	adapterListbox->setOnClickListener(onClickAdapterList);
 
-	textLabels[0]->setText(listBoxes[0]->getSelected()->toString());
-	//listItems.clear();
-
-
-	// Selected adapter display mode list
-	listbox = new ListBox(Vector2(475, 100), 175);
-	listbox->initialize(device, Assets::arialFontFile);
-
-	vector<ListItem*> displayModeItems;
-	for (DXGI_MODE_DESC mode : game->getDisplayModeList(game->getSelectedAdapterIndex())) {
-		DisplayModeItem* item = new DisplayModeItem();
-		item->modeDesc = mode;
-		displayModeItems.push_back(item);
-	}
-	listbox->addItems(displayModeItems);
-	listbox->setSelected(game->getSelectedDisplayMode());
-	listBoxes.push_back(listbox);
-
-	textLabels[1]->setText(listBoxes[1]->getSelected()->toString());
+	adapterLabel->setText(adapterListbox->getSelected()->toString());
 
 
-	TextButton* button = new TextButton();
-	if (!button->load(device, Assets::arialFontFile,
-		Assets::buttonUpFile, Assets::buttonDownFile))
-		return false;
-	button->action = Button::ButtonAction::CANCEL;
-	button->setText("Back");
+	controlPos.y += adapterListbox->getHeight() + MARGIN * 2;
+	displayLabel = GameManager::guiFactory->createTextLabel(controlPos, L"A");
+	guiControls.push_back(displayLabel);
+
+	controlPos.y += displayLabel->getHeight() + MARGIN;
+
+	// create listbox of monitors available to pressed gfx card
+	displayListbox = GameManager::guiFactory->createListBox(controlPos, 400, itemHeight);
+	guiControls.push_back(displayListbox);
+	// because only the one adapter has displays on my laptop
+	// this has to be grab the first (and only) display.
+	populateDisplayList(game->getDisplayListFor(0));
+	displayListbox->setSelected(game->getSelectedDisplayIndex());
+
+	displayLabel->setText(displayListbox->getSelected()->toString());
+
+	// setup label for Display Mode
+	controlPos.x += displayListbox->getWidth() + MARGIN * 2;
+	controlPos.y = 50;
+
+
+	// Setup display mode combobox
+
+	// custom scrollbar for combo list
+	ScrollBarDesc scrollBarDesc;
+	scrollBarDesc.upButtonImage = "ScrollBar Up Custom";
+	scrollBarDesc.upPressedButtonImage = "ScrollBar Up Pressed Custom";
+	//scrollBarDesc.downButtonImage = "ScrollBar Down";
+	scrollBarDesc.trackImage = "ScrollBar Track Custom";
+	scrollBarDesc.scrubberImage = "Scrubber Custom";
+
+	displayModeCombobox =
+		GameManager::guiFactory->createComboBox(controlPos, 75, itemHeight, 10, true);
+
+	populateDisplayModeList(
+		game->getDisplayModeList(0));
+	displayModeCombobox->setScrollBar(scrollBarDesc);
+	displayModeCombobox->setSelected(game->getSelectedDisplayModeIndex());
+	guiControls.push_back(displayModeCombobox);
+
+	OnClickListenerDisplayModeList* onClickDisplayMode =
+		new OnClickListenerDisplayModeList(this);
+	displayModeCombobox->setOnClickListener(onClickDisplayMode);
+
+
+	// Set up CheckBox for full-screen toggle
+	CheckBox* check = GameManager::guiFactory->createCheckBox(
+		Vector2(50, 450), L"Full Screen");
+	OnClickListenerFullScreenCheckBox* onClickFullScreen
+		= new OnClickListenerFullScreenCheckBox(this);
+	check->setChecked(Globals::FULL_SCREEN);
+	check->setOnClickListener(onClickFullScreen);
+	guiControls.push_back(check);
+
+	testLabel = GameManager::guiFactory->createTextLabel(
+		Vector2(250, 450), L"Test Messages here");
+	guiControls.push_back(testLabel);
+
+	// Create Apply and Cancel Buttons
+	ImageButton* button = (ImageButton*) GameManager::guiFactory->
+		createImageButton("Button Up", "Button Down");
+	button->action = Button::ClickAction::CANCEL;
+	button->setText(L"Back");
 	button->setPosition(
 		Vector2(Globals::WINDOW_WIDTH / 2 - button->getWidth(),
-			Globals::WINDOW_HEIGHT - button->getHeight()));
-	buttons.push_back(button);
+			Globals::WINDOW_HEIGHT - button->getHeight() - 25));
+	guiControls.push_back(button);
 
-	button = new TextButton();
-	if (!button->load(device, Assets::arialFontFile,
-		Assets::buttonUpFile, Assets::buttonDownFile))
-		return false;
-	button->action = Button::ButtonAction::OK;
-	button->setText("Apply");
+	button = (ImageButton*) GameManager::guiFactory->
+		createImageButton("Button Up", "Button Down");
+	button->action = Button::ClickAction::OK;
+	button->setText(L"Apply");
 	button->setPosition(
-		Vector2(Globals::WINDOW_WIDTH / 2 + button->getWidth(),
-			Globals::WINDOW_HEIGHT - button->getHeight()));
-	buttons.push_back(button);
+		Vector2(Globals::WINDOW_WIDTH / 2,
+			Globals::WINDOW_HEIGHT - button->getHeight() - 25));
+	guiControls.push_back(button);
 
 
 	return true;
 }
 
 
-void ConfigScreen::update(double deltaTime, KeyboardController* keys,
-	MouseController* mouse) {
+void ConfigScreen::update(double deltaTime, KeyboardController* keys, MouseController* mouse) {
 
-	for (TextButton* button : buttons) {
-		button->update(deltaTime, mouse);
-		if (button->clicked()) {
-			//test->setText("Clicked!");
-			switch (button->action) {
-				case Button::CANCEL:
-					menuManager->openMainMenu();
-					break;
-			}
-		}
-	}
+	auto state = Keyboard::Get().GetState();
+	keyTracker.Update(state);
 
-	//for (ListBox* listbox : listBoxes) {
-	for (int i = 0; i < listBoxes.size(); ++i) {
-
-		if (listBoxes[i]->update(deltaTime, mouse)) {
-
-			textLabels[i]->setText(listBoxes[i]->getSelected()->toString());
-		}
+	if (keyTracker.IsKeyReleased(Keyboard::Escape)) {
+		menuManager->openMainMenu();
 	}
 
 
+	for (auto const& control : guiControls) {
+		control->update(deltaTime);
+	}
 }
 
 void ConfigScreen::draw(SpriteBatch* batch) {
 
-	for (TextButton* button : buttons)
-		button->draw(batch);
+	for (auto const& control : guiControls)
+		control->draw(batch);
+}
 
-	for (ListBox* listbox : listBoxes)
-		listbox->draw(batch);
+void ConfigScreen::populateDisplayList(vector<ComPtr<IDXGIOutput>> displays) {
 
-	for (TextLabel* label : textLabels)
-		label->draw(batch);
+	displayListbox->clear();
+	vector<ListItem*> adapterOuts;
+	for (ComPtr<IDXGIOutput> adap : displays) {
+
+		DisplayItem* item = new DisplayItem();
+		item->adapterOutput = adap;
+		adapterOuts.push_back(item);
+	}
+	displayListbox->addItems(adapterOuts);
+}
+
+void ConfigScreen::populateDisplayModeList(vector<DXGI_MODE_DESC> displayModes) {
+
+	displayModeCombobox->clear();
+	vector<ListItem*> displayModeItems;
+	for (DXGI_MODE_DESC mode : displayModes) {
+		/*if (!Globals::FULL_SCREEN && mode.Scaling == 0)
+		continue;*/
+		DisplayModeItem* item = new DisplayModeItem();
+		item->modeDesc = mode;
+		displayModeItems.push_back(item);
+	}
+	displayModeCombobox->addItems(displayModeItems);
 }
 
 
-
+#include <sstream>
 void AdapterItem::setText() {
 
 	DXGI_ADAPTER_DESC desc;
 	ZeroMemory(&desc, sizeof(DXGI_ADAPTER_DESC));
 	adapter->GetDesc(&desc);
-	textLabel->setText(desc.Description);
+	wostringstream wss;
+	if (isEnumerated) {
+		wss << listPosition << ": ";
+	}
+	wss << desc.Description;
+	textLabel->setText(wss);
 }
 
-static int num = 0;
+
+void DisplayItem::setText() {
+
+	DXGI_OUTPUT_DESC desc;
+	adapterOutput->GetDesc(&desc);
+	wostringstream wss;
+	if (isEnumerated) {
+		wss << listPosition << ": ";
+	}
+	wss << desc.DeviceName;
+	textLabel->setText(wss);
+}
+
 void DisplayModeItem::setText() {
 
 	UINT width = modeDesc.Width;
 	UINT height = modeDesc.Height;
 
-	wostringstream mode;
-	//mode << "Format: " << displayModeList[i].Format;
-	mode << num++ << ": " << width << " x " << height;
+	wostringstream wss;
+	if (isEnumerated) {
+		wss << listPosition << ": ";
+	}
+	wss << width << " x " << height;
+	wss << " Fill: " << ((modeDesc.Scaling == 0) ? L"Yes" : L"No");
+	textLabel->setText(wss.str());
 
-	textLabel->setText(mode.str());
+}
 
+
+void OnClickListenerAdapterList::onClick(ListBox* listbox, int selectedIndex) {
+
+	AdapterItem* selectedItem = (AdapterItem*) listbox->getItem(selectedIndex);
+	config->game->setAdapter(selectedIndex);
+	config->populateDisplayList(config->game->getDisplayList());
+	config->populateDisplayModeList(
+		config->game->getDisplayModeList(0
+		/*config->game->getSelectedAdapterIndex()*/));
+
+	config->adapterLabel->setText(listbox->getSelected()->toString());
+}
+
+void OnClickListenerDisplayModeList::onClick(ComboBox* combobox, int selectedIndex) {
+
+	if (!config->game->setDisplayMode(selectedIndex)) {
+		// change back to previous setting
+		config->testLabel->setText("Display mode switch failed!");
+	} else {
+		// reconstruct display
+		config->testLabel->setText(combobox->getItem(selectedIndex)->toString());
+	}
+
+}
+
+void OnClickListenerFullScreenCheckBox::onClick(CheckBox* checkbox, bool isChecked) {
+
+	/*wostringstream wss;
+	wss << "CheckBox is checked: " << isChecked;
+	config->displayModeLabel->setText(wss);*/
+	if (!config->game->setFullScreen(isChecked)) {
+		// revert to old settings
+	} else {
+		// reconstruct display
+
+		config->populateDisplayModeList(config->game->getDisplayModeList(0));
+		//config->displayModeCombobox->setSelected(config->game->getSelectedDisplayModeIndex());
+	}
+}
+
+void SettingsButtonListener::onClick(Button* button) {
+
+	main->menuManager->openConfigMenu();
+}
+
+void OnClickListenerDialogQuitButton::onClick(Button* button) {
+	main->exitDialog->close();
+	main->confirmExit();
+}
+
+void OnClickListenerExitButton::onClick(Button* button) {
+	main->exitDialog->open();
+}
+
+void PlayButtonListener::onClick(Button* button) {
+
+	game->loadLevel(L"Level Mako");
 }

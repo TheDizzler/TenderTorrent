@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Graphics/Sprite.h"
+#include "../DXTKGui/BaseGraphics/Sprite.h"
 #include "PlayerShip.h"
 #include "EnemyBullet.h"
 

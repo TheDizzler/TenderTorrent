@@ -25,12 +25,6 @@
     <Filter Include="Source Files\EnemyShips">
       <UniqueIdentifier>{c69c133a-2bbe-4d68-ab65-4e65bc09c97c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\BaseClasses">
-      <UniqueIdentifier>{b7d87cb7-9ed3-4f3a-a32e-64945f36192c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\BaseClasses">
-      <UniqueIdentifier>{f852081d-a23e-47ec-8088-f75a7ee21692}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Engine">
       <UniqueIdentifier>{20c8a84b-cee4-4cfc-be3f-3b418c1ac444}</UniqueIdentifier>
     </Filter>
@@ -43,14 +37,47 @@
     <Filter Include="Source Files\Backgrounds">
       <UniqueIdentifier>{5fe34bbf-a561-430c-8aa6-4bc6fbff7eaf}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Backgrounds\levels">
-      <UniqueIdentifier>{e57a88ac-c0b4-45af-8d5c-623ecb07332f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\MenuItems">
       <UniqueIdentifier>{7a3b6f40-549b-4aa0-b14a-4ecce25e0eee}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\MenuItems">
       <UniqueIdentifier>{472b628f-7c46-4a28-9503-08c27fd2e478}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\DXTKGui">
+      <UniqueIdentifier>{539bd89f-040b-4da5-b31d-2d16f2786730}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\DXTKGui\BaseClasses">
+      <UniqueIdentifier>{fd8b1422-a515-4aa9-9aca-b0c840cbd6c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\DXTKGui\Controls">
+      <UniqueIdentifier>{143bedd4-3324-428c-8698-713dc1cd3017}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\DXTKGui\Controllers">
+      <UniqueIdentifier>{23885485-a632-49fc-93fc-63767d21a970}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\DXTKGui\Effects">
+      <UniqueIdentifier>{ffbeab93-4278-4aa1-a44a-93a00e0cb08e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Managers">
+      <UniqueIdentifier>{8494c550-ed03-4443-ad23-6c7671e1a0d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\DXTKGui">
+      <UniqueIdentifier>{42867788-08b4-4fd8-a968-a38fb214064c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\DXTKGui\BaseClasses">
+      <UniqueIdentifier>{dc4e0b79-56e3-4ec6-8532-964b272fb4e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\DXTKGui\Controls">
+      <UniqueIdentifier>{1214c438-2c43-470f-862c-b6792cb977bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\DXTKGui\Controllers">
+      <UniqueIdentifier>{1dbfd166-d67c-4312-9bc9-33782f28114d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\DXTKGui\Effects">
+      <UniqueIdentifier>{4c71b2a7-851d-465f-892a-1f64f40be940}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Managers">
+      <UniqueIdentifier>{c3ca4f3f-3077-4b94-a334-c088cf726b00}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -72,20 +99,8 @@
     <ClCompile Include="Source\GameObjects\EnemyShip.cpp">
       <Filter>Source Files\EnemyShips</Filter>
     </ClCompile>
-    <ClCompile Include="Source\GameObjects\Graphics\FontSet.cpp">
-      <Filter>Source Files\BaseClasses</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\GameObjects\Graphics\Sprite.cpp">
-      <Filter>Source Files\BaseClasses</Filter>
-    </ClCompile>
     <ClCompile Include="Source\GameObjects\EnemyBullet.cpp">
       <Filter>Source Files\EnemyShips</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Managers\GameManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Managers\LevelManager.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\GameEngine.cpp">
       <Filter>Source Files\Engine</Filter>
@@ -99,15 +114,6 @@
     <ClCompile Include="Source\Engine\Input.cpp">
       <Filter>Source Files\Engine</Filter>
     </ClCompile>
-    <ClCompile Include="Source\GameObjects\GUIObjects\TextLabel.cpp">
-      <Filter>Source Files\MenuItems</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Managers\MenuManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Managers\WaveManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source\GameObjects\RearAttackShip.cpp">
       <Filter>Source Files\EnemyShips</Filter>
     </ClCompile>
@@ -116,9 +122,6 @@
     </ClCompile>
     <ClCompile Include="Source\GameObjects\SunBullet.cpp">
       <Filter>Source Files\PlayerShip</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\GameObjects\GUIObjects\Dialog.cpp">
-      <Filter>Source Files\MenuItems</Filter>
     </ClCompile>
     <ClCompile Include="Source\GameObjects\StarEnemyShip.cpp">
       <Filter>Source Files\EnemyShips</Filter>
@@ -132,15 +135,6 @@
     <ClCompile Include="Source\GameObjects\Graphics\Background.cpp">
       <Filter>Source Files\Backgrounds</Filter>
     </ClCompile>
-    <ClCompile Include="Source\GameObjects\GUIObjects\ListBox.cpp">
-      <Filter>Source Files\MenuItems</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\GameObjects\GUIObjects\ComboBox.cpp">
-      <Filter>Source Files\MenuItems</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\GameObjects\GUIObjects\ImageButton.cpp">
-      <Filter>Source Files\MenuItems</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Managers\RearAttackWave.cpp">
       <Filter>Source Files\EnemyShips</Filter>
     </ClCompile>
@@ -150,20 +144,74 @@
     <ClCompile Include="Source\Managers\Wave.cpp">
       <Filter>Source Files\EnemyShips</Filter>
     </ClCompile>
-    <ClCompile Include="Source\GameObjects\GUIObjects\TextButton.cpp">
-      <Filter>Source Files\MenuItems</Filter>
+    <ClCompile Include="Source\DXTKGui\BaseGraphics\GraphicsAsset.cpp">
+      <Filter>Source Files\DXTKGui\BaseClasses</Filter>
     </ClCompile>
-    <ClCompile Include="Source\GameObjects\GUIObjects\Button.cpp">
-      <Filter>Source Files\MenuItems</Filter>
+    <ClCompile Include="Source\DXTKGui\Controls\Button.cpp">
+      <Filter>Source Files\DXTKGui\Controls</Filter>
     </ClCompile>
-    <ClCompile Include="Source\GameObjects\Graphics\RectangleSprite.cpp">
-      <Filter>Source Files\MenuItems</Filter>
+    <ClCompile Include="Source\DXTKGui\Controls\CheckBox.cpp">
+      <Filter>Source Files\DXTKGui\Controls</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\KeyboardController.cpp">
-      <Filter>Source Files\Engine</Filter>
+    <ClCompile Include="Source\DXTKGui\Controls\ComboBox.cpp">
+      <Filter>Source Files\DXTKGui\Controls</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\MouseController.cpp">
-      <Filter>Source Files\Engine</Filter>
+    <ClCompile Include="Source\DXTKGui\Controls\Dialog.cpp">
+      <Filter>Source Files\DXTKGui\Controls</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DXTKGui\BaseGraphics\FontSet.cpp">
+      <Filter>Source Files\DXTKGui\BaseClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DXTKGui\Controls\GUIFactory.cpp">
+      <Filter>Source Files\DXTKGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DXTKGui\Controls\GUIControl.cpp">
+      <Filter>Source Files\DXTKGui\Controls</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DXTKGui\Controllers\KeyboardController.cpp">
+      <Filter>Source Files\DXTKGui\Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DXTKGui\Controllers\MouseController.cpp">
+      <Filter>Source Files\DXTKGui\Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DXTKGui\Controls\ListBox.cpp">
+      <Filter>Source Files\DXTKGui\Controls</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DXTKGui\Effects\ScreenTransitions.cpp">
+      <Filter>Source Files\DXTKGui\Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DXTKGui\Controls\ScrollBar.cpp">
+      <Filter>Source Files\DXTKGui\Controls</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DXTKGui\BaseGraphics\Sprite.cpp">
+      <Filter>Source Files\DXTKGui\BaseClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DXTKGui\Controls\TextLabel.cpp">
+      <Filter>Source Files\DXTKGui\Controls</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DXTKGui\Controls\TexturePanel.cpp">
+      <Filter>Source Files\DXTKGui\Controls</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DXTKGui\BaseGraphics\PrimitiveShapes.cpp">
+      <Filter>Source Files\DXTKGui\BaseClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DXTKGui\Effects\TransitionEffects.cpp">
+      <Filter>Source Files\DXTKGui\Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Managers\GameManager.cpp">
+      <Filter>Source Files\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Managers\GFXAssetManager.cpp">
+      <Filter>Source Files\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Managers\LevelManager.cpp">
+      <Filter>Source Files\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Managers\WaveManager.cpp">
+      <Filter>Source Files\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Managers\MenuManager.cpp">
+      <Filter>Source Files\Managers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -188,23 +236,8 @@
     <ClInclude Include="Source\GameObjects\EnemyShip.h">
       <Filter>Header Files\EnemyShips</Filter>
     </ClInclude>
-    <ClInclude Include="Source\GameObjects\Graphics\FontSet.h">
-      <Filter>Header Files\BaseClasses</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\GameObjects\Graphics\IElement2D.h">
-      <Filter>Header Files\BaseClasses</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\GameObjects\Graphics\Sprite.h">
-      <Filter>Header Files\BaseClasses</Filter>
-    </ClInclude>
     <ClInclude Include="Source\GameObjects\EnemyBullet.h">
       <Filter>Header Files\EnemyShips</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Managers\GameManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Managers\LevelManager.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\GameEngine.h">
       <Filter>Header Files\Engine</Filter>
@@ -215,18 +248,6 @@
     <ClInclude Include="Source\Engine\Input.h">
       <Filter>Header Files\Engine</Filter>
     </ClInclude>
-    <ClInclude Include="Source\GameObjects\GUIObjects\TextLabel.h">
-      <Filter>Header Files\MenuItems</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Managers\Screen.h">
-      <Filter>Header Files\BaseClasses</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Managers\MenuManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Managers\WaveManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Source\GameObjects\RearAttackShip.h">
       <Filter>Header Files\EnemyShips</Filter>
     </ClInclude>
@@ -235,9 +256,6 @@
     </ClInclude>
     <ClInclude Include="Source\GameObjects\SunBullet.h">
       <Filter>Header Files\PlayerShip</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\GameObjects\GUIObjects\Dialog.h">
-      <Filter>Header Files\MenuItems</Filter>
     </ClInclude>
     <ClInclude Include="Source\assets.h">
       <Filter>Header Files</Filter>
@@ -254,15 +272,6 @@
     <ClInclude Include="Source\GameObjects\Graphics\Background.h">
       <Filter>Header Files\Backgrounds</Filter>
     </ClInclude>
-    <ClInclude Include="Source\GameObjects\GUIObjects\ListBox.h">
-      <Filter>Header Files\MenuItems</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\GameObjects\GUIObjects\ComboBox.h">
-      <Filter>Header Files\MenuItems</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\GameObjects\GUIObjects\ImageButton.h">
-      <Filter>Header Files\MenuItems</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Managers\RearAttackWave.h">
       <Filter>Header Files\EnemyShips</Filter>
     </ClInclude>
@@ -272,28 +281,94 @@
     <ClInclude Include="Source\Managers\Wave.h">
       <Filter>Header Files\EnemyShips</Filter>
     </ClInclude>
-    <ClInclude Include="Source\GameObjects\GUIObjects\TextButton.h">
-      <Filter>Header Files\MenuItems</Filter>
+    <ClInclude Include="Source\DXTKGui\Controls\Button.h">
+      <Filter>Header Files\DXTKGui\Controls</Filter>
     </ClInclude>
-    <ClInclude Include="Source\GameObjects\GUIObjects\Button.h">
-      <Filter>Header Files\MenuItems</Filter>
+    <ClInclude Include="Source\DXTKGui\Controls\CheckBox.h">
+      <Filter>Header Files\DXTKGui\Controls</Filter>
     </ClInclude>
-    <ClInclude Include="Source\GameObjects\Graphics\RectangleSprite.h">
-      <Filter>Header Files\MenuItems</Filter>
+    <ClInclude Include="Source\DXTKGui\Controls\ComboBox.h">
+      <Filter>Header Files\DXTKGui\Controls</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\KeyboardController.h">
-      <Filter>Header Files\Engine</Filter>
+    <ClInclude Include="Source\DXTKGui\Controls\Dialog.h">
+      <Filter>Header Files\DXTKGui\Controls</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Engine\MouseController.h">
-      <Filter>Header Files\Engine</Filter>
+    <ClInclude Include="Source\DXTKGui\BaseGraphics\FontSet.h">
+      <Filter>Header Files\DXTKGui\BaseClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DXTKGui\BaseGraphics\GraphicsAsset.h">
+      <Filter>Header Files\DXTKGui\BaseClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DXTKGui\GuiAssets.h">
+      <Filter>Header Files\DXTKGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DXTKGui\Controls\GUIControl.h">
+      <Filter>Header Files\DXTKGui\Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DXTKGui\Controls\GUIFactory.h">
+      <Filter>Header Files\DXTKGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DXTKGui\BaseGraphics\IElement2D.h">
+      <Filter>Header Files\DXTKGui\BaseClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DXTKGui\Controllers\KeyboardController.h">
+      <Filter>Header Files\DXTKGui\Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DXTKGui\Controllers\MouseController.h">
+      <Filter>Header Files\DXTKGui\Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DXTKGui\Controls\ListBox.h">
+      <Filter>Header Files\DXTKGui\Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DXTKGui\BaseGraphics\PrimitiveShapes.h">
+      <Filter>Header Files\DXTKGui\BaseClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DXTKGui\BaseGraphics\screen.h">
+      <Filter>Header Files\DXTKGui\BaseClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DXTKGui\BaseGraphics\Sprite.h">
+      <Filter>Header Files\DXTKGui\BaseClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DXTKGui\Controls\ScrollBar.h">
+      <Filter>Header Files\DXTKGui\Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DXTKGui\StringHelper.h">
+      <Filter>Header Files\DXTKGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DXTKGui\Effects\ScreenTransitions.h">
+      <Filter>Header Files\DXTKGui\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DXTKGui\Effects\TransitionEffects.h">
+      <Filter>Header Files\DXTKGui\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DXTKGui\Controls\TexturePanel.h">
+      <Filter>Header Files\DXTKGui\Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DXTKGui\Controls\TextLabel.h">
+      <Filter>Header Files\DXTKGui\Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Managers\GameManager.h">
+      <Filter>Header Files\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Managers\GFXAssetManager.h">
+      <Filter>Header Files\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Managers\LevelManager.h">
+      <Filter>Header Files\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Managers\MenuManager.h">
+      <Filter>Header Files\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Managers\WaveManager.h">
+      <Filter>Header Files\Managers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Xml Include="assets\bg\mako.xml">
-      <Filter>Source Files\Backgrounds\levels</Filter>
-    </Xml>
+    <Xml Include="assets\AssetManifest.xml" />
+    <Xml Include="assets\LevelManifest.xml" />
+    <Xml Include="assets\mako.xml" />
   </ItemGroup>
 </Project>

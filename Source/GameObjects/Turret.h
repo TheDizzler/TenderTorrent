@@ -8,7 +8,7 @@ public:
 	Turret(Vector2 locationOffset);
 	~Turret();
 
-	bool loadTurretTexture(ID3D11Device* device, const wchar_t* textureFile);
+	virtual void loadTurretTexture(GraphicsAsset* bulletAsset);
 
 	virtual Bullet* fire();
 

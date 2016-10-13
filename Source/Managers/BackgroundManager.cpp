@@ -7,7 +7,7 @@ BackgroundManager::~BackgroundManager() {
 }
 
 
-bool BackgroundManager::loadLevel(ID3D11Device* device, const wchar_t* file) {
+bool BackgroundManager::loadLevel(ComPtr<ID3D11Device> device, const wchar_t* file) {
 
 	bg.reset(new Background());
 	if (!bg->load(device, file))

@@ -1,10 +1,8 @@
 #pragma once
-#include <vector>
 
 #include "Wave.h"
 #include "../GameObjects/RearAttackShip.h"
 
-using namespace::std;
 
 
 class RearAttackWave : public Wave {
@@ -12,7 +10,7 @@ public:
 	RearAttackWave();
 	~RearAttackWave();
 
-	virtual bool initialize(ID3D11Device* device) override;
+	virtual bool initialize(GFXAssetManager* gfxAssets) override;
 	virtual void launchNewWave() override;
 
 	virtual void update(double deltaTime, PlayerShip* player) override;

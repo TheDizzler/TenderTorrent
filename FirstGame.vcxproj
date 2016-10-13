@@ -20,27 +20,33 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\DXTKGui\BaseGraphics\FontSet.cpp" />
+    <ClCompile Include="Source\DXTKGui\BaseGraphics\GraphicsAsset.cpp" />
+    <ClCompile Include="Source\DXTKGui\BaseGraphics\PrimitiveShapes.cpp" />
+    <ClCompile Include="Source\DXTKGui\BaseGraphics\Sprite.cpp" />
+    <ClCompile Include="Source\DXTKGui\Controllers\KeyboardController.cpp" />
+    <ClCompile Include="Source\DXTKGui\Controllers\MouseController.cpp" />
+    <ClCompile Include="Source\DXTKGui\Controls\Button.cpp" />
+    <ClCompile Include="Source\DXTKGui\Controls\CheckBox.cpp" />
+    <ClCompile Include="Source\DXTKGui\Controls\ComboBox.cpp" />
+    <ClCompile Include="Source\DXTKGui\Controls\Dialog.cpp" />
+    <ClCompile Include="Source\DXTKGui\Controls\GUIControl.cpp" />
+    <ClCompile Include="Source\DXTKGui\Controls\GUIFactory.cpp" />
+    <ClCompile Include="Source\DXTKGui\Controls\ListBox.cpp" />
+    <ClCompile Include="Source\DXTKGui\Controls\ScrollBar.cpp" />
+    <ClCompile Include="Source\DXTKGui\Controls\TextLabel.cpp" />
+    <ClCompile Include="Source\DXTKGui\Controls\TexturePanel.cpp" />
+    <ClCompile Include="Source\DXTKGui\Effects\ScreenTransitions.cpp" />
+    <ClCompile Include="Source\DXTKGui\Effects\TransitionEffects.cpp" />
     <ClCompile Include="Source\Engine\GameEngine.cpp" />
     <ClCompile Include="Source\Engine\GraphicsEngine.cpp" />
     <ClCompile Include="Source\Engine\Input.cpp" />
-    <ClCompile Include="Source\Engine\KeyboardController.cpp" />
     <ClCompile Include="Source\Engine\main.cpp" />
-    <ClCompile Include="Source\Engine\MouseController.cpp" />
     <ClCompile Include="Source\GameObjects\Bullet.cpp" />
     <ClCompile Include="Source\GameObjects\EnemyBullet.cpp" />
     <ClCompile Include="Source\GameObjects\EnemyShip.cpp" />
     <ClCompile Include="Source\GameObjects\Graphics\Background.cpp" />
     <ClCompile Include="Source\GameObjects\Graphics\BackgroundLayer.cpp" />
-    <ClCompile Include="Source\GameObjects\Graphics\FontSet.cpp" />
-    <ClCompile Include="Source\GameObjects\Graphics\RectangleSprite.cpp" />
-    <ClCompile Include="Source\GameObjects\Graphics\Sprite.cpp" />
-    <ClCompile Include="Source\GameObjects\GUIObjects\Button.cpp" />
-    <ClCompile Include="Source\GameObjects\GUIObjects\TextButton.cpp" />
-    <ClCompile Include="Source\GameObjects\GUIObjects\ComboBox.cpp" />
-    <ClCompile Include="Source\GameObjects\GUIObjects\Dialog.cpp" />
-    <ClCompile Include="Source\GameObjects\GUIObjects\ImageButton.cpp" />
-    <ClCompile Include="Source\GameObjects\GUIObjects\ListBox.cpp" />
-    <ClCompile Include="Source\GameObjects\GUIObjects\TextLabel.cpp" />
     <ClCompile Include="Source\GameObjects\LaserBolt.cpp" />
     <ClCompile Include="Source\GameObjects\LaserSystem.cpp" />
     <ClCompile Include="Source\GameObjects\PlayerShip.cpp" />
@@ -51,6 +57,7 @@
     <ClCompile Include="Source\GameObjects\WeaponSystem.cpp" />
     <ClCompile Include="Source\Managers\BackgroundManager.cpp" />
     <ClCompile Include="Source\Managers\GameManager.cpp" />
+    <ClCompile Include="Source\Managers\GFXAssetManager.cpp" />
     <ClCompile Include="Source\Managers\LevelManager.cpp" />
     <ClCompile Include="Source\Managers\MenuManager.cpp" />
     <ClCompile Include="Source\Managers\RearAttackWave.cpp" />
@@ -60,27 +67,36 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\assets.h" />
+    <ClInclude Include="Source\DXTKGui\BaseGraphics\FontSet.h" />
+    <ClInclude Include="Source\DXTKGui\BaseGraphics\GraphicsAsset.h" />
+    <ClInclude Include="Source\DXTKGui\BaseGraphics\IElement2D.h" />
+    <ClInclude Include="Source\DXTKGui\BaseGraphics\PrimitiveShapes.h" />
+    <ClInclude Include="Source\DXTKGui\BaseGraphics\screen.h" />
+    <ClInclude Include="Source\DXTKGui\BaseGraphics\Sprite.h" />
+    <ClInclude Include="Source\DXTKGui\Controllers\KeyboardController.h" />
+    <ClInclude Include="Source\DXTKGui\Controllers\MouseController.h" />
+    <ClInclude Include="Source\DXTKGui\Controls\Button.h" />
+    <ClInclude Include="Source\DXTKGui\Controls\CheckBox.h" />
+    <ClInclude Include="Source\DXTKGui\Controls\ComboBox.h" />
+    <ClInclude Include="Source\DXTKGui\Controls\Dialog.h" />
+    <ClInclude Include="Source\DXTKGui\Controls\GUIControl.h" />
+    <ClInclude Include="Source\DXTKGui\Controls\GUIFactory.h" />
+    <ClInclude Include="Source\DXTKGui\Controls\ListBox.h" />
+    <ClInclude Include="Source\DXTKGui\Controls\ScrollBar.h" />
+    <ClInclude Include="Source\DXTKGui\Controls\TextLabel.h" />
+    <ClInclude Include="Source\DXTKGui\Controls\TexturePanel.h" />
+    <ClInclude Include="Source\DXTKGui\Effects\ScreenTransitions.h" />
+    <ClInclude Include="Source\DXTKGui\Effects\TransitionEffects.h" />
+    <ClInclude Include="Source\DXTKGui\GuiAssets.h" />
+    <ClInclude Include="Source\DXTKGui\StringHelper.h" />
     <ClInclude Include="Source\Engine\GameEngine.h" />
     <ClInclude Include="Source\Engine\GraphicsEngine.h" />
     <ClInclude Include="Source\Engine\Input.h" />
-    <ClInclude Include="Source\Engine\KeyboardController.h" />
-    <ClInclude Include="Source\Engine\MouseController.h" />
     <ClInclude Include="Source\GameObjects\Bullet.h" />
     <ClInclude Include="Source\GameObjects\EnemyBullet.h" />
     <ClInclude Include="Source\GameObjects\EnemyShip.h" />
     <ClInclude Include="Source\GameObjects\Graphics\Background.h" />
     <ClInclude Include="Source\GameObjects\Graphics\BackgroundLayer.h" />
-    <ClInclude Include="Source\GameObjects\Graphics\FontSet.h" />
-    <ClInclude Include="Source\GameObjects\Graphics\IElement2D.h" />
-    <ClInclude Include="Source\GameObjects\Graphics\RectangleSprite.h" />
-    <ClInclude Include="Source\GameObjects\Graphics\Sprite.h" />
-    <ClInclude Include="Source\GameObjects\GUIObjects\Button.h" />
-    <ClInclude Include="Source\GameObjects\GUIObjects\TextButton.h" />
-    <ClInclude Include="Source\GameObjects\GUIObjects\ComboBox.h" />
-    <ClInclude Include="Source\GameObjects\GUIObjects\Dialog.h" />
-    <ClInclude Include="Source\GameObjects\GUIObjects\ImageButton.h" />
-    <ClInclude Include="Source\GameObjects\GUIObjects\ListBox.h" />
-    <ClInclude Include="Source\GameObjects\GUIObjects\TextLabel.h" />
     <ClInclude Include="Source\GameObjects\LaserBolt.h" />
     <ClInclude Include="Source\GameObjects\LaserSystem.h" />
     <ClInclude Include="Source\GameObjects\PlayerShip.h" />
@@ -92,10 +108,10 @@
     <ClInclude Include="Source\globals.h" />
     <ClInclude Include="Source\Managers\BackgroundManager.h" />
     <ClInclude Include="Source\Managers\GameManager.h" />
+    <ClInclude Include="Source\Managers\GFXAssetManager.h" />
     <ClInclude Include="Source\Managers\LevelManager.h" />
     <ClInclude Include="Source\Managers\MenuManager.h" />
     <ClInclude Include="Source\Managers\RearAttackWave.h" />
-    <ClInclude Include="Source\Managers\Screen.h" />
     <ClInclude Include="Source\Managers\StarEnemyShipWave.h" />
     <ClInclude Include="Source\Managers\Wave.h" />
     <ClInclude Include="Source\Managers\WaveManager.h" />
@@ -104,9 +120,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Xml Include="assets\bg\mako.xml">
-      <SubType>Designer</SubType>
-    </Xml>
+    <Xml Include="assets\AssetManifest.xml" />
+    <Xml Include="assets\LevelManifest.xml" />
+    <Xml Include="assets\mako.xml" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{E9C22AAC-8D4D-4D44-8969-65311A131B1D}</ProjectGuid>

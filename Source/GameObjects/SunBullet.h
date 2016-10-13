@@ -6,7 +6,7 @@
 class SunBullet : public Bullet {
 public:
 	SunBullet();
-	SunBullet(const Vector2 &position);
+	SunBullet(const Vector2& position);
 	~SunBullet();
 
 

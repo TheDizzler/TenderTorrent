@@ -9,9 +9,13 @@ Background::~Background() {
 
 	for each (BackgroundLayer* bgLayer in bgLayers)
 		delete bgLayer;
+
+	bgLayerAssets.clear();
 }
 
-bool Background::load(ID3D11Device* device, const wchar_t* file) {
+#include "../../DXTKGui/StringHelper.h"
+#include "../../Engine/GameEngine.h"
+bool Background::load(ComPtr<ID3D11Device> device, const wchar_t* file) {
 
 	xml_document doc;
 
@@ -24,8 +28,19 @@ bool Background::load(ID3D11Device* device, const wchar_t* file) {
 
 	const char_t* baseFile = levelRoot.child("base").text().as_string();
 
-	if (!Sprite::load(device, Assets::convertCharStarToWCharT(baseFile)))
+
+	unique_ptr<GraphicsAsset> bgLayerAsset;
+	bgLayerAsset.reset(new GraphicsAsset());
+	if (!bgLayerAsset->load(device, StringHelper::convertCharStarToWCharT(baseFile))) {
+		wstringstream wss;
+		wss << "Unable to background image " << file;
+		GameEngine::showErrorDialog(wss.str(), L"Fatal Error");
 		return false;
+	}
+
+	Sprite::load(bgLayerAsset.get());
+	bgLayerAssets.push_back(move(bgLayerAsset));
+
 
 	float scaleFactor = levelRoot.attribute("scale").as_float();
 	scale = Vector2(scaleFactor, scaleFactor);
@@ -35,14 +50,12 @@ bool Background::load(ID3D11Device* device, const wchar_t* file) {
 	position.y -= height*scale.y / 2;
 
 
-	healthFont.reset(new FontSet());
-	if (!healthFont->load(device, Assets::arialFontFile))
-		return false;
-	healthFont->setTint(DirectX::Colors::Black.v);
+	healthFont = move(GameManager::guiFactory->getFont("Arial"));
+	healthFont->setTint(Vector4(1, 1, 1, 1));
+
 
 	cornerFrame.reset(new Sprite());
-	if (!cornerFrame->load(device, Assets::cornerFrameFile))
-		return false;
+	cornerFrame->load(GameManager::gfxAssets->getAsset("Corner Frame"));
 
 	return loadLevel(device, levelRoot);
 }
@@ -53,10 +66,11 @@ void Background::clear() {
 		delete bgLayer;
 
 	bgLayers.clear();
+	bgLayerAssets.clear();
 }
 
 
-bool Background::loadLevel(ID3D11Device * device, xml_node levelRoot) {
+bool Background::loadLevel(ComPtr<ID3D11Device> device, xml_node levelRoot) {
 
 
 	for each (xml_node layerNode in levelRoot.children("backgroundLayer")) {
@@ -64,10 +78,21 @@ bool Background::loadLevel(ID3D11Device * device, xml_node levelRoot) {
 		BackgroundLayer* bgLayer = new BackgroundLayer();
 		string file = layerNode.text().as_string();
 
-		Assets::trim(file);
-		if (!bgLayer->load(device, Assets::convertCharStarToWCharT(file.c_str())))
+		StringHelper::trim(file);
+		unique_ptr<GraphicsAsset> layerAsset;
+		layerAsset.reset(new GraphicsAsset());
+		if (!layerAsset->load(device, StringHelper::convertCharStarToWCharT(file.c_str()))) {
+			wstringstream wss;
+			wss << "Unable to background image " << file.c_str();
+			GameEngine::showErrorDialog(wss.str(), L"Fatal Error");
 			return false;
+		}
+
+		
+		bgLayer->load(layerAsset.get());
 		bgLayer->setInitialPosition(position, scale);
+
+		bgLayerAssets.push_back(move(layerAsset));
 
 		Vector2 pos = Vector2(layerNode.child("position").attribute("x").as_int(),
 			layerNode.child("position").attribute("y").as_int());

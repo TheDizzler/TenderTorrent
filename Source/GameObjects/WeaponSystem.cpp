@@ -1,12 +1,8 @@
 #include "WeaponSystem.h"
 
-//WeaponSystem::WeaponSystem() {
-//}
-
 WeaponSystem::WeaponSystem(Vector2 offset) {
 
 	locationOffset = offset;
-
 	weaponLocation = Vector2(locationOffset.x, locationOffset.y);
 }
 
@@ -17,17 +13,12 @@ WeaponSystem::~WeaponSystem() {
 
 }
 
-bool WeaponSystem::loadBulletTexture(ID3D11Device * device, const wchar_t* textureFile) {
+void WeaponSystem::loadBulletTexture(GraphicsAsset* bulletAsset) {
 
 	baseBulletSprite.reset(new Sprite());
-	if (!baseBulletSprite->load(device, textureFile)) {
-		MessageBox(NULL, L"Failed to load bullet", L"ERROR", MB_OK);
-		return false;
-	}
+	baseBulletSprite->load(bulletAsset);
 
 	fillBulletStore();
-
-	return true;
 }
 
 
@@ -51,20 +42,19 @@ void WeaponSystem::setWeaponStats(int nrgCst, float coolTime) {
 	Only live bullets need to be updated. */
 void WeaponSystem::update(double deltaTime, Vector2 positionUpdate) {
 
-	weaponLocation = Vector2(positionUpdate.x + locationOffset.x, positionUpdate.y + locationOffset.y);
+	weaponLocation = Vector2(positionUpdate.x + locationOffset.x,
+		positionUpdate.y + locationOffset.y);
 	timeSinceFired -= deltaTime;
 
 }
 
-void WeaponSystem::draw(SpriteBatch * batch) {
+void WeaponSystem::draw(SpriteBatch* batch) {
 
 	for (Bullet* bullet : bulletStore) {
 		if (bullet->isAlive)
 			bullet->draw(batch, baseBulletSprite.get());
 	}
 }
-
-
 
 bool WeaponSystem::ready() {
 
@@ -78,7 +68,6 @@ bool WeaponSystem::ready() {
 		}
 		return false;
 	}
-
 	return timeSinceFired <= 0;
 }
 

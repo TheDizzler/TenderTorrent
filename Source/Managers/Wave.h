@@ -1,10 +1,7 @@
 #pragma once
-#include <vector>
 
+#include "GFXAssetManager.h"
 #include "../GameObjects/EnemyShip.h"
-
-
-using namespace::std;
 
 
 class Wave {
@@ -12,7 +9,7 @@ public:
 	Wave();
 	~Wave();
 
-	virtual bool initialize(ID3D11Device* device) = 0;
+	virtual bool initialize(GFXAssetManager* gfxAssets) = 0;
 	void clear();
 	virtual void launchNewWave() = 0;
 

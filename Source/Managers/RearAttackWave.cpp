@@ -1,26 +1,18 @@
 #include "RearAttackWave.h"
 
 RearAttackWave::RearAttackWave() {
-
-
 }
 
 RearAttackWave::~RearAttackWave() {
 }
 
-bool RearAttackWave::initialize(ID3D11Device* device) {
+bool RearAttackWave::initialize(GFXAssetManager* gfxAssets) {
 
 	sharedShipSprite.reset(new Sprite());
-	if (!sharedShipSprite->load(device, Assets::rearAttackShipFile)) {
-		MessageBox(NULL, L"Failed to load enemy ship A", L"ERROR", MB_OK);
-		return false;
-	}
+	sharedShipSprite->load(gfxAssets->getAsset("EnemyShip RearAttack"));
 
 	sharedBulletSprite.reset(new Sprite());
-	if (!sharedBulletSprite->load(device, Assets::enemyBulletA)) {
-		MessageBox(NULL, L"Failed to load bullet yellow", L"ERROR", MB_OK);
-		return false;
-	}
+	sharedBulletSprite->load(gfxAssets->getAsset("Enemy Bullet A"));
 
 	return true;
 }
@@ -31,25 +23,22 @@ void RearAttackWave::launchNewWave() {
 	miniWavesLaunched = 0;
 
 	launchNextMiniWave();
-
-
 }
 
-void RearAttackWave::update(double deltaTime, PlayerShip * player) {
+void RearAttackWave::update(double deltaTime, PlayerShip* player) {
 
 	Wave::update(deltaTime, player);
 
 	timeSinceLastMiniLaunch += deltaTime;
-	if (miniWavesLaunched < miniWavesMax && timeSinceLastMiniLaunch >= timeBetweenMiniWaves) {
+	if (miniWavesLaunched < miniWavesMax
+		&& timeSinceLastMiniLaunch >= timeBetweenMiniWaves) {
 
 		launchNextMiniWave();
 
 	}
-
 }
 
 #include <random>
-
 bool RearAttackWave::checkForLaunch() {
 
 	mt19937 rng;

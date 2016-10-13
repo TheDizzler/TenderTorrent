@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Graphics\Sprite.h"
-#include "../globals.h"
+#include "../DXTKGui/BaseGraphics/Sprite.h"
+//#include "../globals.h"
 
 
 static const Vector2 weaponStore = Vector2(-511, -511);

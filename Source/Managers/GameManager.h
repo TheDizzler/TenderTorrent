@@ -1,14 +1,12 @@
 #pragma once
 
-//#include <pugixml.hpp>
+#include <sstream>
+#include "../DXTKGui/Controls/GUIFactory.h"
+#include "GFXAssetManager.h"
+
 #include "LevelManager.h"
 #include "MenuManager.h"
 
-
-
-//enum GameState {
-//	menu, paused, playing
-//};
 
 
 class GameEngine;
@@ -21,7 +19,7 @@ public:
 	~GameManager();
 
 
-	bool initializeGame(ID3D11Device* device, MouseController* mouse);
+	bool initializeGame(HWND hwnd, ComPtr<ID3D11Device> device, MouseController* mouse);
 
 
 	void update(double deltaTime, KeyboardController* keys, MouseController* mouse);
@@ -34,26 +32,37 @@ public:
 	void pause();
 	void exit();
 
-	vector<wstring> getAdapterListDescriptions();
 	vector<ComPtr<IDXGIAdapter> > getAdapterList();
-	vector<wstring> getDisplayModeListDescriptions(size_t adapterIndex);
-	vector<DXGI_MODE_DESC> getDisplayModeList(size_t adapterIndex);
-	size_t getSelectedAdapterIndex();
-	size_t getSelectedDisplayMode();
+	vector<ComPtr<IDXGIOutput> > getDisplayList();
+	vector<ComPtr<IDXGIOutput> > getDisplayListFor(size_t displayIndex);
+	vector<ComPtr<IDXGIOutput> > getDisplayListFor(ComPtr<IDXGIAdapter> adapter);
+	vector<DXGI_MODE_DESC> getDisplayModeList(size_t displayIndex);
+	vector<DXGI_MODE_DESC> getDisplayModeList(ComPtr<IDXGIOutput> display);
 
+	bool setAdapter(size_t adapterIndex);
+	bool setDisplayMode(size_t displayModeIndex);
+	bool setFullScreen(bool isFullScreen);
+
+	size_t getSelectedAdapterIndex();
+	size_t getSelectedDisplayIndex();
+	size_t getSelectedDisplayModeIndex();
+
+
+	static unique_ptr<GUIFactory> guiFactory;
+	static unique_ptr<GFXAssetManager> gfxAssets;
 private:
 
-	Screen* currentScreen;
+	Screen* currentScreen = 0;
 	Screen* lastScreen = 0;
 	unique_ptr<LevelManager> levelScreen;
 	unique_ptr<MenuManager> menuScreen;
-
+	unique_ptr<xml_document> docAssMan;
 
 	GameEngine* gameEngine;
 	MouseController* mouse;
-	ID3D11Device* device;
+	ComPtr<ID3D11Device> device;
 	
 
-
+	
 	
 };

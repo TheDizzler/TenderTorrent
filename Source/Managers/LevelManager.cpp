@@ -4,6 +4,10 @@ LevelManager::LevelManager() {
 }
 
 LevelManager::~LevelManager() {
+
+	for (TextLabel* label : textLabels)
+		delete label;
+	textLabels.clear();
 }
 
 void LevelManager::setGameManager(GameManager * gm) {
@@ -11,11 +15,12 @@ void LevelManager::setGameManager(GameManager * gm) {
 	game = gm;
 }
 
-bool LevelManager::initialize(ID3D11Device* device, MouseController* mouse) {
+//#include "Ga
+bool LevelManager::initialize(ComPtr<ID3D11Device> device, MouseController* mouse) {
 
 	playState = LOADING;
 
-	guiFont.reset(new FontSet());
+	/*guiFont.reset(new FontSet());
 	if (!guiFont->load(device, Assets::arialFontFile))
 		return false;
 	guiFont->setTint(DirectX::Colors::Black.v);
@@ -30,10 +35,10 @@ bool LevelManager::initialize(ID3D11Device* device, MouseController* mouse) {
 	if (!warningFont->load(device, Assets::arialFontFile))
 		return false;
 	warningFont->setTint(DirectX::Colors::White.v);
-	warningFont->setScale(Vector2(2, 2));
+	warningFont->setScale(Vector2(2, 2));*/
 
 
-	if (!mouse->load(device, Assets::mouseReticleFile))
+	if (!mouse->loadMouseIcon(GameManager::guiFactory.get(), "Mouse Reticle"))
 		return false;
 
 	bgManager.reset(new BackgroundManager());
@@ -43,10 +48,7 @@ bool LevelManager::initialize(ID3D11Device* device, MouseController* mouse) {
 		return false;
 
 	playerShip.reset(new PlayerShip(startPosition));
-	if (!playerShip->load(device, L"assets/Heroship.dds")) {
-		MessageBox(NULL, L"Failed to load playership", L"ERROR", MB_OK);
-		return false;
-	}
+	playerShip->load(GameManager::guiFactory->getAsset("PlayerShip Hull"));
 	if (!playerShip->loadBullet(device)) {
 		MessageBox(NULL, L"Failed to load weapons", L"ERROR", MB_OK);
 		return false;
@@ -105,7 +107,7 @@ bool LevelManager::initialize(ID3D11Device* device, MouseController* mouse) {
 	return true;
 }
 
-bool LevelManager::loadLevel(ID3D11Device* device, const wchar_t* file) {
+bool LevelManager::loadLevel(ComPtr<ID3D11Device> device, const wchar_t* file) {
 
 	if (!bgManager->loadLevel(device, file))
 		return false;
@@ -170,7 +172,7 @@ void LevelManager::update(double deltaTime, KeyboardController* keys, MouseContr
 				game->loadMainMenu();
 			break;
 		case STARTING:
-			
+
 			if (playerShip->startUpdate(deltaTime, mouse)) {
 				if (delayedPause) {
 					playState = PAUSED;

@@ -6,20 +6,13 @@ StarEnemyShipWave::StarEnemyShipWave() {
 StarEnemyShipWave::~StarEnemyShipWave() {
 }
 
-bool StarEnemyShipWave::initialize(ID3D11Device * device) {
+bool StarEnemyShipWave::initialize(GFXAssetManager* gfxAssets) {
 	
 	sharedShipSprite.reset(new Sprite());
-	if (!sharedShipSprite->load(device, Assets::starEnemyShip)) {
-		MessageBox(NULL, L"Failed to load starEnemyShip", L"ERROR", MB_OK);
-		return false;
-	}
+	sharedShipSprite->load(gfxAssets->getAsset("EnemyShip Star"));
 
 	sharedBulletSprite.reset(new Sprite());
-	if (!sharedBulletSprite->load(device, Assets::enemyBulletA)) {
-		MessageBox(NULL, L"Failed to load bullet yellow", L"ERROR", MB_OK);
-		return false;
-	}
-
+	sharedBulletSprite->load(gfxAssets->getAsset("Enemy Bullet A"));
 
 	maxTimeBetweenLaunches = 25;
 	

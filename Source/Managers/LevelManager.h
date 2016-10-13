@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Screen.h"
-#include "../GameObjects/GUIObjects/TextButton.h"
+#include "../DXTKGui/BaseGraphics/screen.h"
+#include "../DXTKGui/Controls/Button.h"
 #include "../GameObjects/PlayerShip.h"
 #include "WaveManager.h"
 #include "BackgroundManager.h"
@@ -23,8 +23,8 @@ public:
 
 	virtual void setGameManager(GameManager* game);
 
-	virtual bool initialize(ID3D11Device* device, MouseController* mouse);
-	bool loadLevel(ID3D11Device* device, const wchar_t* file);
+	virtual bool initialize(ComPtr<ID3D11Device> device, MouseController* mouse);
+	bool loadLevel(ComPtr<ID3D11Device> device, const wchar_t* file);
 
 
 	virtual void update(double deltaTime, KeyboardController* keys,
@@ -45,17 +45,17 @@ private:
 
 	DIMOUSESTATE mouseLastState;
 
-	unique_ptr<TextButton> exitButton;
-	unique_ptr<TextButton> continueButton;
-	unique_ptr<FontSet> guiFont;
-	unique_ptr<FontSet> pauseFont;
-	unique_ptr<FontSet> warningFont;
+	unique_ptr<Button> exitButton;
+	unique_ptr<Button> continueButton;
+	//unique_ptr<FontSet> guiFont;
+	//unique_ptr<FontSet> pauseFont;
+	//unique_ptr<FontSet> warningFont;
 	unique_ptr<TextLabel> timerLabel;
 	unique_ptr<TextLabel> scoreLabel;
 	unique_ptr<TextLabel> energyLabel;
 	unique_ptr<TextLabel> pauseLabel;
 	unique_ptr<TextLabel> warningLabel;
-	vector<TextLabel* > textLabels;
+	vector<TextLabel*> textLabels;
 
 	unique_ptr<PlayerShip> playerShip;
 

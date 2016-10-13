@@ -1,10 +1,6 @@
 #pragma once
 
-
 #include "EnemyShip.h"
-#include "../globals.h"
-
-using namespace DirectX::SimpleMath;
 
 
 /** A ship that appears from the bottom of the screen and leaps in

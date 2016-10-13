@@ -1,12 +1,9 @@
 #include "EnemyShip.h"
 
 EnemyShip::EnemyShip() :Sprite(SimpleMath::Vector2(0, 0)) {
-
 }
 
 EnemyShip::EnemyShip(const Vector2 & position) : Sprite(position) {
-
-
 }
 
 EnemyShip::~EnemyShip() {
@@ -14,14 +11,13 @@ EnemyShip::~EnemyShip() {
 
 
 void EnemyShip::update(double deltaTime) {
-
 	Sprite::update(deltaTime);
 }
 
 void EnemyShip::draw(SpriteBatch* batch, Sprite* baseShip) {
 
-	batch->Draw(baseShip->texture.Get(), position, &(baseShip->sourceRect), tint, rotation, baseShip->origin, scale, SpriteEffects_None, layerDepth);
-
+	batch->Draw(baseShip->getTexture.Get(), position, &(baseShip->getRect()),
+		tint, rotation, baseShip->getOrigin(), scale, SpriteEffects_None, layerDepth);
 }
 
 bool EnemyShip::readyToFire() {
@@ -34,7 +30,7 @@ bool EnemyShip::readyToFire() {
 	return false;
 }
 
-EnemyBullet * EnemyShip::launchBullet(Vector2 target) {
+EnemyBullet* EnemyShip::launchBullet(Vector2 target) {
 
 	EnemyBullet* bullet = new EnemyBullet(weaponLocation);
 	Vector2 direction = target - weaponLocation;

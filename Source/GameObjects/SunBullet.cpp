@@ -4,7 +4,7 @@ SunBullet::SunBullet() : Bullet() {
 
 }
 
-SunBullet::SunBullet(const Vector2 & position) : Bullet(position) {
+SunBullet::SunBullet(const Vector2& position) : Bullet(position) {
 
 	damage = 20;
 	bulletSpeed = 350;
@@ -13,6 +13,7 @@ SunBullet::SunBullet(const Vector2 & position) : Bullet(position) {
 SunBullet::~SunBullet() {
 }
 
+#include "../globals.h"
 void SunBullet::update(double deltaTime) {
 
 	float deltaSpeed = deltaTime*bulletSpeed;

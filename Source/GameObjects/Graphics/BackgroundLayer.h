@@ -2,7 +2,7 @@
 
 //#include "Sprite.h"
 #include "../PlayerShip.h"
-#include "../GUIObjects/TextLabel.h"
+#include "../../DXTKGui/Controls/TextLabel.h"
 
 
 class BackgroundLayer : public Sprite {

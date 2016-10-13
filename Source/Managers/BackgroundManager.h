@@ -13,7 +13,7 @@ public:
 	~BackgroundManager();
 
 	//bool initialize(ID3D11Device* device);
-	bool loadLevel(ID3D11Device* device, const wchar_t* file);
+	bool loadLevel(ComPtr<ID3D11Device> device, const wchar_t* file);
 	void clear();
 
 	//void startUpdate(double deltaTime);

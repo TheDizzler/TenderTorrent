@@ -9,16 +9,10 @@ Turret::Turret(Vector2 locationOffset) : WeaponSystem(locationOffset) {
 Turret::~Turret() {
 }
 
-bool Turret::loadTurretTexture(ID3D11Device * device, const wchar_t * textureFile) {
+void Turret::loadTurretTexture(GraphicsAsset* bulletAsset) {
 
 	turretSprite.reset(new Sprite(weaponLocation));
-	if (!turretSprite->load(device, textureFile)) {
-		MessageBox(NULL, L"Failed to load Turret", L"ERROR", MB_OK);
-		return false;
-	}
-
-
-	return true;
+	turretSprite->load(bulletAsset);
 }
 
 
@@ -48,7 +42,7 @@ void Turret::update(double deltaTime, Vector2 positionUpdate, const Vector2& mou
 	int x = mousePosition.x - weaponLocation.x;
 	turretDirection = Vector2(x, y);
 	turretDirection.Normalize();
-	turretSprite->rotation = atan2(y, x) + XM_PIDIV2;
+	turretSprite->setRotation(atan2(y, x) + XM_PIDIV2);
 }
 
 void Turret::draw(SpriteBatch * batch) {

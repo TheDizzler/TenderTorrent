@@ -1,24 +1,42 @@
 #include "GameManager.h"
 
-GameManager::GameManager(GameEngine* gmngn) {
+unique_ptr<GUIFactory> guiFactory;
+unique_ptr<GFXAssetManager> gfxAssets;
 
+GameManager::GameManager(GameEngine* gmngn) {
 	gameEngine = gmngn;
 }
 
 GameManager::~GameManager() {
 }
 
-
-bool GameManager::initializeGame(ID3D11Device* dvc, MouseController* ms) {
+#include "../DXTKGui/GuiAssets.h"
+#include "../Engine/GameEngine.h"
+bool GameManager::initializeGame(HWND hwnd, ComPtr<ID3D11Device> dvc, MouseController* ms) {
 
 	device = dvc;
 	mouse = ms;
 
-	//currentScreen.reset(new MenuManager());
-	/*currentScreen = new MenuManager();
-	if (!currentScreen->initialize(device, mouse))
+	// get graphical assets from xml file
+	docAssMan.reset(new pugi::xml_document());
+	if (!docAssMan->load_file(GUIAssets::assetManifestFile)) {
+		MessageBox(0, L"Could not read AssetManifest file!",
+			L"Fatal Read Error!", MB_OK);
 		return false;
-	currentScreen->setGameManager(this);*/
+	}
+
+	xml_node guiAssetsNode = docAssMan->child("root").child("gui");
+	xml_node gfxAssetNode = docAssMan->child("root").child("gfx");
+
+	guiFactory.reset(new GUIFactory(hwnd, guiAssetsNode));
+	if (!guiFactory->initialize(device, gameEngine->getDeviceContext(),
+		gameEngine->getSwapChain(), gameEngine->getSpriteBatch())) {
+
+		MessageBox(0, L"Failed to load GUIFactory", L"Fatal Error", MB_OK);
+		return false;
+	}
+
+	gfxAssets.reset(new GFXAssetManager(gfxAssetNode));
 
 	menuScreen.reset(new MenuManager());
 	menuScreen->setGameManager(this);
@@ -33,89 +51,87 @@ bool GameManager::initializeGame(ID3D11Device* dvc, MouseController* ms) {
 
 	currentScreen = menuScreen.get();
 
+	ShowCursor(false);
 
 	return true;
 }
 
 
-
 void GameManager::update(double deltaTime, KeyboardController* keys,
 	MouseController* mouse) {
 
-
+	guiFactory->updateMouse();
 	currentScreen->update(deltaTime, keys, mouse);
-
 }
 
 
-
-
 void GameManager::draw(SpriteBatch * batch) {
-
 	currentScreen->draw(batch);
-
 }
 
 void GameManager::loadLevel(const wchar_t* file) {
 
-	/*if (lastScreen)
-		delete lastScreen;*/
 	lastScreen = currentScreen;
-	//levelScreen.reset(new LevelManager());
-	//levelScreen->initialize(device, mouse);
-
 	currentScreen = levelScreen.get();
 	if (!levelScreen->loadLevel(device, file)) {
 		MessageBox(NULL, L"Failed to load level", L"ERROR", MB_OK);
 		exit();
 	}
-
 }
 
 void GameManager::loadMainMenu() {
 
-	/*if (lastScreen)
-		delete lastScreen;*/
 	lastScreen = currentScreen;
 	currentScreen = menuScreen.get();
 
-	/*if (!currentScreen->initialize(device, mouse)) {
-		MessageBox(NULL, L"Failed to load main menu", L"ERROR", MB_OK);
-		exit();
-	}
-	currentScreen->setGameManager(this);*/
 }
 
-
-#include "../Engine/GameEngine.h"
 
 void GameManager::pause() {
 
-	currentScreen->pause();
+	if (currentScreen != NULL)
+		currentScreen->pause();
 }
 
 void GameManager::exit() {
-
-
-	//dialogs.push_back(exitDialog.get());
-
 	gameEngine->exit();
-}
-
-vector<wstring> GameManager::getAdapterListDescriptions() {
-	return gameEngine->getAdapterListDescriptions();
 }
 
 vector<ComPtr<IDXGIAdapter>> GameManager::getAdapterList() {
 	return gameEngine->getAdapterList();
 }
 
-vector<wstring> GameManager::getDisplayModeListDescriptions(size_t adapterIndex) {
-	return gameEngine->getDisplayModeListDescriptions(adapterIndex);
+vector<ComPtr<IDXGIOutput>> GameManager::getDisplayList() {
+	return gameEngine->getDisplayList();
 }
 
-vector<DXGI_MODE_DESC> GameManager::getDisplayModeList(size_t adapterIndex) {
-	return gameEngine->getDisplayModeList(adapterIndex);
+vector<ComPtr<IDXGIOutput>> GameManager::getDisplayListFor(size_t displayIndex) {
+	return gameEngine->getDisplayListFor(displayIndex);
+}
+
+vector<ComPtr<IDXGIOutput>> GameManager::getDisplayListFor(
+	ComPtr<IDXGIAdapter> adapter) {
+	return gameEngine->getDisplayListFor(adapter);
+}
+
+vector<DXGI_MODE_DESC> GameManager::getDisplayModeList(size_t displayIndex) {
+	return gameEngine->getDisplayModeList(displayIndex);
+}
+
+vector<DXGI_MODE_DESC> GameManager::getDisplayModeList(ComPtr<IDXGIOutput> display) {
+	return gameEngine->getDisplayModeList(display);
+}
+
+bool GameManager::setAdapter(size_t adapterIndex) {
+	return gameEngine->setAdapter(adapterIndex);
+}
+
+bool GameManager::setDisplayMode(size_t displayModeIndex) {
+	return gameEngine->changeDisplayMode(displayModeIndex);
+}
+
+bool GameManager::setFullScreen(bool isFullScreen) {
+	return gameEngine->setFullScreen(isFullScreen);
 }
 
 
@@ -123,7 +139,11 @@ size_t GameManager::getSelectedAdapterIndex() {
 	return gameEngine->getSelectedAdapterIndex();
 }
 
-size_t GameManager::getSelectedDisplayMode() {
+size_t GameManager::getSelectedDisplayIndex() {
+	return gameEngine->getSelectedDisplayIndex();
+}
+
+size_t GameManager::getSelectedDisplayModeIndex() {
 	return gameEngine->getSelectedDisplayModeIndex();
 }
 

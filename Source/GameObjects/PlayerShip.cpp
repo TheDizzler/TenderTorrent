@@ -38,19 +38,25 @@ void PlayerShip::clear() {
 
 
 
-bool PlayerShip::loadBullet(ID3D11Device * device) {
+bool PlayerShip::loadBullet(GFXAssetManager* gfxAsset) {
 
+	rightWeaponSlot->loadBulletTexture(gfxAsset->getAsset("Cross Bullet"));
+	leftWeaponSlot->loadBulletTexture(gfxAsset->getAsset("Cross Bullet"));
+	centerWeaponSlot->loadBulletTexture(gfxAsset->getAsset("Laserbolt"));
 
-	if (!rightWeaponSlot->loadBulletTexture(device, L"assets/cross bullet.dds")
-		|| !leftWeaponSlot->loadBulletTexture(device, L"assets/cross bullet.dds")
-		|| !centerWeaponSlot->loadBulletTexture(device, L"assets/laserbolt(24x24).dds"))
-		return false;
+	leftTurret->loadTurretTexture(gfxAsset->getAsset("PlayerShip Turret"));
+	rightTurret->loadTurretTexture(gfxAsset->getAsset("PlayerShip Turret"));
+	leftTurret->loadBulletTexture(gfxAsset->getAsset("Sun Bullet"));
+	rightTurret->loadBulletTexture(gfxAsset->getAsset("Sun Bullet"));
 
-	if (!leftTurret->loadTurretTexture(device, L"assets/Turret(24x24).dds")
-		|| !rightTurret->loadTurretTexture(device, L"assets/Turret(24x24).dds")
-		|| !leftTurret->loadBulletTexture(device, L"assets/sunball.dds")
-		|| !rightTurret->loadBulletTexture(device, L"assets/sunball.dds"))
-		return false;
+	/*rightWeaponSlot->loadBulletTexture(device, L"assets/cross bullet.dds");
+	leftWeaponSlot->loadBulletTexture(device, L"assets/cross bullet.dds");
+	centerWeaponSlot->loadBulletTexture(device, L"assets/laserbolt(24x24).dds");
+
+	leftTurret->loadTurretTexture(device, L"assets/Turret(24x24).dds");
+	rightTurret->loadTurretTexture(device, L"assets/Turret(24x24).dds");
+	leftTurret->loadBulletTexture(device, L"assets/sunball.dds");
+	rightTurret->loadBulletTexture(device, L"assets/sunball.dds");*/
 
 	return true;
 }
@@ -77,11 +83,14 @@ void PlayerShip::update(double deltaTime,
 	if (firing)
 		currentSpeed = firingSpeed;
 
-	//if (keyboardState[DIK_A] & 0x80)
-	if (keys->keyDown[KeyboardController::LEFT])
+	auto state = Keyboard::Get().GetState();
+
+	//if (keys->keyDown[KeyboardController::LEFT])
+	if (state.Left)
 		position.x -= currentSpeed * deltaTime;
-	//if (keyboardState[DIK_D] & 0x80)
-	if (keys->keyDown[KeyboardController::RIGHT])
+
+	//if (keys->keyDown[KeyboardController::RIGHT])
+	if (state.Right)
 		position.x += currentSpeed * deltaTime;
 
 	if (position.x < 0 + width / 2)
@@ -90,11 +99,12 @@ void PlayerShip::update(double deltaTime,
 		position.x = Globals::WINDOW_WIDTH - width / 2;
 
 	
-	//if (keyboardState[DIK_W] & 0x80)
-	if (keys->keyDown[KeyboardController::UP])
+
+	//if (keys->keyDown[KeyboardController::UP])
+	if (state.Up)
 		position.y -= currentSpeed * deltaTime;
-	//if (keyboardState[DIK_S] & 0x80)
-	if (keys->keyDown[KeyboardController::DOWN])
+	if (state.Down)
+	//if (keys->keyDown[KeyboardController::DOWN])
 		position.y += currentSpeed * deltaTime;
 
 	if (position.y < 0 + height / 2)
@@ -116,8 +126,9 @@ void PlayerShip::update(double deltaTime,
 		[](const Sprite* sprite) { return !sprite->isAlive; }), liveBullets.end());
 
 
-	//if (keyboardState[DIK_SPACE] & 0x80) {
-	if (keys->keyDown[KeyboardController::FIRE]) {
+
+	//if (keys->keyDown[KeyboardController::FIRE]) {
+	if (state.Space) {
 		for (WeaponSystem* weaponSlot : weaponSlots) {
 			if (energy >= weaponSlot->energyCost
 				&& weaponSlot->ready()) {
@@ -126,14 +137,13 @@ void PlayerShip::update(double deltaTime,
 				energy -= weaponSlot->energyCost;
 			}
 		}
-
 	} else {
 		firing = false;
 	}
 
 
 	//if (!lastStateVKLButtonDown && mouse->leftButtonDown()) {
-	if (!mouse->leftButtonLastDown() && mouse->leftButtonDown()) {
+	if (!mouse->leftButtonLast() && mouse->leftButton()) {
 
 		if (rightTurret->ready()) {
 			liveBullets.push_back(rightTurret->fire());

@@ -9,15 +9,15 @@ WaveManager::~WaveManager() {
 		delete wave;
 }
 
-bool WaveManager::initialize(ID3D11Device* device) {
+bool WaveManager::initialize(GFXAssetManager* gfxAssets) {
 
 	Wave* wave = new RearAttackWave();
-	if (!wave->initialize(device))
+	if (!wave->initialize(gfxAssets))
 		return false;
 	waves.push_back(wave);
 
 	wave = new StarEnemyShipWave();
-	if (!wave->initialize(device))
+	if (!wave->initialize(gfxAssets))
 		return false;
 	wave->launchNewWave();
 	waves.push_back(wave);
