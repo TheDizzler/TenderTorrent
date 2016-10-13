@@ -10,7 +10,7 @@ public:
 	BackgroundLayer();
 	~BackgroundLayer();
 
-	void setHitArea(const Vector2& position, const Vector2& size, FontSet* font);
+	void setHitArea(const Vector2& position, const Vector2& size);
 
 	void setInitialPosition(const Vector2& position, const Vector2& scale);
 	void takeDamage(int damageTaken);
@@ -20,7 +20,8 @@ public:
 
 private:
 
-	Vector2 topLeftCorner, topRightCorner, bottomLeftCorner, bottomRightCorner;
+	Vector2 topLeftCornerPos, topRightCornerPos,
+		bottomLeftCornerPos, bottomRightCornerPos;
 
 	int health = 200;
 

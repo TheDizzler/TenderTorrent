@@ -75,6 +75,10 @@ bool GameEngine::initStage() {
 	if (!game->initializeGame(hwnd, device, mouse.get()))
 		return false;
 
+	return true;
+}
+
+void GameEngine::constructErrorDialogs() {
 	errorDialog.reset(GameManager::guiFactory->createDialog());
 	Vector2 dialogPos, dialogSize;
 	dialogSize = Vector2(Globals::WINDOW_WIDTH / 2, Globals::WINDOW_HEIGHT / 2);
@@ -107,10 +111,7 @@ bool GameEngine::initStage() {
 	warningDialog->setConfirmButton(move(quitButton2));
 
 	showDialog = warningDialog.get();
-
-	return true;
 }
-
 
 bool warningCanceled = false;
 void GameEngine::run(double deltaTime, int fps) {
@@ -143,6 +144,7 @@ void GameEngine::run(double deltaTime, int fps) {
 void GameEngine::update(double deltaTime) {
 
 	mouse->saveMouseState();
+	keys->saveKeyboardState();
 	if (showDialog->isOpen)
 		showDialog->update(deltaTime);
 	else

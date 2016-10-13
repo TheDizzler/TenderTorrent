@@ -19,7 +19,7 @@ bool WaveManager::initialize(GFXAssetManager* gfxAssets) {
 	wave = new StarEnemyShipWave();
 	if (!wave->initialize(gfxAssets))
 		return false;
-	wave->launchNewWave();
+	//wave->launchNewWave();
 	waves.push_back(wave);
 
 

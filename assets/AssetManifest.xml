@@ -5,7 +5,7 @@
 
 		<sprite name="Enemy Bullet A" file="bullet yellow.dds"/>
 		<sprite name="Cross Bullet" file="cross bullet.dds"/>
-		<sprite name="Laserbolt" file="laserbolt.dds"/>
+		<sprite name="Laserbolt" file="laserbolt(24x24).dds"/>
 
 
 		<sprite name="EnemyShip RearAttack" file="enemy ship A.dds"/>
@@ -28,7 +28,7 @@
 			<font name="BlackCloak" file="BlackCloak.spritefont" fontSize="32" />
 		</spritefonts>
 
-		<sprite name="Test BG" file="TestBG.dds" />
+		<sprite name="Default Transition BG" file="TestBG.dds" />
 		<sprite name="White Pixel" file="WhitePixel.dds" />
 		<sprite name="Mouse Icon" file="mouse icon.dds" />
 		<sprite name="Mouse Reticle" file="reticle (16x16).dds" />

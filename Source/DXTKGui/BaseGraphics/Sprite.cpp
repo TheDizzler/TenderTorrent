@@ -5,7 +5,7 @@ Sprite::Sprite() {
 
 	rotation = 0.0f;
 	scale = Vector2(1, 1);
-	tint = DirectX::Colors::White;
+	tint = DirectX::Colors::White.v;
 	layerDepth = 0.0f;
 
 	width = 0;
@@ -17,7 +17,7 @@ Sprite::Sprite(const Vector2& pos) {
 	position = pos;
 	rotation = 0.0f;
 	scale = Vector2(1, 1);
-	tint = DirectX::Colors::White;
+	tint = DirectX::Colors::White.v;
 	layerDepth = 0.0f;
 	width = 0;
 	height = 0;

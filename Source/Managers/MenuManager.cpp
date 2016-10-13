@@ -153,13 +153,14 @@ bool MainScreen::initialize(ComPtr<ID3D11Device> device, MouseController* mouse)
 
 	buttonpos.y += 150;
 	button = GameManager::guiFactory->createButton(
-		buttonpos, buttonsize, L"Setttings");
+		buttonpos, buttonsize, L"Settings");
 	button->setOnClickListener(new SettingsButtonListener(this));
 	guiControls.push_back(button);
 
 	buttonpos.y += 150;
 	button = GameManager::guiFactory->createButton(
 		buttonpos, buttonsize, L"Exit");
+	button->setOnClickListener(new OnClickListenerExitButton(this));
 	guiControls.push_back(button);
 
 
@@ -508,7 +509,7 @@ void SettingsButtonListener::onClick(Button* button) {
 
 void OnClickListenerDialogQuitButton::onClick(Button* button) {
 	main->exitDialog->close();
-	main->confirmExit();
+	main->game->exit();
 }
 
 void OnClickListenerExitButton::onClick(Button* button) {

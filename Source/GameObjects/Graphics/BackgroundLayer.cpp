@@ -13,7 +13,8 @@ void BackgroundLayer::setInitialPosition(const Vector2& pos, const Vector2& scl)
 	position = pos;
 }
 
-void BackgroundLayer::setHitArea(const Vector2& hitPos, const Vector2& size, FontSet* font) {
+#include "../../Managers/GameManager.h"
+void BackgroundLayer::setHitArea(const Vector2& hitPos, const Vector2& size) {
 
 	Vector2 offset((position.x - width * scale.x / 2) + hitPos.x * scale.x,
 		(position.y - height* scale.y / 2) + hitPos.y* scale.y);
@@ -21,14 +22,16 @@ void BackgroundLayer::setHitArea(const Vector2& hitPos, const Vector2& size, Fon
 	hitArea->size = size * scale;
 
 	Vector2 textPos(offset.x + hitArea->size.x * 3 / 4, offset.y + hitArea->size.y * 3 / 4);
-	healthLabel.reset(new TextLabel(textPos, font));
-	healthLabel->setText(to_string(health));
+	//healthLabel.reset(new TextLabel(textPos, font));
+	//healthLabel->setText(to_string(health));
+	healthLabel.reset(GameManager::guiFactory->createTextLabel(textPos, to_wstring(health)));
+	
 
 
-	topLeftCorner = hitArea->position;
-	topRightCorner = Vector2(hitArea->position.x + hitArea->size.x, hitArea->position.y);
-	bottomLeftCorner = Vector2(hitArea->position.x, hitArea->position.y + hitArea->size.y);
-	bottomRightCorner = Vector2(hitArea->position.x + hitArea->size.x, hitArea->position.y + hitArea->size.y);
+	topLeftCornerPos = hitArea->position;
+	topRightCornerPos = Vector2(hitArea->position.x + hitArea->size.x, hitArea->position.y);
+	bottomLeftCornerPos = Vector2(hitArea->position.x, hitArea->position.y + hitArea->size.y);
+	bottomRightCornerPos = Vector2(hitArea->position.x + hitArea->size.x, hitArea->position.y + hitArea->size.y);
 }
 
 
@@ -37,7 +40,7 @@ void BackgroundLayer::takeDamage(int damageTaken) {
 
 	health -= damageTaken;
 	labelHidden = false;
-	healthLabel->setText(to_string(health));
+	healthLabel->setText(to_wstring(health));
 	if (health <= 0) {
 		isAlive = false;
 	}
@@ -47,11 +50,11 @@ void BackgroundLayer::setPosition(const Vector2& pos) {
 
 	position += pos;
 	hitArea->position += pos;
-	healthLabel->position += pos;
-	topLeftCorner += pos;
-	topRightCorner += pos;
-	bottomLeftCorner += pos;
-	bottomRightCorner += pos;
+	healthLabel->moveBy(pos);
+	topLeftCornerPos += pos;
+	topRightCornerPos += pos;
+	bottomLeftCornerPos += pos;
+	bottomRightCornerPos += pos;
 }
 
 void BackgroundLayer::draw(SpriteBatch* batch, Sprite* frame) {
@@ -60,14 +63,18 @@ void BackgroundLayer::draw(SpriteBatch* batch, Sprite* frame) {
 		Sprite::draw(batch);
 		if (!labelHidden) {
 			healthLabel->draw(batch);
-			batch->Draw(frame->texture.Get(), topLeftCorner, &frame->sourceRect,
-				frame->tint, 0, frame->origin, scale, SpriteEffects_None, layerDepth);
-			batch->Draw(frame->texture.Get(), topRightCorner, &frame->sourceRect,
-				frame->tint, XM_PI / 2, frame->origin, scale, SpriteEffects_None, layerDepth);
-			batch->Draw(frame->texture.Get(), bottomLeftCorner, &frame->sourceRect,
-				frame->tint, -XM_PI / 2, frame->origin, scale, SpriteEffects_None, layerDepth);
-			batch->Draw(frame->texture.Get(), bottomRightCorner, &frame->sourceRect,
-				frame->tint, XM_PI, frame->origin, scale, SpriteEffects_None, layerDepth);
+			ID3D11ShaderResourceView* texture = frame->getTexture().Get();
+			RECT frameRect = frame->getRect();
+			Color frameTint = frame->getTint();
+			Vector2 frameOrigin = frame->getOrigin();
+			batch->Draw(texture, topLeftCornerPos, &frameRect,
+				frameTint, 0, frameOrigin, scale, SpriteEffects_None, layerDepth);
+			batch->Draw(texture, topRightCornerPos, &frameRect,
+				frameTint, XM_PI / 2, frameOrigin, scale, SpriteEffects_None, layerDepth);
+			batch->Draw(texture, bottomLeftCornerPos, &frameRect,
+				frameTint, -XM_PI / 2, frameOrigin, scale, SpriteEffects_None, layerDepth);
+			batch->Draw(texture, bottomRightCornerPos, &frameRect,
+				frameTint, XM_PI, frameOrigin, scale, SpriteEffects_None, layerDepth);
 
 		}
 	}

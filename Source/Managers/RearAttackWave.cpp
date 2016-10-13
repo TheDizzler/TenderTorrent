@@ -6,13 +6,33 @@ RearAttackWave::RearAttackWave() {
 RearAttackWave::~RearAttackWave() {
 }
 
+#include "../Engine/GameEngine.h"
 bool RearAttackWave::initialize(GFXAssetManager* gfxAssets) {
 
+	const char_t* shipName = "EnemyShip RearAttack";
+	GraphicsAsset* ship = gfxAssets->getAsset(shipName);
+	if (ship == NULL) {
+		wostringstream wss;
+		wss << "Unable to find asset " << shipName;
+		wss << " in RearAttackWave.";
+		GameEngine::showErrorDialog(wss.str(), L"This is bad");
+		return true;
+	}
+
+	const char_t* bulletName = "Enemy Bullet A";
+	GraphicsAsset* bullet = gfxAssets->getAsset(bulletName);
+	if (bullet == NULL) {
+		wostringstream wss;
+		wss << "Unable to find asset " << bulletName;
+		wss << " in RearAttackWave.";
+		GameEngine::showErrorDialog(wss.str(), L"This is bad");
+		return true;
+	}
 	sharedShipSprite.reset(new Sprite());
-	sharedShipSprite->load(gfxAssets->getAsset("EnemyShip RearAttack"));
+	sharedShipSprite->load(ship);
 
 	sharedBulletSprite.reset(new Sprite());
-	sharedBulletSprite->load(gfxAssets->getAsset("Enemy Bullet A"));
+	sharedBulletSprite->load(bullet);
 
 	return true;
 }

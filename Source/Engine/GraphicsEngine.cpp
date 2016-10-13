@@ -1,6 +1,6 @@
 #include "GraphicsEngine.h"
 
-#include <DirectXColors.h>
+//#include <DirectXColors.h>
 
 
 GraphicsEngine::GraphicsEngine() {
@@ -74,11 +74,6 @@ bool GraphicsEngine::getDisplayAdapters() {
 
 	}
 
-	/*deviceContexts.resize(adapters.size());
-	swapChains.resize(adapters.size());
-	devices.resize(adapters.size());
-	renderTargetViews.resize(adapters.size());*/
-	//batches.resize(adapters.size());
 
 	int size = i - 1;
 
@@ -122,11 +117,6 @@ bool GraphicsEngine::initializeAdapter(int adapterIndex) {
 
 	selectedAdapterIndex = adapterIndex;
 	selectedAdapter = adapters[selectedAdapterIndex];
-	//device = devices[selectedAdapterIndex];
-	//deviceContext = deviceContexts[selectedAdapterIndex];
-	//swapChain = swapChains[selectedAdapterIndex];
-	//renderTargetView = renderTargetViews[selectedAdapterIndex];
-	//batch = batches[selectedAdapterIndex].get();
 
 	if (!populateDisplayModeList(selectedDisplay))
 		return false;
@@ -175,58 +165,6 @@ bool GraphicsEngine::initializeAdapter(int adapterIndex) {
 		return false;
 
 	verifyAdapter(device);
-
-
-	// create extra swapchain for creating textures from screen
-	/*ComPtr<IDXGIDevice> dxgiDevice;
-	if (GameEngine::reportError(
-	device.Get()->QueryInterface(
-	__uuidof(IDXGIDevice), (void**) dxgiDevice.GetAddressOf()),
-	L"Failed Querying interface.", L"WTF"))
-	return false;
-
-	ComPtr<IDXGIAdapter> dxgiAdapter;
-	if (GameEngine::reportError(
-	dxgiDevice->GetParent(__uuidof(IDXGIAdapter), (void**) dxgiAdapter.GetAddressOf()),
-	L"Failed to get DXGIAdapter from DXGIDevice."))
-	return false;
-	ComPtr<IDXGIFactory1> factory;
-	if (GameEngine::reportError(
-	dxgiAdapter->GetParent(__uuidof(IDXGIFactory1), (void**) factory.GetAddressOf()),
-	L"Failed to get IDXGIFactory from DXGIAdapter"))
-	return false;
-
-	if (GameEngine::reportError(
-	factory->CreateSwapChain(
-	device.Get(), &swapChainDesc, textureSwapChain.GetAddressOf()),
-	L"Failed to create textureSwapChain"))
-	return false;
-
-	ID3D11Texture2D* backBufferPtr;
-	if (GameEngine::reportError(
-	swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*) &backBufferPtr),
-	L"Could not get pointer to back buffer.", L"ERROR"))
-	return false;
-
-	if (GameEngine::reportError(
-	device->CreateRenderTargetView(backBufferPtr,
-	NULL, textureRenderTargetView.GetAddressOf()),
-	L"Could not create texture render target view.", L"ERROR"))
-	return false;
-
-	ComPtr<ID3D11ShaderResourceView> shaderResourceView;
-	D3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc;
-	shaderResourceViewDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-	shaderResourceViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-	shaderResourceViewDesc.Texture2D.MostDetailedMip = 0;
-	shaderResourceViewDesc.Texture2D.MipLevels = 1;
-
-	if (GameEngine::reportError(
-	device->CreateShaderResourceView(backBufferPtr,
-	&shaderResourceViewDesc, shaderResourceView.GetAddressOf()),
-	L"Failed to create Shader Resource View for new texture."))
-	return false;
-	backBufferPtr->Release();*/
 
 	return true;
 }
@@ -403,9 +341,6 @@ vector<DXGI_MODE_DESC> GraphicsEngine::getDisplayModeList(
 bool GraphicsEngine::setAdapter(size_t newAdapterIndex) {
 
 	swapChain->SetFullscreenState(false, NULL);
-	//renderTargetView.Get()->Release();
-	//deviceContext.Get()->Release();
-	//device.Get()->Release();
 
 
 	if (!initializeAdapter(newAdapterIndex)) {
@@ -420,11 +355,6 @@ bool GraphicsEngine::setAdapter(size_t newAdapterIndex) {
 
 	// re-create SpriteBatch
 	batch.reset(new SpriteBatch(deviceContext.Get()));
-	//batch = new SpriteBatch(deviceContext.Get());
-
-	/*ComPtr<ID3D11Device> deviceCheck;
-	deviceContext->GetDevice(&deviceCheck);
-	verifyAdapter(deviceCheck);*/
 
 	return true;
 }
@@ -456,8 +386,6 @@ bool GraphicsEngine::setFullScreen(bool isFullScreen) {
 
 	if (swapChain.Get() == NULL)
 		return false;
-
-
 
 	if (isFullScreen) {
 		swapChain->SetFullscreenState(true, NULL);

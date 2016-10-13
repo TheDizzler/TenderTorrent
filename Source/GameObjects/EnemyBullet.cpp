@@ -11,6 +11,7 @@ EnemyBullet::EnemyBullet(Vector2 & position) : Bullet(position) {
 EnemyBullet::~EnemyBullet() {
 }
 
+#include "../globals.h"
 void EnemyBullet::update(double deltaTime) {
 
 	position += direction*deltaTime*bulletSpeed;

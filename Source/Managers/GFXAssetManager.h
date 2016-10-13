@@ -1,5 +1,6 @@
 #pragma once
 
+#include <map>
 #include <pugixml.hpp>
 
 #include "../DXTKGui/BaseGraphics/Sprite.h"
@@ -21,7 +22,9 @@ public:
 private:
 	xml_node gfxAssetsNode;
 
+	map<string, unique_ptr<GraphicsAsset> > assetMap;
+	map<string, shared_ptr<Animation> > animationMap;
 
-	bool getGFXAssetsFromXML();
+	bool getGFXAssetsFromXML(ComPtr<ID3D11Device> device);
 
 };

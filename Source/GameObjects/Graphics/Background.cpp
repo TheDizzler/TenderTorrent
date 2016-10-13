@@ -50,8 +50,8 @@ bool Background::load(ComPtr<ID3D11Device> device, const wchar_t* file) {
 	position.y -= height*scale.y / 2;
 
 
-	healthFont = move(GameManager::guiFactory->getFont("Arial"));
-	healthFont->setTint(Vector4(1, 1, 1, 1));
+	/*healthFont = move(GameManager::guiFactory->getFont("Arial"));
+	healthFont->setTint(Vector4(1, 1, 1, 1));*/
 
 
 	cornerFrame.reset(new Sprite());
@@ -101,7 +101,7 @@ bool Background::loadLevel(ComPtr<ID3D11Device> device, xml_node levelRoot) {
 			layerNode.child("size").attribute("y").as_int());
 
 
-		bgLayer->setHitArea(pos, size, healthFont.get());
+		bgLayer->setHitArea(pos, size);
 		bgLayers.push_back(bgLayer);
 
 	}

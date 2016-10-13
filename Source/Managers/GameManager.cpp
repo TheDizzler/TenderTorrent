@@ -1,7 +1,7 @@
 #include "GameManager.h"
 
-unique_ptr<GUIFactory> guiFactory;
-unique_ptr<GFXAssetManager> gfxAssets;
+unique_ptr<GUIFactory> GameManager::guiFactory;
+unique_ptr<GFXAssetManager> GameManager::gfxAssets;
 
 GameManager::GameManager(GameEngine* gmngn) {
 	gameEngine = gmngn;
@@ -35,8 +35,13 @@ bool GameManager::initializeGame(HWND hwnd, ComPtr<ID3D11Device> dvc, MouseContr
 		MessageBox(0, L"Failed to load GUIFactory", L"Fatal Error", MB_OK);
 		return false;
 	}
+	gameEngine->constructErrorDialogs();
 
 	gfxAssets.reset(new GFXAssetManager(gfxAssetNode));
+	if (!gfxAssets->initialize(device)) {
+		MessageBox(0, L"Failed to load GFX Assets.", L"Fatal Error", MB_OK);
+		return false;
+	}
 
 	menuScreen.reset(new MenuManager());
 	menuScreen->setGameManager(this);
@@ -45,9 +50,9 @@ bool GameManager::initializeGame(HWND hwnd, ComPtr<ID3D11Device> dvc, MouseContr
 
 
 	levelScreen.reset(new LevelManager());
-	if (!levelScreen->initialize(device, mouse))
+	/*if (!levelScreen->initialize(device, mouse))
 		return false;
-	levelScreen->setGameManager(this);
+	levelScreen->setGameManager(this);*/
 
 	currentScreen = menuScreen.get();
 

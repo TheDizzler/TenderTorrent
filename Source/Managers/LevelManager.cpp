@@ -15,7 +15,7 @@ void LevelManager::setGameManager(GameManager * gm) {
 	game = gm;
 }
 
-//#include "Ga
+#include "GameManager.h"
 bool LevelManager::initialize(ComPtr<ID3D11Device> device, MouseController* mouse) {
 
 	playState = LOADING;
@@ -44,65 +44,69 @@ bool LevelManager::initialize(ComPtr<ID3D11Device> device, MouseController* mous
 	bgManager.reset(new BackgroundManager());
 
 	waveManager.reset(new WaveManager());
-	if (!waveManager->initialize(device))
+	if (!waveManager->initialize(GameManager::gfxAssets.get()))
 		return false;
 
 	playerShip.reset(new PlayerShip(startPosition));
 	playerShip->load(GameManager::guiFactory->getAsset("PlayerShip Hull"));
-	if (!playerShip->loadBullet(device)) {
+	if (!playerShip->loadBullet(GameManager::gfxAssets.get())) {
 		MessageBox(NULL, L"Failed to load weapons", L"ERROR", MB_OK);
 		return false;
 	}
 	playerShip->setDimensions(playerShip.get());
 
 
-	timerLabel.reset(new TextLabel(Vector2(500, 10), guiFont.get()));
+
+	timerLabel.reset(new TextLabel(Vector2(500, 10),
+		GameManager::guiFactory->getFont("Arial")));
 	textLabels.push_back(timerLabel.get());
 
-	scoreLabel.reset(new TextLabel(Vector2(10, 10), guiFont.get()));
+	scoreLabel.reset(new TextLabel(Vector2(10, 10),
+		GameManager::guiFactory->getFont("Arial")));
 	textLabels.push_back(scoreLabel.get());
 
-	energyLabel.reset(new TextLabel(Vector2(10, 30), guiFont.get()));
+	energyLabel.reset(new TextLabel(Vector2(10, 30),
+		GameManager::guiFactory->getFont("Arial")));
 	textLabels.push_back(energyLabel.get());
 
-	Vector2 size = pauseFont->measureString(L"Paused");
-	pauseLabel.reset(new TextLabel(
-		Vector2((Globals::WINDOW_WIDTH - size.x) / 2, (Globals::WINDOW_HEIGHT - size.y) / 2),
-		pauseFont.get()));
+	Vector2 size = timerLabel->measureString(L"Paused");
+	pauseLabel.reset(new TextLabel(Vector2(
+		(Globals::WINDOW_WIDTH - size.x) / 2, (Globals::WINDOW_HEIGHT - size.y) / 2),
+		GameManager::guiFactory->getFont("Arial")));
 	pauseLabel->setText("Paused");
 
-	exitButton.reset(new TextButton());
-	if (!exitButton->load(device, Assets::arialFontFile,
-		Assets::buttonUpFile, Assets::buttonDownFile))
-		return false;
-	exitButton->action = Button::EXIT;
-	exitButton->setText("Exit");
-	exitButton->setPosition(
-		Vector2(Globals::WINDOW_WIDTH / 4, Globals::WINDOW_HEIGHT * 3 / 4));
-
-	continueButton.reset(new TextButton());
-	if (!continueButton->load(device, Assets::arialFontFile,
-		Assets::buttonUpFile, Assets::buttonDownFile))
-		return false;
-	continueButton->action = Button::CANCEL;
-	continueButton->setText("Continue");
-	continueButton->setPosition(
-		Vector2(Globals::WINDOW_WIDTH * 3 / 4, Globals::WINDOW_HEIGHT * 3 / 4));
+	exitButton.reset(
+		GameManager::guiFactory->createImageButton(
+			Vector2(Globals::WINDOW_WIDTH / 4, Globals::WINDOW_HEIGHT * 3 / 4),
+			"Button Up", "Button Down"));
+	exitButton->setText(L"Exit");
 
 
-	size = warningFont->measureString(L"GET READY!");
+	continueButton.reset(
+		GameManager::guiFactory->createImageButton(
+			Vector2(Globals::WINDOW_WIDTH * 3 / 4, Globals::WINDOW_HEIGHT * 3 / 4),
+			"Button Up", "Button Down"));
+	continueButton->setText(L"Continue");
+
+
+
+	size = timerLabel->measureString(L"GET READY!");
 	warningLabel.reset(new TextLabel(
 		Vector2((Globals::WINDOW_WIDTH - size.x) / 2, (Globals::WINDOW_HEIGHT - size.y) / 2),
-		warningFont.get()));
+		GameManager::guiFactory->getFont("Arial")));
 	warningLabel->setText("GET READY!");
 
 
-	pauseOverlay.reset(new Sprite(Vector2(0, 0)));
+	/*pauseOverlay.reset(new Sprite(Vector2(0, 0)));
 	if (!pauseOverlay->load(device, Assets::pauseOverlayFile)) {
 		MessageBox(NULL, L"Failed to pause overlay", L"ERROR", MB_OK);
 		return false;
-	}
-	pauseOverlay->setTint(Color(Vector4(1, 1, 1, .25)));
+	}*/
+
+	pauseOverlay.reset(
+		GameManager::guiFactory->createRectangle(Vector2(0, 0),
+			Vector2(Globals::WINDOW_WIDTH, Globals::WINDOW_HEIGHT)));
+	pauseOverlay->setTint(Color(1, .588, 1, .25)); //should be pinkish
 
 	return true;
 }
@@ -113,7 +117,7 @@ bool LevelManager::loadLevel(ComPtr<ID3D11Device> device, const wchar_t* file) {
 		return false;
 
 	waveManager.reset(new WaveManager());
-	if (!waveManager->initialize(device))
+	if (!waveManager->initialize(GameManager::gfxAssets.get()))
 		return false;
 
 	totalPlayTime = 0;
@@ -124,10 +128,11 @@ bool LevelManager::loadLevel(ComPtr<ID3D11Device> device, const wchar_t* file) {
 	return true;
 }
 
-#include "GameManager.h"
 
-void LevelManager::update(double deltaTime, KeyboardController* keys, MouseController* mouse) {
+void LevelManager::update(double deltaTime,
+	KeyboardController* keys, MouseController* mouse) {
 
+	auto keyState = Keyboard::Get().GetState();
 	switch (playState) {
 		case PLAYING:
 			totalPlayTime += deltaTime;
@@ -160,10 +165,8 @@ void LevelManager::update(double deltaTime, KeyboardController* keys, MouseContr
 			playerShip->update(deltaTime, keys, mouse);
 			waveManager->update(deltaTime, playerShip.get());
 
-			if (!pauseDownLast && keys->keyDown[KeyboardController::PAUSE]) {
-			//if (!keys->lastDown[KeyboardController::CANCEL]
-				//&& keys->keyDown[KeyboardController::CANCEL]) {
-
+			//if (!pauseDownLast && keys->keyDown[KeyboardController::PAUSE]) {
+			if (!pauseDownLast && keyState.Escape) {
 				playState = PAUSED;
 				pauseDownLast = true;
 			}
@@ -186,7 +189,7 @@ void LevelManager::update(double deltaTime, KeyboardController* keys, MouseContr
 		case PAUSED:
 			displayPause(deltaTime);
 
-			exitButton->update(deltaTime, mouse);
+			exitButton->update(deltaTime);
 			if (exitButton->clicked()) {
 				waveManager->clear();
 				bgManager->clear();
@@ -198,11 +201,10 @@ void LevelManager::update(double deltaTime, KeyboardController* keys, MouseContr
 				game->loadMainMenu();
 			}
 
-			continueButton->update(deltaTime, mouse);
+			continueButton->update(deltaTime);
 			if (continueButton->clicked()
-				|| (!pauseDownLast && keys->keyDown[KeyboardController::PAUSE])) {
-				//|| (!keys->lastDown[KeyboardController::CANCEL]
-					//&& keys->keyDown[KeyboardController::CANCEL])) {
+				//|| (!pauseDownLast && keys->keyDown[KeyboardController::PAUSE])) {
+				|| (!pauseDownLast && keyState.Escape)) {
 				playState = PLAYING;
 				pauseDownLast = true;
 			}
@@ -229,7 +231,8 @@ void LevelManager::update(double deltaTime, KeyboardController* keys, MouseContr
 		energyLabel->setText(ws);
 	}
 
-	pauseDownLast = keys->keyDown[KeyboardController::PAUSE];
+	//pauseDownLast = keys->keyDown[KeyboardController::PAUSE];
+	pauseDownLast = keyState.Escape;
 }
 
 
@@ -245,11 +248,11 @@ void LevelManager::draw(SpriteBatch* batch) {
 
 
 	if (playState == PAUSED) {
-		for (int w = 0; w <= Globals::WINDOW_WIDTH; w += 16)
-			for (int h = 0; h <= Globals::WINDOW_HEIGHT; h += 16) {
-				pauseOverlay->setPosition(Vector2(w, h));
+		//for (int w = 0; w <= Globals::WINDOW_WIDTH; w += 16)
+			//for (int h = 0; h <= Globals::WINDOW_HEIGHT; h += 16) {
+				//pauseOverlay->setPosition(Vector2(w, h));
 				pauseOverlay->draw(batch);
-			}
+			//}
 		exitButton->draw(batch);
 		continueButton->draw(batch);
 		pauseLabel->draw(batch);
@@ -276,7 +279,8 @@ bool bInc = true;
 /** Changes the Green and Blue variables between 0 and 1. */
 void LevelManager::displayWarning(double deltaTime) {
 
-	Color color = warningFont->getTint();
+	//Color color = warningFont->getTint();
+	Color color = warningLabel->getTint();
 	float r = color.G();
 	if (rInc) {
 		r += 5 * deltaTime;
@@ -288,13 +292,14 @@ void LevelManager::displayWarning(double deltaTime) {
 			rInc = true;
 	}
 
-	warningFont->setTint(Color(Vector3(1, r, r)));
+	//warningFont->setTint(Color(Vector3(1, r, r)));
+	warningLabel->setTint(Vector4(1, r, r, 1));
 }
 
 /** Changes the Red variable between 0 and 1. */
 void LevelManager::displayPause(double deltaTime) {
 
-	Color color = pauseFont->getTint();
+	Color color = pauseLabel->getTint();
 
 	if (rInc) {
 		color.R(color.R() + deltaTime);
@@ -306,6 +311,6 @@ void LevelManager::displayPause(double deltaTime) {
 			rInc = true;
 	}
 
-	pauseFont->setTint(color);
+	pauseLabel->setTint(color);
 }
 

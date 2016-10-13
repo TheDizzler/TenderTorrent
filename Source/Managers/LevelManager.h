@@ -59,7 +59,8 @@ private:
 
 	unique_ptr<PlayerShip> playerShip;
 
-	unique_ptr<Sprite> pauseOverlay;
+	//unique_ptr<Sprite> pauseOverlay;
+	unique_ptr<RectangleSprite> pauseOverlay;
 
 
 	float timeStep = 1.0f / 60.0f;

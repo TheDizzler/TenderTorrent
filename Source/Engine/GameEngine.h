@@ -22,6 +22,7 @@ public:
 	~GameEngine();
 
 	bool initEngine(HWND hwnd, HINSTANCE hInstance);
+	void constructErrorDialogs();
 	void onAudioDeviceChange();
 
 

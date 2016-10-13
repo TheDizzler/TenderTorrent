@@ -49,15 +49,6 @@ bool PlayerShip::loadBullet(GFXAssetManager* gfxAsset) {
 	leftTurret->loadBulletTexture(gfxAsset->getAsset("Sun Bullet"));
 	rightTurret->loadBulletTexture(gfxAsset->getAsset("Sun Bullet"));
 
-	/*rightWeaponSlot->loadBulletTexture(device, L"assets/cross bullet.dds");
-	leftWeaponSlot->loadBulletTexture(device, L"assets/cross bullet.dds");
-	centerWeaponSlot->loadBulletTexture(device, L"assets/laserbolt(24x24).dds");
-
-	leftTurret->loadTurretTexture(device, L"assets/Turret(24x24).dds");
-	rightTurret->loadTurretTexture(device, L"assets/Turret(24x24).dds");
-	leftTurret->loadBulletTexture(device, L"assets/sunball.dds");
-	rightTurret->loadBulletTexture(device, L"assets/sunball.dds");*/
-
 	return true;
 }
 
@@ -78,19 +69,19 @@ void PlayerShip::update(double deltaTime,
 
 		return;
 	}
-		// Movement
+	// Movement
 	int currentSpeed = speed;
 	if (firing)
 		currentSpeed = firingSpeed;
 
-	auto state = Keyboard::Get().GetState();
+	auto keyState = Keyboard::Get().GetState();
 
 	//if (keys->keyDown[KeyboardController::LEFT])
-	if (state.Left)
+	if (keyState.Left)
 		position.x -= currentSpeed * deltaTime;
 
 	//if (keys->keyDown[KeyboardController::RIGHT])
-	if (state.Right)
+	if (keyState.Right)
 		position.x += currentSpeed * deltaTime;
 
 	if (position.x < 0 + width / 2)
@@ -101,9 +92,9 @@ void PlayerShip::update(double deltaTime,
 	
 
 	//if (keys->keyDown[KeyboardController::UP])
-	if (state.Up)
+	if (keyState.Up)
 		position.y -= currentSpeed * deltaTime;
-	if (state.Down)
+	if (keyState.Down)
 	//if (keys->keyDown[KeyboardController::DOWN])
 		position.y += currentSpeed * deltaTime;
 
@@ -128,7 +119,7 @@ void PlayerShip::update(double deltaTime,
 
 
 	//if (keys->keyDown[KeyboardController::FIRE]) {
-	if (state.Space) {
+	if (keyState.Space) {
 		for (WeaponSystem* weaponSlot : weaponSlots) {
 			if (energy >= weaponSlot->energyCost
 				&& weaponSlot->ready()) {

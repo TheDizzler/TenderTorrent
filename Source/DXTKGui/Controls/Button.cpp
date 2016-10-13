@@ -151,7 +151,6 @@ void Button::setPosition(const Vector2& pos) {
 
 	// center text
 	positionText();
-
 }
 
 void Button::positionText() {
