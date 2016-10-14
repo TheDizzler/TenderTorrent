@@ -273,7 +273,11 @@ void Dialog::setConfirmOnClickListener(Button::OnClickListener* iOnClickListener
 void Dialog::setCancelButton(unique_ptr<Button> cancelButton,
 	bool autoPosition, bool autoSize) {
 
+
 	if (autoPosition) {
+		if (cancelButton->getWidth() == 0) {
+			cancelButton->setDimensions(cancelButtonPosition, standardButtonSize, 3);
+		}
 		cancelButtonPosition.x =
 			position.x + size.x - cancelButton->getWidth() - buttonMargin;
 		if (calculateButtonPosition(cancelButtonPosition))
@@ -281,10 +285,12 @@ void Dialog::setCancelButton(unique_ptr<Button> cancelButton,
 	} else {
 		cancelButtonPosition = cancelButton->getPosition();
 	}
+
 	if (autoSize) {
 		cancelButton->setDimensions(cancelButtonPosition, standardButtonSize, 3);
 	} else
 		cancelButton->setPosition(cancelButtonPosition);
+
 	controls[ButtonCancel].release();
 	controls[ButtonCancel] = move(cancelButton);
 }

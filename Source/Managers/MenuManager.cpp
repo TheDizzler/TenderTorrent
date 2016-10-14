@@ -50,28 +50,28 @@ bool lastStateDown;
 void MenuManager::update(double deltaTime,
 	KeyboardController* keys, MouseController* mouse) {
 
-	ShowCursor(false);
-	Vector2 mousePos = mouse->getPosition();
-	if (mousePos.x > Globals::WINDOW_WIDTH) {
-		mousePos.x = Globals::WINDOW_WIDTH;
-		//SetCursorPos(mousePos.x, mousePos.y);
-		ShowCursor(true);
-	}
-	if (mousePos.y > Globals::WINDOW_HEIGHT) {
-		mousePos.y = Globals::WINDOW_HEIGHT;
-		//SetCursorPos(mousePos.x, mousePos.y);
-		ShowCursor(true);
-	}
-	if (mousePos.x < 0) {
-		mousePos.x = 0;
-		//SetCursorPos(mousePos.x, mousePos.y);
-		ShowCursor(true);
-	}
-	if (mousePos.y < 0) {
-		mousePos.y = 0;
-		//SetCursorPos(mousePos.x, mousePos.y);
-		ShowCursor(true);
-	}
+	
+	//Vector2 mousePos = mouse->getPosition();
+	//if (mousePos.x > Globals::WINDOW_WIDTH) {
+	//	mousePos.x = Globals::WINDOW_WIDTH;
+	//	//SetCursorPos(mousePos.x, mousePos.y);
+	//	ShowCursor(true);
+	//}
+	//if (mousePos.y > Globals::WINDOW_HEIGHT) {
+	//	mousePos.y = Globals::WINDOW_HEIGHT;
+	//	//SetCursorPos(mousePos.x, mousePos.y);
+	//	ShowCursor(true);
+	//}
+	//if (mousePos.x < 0) {
+	//	mousePos.x = 0;
+	//	//SetCursorPos(mousePos.x, mousePos.y);
+	//	ShowCursor(true);
+	//}
+	//if (mousePos.y < 0) {
+	//	mousePos.y = 0;
+	//	//SetCursorPos(mousePos.x, mousePos.y);
+	//	ShowCursor(true);
+	//}
 
 	if (switchTo != NULL) {
 		if (transitionManager->runTransition(deltaTime)) {
@@ -142,24 +142,26 @@ MainScreen::~MainScreen() {
 
 bool MainScreen::initialize(ComPtr<ID3D11Device> device, MouseController* mouse) {
 
-	Vector2 buttonpos = Vector2(Globals::WINDOW_WIDTH / 2, 200);
-	Vector2 buttonsize =
-		Vector2(Globals::WINDOW_WIDTH / 4, Globals::WINDOW_HEIGHT / 4);
+	Vector2 buttonpos = Vector2(Globals::WINDOW_WIDTH / 2, Globals::WINDOW_HEIGHT / 8);
+	Vector2 buttonsize = Vector2(Globals::WINDOW_WIDTH / 4, 0);
+	buttonpos.x -= buttonsize.x / 2;
 	Button* button = GameManager::guiFactory->createButton(
 		buttonpos, buttonsize, L"Play");
-
+	button->normalColor = Color(1, .558, 1, 1);
 	button->setOnClickListener(new PlayButtonListener(game));
 	guiControls.push_back(button);
 
-	buttonpos.y += 150;
+	buttonpos.y = Globals::WINDOW_HEIGHT / 2  - button->getHeight()/2;
 	button = GameManager::guiFactory->createButton(
 		buttonpos, buttonsize, L"Settings");
+	button->normalColor = Color(1, .558, 1, 1);
 	button->setOnClickListener(new SettingsButtonListener(this));
 	guiControls.push_back(button);
 
-	buttonpos.y += 150;
+	buttonpos.y = Globals::WINDOW_HEIGHT - Globals::WINDOW_HEIGHT / 8 - button->getHeight();
 	button = GameManager::guiFactory->createButton(
 		buttonpos, buttonsize, L"Exit");
+	button->normalColor = Color(1, .558, 1, 1);
 	button->setOnClickListener(new OnClickListenerExitButton(this));
 	guiControls.push_back(button);
 
@@ -518,5 +520,5 @@ void OnClickListenerExitButton::onClick(Button* button) {
 
 void PlayButtonListener::onClick(Button* button) {
 
-	game->loadLevel(L"Level Mako");
+	game->loadLevel("Level Mako");
 }

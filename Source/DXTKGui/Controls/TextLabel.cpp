@@ -158,6 +158,10 @@ void TextLabel::setTint(const XMFLOAT4 color) {
 
 void TextLabel::setScale(const Vector2 & scl) {
 	scale = scl;
+	Vector2 size = font->measureString(label.c_str());
+	size *= scale;
+	hitArea->position = position;
+	hitArea->size = size;
 }
 
 const Vector2& TextLabel::getPosition() const {

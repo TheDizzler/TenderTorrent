@@ -14,6 +14,8 @@ using namespace Microsoft::WRL;
 
 namespace Assets {
 
+	const static char* levelManifestFile = "assets/LevelManifest.xml";
+
 	/*const static wchar_t* arialFontFile = L"assets/Arial.spritefont";
 
 	const static wchar_t* mouseIconFile = L"assets/GUI/mouse icon.dds";

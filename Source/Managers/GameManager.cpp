@@ -50,13 +50,14 @@ bool GameManager::initializeGame(HWND hwnd, ComPtr<ID3D11Device> dvc, MouseContr
 
 
 	levelScreen.reset(new LevelManager());
-	/*if (!levelScreen->initialize(device, mouse))
+	levelScreen->setGameManager(this);
+	if (!levelScreen->initialize(device, mouse))
 		return false;
-	levelScreen->setGameManager(this);*/
+	
 
 	currentScreen = menuScreen.get();
 
-	ShowCursor(false);
+	//ShowCursor(false);
 
 	return true;
 }
@@ -64,8 +65,7 @@ bool GameManager::initializeGame(HWND hwnd, ComPtr<ID3D11Device> dvc, MouseContr
 
 void GameManager::update(double deltaTime, KeyboardController* keys,
 	MouseController* mouse) {
-
-	guiFactory->updateMouse();
+	//guiFactory->updateMouse();
 	currentScreen->update(deltaTime, keys, mouse);
 }
 
@@ -74,14 +74,18 @@ void GameManager::draw(SpriteBatch * batch) {
 	currentScreen->draw(batch);
 }
 
-void GameManager::loadLevel(const wchar_t* file) {
+void GameManager::loadLevel(const char_t* levelName) {
 
+	if (!levelScreen->loadLevel(device, levelName)) {
+		wostringstream msg;
+		msg << "Failed to load level: " << levelName;
+		GameEngine::showErrorDialog(msg.str(), L"Fatal Error");
+		return;
+	}
 	lastScreen = currentScreen;
 	currentScreen = levelScreen.get();
-	if (!levelScreen->loadLevel(device, file)) {
-		MessageBox(NULL, L"Failed to load level", L"ERROR", MB_OK);
-		exit();
-	}
+
+	
 }
 
 void GameManager::loadMainMenu() {

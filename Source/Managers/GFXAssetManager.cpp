@@ -49,7 +49,6 @@ GraphicsAsset* const GFXAssetManager::getAsset(const char_t * assetName) {
 	if (assetMap.find(assetName) == assetMap.end()) {
 		wostringstream ws;
 		ws << "Cannot find asset file: " << assetName << "\n";
-		ws << "Count : " << assetMap.count(assetName) << "\n";
 		OutputDebugString(ws.str().c_str());
 		return NULL;
 	}

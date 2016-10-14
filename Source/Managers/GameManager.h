@@ -26,7 +26,7 @@ public:
 	void draw(SpriteBatch* batch);
 
 
-	void loadLevel(const wchar_t* file);
+	void loadLevel(const char_t* levelName);
 	void loadMainMenu();
 
 	void pause();

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<level name="mako" scale="2.5" numLayers="9" dir="bg/">
+<level name="mako" scale="2.5" numLayers="9" dir="assets/bg/">
 
 	<base layer="0">mako00.dds</base>
 	<backgroundLayer layer="1">

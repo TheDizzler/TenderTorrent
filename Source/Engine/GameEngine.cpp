@@ -49,6 +49,7 @@ bool GameEngine::initEngine(HWND hw, HINSTANCE hInstance) {
 		return false;
 	}
 
+	ShowCursor(false);
 
 	return true;
 }
@@ -70,7 +71,6 @@ public:
 
 bool GameEngine::initStage() {
 
-
 	game.reset(new GameManager(this));
 	if (!game->initializeGame(hwnd, device, mouse.get()))
 		return false;
@@ -79,7 +79,8 @@ bool GameEngine::initStage() {
 }
 
 void GameEngine::constructErrorDialogs() {
-	errorDialog.reset(GameManager::guiFactory->createDialog());
+
+	errorDialog.reset(GameManager::guiFactory->createDialog(true));
 	Vector2 dialogPos, dialogSize;
 	dialogSize = Vector2(Globals::WINDOW_WIDTH / 2, Globals::WINDOW_HEIGHT / 2);
 	dialogPos = dialogSize;
@@ -93,15 +94,15 @@ void GameEngine::constructErrorDialogs() {
 	quitButton->setOnClickListener(new QuitButtonListener(this));
 	errorDialog->setCancelButton(move(quitButton));
 
-	ScrollBarDesc scrollBarDesc;
+	/*ScrollBarDesc scrollBarDesc;
 	scrollBarDesc.upButtonImage = "ScrollBar Up Custom";
 	scrollBarDesc.upPressedButtonImage = "ScrollBar Up Pressed Custom";
 	scrollBarDesc.trackImage = "ScrollBar Track Custom";
-	scrollBarDesc.scrubberImage = "Scrubber Custom";
+	scrollBarDesc.scrubberImage = "Scrubber Custom";*/
 	warningDialog.reset(GameManager::guiFactory->createDialog(true));
 
 	warningDialog->setDimensions(dialogPos, dialogSize);
-	warningDialog->setScrollBar(scrollBarDesc);
+	//warningDialog->setScrollBar(scrollBarDesc);
 	warningDialog->setTint(Color(0, 120, 207));
 	warningDialog->setCancelButton(L"Continue");
 	unique_ptr<Button> quitButton2;
@@ -145,9 +146,10 @@ void GameEngine::update(double deltaTime) {
 
 	mouse->saveMouseState();
 	keys->saveKeyboardState();
-	if (showDialog->isOpen)
+	GameManager::guiFactory->updateMouse();
+	if (showDialog->isOpen) {
 		showDialog->update(deltaTime);
-	else
+	} else
 		game->update(deltaTime, keys.get(), mouse.get());
 }
 

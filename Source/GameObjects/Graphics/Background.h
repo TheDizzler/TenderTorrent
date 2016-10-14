@@ -1,7 +1,5 @@
 #pragma once
 
-#include <vector>
-
 #include <pugixml.hpp>
 #include "BackgroundLayer.h"
 
@@ -13,19 +11,18 @@ public:
 	Background();
 	~Background();
 
-	virtual bool load(ComPtr<ID3D11Device> device, const wchar_t* file);
+	virtual bool load(ComPtr<ID3D11Device> device, const char_t* levelFile);
 	void clear();
 
 	void update(double deltaTime, PlayerShip* player);
 	virtual void draw(SpriteBatch* batch) override;
 
 
-	std::vector<BackgroundLayer*> bgLayers;
+	vector<BackgroundLayer*> bgLayers;
 
 private:
 
 	Vector2 startPos;
-	//unique_ptr<FontSet> healthFont;
 	unique_ptr<Sprite> cornerFrame;
 	vector<unique_ptr<GraphicsAsset> > bgLayerAssets;
 

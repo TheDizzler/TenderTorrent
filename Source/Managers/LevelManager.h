@@ -6,8 +6,6 @@
 #include "WaveManager.h"
 #include "BackgroundManager.h"
 
-using namespace std;
-
 
 
 class LevelManager : public Screen {
@@ -24,7 +22,7 @@ public:
 	virtual void setGameManager(GameManager* game);
 
 	virtual bool initialize(ComPtr<ID3D11Device> device, MouseController* mouse);
-	bool loadLevel(ComPtr<ID3D11Device> device, const wchar_t* file);
+	bool loadLevel(ComPtr<ID3D11Device> device, const char_t* levelName);
 
 
 	virtual void update(double deltaTime, KeyboardController* keys,
@@ -35,6 +33,8 @@ public:
 
 
 private:
+
+	unique_ptr<xml_document> levelManifest;
 
 	PlayState playState = LOADING;
 
@@ -47,19 +47,16 @@ private:
 
 	unique_ptr<Button> exitButton;
 	unique_ptr<Button> continueButton;
-	//unique_ptr<FontSet> guiFont;
-	//unique_ptr<FontSet> pauseFont;
-	//unique_ptr<FontSet> warningFont;
+
 	unique_ptr<TextLabel> timerLabel;
 	unique_ptr<TextLabel> scoreLabel;
 	unique_ptr<TextLabel> energyLabel;
 	unique_ptr<TextLabel> pauseLabel;
 	unique_ptr<TextLabel> warningLabel;
-	vector<TextLabel*> textLabels;
+	//vector<unique_ptr<TextLabel>> textLabels;
 
 	unique_ptr<PlayerShip> playerShip;
 
-	//unique_ptr<Sprite> pauseOverlay;
 	unique_ptr<RectangleSprite> pauseOverlay;
 
 

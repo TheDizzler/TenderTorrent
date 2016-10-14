@@ -5,20 +5,29 @@ LevelManager::LevelManager() {
 
 LevelManager::~LevelManager() {
 
-	for (TextLabel* label : textLabels)
-		delete label;
-	textLabels.clear();
+	/*for (TextLabel* label : textLabels)
+		delete label;*/
+	//textLabels.clear();
 }
 
-void LevelManager::setGameManager(GameManager * gm) {
-
+void LevelManager::setGameManager(GameManager* gm) {
 	game = gm;
 }
 
+#include "../assets.h"
 #include "GameManager.h"
 bool LevelManager::initialize(ComPtr<ID3D11Device> device, MouseController* mouse) {
 
-	playState = LOADING;
+	levelManifest.reset(new xml_document());
+	xml_parse_result result = levelManifest->load_file(Assets::levelManifestFile);
+
+	if (!result) {
+		wostringstream wss;
+		wss << "Could not read Level Manifest file!";
+		wss << "\n" << result.description();
+		MessageBox(0, wss.str().c_str(), L"Fatal Read Error!", MB_OK);
+		return false;
+	}
 
 	/*guiFont.reset(new FontSet());
 	if (!guiFont->load(device, Assets::arialFontFile))
@@ -48,7 +57,7 @@ bool LevelManager::initialize(ComPtr<ID3D11Device> device, MouseController* mous
 		return false;
 
 	playerShip.reset(new PlayerShip(startPosition));
-	playerShip->load(GameManager::guiFactory->getAsset("PlayerShip Hull"));
+	playerShip->load(GameManager::gfxAssets->getAsset("PlayerShip Hull"));
 	if (!playerShip->loadBullet(GameManager::gfxAssets.get())) {
 		MessageBox(NULL, L"Failed to load weapons", L"ERROR", MB_OK);
 		return false;
@@ -59,20 +68,27 @@ bool LevelManager::initialize(ComPtr<ID3D11Device> device, MouseController* mous
 
 	timerLabel.reset(new TextLabel(Vector2(500, 10),
 		GameManager::guiFactory->getFont("Arial")));
-	textLabels.push_back(timerLabel.get());
+	//textLabels.push_back(timerLabel.get());
 
 	scoreLabel.reset(new TextLabel(Vector2(10, 10),
 		GameManager::guiFactory->getFont("Arial")));
-	textLabels.push_back(scoreLabel.get());
+	//textLabels.push_back(scoreLabel.get());
 
 	energyLabel.reset(new TextLabel(Vector2(10, 30),
 		GameManager::guiFactory->getFont("Arial")));
-	textLabels.push_back(energyLabel.get());
+	//textLabels.push_back(energyLabel.get());
 
-	Vector2 size = timerLabel->measureString(L"Paused");
+
+	pauseOverlay.reset(
+		GameManager::guiFactory->createRectangle(Vector2(0, 0),
+			Vector2(Globals::WINDOW_WIDTH, Globals::WINDOW_HEIGHT)));
+	pauseOverlay->setTint(Color(1, .588, 1, .8)); //should be pinkish
+
+	Vector2 size = timerLabel->measureString(L"Paused") * Vector2(1.5, 1.5);
 	pauseLabel.reset(new TextLabel(Vector2(
 		(Globals::WINDOW_WIDTH - size.x) / 2, (Globals::WINDOW_HEIGHT - size.y) / 2),
 		GameManager::guiFactory->getFont("Arial")));
+	pauseLabel->setScale(Vector2(1.5, 1.5));
 	pauseLabel->setText("Paused");
 
 	exitButton.reset(
@@ -103,17 +119,23 @@ bool LevelManager::initialize(ComPtr<ID3D11Device> device, MouseController* mous
 		return false;
 	}*/
 
-	pauseOverlay.reset(
-		GameManager::guiFactory->createRectangle(Vector2(0, 0),
-			Vector2(Globals::WINDOW_WIDTH, Globals::WINDOW_HEIGHT)));
-	pauseOverlay->setTint(Color(1, .588, 1, .25)); //should be pinkish
+	
 
 	return true;
 }
 
-bool LevelManager::loadLevel(ComPtr<ID3D11Device> device, const wchar_t* file) {
+bool LevelManager::loadLevel(ComPtr<ID3D11Device> device, const char_t* levelName) {
 
-	if (!bgManager->loadLevel(device, file))
+	playState = LOADING;
+
+
+	// extract level file from LevelManifest
+	string levelFile = levelManifest->child("root").attribute("dir").as_string();
+	xml_node levelNode =
+		levelManifest->child("root").find_child_by_attribute("name", levelName);
+	levelFile += levelNode.attribute("file").as_string();
+
+	if (!bgManager->loadLevel(device, levelFile.c_str()))
 		return false;
 
 	waveManager.reset(new WaveManager());
@@ -123,7 +145,7 @@ bool LevelManager::loadLevel(ComPtr<ID3D11Device> device, const wchar_t* file) {
 	totalPlayTime = 0;
 	playerShip->energy = playerShip->maxEnergy;
 
-	textLabels.push_back(warningLabel.get());
+	//textLabels.push_back(move(warningLabel.get()));
 	playState = STARTING;
 	return true;
 }
@@ -182,7 +204,7 @@ void LevelManager::update(double deltaTime,
 					delayedPause = false;
 				} else
 					playState = PLAYING;
-				textLabels.pop_back();
+				//textLabels.pop_back();
 			} else
 				displayWarning(deltaTime);
 			break;
@@ -240,8 +262,13 @@ void LevelManager::draw(SpriteBatch* batch) {
 
 	bgManager->draw(batch);
 
-	for (auto const& label : textLabels)
-		label->draw(batch);
+	//for (auto const& label : textLabels)
+		//label->draw(batch);
+
+	timerLabel->draw(batch);
+	scoreLabel->draw(batch);
+	energyLabel->draw(batch);
+
 
 	playerShip->draw(batch);
 	waveManager->draw(batch);
@@ -251,15 +278,14 @@ void LevelManager::draw(SpriteBatch* batch) {
 		//for (int w = 0; w <= Globals::WINDOW_WIDTH; w += 16)
 			//for (int h = 0; h <= Globals::WINDOW_HEIGHT; h += 16) {
 				//pauseOverlay->setPosition(Vector2(w, h));
-				pauseOverlay->draw(batch);
+		pauseOverlay->draw(batch);
 			//}
 		exitButton->draw(batch);
 		continueButton->draw(batch);
 		pauseLabel->draw(batch);
 
-	}
-
-
+	} else if (playState == STARTING)
+		warningLabel->draw(batch);
 }
 
 void LevelManager::pause() {
