@@ -79,6 +79,9 @@
     <Filter Include="Source Files\Managers">
       <UniqueIdentifier>{c3ca4f3f-3077-4b94-a334-c088cf726b00}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\levels">
+      <UniqueIdentifier>{5223c0f6-3102-49bf-b315-1ff05947e5c0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\GameObjects\Bullet.cpp">
@@ -211,6 +214,9 @@
       <Filter>Source Files\Managers</Filter>
     </ClCompile>
     <ClCompile Include="Source\Managers\MenuManager.cpp">
+      <Filter>Source Files\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Managers\LevelSelectScreen.cpp">
       <Filter>Source Files\Managers</Filter>
     </ClCompile>
   </ItemGroup>
@@ -362,13 +368,23 @@
     <ClInclude Include="Source\Managers\WaveManager.h">
       <Filter>Header Files\Managers</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Managers\LevelSelectScreen.h">
+      <Filter>Header Files\Managers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="assets\AssetManifest.xml" />
-    <Xml Include="assets\LevelManifest.xml" />
-    <Xml Include="assets\mako.xml" />
+    <Xml Include="assets\mako.xml">
+      <Filter>Source Files\levels</Filter>
+    </Xml>
+    <Xml Include="assets\LevelManifest.xml">
+      <Filter>Source Files\levels</Filter>
+    </Xml>
+    <Xml Include="assets\shara.xml">
+      <Filter>Source Files\levels</Filter>
+    </Xml>
   </ItemGroup>
 </Project>

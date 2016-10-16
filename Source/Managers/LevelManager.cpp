@@ -79,39 +79,6 @@ bool LevelManager::initialize(ComPtr<ID3D11Device> device, MouseController* mous
 	//textLabels.push_back(energyLabel.get());
 
 
-	pauseOverlay.reset(
-		GameManager::guiFactory->createRectangle(Vector2(0, 0),
-			Vector2(Globals::WINDOW_WIDTH, Globals::WINDOW_HEIGHT)));
-	pauseOverlay->setTint(Color(1, .588, 1, .8)); //should be pinkish
-
-	Vector2 size = timerLabel->measureString(L"Paused") * Vector2(1.5, 1.5);
-	pauseLabel.reset(new TextLabel(Vector2(
-		(Globals::WINDOW_WIDTH - size.x) / 2, (Globals::WINDOW_HEIGHT - size.y) / 2),
-		GameManager::guiFactory->getFont("Arial")));
-	pauseLabel->setScale(Vector2(1.5, 1.5));
-	pauseLabel->setText("Paused");
-
-	exitButton.reset(
-		GameManager::guiFactory->createImageButton(
-			Vector2(Globals::WINDOW_WIDTH / 4, Globals::WINDOW_HEIGHT * 3 / 4),
-			"Button Up", "Button Down"));
-	exitButton->setText(L"Exit");
-
-
-	continueButton.reset(
-		GameManager::guiFactory->createImageButton(
-			Vector2(Globals::WINDOW_WIDTH * 3 / 4, Globals::WINDOW_HEIGHT * 3 / 4),
-			"Button Up", "Button Down"));
-	continueButton->setText(L"Continue");
-
-
-
-	size = timerLabel->measureString(L"GET READY!");
-	warningLabel.reset(new TextLabel(
-		Vector2((Globals::WINDOW_WIDTH - size.x) / 2, (Globals::WINDOW_HEIGHT - size.y) / 2),
-		GameManager::guiFactory->getFont("Arial")));
-	warningLabel->setText("GET READY!");
-
 
 	/*pauseOverlay.reset(new Sprite(Vector2(0, 0)));
 	if (!pauseOverlay->load(device, Assets::pauseOverlayFile)) {
@@ -119,7 +86,7 @@ bool LevelManager::initialize(ComPtr<ID3D11Device> device, MouseController* mous
 		return false;
 	}*/
 
-	
+
 
 	return true;
 }
@@ -127,6 +94,50 @@ bool LevelManager::initialize(ComPtr<ID3D11Device> device, MouseController* mous
 bool LevelManager::loadLevel(ComPtr<ID3D11Device> device, const char_t* levelName) {
 
 	playState = LOADING;
+
+	pauseOverlay.reset(
+		GameManager::guiFactory->createRectangle(Vector2(0, 0),
+			Vector2(Globals::WINDOW_WIDTH, Globals::WINDOW_HEIGHT)));
+	pauseOverlay->setTint(Color(1, .588, 1, .8)); //should be pinkish
+
+
+	pauseLabel.reset(new TextLabel(
+		GameManager::guiFactory->getFont("BlackCloak")));
+	pauseLabel->setText(L"Paused");
+	pauseLabel->setScale(Vector2(1, 1.5));
+	Vector2 size = pauseLabel->measureString();
+	pauseLabel->setPosition(Vector2(
+		(Globals::WINDOW_WIDTH - size.x) / 2, (Globals::WINDOW_HEIGHT - size.y) / 2));
+
+
+	exitButton.reset(
+		GameManager::guiFactory->createImageButton(
+			Vector2(Globals::WINDOW_WIDTH / 4, Globals::WINDOW_HEIGHT * 3 / 4),
+			"Button Up", "Button Down"));
+	exitButton->setText(L"Exit");
+	Vector2 moveBy = Vector2(exitButton->getScaledWidth()/2, 0);
+	exitButton->moveBy(-moveBy);
+	
+
+
+	continueButton.reset(
+		GameManager::guiFactory->createImageButton(
+			Vector2(Globals::WINDOW_WIDTH * 3 / 4, Globals::WINDOW_HEIGHT * 3 / 4),
+			"Button Up", "Button Down"));
+	continueButton->setText(L"Continue");
+	continueButton->moveBy(-moveBy);
+
+
+
+	
+	warningLabel.reset(new TextLabel(
+		Vector2((Globals::WINDOW_WIDTH ) / 2, (Globals::WINDOW_HEIGHT) / 2),
+		GameManager::guiFactory->getFont("BlackCloak")));
+	warningLabel->setText("GET READY!");
+	warningLabel->setScale(Vector2(1, 1.5));
+	size = warningLabel->measureString(L"GET READY!");
+	warningLabel->moveBy(-size/2);
+
 
 
 	// extract level file from LevelManifest
@@ -145,7 +156,6 @@ bool LevelManager::loadLevel(ComPtr<ID3D11Device> device, const char_t* levelNam
 	totalPlayTime = 0;
 	playerShip->energy = playerShip->maxEnergy;
 
-	//textLabels.push_back(move(warningLabel.get()));
 	playState = STARTING;
 	return true;
 }

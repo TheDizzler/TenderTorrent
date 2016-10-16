@@ -59,6 +59,7 @@
     <ClCompile Include="Source\Managers\GameManager.cpp" />
     <ClCompile Include="Source\Managers\GFXAssetManager.cpp" />
     <ClCompile Include="Source\Managers\LevelManager.cpp" />
+    <ClCompile Include="Source\Managers\LevelSelectScreen.cpp" />
     <ClCompile Include="Source\Managers\MenuManager.cpp" />
     <ClCompile Include="Source\Managers\RearAttackWave.cpp" />
     <ClCompile Include="Source\Managers\StarEnemyShipWave.cpp" />
@@ -110,6 +111,7 @@
     <ClInclude Include="Source\Managers\GameManager.h" />
     <ClInclude Include="Source\Managers\GFXAssetManager.h" />
     <ClInclude Include="Source\Managers\LevelManager.h" />
+    <ClInclude Include="Source\Managers\LevelSelectScreen.h" />
     <ClInclude Include="Source\Managers\MenuManager.h" />
     <ClInclude Include="Source\Managers\RearAttackWave.h" />
     <ClInclude Include="Source\Managers\StarEnemyShipWave.h" />
@@ -123,6 +125,7 @@
     <Xml Include="assets\AssetManifest.xml" />
     <Xml Include="assets\LevelManifest.xml" />
     <Xml Include="assets\mako.xml" />
+    <Xml Include="assets\shara.xml" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{E9C22AAC-8D4D-4D44-8969-65311A131B1D}</ProjectGuid>

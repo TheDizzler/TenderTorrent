@@ -7,5 +7,7 @@ Written in C++ using DirectXTK. So far only one playable level with two enemies 
 
 
 # Todo:
->- refactor with new gui toolkit
->- refactor with new graphics engine, input controls, and .... ?
+>- sfx (warning, shooting, explosions)
+>- more levels
+>- improve enemy movement
+

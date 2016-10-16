@@ -1,8 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root game="TenderTorrent" xml="LevelManifest" dir="assets/">
 
-	<level name="Level Mako" dir="" file="mako.xml"/>
+	<properties>
+		<frameMargin x="5" y="5"/>
+		<frameThickness value="5"/>
+		<frameColor r="1" g=".5" b="0" a="1" />
+		<frameDimensions x="100" y="140"/>
+	</properties>
 
-	
+
+	<level name="Mako" dir="" file="mako.xml" preview="Preview Mako"/>
+	<level name="Shara" dir="" file="shara.xml" preview="Preview Shara"/>
+
 
 </root>

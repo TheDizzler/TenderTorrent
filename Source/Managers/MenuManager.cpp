@@ -8,7 +8,7 @@ MenuManager::MenuManager() {
 MenuManager::~MenuManager() {
 }
 
-void MenuManager::setGameManager(GameManager * gm) {
+void MenuManager::setGameManager(GameManager* gm) {
 	game = gm;
 }
 
@@ -31,6 +31,10 @@ bool MenuManager::initialize(ComPtr<ID3D11Device> device, MouseController* mouse
 		return false;
 	configScreen->update(0, NULL, mouse);
 
+	levelSelectScreen.reset(new LevelSelectScreen());
+	if (!levelSelectScreen->initialize(device, mouse)) {
+		return false;
+	};
 
 	currentScreen = mainScreen.get();
 
@@ -50,7 +54,7 @@ bool lastStateDown;
 void MenuManager::update(double deltaTime,
 	KeyboardController* keys, MouseController* mouse) {
 
-	
+
 	//Vector2 mousePos = mouse->getPosition();
 	//if (mousePos.x > Globals::WINDOW_WIDTH) {
 	//	mousePos.x = Globals::WINDOW_WIDTH;
@@ -151,7 +155,7 @@ bool MainScreen::initialize(ComPtr<ID3D11Device> device, MouseController* mouse)
 	button->setOnClickListener(new PlayButtonListener(game));
 	guiControls.push_back(button);
 
-	buttonpos.y = Globals::WINDOW_HEIGHT / 2  - button->getHeight()/2;
+	buttonpos.y = Globals::WINDOW_HEIGHT / 2 - button->getHeight() / 2;
 	button = GameManager::guiFactory->createButton(
 		buttonpos, buttonsize, L"Settings");
 	button->normalColor = Color(1, .558, 1, 1);
@@ -520,5 +524,5 @@ void OnClickListenerExitButton::onClick(Button* button) {
 
 void PlayButtonListener::onClick(Button* button) {
 
-	game->loadLevel("Level Mako");
+	game->loadLevel("Shara");
 }

@@ -1,9 +1,11 @@
 #pragma once
 
-#include "../DXTKGui/BaseGraphics/screen.h"
+#include "LevelSelectScreen.h"
 #include "../DXTKGui/Controls/Dialog.h"
 #include "../DXTKGui/Controls/ListBox.h"
 #include "../DXTKGUI/Effects/ScreenTransitions.h"
+
+
 
 class MenuScreen;
 class MainScreen;
@@ -125,6 +127,7 @@ private:
 	Screen* switchTo = NULL;
 	unique_ptr<MainScreen> mainScreen;
 	unique_ptr<ConfigScreen> configScreen;
+	unique_ptr<LevelSelectScreen> levelSelectScreen;
 
 	GameManager* game;
 };

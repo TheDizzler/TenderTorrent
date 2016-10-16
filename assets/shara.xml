@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<level name="shara" scale="1.5" numLayers="2" dir="assets/bg/">
+
+	<base layer="0">shara00.dds</base>
+	<backgroundLayer layer="1">
+		shara01a.dds
+		<position x="303" y="619"/>
+		<size x="214" y="220"/>
+	</backgroundLayer>
+	<backgroundLayer layer="1">
+		shara01b.dds
+		<position x="208" y="304"/>
+		<size x="331" y="183"/>
+	</backgroundLayer>
+
+</level>

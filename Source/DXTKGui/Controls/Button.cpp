@@ -237,6 +237,7 @@ bool Button::hovering() {
 void Button::setFont(const pugi::char_t* font) {
 
 	buttonLabel->setFont(guiFactory->getFont(font));
+	positionText();
 }
 
 
@@ -290,6 +291,7 @@ void ImageButton::draw(SpriteBatch* batch) {
 
 void ImageButton::setText(wstring text) {
 	buttonLabel->setText(text);
+	positionText();
 }
 
 void ImageButton::setPosition(const Vector2& pos) {

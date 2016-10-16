@@ -19,6 +19,10 @@
 
 		<sprite name="Corner Frame" file="corner frame.dds"/>
 
+
+
+		<sprite name="Preview Mako" file="previews/mako preview.dds"/>
+
 	</gfx>
 
 	<gui dir="gui/">
