@@ -1,6 +1,6 @@
+#include "../../pch.h"
 #pragma once
 
-#include <pugixml.hpp>
 #include "BackgroundLayer.h"
 
 using namespace pugi;

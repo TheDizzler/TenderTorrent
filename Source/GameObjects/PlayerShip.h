@@ -1,6 +1,7 @@
+#include "../pch.h"
 #pragma once
 
-#include <dinput.h>
+//#include <dinput.h>
 
 #include "../Managers/GFXAssetManager.h"
 

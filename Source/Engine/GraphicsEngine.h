@@ -1,20 +1,9 @@
+#include "../pch.h"
 #pragma once
-#pragma comment (lib, "D3D11.lib")
-#pragma comment(lib, "DXGI.lib")
 
-#include <d3d11_1.h>
-#include <dxgi1_2.h>
-
-#include <wrl.h>
-#include <vector>
-
-#include "SpriteBatch.h"
 #include "../globals.h"
 
-
-using namespace DirectX;
 using namespace std;
-using namespace Microsoft::WRL;
 
 
 class GraphicsEngine {
@@ -73,6 +62,7 @@ protected:
 	//ComPtr<IDXGISwapChain> textureSwapChain;
 	/* GPU object */
 	ComPtr<ID3D11Device> device;
+	ComPtr<ID3D11Debug> debugDevice;
 	/* GPU interface */
 	ComPtr<ID3D11DeviceContext> deviceContext;
 	/* The backbuffer that gets drawn to. */

@@ -31,7 +31,7 @@ bool MenuManager::initialize(ComPtr<ID3D11Device> device, MouseController* mouse
 		return false;
 	configScreen->update(0, NULL, mouse);
 
-	levelSelectScreen.reset(new LevelSelectScreen());
+	levelSelectScreen.reset(new LevelSelectScreen(this));
 	if (!levelSelectScreen->initialize(device, mouse)) {
 		return false;
 	};
@@ -40,7 +40,7 @@ bool MenuManager::initialize(ComPtr<ID3D11Device> device, MouseController* mouse
 
 	transitionManager.reset(
 		new ScreenTransitions::ScreenTransitionManager(
-			GameManager::guiFactory.get(), "Test BG"));
+			GameManager::guiFactory.get(), "Default Transition BG"));
 	transitionManager->setTransition(
 		//new ScreenTransitions::FlipScreenTransition(true));
 		//new ScreenTransitions::SquareFlipScreenTransition());
@@ -90,7 +90,10 @@ void MenuManager::update(double deltaTime,
 
 void MenuManager::draw(SpriteBatch* batch) {
 
-	currentScreen->draw(batch);
+	if (switchTo != NULL) {
+		transitionManager->drawTransition(batch);
+	} else
+		currentScreen->draw(batch);
 
 }
 
@@ -100,12 +103,20 @@ void MenuManager::pause() {
 
 void MenuManager::openMainMenu() {
 
-	currentScreen = mainScreen.get();
+	switchTo = mainScreen.get();
+	transitionManager->transitionBetween(currentScreen, switchTo);
 }
 
 void MenuManager::openConfigMenu() {
 
-	currentScreen = configScreen.get();
+	switchTo = configScreen.get();
+	transitionManager->transitionBetween(currentScreen, switchTo);
+}
+
+void MenuManager::openLevelSelectScreen() {
+
+	switchTo = levelSelectScreen.get();
+	transitionManager->transitionBetween(currentScreen, switchTo);
 }
 
 
@@ -119,8 +130,8 @@ MenuScreen::MenuScreen(MenuManager* mngr) {
 
 MenuScreen::~MenuScreen() {
 
-	for (GUIControl* control : guiControls)
-		delete control;
+	//for (GUIControl* control : guiControls)
+		//delete control;
 
 	guiControls.clear();
 }
@@ -152,22 +163,22 @@ bool MainScreen::initialize(ComPtr<ID3D11Device> device, MouseController* mouse)
 	Button* button = GameManager::guiFactory->createButton(
 		buttonpos, buttonsize, L"Play");
 	button->normalColor = Color(1, .558, 1, 1);
-	button->setOnClickListener(new PlayButtonListener(game));
-	guiControls.push_back(button);
+	button->setOnClickListener(new PlayButtonListener(this));
+	guiControls.push_back(unique_ptr<GUIControl>(button));
 
 	buttonpos.y = Globals::WINDOW_HEIGHT / 2 - button->getHeight() / 2;
 	button = GameManager::guiFactory->createButton(
 		buttonpos, buttonsize, L"Settings");
 	button->normalColor = Color(1, .558, 1, 1);
 	button->setOnClickListener(new SettingsButtonListener(this));
-	guiControls.push_back(button);
+	guiControls.push_back(unique_ptr<GUIControl>(button));
 
 	buttonpos.y = Globals::WINDOW_HEIGHT - Globals::WINDOW_HEIGHT / 8 - button->getHeight();
 	button = GameManager::guiFactory->createButton(
 		buttonpos, buttonsize, L"Exit");
 	button->normalColor = Color(1, .558, 1, 1);
 	button->setOnClickListener(new OnClickListenerExitButton(this));
-	guiControls.push_back(button);
+	guiControls.push_back(unique_ptr<GUIControl>(button));
 
 
 
@@ -191,8 +202,8 @@ bool MainScreen::initialize(ComPtr<ID3D11Device> device, MouseController* mouse)
 		exitDialog->setCancelButton(L"Keep Testing!");
 		exitDialog->open();
 		exitDialog->setOpenTransition(
-			/*new TransitionEffects::SpinGrowTransition(exitDialog.get(), .5));*/
-			new TransitionEffects::SplitTransition(exitDialog.get(), Globals::WINDOW_WIDTH));
+			new TransitionEffects::SpinGrowTransition(exitDialog.get(), .5));
+			//new TransitionEffects::SplitTransition(exitDialog.get(), Globals::WINDOW_WIDTH));
 			//new TransitionEffects::BlindsTransition(exitDialog.get(), .5, false, true));
 		/*new TransitionEffects::TrueGrowTransition(exitDialog.get(),
 		Vector2(.001, .001), Vector2(1, 1)));*/
@@ -260,6 +271,7 @@ ConfigScreen::ConfigScreen(MenuManager* mngr) : MenuScreen(mngr) {
 }
 
 ConfigScreen::~ConfigScreen() {
+guiControls.clear();
 }
 
 
@@ -272,14 +284,14 @@ bool ConfigScreen::initialize(ComPtr<ID3D11Device> device, MouseController* mous
 	adapterLabel =
 		GameManager::guiFactory->createTextLabel(controlPos, L"Test");
 	adapterLabel->setHoverable(true);
-	guiControls.push_back(adapterLabel);
+	guiControls.push_back(unique_ptr<GUIControl>(adapterLabel));
 
 	controlPos.y += adapterLabel->getHeight() + MARGIN;
 
 	// create listbox of gfx cards
 	adapterListbox =
 		GameManager::guiFactory->createListBox(controlPos, 400, itemHeight);
-	guiControls.push_back(adapterListbox);
+	guiControls.push_back(unique_ptr<GUIControl>(adapterListbox));
 	vector<ListItem*> adapterItems;
 	for (ComPtr<IDXGIAdapter> adap : game->getAdapterList()) {
 		AdapterItem* item = new AdapterItem();
@@ -297,13 +309,13 @@ bool ConfigScreen::initialize(ComPtr<ID3D11Device> device, MouseController* mous
 
 	controlPos.y += adapterListbox->getHeight() + MARGIN * 2;
 	displayLabel = GameManager::guiFactory->createTextLabel(controlPos, L"A");
-	guiControls.push_back(displayLabel);
+	guiControls.push_back(unique_ptr<GUIControl>(displayLabel));
 
 	controlPos.y += displayLabel->getHeight() + MARGIN;
 
 	// create listbox of monitors available to pressed gfx card
 	displayListbox = GameManager::guiFactory->createListBox(controlPos, 400, itemHeight);
-	guiControls.push_back(displayListbox);
+	guiControls.push_back(unique_ptr<GUIControl>(displayListbox));
 	// because only the one adapter has displays on my laptop
 	// this has to be grab the first (and only) display.
 	populateDisplayList(game->getDisplayListFor(0));
@@ -333,7 +345,7 @@ bool ConfigScreen::initialize(ComPtr<ID3D11Device> device, MouseController* mous
 		game->getDisplayModeList(0));
 	displayModeCombobox->setScrollBar(scrollBarDesc);
 	displayModeCombobox->setSelected(game->getSelectedDisplayModeIndex());
-	guiControls.push_back(displayModeCombobox);
+	guiControls.push_back(unique_ptr<GUIControl>(displayModeCombobox));
 
 	OnClickListenerDisplayModeList* onClickDisplayMode =
 		new OnClickListenerDisplayModeList(this);
@@ -347,11 +359,11 @@ bool ConfigScreen::initialize(ComPtr<ID3D11Device> device, MouseController* mous
 		= new OnClickListenerFullScreenCheckBox(this);
 	check->setChecked(Globals::FULL_SCREEN);
 	check->setOnClickListener(onClickFullScreen);
-	guiControls.push_back(check);
+	guiControls.push_back(unique_ptr<GUIControl>(check));
 
 	testLabel = GameManager::guiFactory->createTextLabel(
 		Vector2(250, 450), L"Test Messages here");
-	guiControls.push_back(testLabel);
+	guiControls.push_back(unique_ptr<GUIControl>(testLabel));
 
 	// Create Apply and Cancel Buttons
 	ImageButton* button = (ImageButton*) GameManager::guiFactory->
@@ -361,7 +373,7 @@ bool ConfigScreen::initialize(ComPtr<ID3D11Device> device, MouseController* mous
 	button->setPosition(
 		Vector2(Globals::WINDOW_WIDTH / 2 - button->getWidth(),
 			Globals::WINDOW_HEIGHT - button->getHeight() - 25));
-	guiControls.push_back(button);
+	guiControls.push_back(unique_ptr<GUIControl>(button));
 
 	button = (ImageButton*) GameManager::guiFactory->
 		createImageButton("Button Up", "Button Down");
@@ -370,7 +382,7 @@ bool ConfigScreen::initialize(ComPtr<ID3D11Device> device, MouseController* mous
 	button->setPosition(
 		Vector2(Globals::WINDOW_WIDTH / 2,
 			Globals::WINDOW_HEIGHT - button->getHeight() - 25));
-	guiControls.push_back(button);
+	guiControls.push_back(unique_ptr<GUIControl>(button));
 
 
 	return true;
@@ -524,5 +536,6 @@ void OnClickListenerExitButton::onClick(Button* button) {
 
 void PlayButtonListener::onClick(Button* button) {
 
-	game->loadLevel("Shara");
+	//game->loadLevel("Shara");
+	main->menuManager->openLevelSelectScreen();
 }

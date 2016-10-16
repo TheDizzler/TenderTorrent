@@ -5,7 +5,7 @@ Button::Button(GraphicsAsset* pixelAsset,
 	unique_ptr<FontSet> font) {
 
 	if (pixelAsset != NULL) {
-		// this it stop errors when coming from ImageButton
+		// this stops errors when coming from ImageButton
 		frame.reset(new RectangleFrame(pixelAsset));
 		rectSprite.reset(new RectangleSprite(pixelAsset));
 	}
@@ -15,7 +15,7 @@ Button::Button(GraphicsAsset* pixelAsset,
 	position = Vector2(-1, -1);
 
 	if (pixelAsset != NULL)
-		setToUnpressedState();	// this always call Button::setToUnpressedState
+		setToUnpressedState();	// this always calls Button::setToUnpressedState
 								// even if it is an ImageButton
 
 }

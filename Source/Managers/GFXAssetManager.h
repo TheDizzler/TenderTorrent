@@ -1,11 +1,9 @@
+#include "../pch.h"
 #pragma once
 
 #include <map>
-#include <pugixml.hpp>
 
 #include "../DXTKGui/BaseGraphics/Sprite.h"
-
-using namespace pugi;
 
 
 class GFXAssetManager {

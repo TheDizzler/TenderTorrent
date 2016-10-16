@@ -37,9 +37,6 @@
     <Filter Include="Source Files\Backgrounds">
       <UniqueIdentifier>{5fe34bbf-a561-430c-8aa6-4bc6fbff7eaf}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\MenuItems">
-      <UniqueIdentifier>{7a3b6f40-549b-4aa0-b14a-4ecce25e0eee}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\MenuItems">
       <UniqueIdentifier>{472b628f-7c46-4a28-9503-08c27fd2e478}</UniqueIdentifier>
     </Filter>
@@ -219,6 +216,9 @@
     <ClCompile Include="Source\Managers\LevelSelectScreen.cpp">
       <Filter>Source Files\Managers</Filter>
     </ClCompile>
+    <ClCompile Include="Source\pch.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\globals.h">
@@ -370,6 +370,9 @@
     </ClInclude>
     <ClInclude Include="Source\Managers\LevelSelectScreen.h">
       <Filter>Header Files\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\pch.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

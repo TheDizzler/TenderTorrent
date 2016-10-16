@@ -1,49 +1,101 @@
+#include "../pch.h"
 #pragma once
 
-#include <pugixml.hpp>
-#include "../DXTKGui/Controls/GUIFactory.h"
-//#include "../DXTKGui/BaseGraphics/screen.h"
-//#include "../DXTKGui/BaseGraphics/PrimitiveShapes.h"
-//#include "../DXTKGui/Controls/TextLabel.h"
 
-
-struct LevelSelection {
-
-	Vector2 position;
+class LevelSelection {
+public:
 	
-	unique_ptr<Sprite> previewPic;
-	unique_ptr<RectangleFrame> picFrame;
-	unique_ptr<TextLabel> label;
-	string levelXMLFile;
-
-	unique_ptr<HitArea> hitArea;
-
-
 	LevelSelection(const Vector2& position, pugi::xml_node levelNode);
 
 	void update(double deltaTime, MouseController* mouse);
 	void draw(SpriteBatch* batch);
 
-	void setPosition(const Vector2& newPosition);
+	const Vector2& getSize();
+
+	bool isHover = false;
+	bool isPressed = false;
+	bool isClicked = false;
+
+	class OnClickListener {
+	public:
+		virtual void onClick(LevelSelection* level) = 0;
+	};
+
+
+	void setOnClickListener(OnClickListener* iOnC) {
+		if (onClickListener != NULL)
+			delete onClickListener;
+		onClickFunction = &OnClickListener::onClick;
+		onClickListener = iOnC;
+	}
+
+	void onClick() {
+		if (onClickListener != NULL) {
+			isClicked = isPressed = false;
+			(onClickListener->*onClickFunction)(this);
+		}
+	}
+
+
+	void setOnHoverListener(OnClickListener* iOnC) {
+		if (!onHoverListener != NULL)
+			delete onHoverListener;
+		onHoverFunction = &OnClickListener::onClick;
+		onHoverListener = iOnC;
+
+	}
+
+	void onHover() {
+		if (onHoverListener != NULL) {
+			(onHoverListener->*onHoverFunction)(this);
+		}
+	}
+
+private:
+	unique_ptr<Sprite> previewPic;
+	unique_ptr<RectangleFrame> picFrame;
+	unique_ptr<TextLabel> label;
+	string levelXMLFile;
+	unique_ptr<HitArea> hitArea;
+
+	typedef void (OnClickListener::*OnClickFunction) (LevelSelection*);
+	OnClickFunction onClickFunction;
+	OnClickListener* onClickListener = NULL;
+	OnClickFunction onHoverFunction;
+	OnClickListener* onHoverListener = NULL;
+
+	virtual void setToUnpressedState();
+	virtual void setToHoverState();
+	virtual void setToSelectedState();
+
+	Vector4 frameColor;
+	Vector4 labelColor;
+
+	Vector4 hoverFrameColor = Vector4(0, 0, 0, .5);
+	Vector4 hoverLabelColor = Vector4(0, 0, 0, .8);
 };
 
+
+class MenuManager;
 class LevelSelectScreen : public Screen {
 public:
-	LevelSelectScreen();
+	LevelSelectScreen(MenuManager* menuManager);
 	~LevelSelectScreen();
 
-	virtual bool initialize(ComPtr<ID3D11Device> device, MouseController * mouse) override;
+	virtual bool initialize(ComPtr<ID3D11Device> device, MouseController* mouse) override;
 	virtual void setGameManager(GameManager * game) override;
 
-	virtual void update(double deltaTime, KeyboardController * keys, MouseController * mouse) override;
-	virtual void draw(SpriteBatch * batch) override;
+	virtual void update(double deltaTime, KeyboardController* keys, MouseController* mouse) override;
+	virtual void draw(SpriteBatch* batch) override;
 
 	virtual void pause() override;
 
-
+	MenuManager* menuManager;
 private:
 	GameManager* game;
 	unique_ptr<xml_document> levelManifest;
 
 	vector<unique_ptr<LevelSelection>> levelSelections;
+
+	unique_ptr<TextLabel> titleLabel;
 };

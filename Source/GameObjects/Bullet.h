@@ -1,6 +1,7 @@
+#include "../pch.h"
 #pragma once
 
-#include "../DXTKGui/BaseGraphics/Sprite.h"
+//#include "../DXTKGui/BaseGraphics/Sprite.h"
 //#include "../globals.h"
 
 

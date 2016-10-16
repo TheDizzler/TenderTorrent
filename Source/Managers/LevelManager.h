@@ -1,7 +1,8 @@
+#include "../pch.h"
 #pragma once
 
-#include "../DXTKGui/BaseGraphics/screen.h"
-#include "../DXTKGui/Controls/Button.h"
+//#include "../DXTKGui/BaseGraphics/screen.h"
+//#include "../DXTKGui/Controls/Button.h"
 #include "../GameObjects/PlayerShip.h"
 #include "WaveManager.h"
 #include "BackgroundManager.h"
@@ -43,7 +44,7 @@ private:
 	unique_ptr<BackgroundManager> bgManager;
 	unique_ptr<WaveManager> waveManager;
 
-	DIMOUSESTATE mouseLastState;
+	//DIMOUSESTATE mouseLastState;
 
 	unique_ptr<Button> exitButton;
 	unique_ptr<Button> continueButton;

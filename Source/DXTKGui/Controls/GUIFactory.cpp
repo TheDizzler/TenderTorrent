@@ -14,7 +14,6 @@ GUIFactory::GUIFactory(HWND h, pugi::xml_node guiAssets) {
 }
 
 GUIFactory::~GUIFactory() {
-
 	assetMap.clear();
 	fontMap.clear();
 }
@@ -70,7 +69,7 @@ unique_ptr<FontSet> GUIFactory::getFont(const char_t* fontName) {
 		defaultFont->load(device, StringHelper::convertCharStarToWCharT(defaultFontFile));
 		//defaultFont->setTint(Color(1, 1, 1, 1));
 
-		return defaultFont;
+		return move(defaultFont);
 	}
 
 	const char_t* fontFile = fontMap[fontName].c_str();
@@ -79,7 +78,7 @@ unique_ptr<FontSet> GUIFactory::getFont(const char_t* fontName) {
 	font.reset(new FontSet());
 	font->load(device, StringHelper::convertCharStarToWCharT(fontFile));
 	font->setTint(Color(1, 1, 1, 1));
-	return font;
+	return move(font);
 }
 
 
@@ -104,7 +103,7 @@ unique_ptr<Sprite> GUIFactory::getSpriteFromAsset(const char_t* assetName) {
 	unique_ptr<Sprite> sprite;
 	sprite.reset(new Sprite());
 	sprite->load(asset);
-	return sprite;
+	return move(sprite);
 }
 
 shared_ptr<Animation> GUIFactory::getAnimation(const char_t* animationName) {

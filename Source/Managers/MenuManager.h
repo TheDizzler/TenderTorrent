@@ -1,8 +1,7 @@
+#include "../pch.h"
 #pragma once
 
 #include "LevelSelectScreen.h"
-#include "../DXTKGui/Controls/Dialog.h"
-#include "../DXTKGui/Controls/ListBox.h"
 #include "../DXTKGUI/Effects/ScreenTransitions.h"
 
 
@@ -69,11 +68,11 @@ private:
 
 class PlayButtonListener : public Button::OnClickListener {
 public:
-	PlayButtonListener(GameManager* gm) : game(gm) {
+	PlayButtonListener(MainScreen* screen) : main(screen) {
 	}
 	virtual void onClick(Button* button) override;
 private:
-	GameManager* game;
+	MainScreen* main;
 };
 
 class SettingsButtonListener : public Button::OnClickListener {
@@ -118,6 +117,7 @@ public:
 
 	void openMainMenu();
 	void openConfigMenu();
+	void openLevelSelectScreen();
 
 	unique_ptr<ScreenTransitions::ScreenTransitionManager> transitionManager;
 
@@ -135,7 +135,6 @@ private:
 
 
 class MenuScreen : public Screen {
-	friend class SettingsButtonListener;
 public:
 
 	MenuScreen(MenuManager* manager);
@@ -143,12 +142,13 @@ public:
 
 	virtual void setGameManager(GameManager* game) override;
 	virtual void pause() override;
+
+	MenuManager* menuManager;
 protected:
 
 	GameManager* game;
-	MenuManager* menuManager;
-
-	vector<GUIControl*> guiControls;
+	//vector<GUIControl*> guiControls;
+	vector<unique_ptr<GUIControl>> guiControls;
 };
 
 

@@ -10,4 +10,5 @@ Written in C++ using DirectXTK. So far only one playable level with two enemies 
 >- sfx (warning, shooting, explosions)
 >- more levels
 >- improve enemy movement
+>- Put WeaponSystems in XML files (for live editing)
 

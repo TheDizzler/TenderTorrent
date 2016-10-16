@@ -41,7 +41,8 @@ bool GameEngine::initEngine(HWND hw, HINSTANCE hInstance) {
 
 	if (!audioEngine->IsAudioDevicePresent()) {
 		// no audio device found. Operating in silent mode.
-
+		MessageBox(0, L"No audio device found!", L"Error initializing Audio Device", MB_OK);
+		return false;
 	}
 
 	if (!initStage()) {
@@ -188,6 +189,8 @@ void GameEngine::resume() {
 }
 
 void GameEngine::exit() {
+
+	//debugDevice->ReportLiveDeviceObjects(D3D11_RLDO_DETAIL);
 	if (swapChain.Get() != NULL)
 		swapChain->SetFullscreenState(false, NULL);
 	DestroyWindow(hwnd);

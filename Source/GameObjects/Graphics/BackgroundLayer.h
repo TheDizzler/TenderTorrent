@@ -1,6 +1,6 @@
+#include "../../pch.h"
 #pragma once
 
-//#include "Sprite.h"
 #include "../PlayerShip.h"
 #include "../../DXTKGui/Controls/TextLabel.h"
 

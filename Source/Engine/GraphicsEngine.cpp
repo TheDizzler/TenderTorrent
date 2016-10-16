@@ -164,7 +164,10 @@ bool GraphicsEngine::initializeAdapter(int adapterIndex) {
 		L"Error creating Device and Swap Chain.", L"ERROR"))
 		return false;
 
+	device.Get()->QueryInterface(__uuidof(ID3D11Debug), reinterpret_cast<void**>(debugDevice.GetAddressOf()));
+
 	verifyAdapter(device);
+
 
 	return true;
 }

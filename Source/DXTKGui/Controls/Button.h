@@ -11,7 +11,7 @@ class Button : public GUIControl {
 public:
 
 	Button(GraphicsAsset* pixelAsset, unique_ptr<FontSet> font);
-	virtual ~Button();
+	~Button();
 
 	/* position is topleft of button. */
 	void setDimensions(const Vector2& position, const Vector2& size,

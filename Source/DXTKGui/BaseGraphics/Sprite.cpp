@@ -25,7 +25,7 @@ Sprite::Sprite(const Vector2& pos) {
 }
 
 Sprite::~Sprite() {
-
+	texture.Reset();
 }
 
 void Sprite::load(GraphicsAsset* const graphicsAsset) {

@@ -1,9 +1,5 @@
+#include "pch.h"
 #pragma once
-
-
-/* Global variables and includes */
-#include <comdef.h>
-
 
 namespace Globals {
 

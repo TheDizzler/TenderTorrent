@@ -1,16 +1,10 @@
+#include "../pch.h"
 #pragma once
 
-#pragma comment (lib, "dinput8.lib")
-
-#include <dinput.h>
-#include <DirectXMath.h>
-#include <GamePad.h>
 
 #include "../DXTKGui/Controllers/MouseController.h"
 #include "../DXTKGui/Controllers/KeyboardController.h"
 
-
-using namespace DirectX;
 
 
 class Input {

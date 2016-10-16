@@ -6,6 +6,8 @@ GraphicsAsset::GraphicsAsset() {
 }
 GraphicsAsset::~GraphicsAsset() {
 
+	resource.Reset();
+
 }
 
 #include "../StringHelper.h"

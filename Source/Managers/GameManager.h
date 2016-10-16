@@ -1,7 +1,6 @@
+#include "../pch.h"
 #pragma once
 
-#include <sstream>
-#include "../DXTKGui/Controls/GUIFactory.h"
 #include "GFXAssetManager.h"
 
 #include "LevelManager.h"
