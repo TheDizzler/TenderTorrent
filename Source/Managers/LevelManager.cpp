@@ -141,12 +141,12 @@ bool LevelManager::loadLevel(ComPtr<ID3D11Device> device, const char_t* levelNam
 
 
 	// extract level file from LevelManifest
-	string levelFile = levelManifest->child("root").attribute("dir").as_string();
+	/*string levelFile = levelManifest->child("root").attribute("dir").as_string();
 	xml_node levelNode =
 		levelManifest->child("root").find_child_by_attribute("name", levelName);
-	levelFile += levelNode.attribute("file").as_string();
+	levelFile += levelNode.attribute("file").as_string();*/
 
-	if (!bgManager->loadLevel(device, levelFile.c_str()))
+	if (!bgManager->loadLevel(device, levelName))
 		return false;
 
 	waveManager.reset(new WaveManager());

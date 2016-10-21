@@ -25,7 +25,7 @@ public:
 	void draw(SpriteBatch* batch);
 
 
-	void loadLevel(const char_t* levelName);
+	void loadLevel(string levelName);
 	void loadMainMenu();
 
 	void pause();
@@ -52,6 +52,7 @@ public:
 private:
 
 	Screen* currentScreen = 0;
+	Screen* switchTo = NULL;
 	Screen* lastScreen = 0;
 	unique_ptr<LevelManager> levelScreen;
 	unique_ptr<MenuManager> menuScreen;
@@ -61,7 +62,7 @@ private:
 	MouseController* mouse;
 	ComPtr<ID3D11Device> device;
 	
-
+	unique_ptr<ScreenTransitions::ScreenTransitionManager> transitionManager;
 	
 	
 };

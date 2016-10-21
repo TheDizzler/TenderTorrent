@@ -57,7 +57,13 @@ bool GameManager::initializeGame(HWND hwnd, ComPtr<ID3D11Device> dvc, MouseContr
 
 	currentScreen = menuScreen.get();
 
-	//ShowCursor(false);
+	transitionManager.reset(
+		new ScreenTransitions::ScreenTransitionManager(
+			GameManager::guiFactory.get(), "Default Transition BG"));
+	transitionManager->setTransition(
+		//new ScreenTransitions::FlipScreenTransition(true));
+		new ScreenTransitions::SquareFlipScreenTransition());
+		//new ScreenTransitions::LineWipeScreenTransition());
 
 	return true;
 }
@@ -65,33 +71,46 @@ bool GameManager::initializeGame(HWND hwnd, ComPtr<ID3D11Device> dvc, MouseContr
 
 void GameManager::update(double deltaTime, KeyboardController* keys,
 	MouseController* mouse) {
-	//guiFactory->updateMouse();
-	currentScreen->update(deltaTime, keys, mouse);
+	
+	if (switchTo != NULL) {
+		if (transitionManager->runTransition(deltaTime)) {
+			currentScreen = switchTo;
+			switchTo = NULL;
+		}
+	} else
+		currentScreen->update(deltaTime, keys, mouse);
 }
 
 
 void GameManager::draw(SpriteBatch * batch) {
-	currentScreen->draw(batch);
+	if (switchTo != NULL) {
+		transitionManager->drawTransition(batch);
+	} else
+		currentScreen->draw(batch);
 }
 
-void GameManager::loadLevel(const char_t* levelName) {
+void GameManager::loadLevel(string levelName) {
 
-	if (!levelScreen->loadLevel(device, levelName)) {
+	if (!levelScreen->loadLevel(device, levelName.c_str())) {
 		wostringstream msg;
-		msg << "Failed to load level: " << levelName;
+		msg << "Failed to load level: " << levelName.c_str();
 		GameEngine::showErrorDialog(msg.str(), L"Fatal Error");
 		return;
 	}
+	switchTo = levelScreen.get();
+	transitionManager->transitionBetween(currentScreen, switchTo);
 	lastScreen = currentScreen;
-	currentScreen = levelScreen.get();
+	//currentScreen = levelScreen.get();
 
 	
 }
 
 void GameManager::loadMainMenu() {
 
+	switchTo = menuScreen.get();
+	transitionManager->transitionBetween(currentScreen, switchTo);
 	lastScreen = currentScreen;
-	currentScreen = menuScreen.get();
+	//currentScreen = menuScreen.get();
 
 }
 

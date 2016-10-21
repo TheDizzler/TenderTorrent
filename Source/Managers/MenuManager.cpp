@@ -119,6 +119,11 @@ void MenuManager::openLevelSelectScreen() {
 	transitionManager->transitionBetween(currentScreen, switchTo);
 }
 
+void MenuManager::loadLevel(string levelXMLFile) {
+
+	game->loadLevel(levelXMLFile);
+}
+
 
 
 
@@ -271,7 +276,7 @@ ConfigScreen::ConfigScreen(MenuManager* mngr) : MenuScreen(mngr) {
 }
 
 ConfigScreen::~ConfigScreen() {
-guiControls.clear();
+	guiControls.clear();
 }
 
 

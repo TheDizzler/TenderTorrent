@@ -20,7 +20,7 @@ bool Background::load(ComPtr<ID3D11Device> device, const char_t* xmlFile) {
 	xml_document doc;
 
 	if (!doc.load_file(xmlFile)) {
-		MessageBox(NULL, L"Failed to load xml file", L"ERROR", MB_OK);
+		//MessageBox(NULL, L"Failed to load xml file", L"ERROR", MB_OK);
 		return false;
 	}
 

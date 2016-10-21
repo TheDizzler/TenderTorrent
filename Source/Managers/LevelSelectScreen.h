@@ -4,7 +4,7 @@
 
 class LevelSelection {
 public:
-	
+
 	LevelSelection(const Vector2& position, pugi::xml_node levelNode);
 
 	void update(double deltaTime, MouseController* mouse);
@@ -51,7 +51,6 @@ public:
 		}
 	}
 
-private:
 	unique_ptr<Sprite> previewPic;
 	unique_ptr<RectangleFrame> picFrame;
 	unique_ptr<TextLabel> label;
@@ -76,6 +75,8 @@ private:
 };
 
 
+
+
 class MenuManager;
 class LevelSelectScreen : public Screen {
 public:
@@ -90,6 +91,8 @@ public:
 
 	virtual void pause() override;
 
+	void loadLevel(string levelXMLFile);
+
 	MenuManager* menuManager;
 private:
 	GameManager* game;
@@ -98,4 +101,20 @@ private:
 	vector<unique_ptr<LevelSelection>> levelSelections;
 
 	unique_ptr<TextLabel> titleLabel;
+};
+
+
+class OnClickLevelSelect : public LevelSelection::OnClickListener {
+public:
+
+	OnClickLevelSelect(LevelSelectScreen* screen) : levelSelectScreen(screen) {
+	}
+	virtual void onClick(LevelSelection* level) {
+		levelSelectScreen->loadLevel(level->levelXMLFile);
+
+	};
+
+private:
+	LevelSelectScreen* levelSelectScreen;
+
 };

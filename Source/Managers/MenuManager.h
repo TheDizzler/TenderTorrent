@@ -118,6 +118,7 @@ public:
 	void openMainMenu();
 	void openConfigMenu();
 	void openLevelSelectScreen();
+	void loadLevel(string levelXMLFile);
 
 	unique_ptr<ScreenTransitions::ScreenTransitionManager> transitionManager;
 
@@ -147,7 +148,6 @@ public:
 protected:
 
 	GameManager* game;
-	//vector<GUIControl*> guiControls;
 	vector<unique_ptr<GUIControl>> guiControls;
 };
 

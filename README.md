@@ -8,7 +8,9 @@ Written in C++ using DirectXTK. So far only one playable level with two enemies 
 
 # Todo:
 >- sfx (warning, shooting, explosions)
->- more levels
+>- music
+>- ~more levels~
 >- improve enemy movement
 >- Put WeaponSystems in XML files (for live editing)
-
+>- ship selection
+>- weapon upgrades

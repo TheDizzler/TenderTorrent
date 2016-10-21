@@ -37,6 +37,7 @@ bool LevelSelectScreen::initialize(ComPtr<ID3D11Device> device, MouseController*
 
 		LevelSelection* level = new LevelSelection(pos, levelNode);
 		pos.x += level->getSize().x + 10;
+		level->setOnClickListener(new OnClickLevelSelect(this));
 		levelSelections.push_back(unique_ptr<LevelSelection>(level));
 	}
 
@@ -74,6 +75,11 @@ void LevelSelectScreen::draw(SpriteBatch* batch) {
 }
 
 void LevelSelectScreen::pause() {
+}
+
+void LevelSelectScreen::loadLevel(string levelXMLFile) {
+
+	menuManager->loadLevel(levelXMLFile);
 }
 
 
@@ -138,11 +144,14 @@ void LevelSelection::update(double deltaTime, MouseController* mouse) {
 			onHover();
 			setToHoverState();
 		}
-	} else
+	} else {
+		//isPressed = false;
 		isHover = false;
+	}
 
 	if (isPressed && !mouse->leftButton()) {
 		isClicked = true;
+		isPressed = false;
 		onClick();
 		setToUnpressedState();
 	} else {
@@ -168,6 +177,8 @@ const Vector2& LevelSelection::getSize() {
 	return hitArea->size;
 }
 
+
+
 void LevelSelection::setToUnpressedState() {
 
 	previewPic->setTint(Vector4(1, 1, 1, 1));
@@ -184,3 +195,5 @@ void LevelSelection::setToHoverState() {
 
 void LevelSelection::setToSelectedState() {
 }
+
+
