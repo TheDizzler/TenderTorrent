@@ -11,7 +11,7 @@ public:
 	RearAttackWave();
 	~RearAttackWave();
 
-	virtual bool initialize(GFXAssetManager* gfxAssets) override;
+	virtual bool initialize(GFXAssetManager* gfxAssets, xml_node shipNode) override;
 	virtual void launchNewWave() override;
 
 	virtual void update(double deltaTime, PlayerShip* player) override;

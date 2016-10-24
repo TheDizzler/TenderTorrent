@@ -12,23 +12,8 @@ namespace Globals {
 	extern bool FULL_SCREEN;
 
 
-	/*inline bool reportError(HRESULT hr) {
-
-		if (FAILED(hr)) {
-			_com_error err(hr);
-			MessageBox(NULL, err.ErrorMessage(), TEXT("This is SRS Error"), MB_OK | MB_ICONERROR);
-			return true;
-		}
-
-		return false;
-	}*/
-
 	/* For reference purposes only. */
-	/*wstring convertIntToWString(float number) {
-
-		wostringstream ws;
-		ws << "The number: " << number;
-
-		return ws.str();
-	}*/
+	/*wostringstream ws;
+	ws << "some writing here" << someVariable << "\n";
+	OutputDebugString(ws.str().c_str());*/
 };

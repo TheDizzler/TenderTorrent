@@ -9,9 +9,9 @@ RearAttackWave::~RearAttackWave() {
 }
 
 #include "../Engine/GameEngine.h"
-bool RearAttackWave::initialize(GFXAssetManager* gfxAssets) {
+bool RearAttackWave::initialize(GFXAssetManager* gfxAssets, xml_node shipNode) {
 
-	const char_t* shipName = "EnemyShip RearAttack";
+	const char_t* shipName = shipNode.child("sprite").text().as_string();
 	GraphicsAsset* ship = gfxAssets->getAsset(shipName);
 	if (ship == NULL) {
 		wostringstream wss;
@@ -39,12 +39,18 @@ bool RearAttackWave::initialize(GFXAssetManager* gfxAssets) {
 
 	// fill ship store
 	for (int i = 0; i < 18; ++i) {
-		RearAttackShip* enemy = new RearAttackShip(false);
+		for (xml_node mirrorNode = shipNode.child("mirrors").child("mirror");
+			mirrorNode; mirrorNode = mirrorNode.next_sibling()) {
+			RearAttackShip* enemy = new RearAttackShip(mirrorNode);
+			enemy->setDimensions(sharedShipSprite.get());
+			shipStore.push_back(enemy);
+		}
+		/*RearAttackShip* enemy = new RearAttackShip(false);
 		enemy->setDimensions(sharedShipSprite.get());
 		shipStore.push_back(enemy);
 		enemy = new RearAttackShip(true);
 		enemy->setDimensions(sharedShipSprite.get());
-		shipStore.push_back(enemy);
+		shipStore.push_back(enemy);*/
 	}
 
 

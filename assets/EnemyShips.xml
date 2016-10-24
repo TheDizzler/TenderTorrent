@@ -4,6 +4,7 @@
 	<ship name="Rear Attack Ship" mirrored="true">
 		<sprite>EnemyShip RearAttack</sprite>
 		<health>6</health>
+		<speed factor="3.0"/>
 		<weaponPoints>
 			<weapon type="Cannon">
 				<location x="0" y="-8"/>
@@ -11,20 +12,21 @@
 			</weapon>
 		</weaponPoints>
 
-		<movement>
-			<speed factor="3.0"/>
-			<mirror>
+		<mirrors>
+			<mirror name="left side">
 				<start x="120" y="WINDOW_HEIGHT + 50"/>
 				<controlPoint x="0" y="0" />
+				<climax x="125" y="150"/>
 				<end x="WINDOW_WIDTH / 2" y="WINDOW_HEIGHT + 120"/>
 			</mirror>
 
-			<mirror>
+			<mirror name="right side">
 				<start x="WINDOW_WIDTH - 120" y="WINDOW_HEIGHT + 50"/>
 				<controlPoint x="WINDOW_WIDTH" y="0"/>
+				<climax x="WINDOW_WIDTH - 125" y="150"/>
 				<end x="WINDOW_WIDTH / 2" y="WINDOW_HEIGHT + 120"/>
 			</mirror>
-		</movement>
+		</mirrors>
 
 	</ship>
 

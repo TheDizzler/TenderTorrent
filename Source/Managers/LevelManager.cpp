@@ -148,8 +148,6 @@ bool LevelManager::loadLevel(ComPtr<ID3D11Device> device, const char_t* levelFil
 
 	totalPlayTime = 0;
 	playerShip->reset();
-	//playerShip->isAlive = true;
-	//playerShip->energy = playerShip->maxEnergy;
 
 	playState = STARTING;
 	return true;

@@ -9,15 +9,22 @@ WaveManager::~WaveManager() {
 		delete wave;
 }
 
+#include "../assets.h"
 bool WaveManager::initialize(GFXAssetManager* gfxAssets) {
 
+	xml_document xml_enemies;
+	xml_enemies.load_file(Assets::enemyShipManifestFile);
+
+	xml_node root = xml_enemies.child("root");
+	xml_node shipNode = root.child("ship");
+
 	Wave* wave = new RearAttackWave();
-	if (!wave->initialize(gfxAssets))
+	if (!wave->initialize(gfxAssets, shipNode))
 		return false;
 	waves.push_back(wave);
 
 	wave = new StarEnemyShipWave();
-	if (!wave->initialize(gfxAssets))
+	if (!wave->initialize(gfxAssets, shipNode.next_sibling()))
 		return false;
 	waves.push_back(wave);
 

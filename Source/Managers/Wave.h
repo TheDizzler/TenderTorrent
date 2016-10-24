@@ -10,7 +10,7 @@ public:
 	Wave();
 	~Wave();
 
-	virtual bool initialize(GFXAssetManager* gfxAssets) = 0;
+	virtual bool initialize(GFXAssetManager* gfxAssets, xml_node shipNode) = 0;
 	void clear();
 	virtual void launchNewWave() = 0;
 

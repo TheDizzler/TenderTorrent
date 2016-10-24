@@ -7,7 +7,7 @@ StarEnemyShipWave::~StarEnemyShipWave() {
 }
 
 #include "../Engine/GameEngine.h"
-bool StarEnemyShipWave::initialize(GFXAssetManager* gfxAssets) {
+bool StarEnemyShipWave::initialize(GFXAssetManager* gfxAssets, xml_node shipNode) {
 	
 	const char_t* shipName = "EnemyShip Star";
 	GraphicsAsset* ship = gfxAssets->getAsset(shipName);

@@ -193,7 +193,9 @@
     <Xml Include="assets\LevelManifest.xml">
       <SubType>Designer</SubType>
     </Xml>
-    <Xml Include="assets\mako.xml" />
+    <Xml Include="assets\mako.xml">
+      <SubType>Designer</SubType>
+    </Xml>
     <Xml Include="assets\shara.xml" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
