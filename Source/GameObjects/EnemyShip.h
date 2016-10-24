@@ -14,6 +14,7 @@ public:
 	/** For constructing actual enemies seen on stage. */
 	EnemyShip(const Vector2& position);
 	~EnemyShip();
+	virtual void reset() = 0;
 
 	virtual void update(double deltaTime, PlayerShip* player) = 0;
 	virtual void update(double deltaTime);
@@ -29,9 +30,10 @@ public:
 
 protected:
 	
+	int maxHealth = 10;
 	int health = 10;
 
-	bool fireReady;
+	bool fireReady = true;
 	int speed = 200;
 
 	Vector2 weaponLocation;

@@ -1,6 +1,8 @@
 #include "RearAttackWave.h"
 
 RearAttackWave::RearAttackWave() {
+
+	maxTimeBetweenLaunches = 15;
 }
 
 RearAttackWave::~RearAttackWave() {
@@ -34,6 +36,18 @@ bool RearAttackWave::initialize(GFXAssetManager* gfxAssets) {
 	sharedBulletSprite.reset(new Sprite());
 	sharedBulletSprite->load(bullet);
 
+
+	// fill ship store
+	for (int i = 0; i < 18; ++i) {
+		RearAttackShip* enemy = new RearAttackShip(false);
+		enemy->setDimensions(sharedShipSprite.get());
+		shipStore.push_back(enemy);
+		enemy = new RearAttackShip(true);
+		enemy->setDimensions(sharedShipSprite.get());
+		shipStore.push_back(enemy);
+	}
+
+
 	return true;
 }
 
@@ -63,7 +77,7 @@ bool RearAttackWave::checkForLaunch() {
 
 	mt19937 rng;
 	rng.seed(random_device{}());
-	uniform_int_distribution<mt19937::result_type> rand((int) 0, maxTimeBetweenLaunches);
+	uniform_int_distribution<mt19937::result_type> rand((int) timeSinceLastLaunch, maxTimeBetweenLaunches);
 	if (rand(rng) >= maxTimeBetweenLaunches - 2)
 		return true;
 	return false;
@@ -71,12 +85,24 @@ bool RearAttackWave::checkForLaunch() {
 
 void RearAttackWave::launchNextMiniWave() {
 
-	RearAttackShip* enemy = new RearAttackShip(false);
+	/*RearAttackShip* enemy = new RearAttackShip(false);
 	enemy->setDimensions(sharedShipSprite.get());
 	enemyShips.push_back(enemy);
 	enemy = new RearAttackShip(true);
 	enemy->setDimensions(sharedShipSprite.get());
-	enemyShips.push_back(enemy);
+	enemyShips.push_back(enemy);*/
+
+	EnemyShip* next = shipStore[nextShipInStore++];
+	//EnemyShip* next = shipStore.back();
+	next->reset();
+	//activeShips.push_back(next);
+	//shipStore.pop_back();
+	next = shipStore[nextShipInStore++];
+	next->reset();
+	//activeShips.push_back(next);
+
+	if (nextShipInStore >= shipStore.size())
+		nextShipInStore = 0;
 
 	++miniWavesLaunched;
 	timeSinceLastMiniLaunch = 0;

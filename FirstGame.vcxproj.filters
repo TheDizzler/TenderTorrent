@@ -389,5 +389,8 @@
     <Xml Include="assets\shara.xml">
       <Filter>Source Files\levels</Filter>
     </Xml>
+    <Xml Include="assets\EnemyShips.xml">
+      <Filter>Source Files\EnemyShips</Filter>
+    </Xml>
   </ItemGroup>
 </Project>

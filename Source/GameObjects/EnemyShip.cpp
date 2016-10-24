@@ -1,9 +1,13 @@
 #include "EnemyShip.h"
 
-EnemyShip::EnemyShip() :Sprite(SimpleMath::Vector2(0, 0)) {
+EnemyShip::EnemyShip() : Sprite(SimpleMath::Vector2(0, 0)) {
+
+	isAlive = false;
 }
 
-EnemyShip::EnemyShip(const Vector2 & position) : Sprite(position) {
+EnemyShip::EnemyShip(const Vector2& position) : Sprite(position) {
+
+	isAlive = false;
 }
 
 EnemyShip::~EnemyShip() {

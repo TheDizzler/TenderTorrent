@@ -19,6 +19,11 @@ StarEnemyShip::StarEnemyShip(bool isRght) {
 StarEnemyShip::~StarEnemyShip() {
 }
 
+
+void StarEnemyShip::reset() {
+}
+
+
 void StarEnemyShip::update(double deltaTime, PlayerShip * player) {
 
 	if (rightSide)

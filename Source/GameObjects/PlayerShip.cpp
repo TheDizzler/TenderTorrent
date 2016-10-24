@@ -27,14 +27,32 @@ PlayerShip::~PlayerShip() {
 	liveBullets.clear();
 }
 
-void PlayerShip::clear() {
+void PlayerShip::reset() {
 
 	for each (Bullet* bullet in liveBullets)
 		bullet->isAlive = false;
 	liveBullets.clear();
 
+	isAlive = true;
+	energy = startMaxEnergy;
 	position = startPosition;
+
+	rightWeaponSlot->update(0, position);
+	leftWeaponSlot->update(0, position);
+	centerWeaponSlot->update(0, position);
+	rightTurret->update(0, position, Vector2::Zero);
+	leftTurret->update(0, position, Vector2::Zero);
+
 }
+
+//void PlayerShip::clear() {
+//
+//	for each (Bullet* bullet in liveBullets)
+//		bullet->isAlive = false;
+//	liveBullets.clear();
+//
+//	position = startPosition;
+//}
 
 
 

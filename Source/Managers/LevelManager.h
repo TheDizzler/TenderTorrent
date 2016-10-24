@@ -23,7 +23,9 @@ public:
 	virtual void setGameManager(GameManager* game);
 
 	virtual bool initialize(ComPtr<ID3D11Device> device, MouseController* mouse);
-	bool loadLevel(ComPtr<ID3D11Device> device, const char_t* levelName);
+
+
+	bool loadLevel(ComPtr<ID3D11Device> device, const char_t* levelFileName);
 
 
 	virtual void update(double deltaTime, KeyboardController* keys,

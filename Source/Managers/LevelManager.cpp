@@ -91,7 +91,7 @@ bool LevelManager::initialize(ComPtr<ID3D11Device> device, MouseController* mous
 	return true;
 }
 
-bool LevelManager::loadLevel(ComPtr<ID3D11Device> device, const char_t* levelName) {
+bool LevelManager::loadLevel(ComPtr<ID3D11Device> device, const char_t* levelFileName) {
 
 	playState = LOADING;
 
@@ -115,9 +115,9 @@ bool LevelManager::loadLevel(ComPtr<ID3D11Device> device, const char_t* levelNam
 			Vector2(Globals::WINDOW_WIDTH / 4, Globals::WINDOW_HEIGHT * 3 / 4),
 			"Button Up", "Button Down"));
 	exitButton->setText(L"Exit");
-	Vector2 moveBy = Vector2(exitButton->getScaledWidth()/2, 0);
+	Vector2 moveBy = Vector2(exitButton->getScaledWidth() / 2, 0);
 	exitButton->moveBy(-moveBy);
-	
+
 
 
 	continueButton.reset(
@@ -129,24 +129,17 @@ bool LevelManager::loadLevel(ComPtr<ID3D11Device> device, const char_t* levelNam
 
 
 
-	
+
 	warningLabel.reset(new TextLabel(
-		Vector2((Globals::WINDOW_WIDTH ) / 2, (Globals::WINDOW_HEIGHT) / 2),
+		Vector2((Globals::WINDOW_WIDTH) / 2, (Globals::WINDOW_HEIGHT) / 2),
 		GameManager::guiFactory->getFont("BlackCloak")));
 	warningLabel->setText("GET READY!");
 	warningLabel->setScale(Vector2(1, 1.5));
 	size = warningLabel->measureString(L"GET READY!");
-	warningLabel->moveBy(-size/2);
+	warningLabel->moveBy(-size / 2);
 
 
-
-	// extract level file from LevelManifest
-	/*string levelFile = levelManifest->child("root").attribute("dir").as_string();
-	xml_node levelNode =
-		levelManifest->child("root").find_child_by_attribute("name", levelName);
-	levelFile += levelNode.attribute("file").as_string();*/
-
-	if (!bgManager->loadLevel(device, levelName))
+	if (!bgManager->loadLevel(device, levelFileName))
 		return false;
 
 	waveManager.reset(new WaveManager());
@@ -154,7 +147,9 @@ bool LevelManager::loadLevel(ComPtr<ID3D11Device> device, const char_t* levelNam
 		return false;
 
 	totalPlayTime = 0;
-	playerShip->energy = playerShip->maxEnergy;
+	playerShip->reset();
+	//playerShip->isAlive = true;
+	//playerShip->energy = playerShip->maxEnergy;
 
 	playState = STARTING;
 	return true;
@@ -173,10 +168,12 @@ void LevelManager::update(double deltaTime,
 			for (Bullet* bullet : playerShip->liveBullets) {
 				bullet->update(deltaTime);
 				for (Wave* wave : waveManager->waves) {
-					for (EnemyShip* enemy : wave->enemyShips) {
-						if (bullet->getHitArea()->collision(enemy->getHitArea())) {
-							enemy->takeDamage(bullet->damage);
-							bullet->isAlive = false;
+					for (EnemyShip* enemy : wave->shipStore) {
+						if (enemy->isAlive) {
+							if (bullet->getHitArea()->collision(enemy->getHitArea())) {
+								enemy->takeDamage(bullet->damage);
+								bullet->isAlive = false;
+							}
 						}
 					}
 				}
@@ -225,7 +222,7 @@ void LevelManager::update(double deltaTime,
 			if (exitButton->clicked()) {
 				waveManager->clear();
 				bgManager->clear();
-				playerShip->clear();
+				//playerShip->clear();
 
 
 				pauseDownLast = true;

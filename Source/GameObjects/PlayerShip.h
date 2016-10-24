@@ -21,7 +21,8 @@ public:
 	PlayerShip(const Vector2& position);
 	~PlayerShip();
 
-	void clear();
+	void reset();
+	//void clear();
 
 	/*
 		TODO?

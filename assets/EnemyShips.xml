@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root game="TenderTorrent" xml="AssetManifest" dir="assets/">
+
+	<ship name="Rear Attack Ship" mirrored="true">
+		<sprite>EnemyShip RearAttack</sprite>
+		<health>6</health>
+		<weaponPoints>
+			<weapon type="Cannon">
+				<location x="0" y="-8"/>
+				<fireRate delay="2.5" repeat="1" />
+			</weapon>
+		</weaponPoints>
+
+		<movement>
+			<speed factor="3.0"/>
+			<mirror>
+				<start x="120" y="WINDOW_HEIGHT + 50"/>
+				<controlPoint x="0" y="0" />
+				<end x="WINDOW_WIDTH / 2" y="WINDOW_HEIGHT + 120"/>
+			</mirror>
+
+			<mirror>
+				<start x="WINDOW_WIDTH - 120" y="WINDOW_HEIGHT + 50"/>
+				<controlPoint x="WINDOW_WIDTH" y="0"/>
+				<end x="WINDOW_WIDTH / 2" y="WINDOW_HEIGHT + 120"/>
+			</mirror>
+		</movement>
+
+	</ship>
+
+	<ship name="Attack from corner then return">
+
+		double percent = (timeAlive - timeToClimax) / timeToEnd;
+		percent = -cos(percent*XM_PIDIV2);
+		position = Vector2::Lerp(climaxPos, endPos, percent);
+
+	</ship>
+
+
+
+
+	<weaponSystems>
+		<weaponType name="Cannon">
+			<sprite>Enemy Bullet A</sprite>
+			<targetsPlayer>true</targetsPlayer>
+			<damage>10</damage>
+			<bulletSpeed>400</bulletSpeed>
+		</weaponType>
+	</weaponSystems>
+</root>

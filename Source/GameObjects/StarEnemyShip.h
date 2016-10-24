@@ -10,6 +10,8 @@ public:
 	StarEnemyShip(bool rightSide);
 	~StarEnemyShip();
 
+	virtual void reset() override;
+
 	virtual void update(double deltaTime, PlayerShip* player);
 
 	//virtual EnemyBullet* launchBullet(Vector2 target);
@@ -22,5 +24,6 @@ private:
 
 	const Vector2 startPosLeftSide = Vector2(-50, 100);
 	const Vector2 startPosRightSide = Vector2(Globals::WINDOW_WIDTH + 50, 100);
+
 
 };

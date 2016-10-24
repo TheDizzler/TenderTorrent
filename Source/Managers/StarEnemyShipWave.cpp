@@ -44,12 +44,12 @@ void StarEnemyShipWave::launchNewWave() {
 
 	timeSinceLastLaunch = 0;
 
-	StarEnemyShip* enemy = new StarEnemyShip(false);
+	/*StarEnemyShip* enemy = new StarEnemyShip(false);
 	enemy->setDimensions(sharedShipSprite.get());
 	enemyShips.push_back(enemy);
 	enemy = new StarEnemyShip(true);
 	enemy->setDimensions(sharedShipSprite.get());
-	enemyShips.push_back(enemy);
+	enemyShips.push_back(enemy);*/
 }
 
 #include <random>

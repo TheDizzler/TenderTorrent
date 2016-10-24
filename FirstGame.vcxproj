@@ -184,8 +184,15 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Xml Include="assets\AssetManifest.xml" />
-    <Xml Include="assets\LevelManifest.xml" />
+    <Xml Include="assets\AssetManifest.xml">
+      <SubType>Designer</SubType>
+    </Xml>
+    <Xml Include="assets\EnemyShips.xml">
+      <SubType>Designer</SubType>
+    </Xml>
+    <Xml Include="assets\LevelManifest.xml">
+      <SubType>Designer</SubType>
+    </Xml>
     <Xml Include="assets\mako.xml" />
     <Xml Include="assets\shara.xml" />
   </ItemGroup>
