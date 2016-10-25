@@ -15,18 +15,19 @@ WeaponSystem::~WeaponSystem() {
 
 void WeaponSystem::loadBulletTexture(GraphicsAsset* bulletAsset) {
 
-	baseBulletSprite.reset(new Sprite());
-	baseBulletSprite->load(bulletAsset);
+	//baseBulletSprite.reset(new Sprite());
+	//baseBulletSprite->load(bulletAsset);
 
-	fillBulletStore();
+	fillBulletStore(bulletAsset);
 }
 
 
-void WeaponSystem::fillBulletStore() {
+void WeaponSystem::fillBulletStore(GraphicsAsset* bulletAsset) {
 
 	for (int i = 0; i < maxStoreSize; ++i) {
 		Bullet* bullet = new Bullet(weaponStore);
-		bullet->setDimensions(baseBulletSprite.get());
+		//bullet->setDimensions(baseBulletSprite.get());
+		bullet->load(bulletAsset);
 		bulletStore.push_back(bullet);
 	}
 }
@@ -52,7 +53,7 @@ void WeaponSystem::draw(SpriteBatch* batch) {
 
 	for (Bullet* bullet : bulletStore) {
 		if (bullet->isAlive)
-			bullet->draw(batch, baseBulletSprite.get());
+			bullet->draw(batch/*, baseBulletSprite.get()*/);
 	}
 }
 

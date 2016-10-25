@@ -32,13 +32,13 @@ public:
 	Vector2 locationOffset;
 
 protected:
-	unique_ptr<Sprite> baseBulletSprite;
+	//unique_ptr<Sprite> baseBulletSprite;
 	float coolDownTime = .1;
 
 	Vector2 weaponLocation;
 
 	int maxStoreSize = 24;
-	virtual void fillBulletStore();
+	virtual void fillBulletStore(GraphicsAsset* bulletAsset);
 	std::vector<Bullet*> bulletStore;
 
 	int nextBullet = 0;

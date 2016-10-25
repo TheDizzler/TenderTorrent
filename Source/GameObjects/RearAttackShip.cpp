@@ -1,66 +1,11 @@
 #include "RearAttackShip.h"
 
+#include "../Engine/GameEngine.h"
 #include "../globals.h"
-inline int getInt(xml_attribute attr) {
-
-	string value = attr.as_string();
-	if (isdigit(value[0]))
-		return attr.as_int();
-
-	/*int i = -1;
-	while (isalpha(value[++i])) {
-	}*/
-	int i = value.find_first_of(" ");
-	string token = value.substr(0, i);
-
-
-	int num = 0;
-	if (token.compare("WINDOW_WIDTH") == 0) {
-		num = Globals::WINDOW_WIDTH;
-
-	} else if (token.compare("WINDOW_HEIGHT") == 0) {
-		num = Globals::WINDOW_HEIGHT;
-
-	}
-
-	if (i == -1)
-		return num;
-
-	token = value.substr(i);
-	i = token.find_first_not_of(" ");
-
-	token = token.substr(i);
-	char op = token[0];
-	if (op == 'W')
-		return num;
-	token = token.substr(1);
-	i = token.find_first_not_of(" ");
-	token = token.substr(i);
-	int next = stoi(token);
-	if (op == '+') {
-		num += next;
-
-	} else if (op == '-') {
-		num -= next;
-
-	} else if (op == '/') {
-		num /= next;
-
-	} else if (op == '*') {
-		num *= next;
-
-	}
-
-	/*wostringstream ws;
-	ws << token.c_str() << "\n";
-	OutputDebugString(ws.str().c_str());*/
-
-	return num;
-}
-
+using namespace Globals;
 RearAttackShip::RearAttackShip(xml_node mirrorNode) {
 
-	xml_node parentNode = mirrorNode.parent();
+	xml_node shipNode = mirrorNode.parent().parent();
 
 	xml_node startNode = mirrorNode.child("start");
 	xml_node controlNode = mirrorNode.child("controlPoint");
@@ -72,16 +17,38 @@ RearAttackShip::RearAttackShip(xml_node mirrorNode) {
 	endPos = Vector2(getInt(endNode.attribute("x")), getInt(endNode.attribute("y")));
 
 
-	/*xml_node weaponPointsNode = parentNode.child("weaponPoints");
-	for (xml_node weaponNode = weaponPointsNode.child("weapon");
-		weaponNode; weaponNode = weaponNode.next_sibling()) {
+	xml_node weaponPointsNode = shipNode.child("weaponPoints");
+	xml_node weaponNode = weaponPointsNode.child("weapon");
+	xml_node weaponSystemsNode = shipNode.parent().child("weaponSystems");
 
-		const char_t* weaponType = weaponNode.attribute("type").as_string();
+	/*for (xml_node weaponNode = weaponPointsNode.child("weapon");
+		weaponNode; weaponNode = weaponNode.next_sibling()) {*/
+	const char_t* weaponTypeName = weaponNode.attribute("type").as_string();
+	xml_node weaponTypeNode = weaponSystemsNode.find_child_by_attribute("weaponType", "name", weaponTypeName);
+	int damage = weaponTypeNode.child("damage").text().as_int();
+	int bulletSpeed = weaponTypeNode.child("bulletSpeed").text().as_int();
+	const char_t* bulletName = weaponTypeNode.child("sprite").text().as_string();
+	GraphicsAsset* bulletAsset = GameManager::gfxAssets->getAsset(bulletName);
+	if (bulletAsset == NULL) {
+		wostringstream wss;
+		wss << "Unable to find weapon asset " << bulletName;
+		wss << " in RearAttackShip.";
+		GameEngine::showErrorDialog(wss.str(), L"This is bad");
+		return;
+	}
+	for (int i = 0; i < MAX_BULLETS_IN_STORE; ++i) {
+		EnemyBullet* bullet = new EnemyBullet();
+		bullet->damage = damage;
+		bullet->bulletSpeed = bulletSpeed;
+		bullet->load(bulletAsset);
+		bulletStore.push_back(bullet);
+	}
+	//}
 
-	}*/
 
 
-	maxHealth = parentNode.child("health").text().as_int();
+
+	maxHealth = shipNode.child("health").text().as_int();
 
 
 	position = startPos;
@@ -96,29 +63,6 @@ RearAttackShip::RearAttackShip(xml_node mirrorNode) {
 RearAttackShip::RearAttackShip() {
 }
 
-
-RearAttackShip::RearAttackShip(bool isRght) : EnemyShip(position) {
-
-	rotation = XM_PI;
-
-	//rightSide = isRght;
-	if (isRght) {
-		startPos = startPosRightSide;
-		climaxPos = Vector2(Globals::WINDOW_WIDTH - 125, 150);
-		controlPoint = Vector2(Globals::WINDOW_WIDTH, 0);
-	} else {
-		startPos = startPosLeftSide;
-		climaxPos = Vector2(125, 150);
-		controlPoint = Vector2(0, 0);
-	}
-	endPos = Vector2(Globals::WINDOW_WIDTH / 2, Globals::WINDOW_HEIGHT + 120);
-	maxHealth = 6;
-
-
-	position = startPos;
-	weaponLocation = position;
-	health = maxHealth;
-}
 
 RearAttackShip::~RearAttackShip() {
 }
@@ -139,7 +83,6 @@ void RearAttackShip::update(double deltaTime, PlayerShip* player) {
 
 	timeAlive += deltaTime;
 
-	//if (timeAlive <= timeToClimax) {
 	double percent = timeAlive / timeToClimax;
 	//percent = sin(percent*XM_PIDIV2);
 	//position = Vector2::Lerp(startPos, climaxPos, percent);

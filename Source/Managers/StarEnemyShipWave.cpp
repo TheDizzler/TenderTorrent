@@ -8,34 +8,33 @@ StarEnemyShipWave::~StarEnemyShipWave() {
 
 #include "../Engine/GameEngine.h"
 bool StarEnemyShipWave::initialize(GFXAssetManager* gfxAssets, xml_node shipNode) {
-	
-	const char_t* shipName = "EnemyShip Star";
+
+	xml_node waveDataNode = shipNode.child("waveData");
+	maxTimeBetweenLaunches = waveDataNode.attribute("maxTimeBetweenWaves").as_double();
+	timeBetweenChecks = waveDataNode.attribute("timeBetweenChanceForWave").as_double();
+
+	const char_t* shipName = shipNode.child("sprite").text().as_string();
 	GraphicsAsset* ship = gfxAssets->getAsset(shipName);
 	if (ship == NULL) {
 		wostringstream wss;
 		wss << "Unable to find asset " << shipName;
-		wss << " in RearAttackWave.";
+		wss << " in StarEnemyShipWave.";
 		GameEngine::showErrorDialog(wss.str(), L"This is bad");
 		return true;
 	}
+	//sharedShipSprite.reset(new Sprite());
+	//sharedShipSprite->load(ship);
 
-	const char_t* bulletName = "Enemy Bullet A";
-	GraphicsAsset* bullet = gfxAssets->getAsset(bulletName);
-	if (bullet == NULL) {
-		wostringstream wss;
-		wss << "Unable to find asset " << bulletName;
-		wss << " in RearAttackWave.";
-		GameEngine::showErrorDialog(wss.str(), L"This is bad");
-		return true;
+	MAX_SHIPS_IN_STORE = 4;
+
+	for (int i = 0; i < MAX_SHIPS_IN_STORE; ++i) {
+		for (xml_node mirrorNode : shipNode.child("mirrors").children("mirror")) {
+			StarEnemyShip* enemy = new StarEnemyShip(mirrorNode);
+			//enemy->setDimensions(sharedShipSprite.get());
+			enemy->load(ship);
+			shipStore.push_back(enemy);
+		}
 	}
-
-	sharedShipSprite.reset(new Sprite());
-	sharedShipSprite->load(ship);
-
-	sharedBulletSprite.reset(new Sprite());
-	sharedBulletSprite->load(bullet);
-
-	maxTimeBetweenLaunches = 25;
 	
 	return true;
 }
@@ -50,16 +49,23 @@ void StarEnemyShipWave::launchNewWave() {
 	enemy = new StarEnemyShip(true);
 	enemy->setDimensions(sharedShipSprite.get());
 	enemyShips.push_back(enemy);*/
+
+	EnemyShip* next = shipStore[nextShipInStore++];
+	next->reset();
+	next = shipStore[nextShipInStore++];
+	next->reset();
+
+	if (nextShipInStore >= shipStore.size())
+		nextShipInStore = 0;
 }
 
 #include <random>
-
 bool StarEnemyShipWave::checkForLaunch() {
 	
 	mt19937 rng;
 	rng.seed(random_device{}());
-	uniform_int_distribution<mt19937::result_type> rand((int) 0, maxTimeBetweenLaunches);
-	if (rand(rng) >= maxTimeBetweenLaunches - 1)
+	uniform_int_distribution<mt19937::result_type> rand((int) timeSinceLastLaunch, maxTimeBetweenLaunches);
+	if (rand(rng) >= maxTimeBetweenLaunches - 2)
 		return true;
 	return false;
 }

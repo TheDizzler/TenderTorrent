@@ -23,11 +23,11 @@ Bullet* Turret::fire() {
 	return bullet;
 }
 
-void Turret::fillBulletStore() {
+void Turret::fillBulletStore(GraphicsAsset* bulletAsset) {
 
 	for (int i = 0; i < maxStoreSize; ++i) {
 		Bullet* bullet = new SunBullet(weaponStore);
-		bullet->setDimensions(baseBulletSprite.get());
+		bullet->load(bulletAsset);
 		bulletStore.push_back(bullet);
 	}
 }

@@ -7,7 +7,8 @@
 class StarEnemyShip : public EnemyShip {
 public:
 	StarEnemyShip();
-	StarEnemyShip(bool rightSide);
+	StarEnemyShip(xml_node mirrorNode);
+	//StarEnemyShip(bool rightSide);
 	~StarEnemyShip();
 
 	virtual void reset() override;
@@ -19,11 +20,14 @@ public:
 
 private:
 
-	bool rightSide;
-	double onScreenTime = 0;
+	bool fired = false;
+	double timeToTravel;
 
-	const Vector2 startPosLeftSide = Vector2(-50, 100);
-	const Vector2 startPosRightSide = Vector2(Globals::WINDOW_WIDTH + 50, 100);
+	Vector2 startPos;
+	Vector2 endPos;
+
+	//const Vector2 startPosLeftSide = Vector2(-50, 100);
+	//const Vector2 startPosRightSide = Vector2(Globals::WINDOW_WIDTH + 50, 100);
 
 
 };

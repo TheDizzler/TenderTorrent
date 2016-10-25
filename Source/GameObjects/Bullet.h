@@ -1,9 +1,6 @@
 #include "../pch.h"
 #pragma once
 
-//#include "../DXTKGui/BaseGraphics/Sprite.h"
-//#include "../globals.h"
-
 
 static const Vector2 weaponStore = Vector2(-511, -511);
 
@@ -16,17 +13,16 @@ public:
 	~Bullet();
 
 	virtual void update(double deltaTime);
-	virtual void draw(SpriteBatch* batch, Sprite* baseSprite);
+	//void draw(SpriteBatch* batch, Sprite* baseSprite);
 
 	/** Normalized direction vector of projectile. */
 	Vector2 direction;
 
 
 	int damage = 1;
+	int bulletSpeed = 400;
 protected:
 
 	float timeAlive = 0;
-
-	int bulletSpeed = 400;
 
 };

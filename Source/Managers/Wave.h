@@ -20,10 +20,8 @@ public:
 	void draw(SpriteBatch* batch);
 
 
-	//vector<EnemyShip*> enemyShips;
-	vector<Bullet*> bullets;
+	vector<Bullet*> liveBullets;
 	vector<EnemyShip*> shipStore;
-	//vector<Bullet*> bulletStore;
 	
 protected:
 	size_t MAX_SHIPS_IN_STORE = 18;
@@ -31,11 +29,10 @@ protected:
 	
 	virtual bool checkForLaunch() = 0;
 
-	unique_ptr<Sprite> sharedShipSprite;
-	unique_ptr<Sprite> sharedBulletSprite;
+	//unique_ptr<Sprite> sharedShipSprite;
 
 	
-	const double timeBetweenChecks = 3;
+	double timeBetweenChecks = 3;
 	double timeUntilNextCheck = timeBetweenChecks;
 	double timeSinceLastLaunch = 0;
 	int maxTimeBetweenLaunches = 25;

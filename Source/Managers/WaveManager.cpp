@@ -47,7 +47,7 @@ void WaveManager::update(double deltaTime, PlayerShip* player) {
 	for (Wave* wave : waves) {
 		wave->update(deltaTime, player);
 
-		for (Bullet* bullet : wave->bullets) {
+		for (Bullet* bullet : wave->liveBullets) {
 			bullet->update(deltaTime);
 			if (bullet->getHitArea()->collision(player->getHitArea())) {
 

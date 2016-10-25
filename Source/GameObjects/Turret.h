@@ -18,7 +18,7 @@ public:
 
 
 protected:
-	virtual void fillBulletStore();
+	virtual void fillBulletStore(GraphicsAsset* bulletAsset);
 
 private:
 

@@ -3,24 +3,29 @@
 
 	<gfx dir="gfx/">
 
+		<!-- Bullets and other shooty things -->
 		<sprite name="Enemy Bullet A" file="bullet yellow.dds"/>
 		<sprite name="Cross Bullet" file="cross bullet.dds"/>
 		<sprite name="Laserbolt" file="laserbolt(24x24).dds"/>
+		<sprite name="Sun Bullet" file="sunball.dds"/>
 
 
+		<!-- Enemy ship sprites -->
 		<sprite name="EnemyShip RearAttack" file="enemy ship A.dds"/>
 		<sprite name="EnemyShip Star" file="enemy ship B.dds"/>
+
+		<!-- Player ship sprites -->
 		<sprite name="PlayerShip Hull" file="HeroShip.dds"/>
 		<sprite name="PlayerShip Turret" file="Turret(24x24).dds"/>
 
-		<sprite name="Sun Bullet" file="sunball.dds"/>
 		
 
 
+		<!-- Miscl stuff -->
 		<sprite name="Corner Frame" file="corner frame.dds"/>
 
 
-
+		<!-- Level previews -->
 		<sprite name="Preview Mako" file="previews/mako preview.dds"/>
 		<sprite name="Preview Shara" file="previews/shara preview.dds"/>
 

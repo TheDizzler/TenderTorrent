@@ -11,6 +11,11 @@ EnemyShip::EnemyShip(const Vector2& position) : Sprite(position) {
 }
 
 EnemyShip::~EnemyShip() {
+
+	for (Bullet* bullet : bulletStore)
+		delete bullet;
+
+	bulletStore.clear();
 }
 
 
@@ -18,11 +23,11 @@ void EnemyShip::update(double deltaTime) {
 	Sprite::update(deltaTime);
 }
 
-void EnemyShip::draw(SpriteBatch* batch, Sprite* baseShip) {
-
-	batch->Draw(baseShip->getTexture().Get(), position, &(baseShip->getRect()),
-		tint, rotation, baseShip->getOrigin(), scale, SpriteEffects_None, layerDepth);
-}
+//void EnemyShip::draw(SpriteBatch* batch, Sprite* baseShip) {
+//
+//	batch->Draw(baseShip->getTexture().Get(), position, &(baseShip->getRect()),
+//		tint, rotation, baseShip->getOrigin(), scale, SpriteEffects_None, layerDepth);
+//}
 
 bool EnemyShip::readyToFire() {
 
@@ -36,12 +41,15 @@ bool EnemyShip::readyToFire() {
 
 EnemyBullet* EnemyShip::launchBullet(Vector2 target) {
 
-	EnemyBullet* bullet = new EnemyBullet(weaponLocation);
+	EnemyBullet* bullet = bulletStore[nextBulletInStore++];
+	bullet->setPosition(weaponLocation);
 	Vector2 direction = target - weaponLocation;
 	direction.Normalize();
 	bullet->direction = direction;
 	bullet->isAlive = true;
 
+	if (nextBulletInStore >= bulletStore.size())
+		nextBulletInStore = 0;
 	return bullet;
 }
 

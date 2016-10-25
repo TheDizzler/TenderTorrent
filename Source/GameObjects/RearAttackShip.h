@@ -11,7 +11,6 @@ public:
 
 	RearAttackShip();
 	RearAttackShip(xml_node shipNode);
-	RearAttackShip(bool rightSide);
 	~RearAttackShip();
 
 	virtual void reset() override;
@@ -23,16 +22,13 @@ public:
 private:
 
 	bool fired = false;
-	const Vector2 startPosLeftSide = Vector2(120, Globals::WINDOW_HEIGHT + 50);
-	const Vector2 startPosRightSide = Vector2(Globals::WINDOW_WIDTH - 120, Globals::WINDOW_HEIGHT + 50);
 
 	Vector2 controlPoint;
-
 	Vector2 startPos;
 	Vector2 climaxPos;
 	Vector2 endPos;
 
-	double timeAlive = 0;
+	
 
 
 };

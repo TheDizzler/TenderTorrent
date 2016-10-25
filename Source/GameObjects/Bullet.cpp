@@ -27,12 +27,12 @@ void Bullet::update(double deltaTime) {
 	Sprite::update(deltaTime);
 }
 
-void Bullet::draw(SpriteBatch* batch, Sprite* baseSprite) {
-
-	batch->Draw(baseSprite->getTexture().Get(), position,
-		&(baseSprite->getRect()), tint, rotation, baseSprite->getOrigin(),
-		scale, SpriteEffects_None, layerDepth);
-
-}
+//void Bullet::draw(SpriteBatch* batch, Sprite* baseSprite) {
+//
+//	batch->Draw(baseSprite->getTexture().Get(), position,
+//		&(baseSprite->getRect()), tint, rotation, baseSprite->getOrigin(),
+//		scale, SpriteEffects_None, layerDepth);
+//
+//}
 
 

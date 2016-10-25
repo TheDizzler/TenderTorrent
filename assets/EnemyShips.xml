@@ -4,7 +4,7 @@
 	<ship name="Rear Attack Ship" mirrored="true">
 		<sprite>EnemyShip RearAttack</sprite>
 		<health>6</health>
-		<speed factor="3.0"/>
+		<speed>0</speed>
 		<weaponPoints>
 			<weapon type="Turret Cannon">
 				<location x="0" y="-8"/>
@@ -28,7 +28,39 @@
 			</mirror>
 		</mirrors>
 
+		<waveData maxTimeBetweenWaves="25" timeBetweenChanceForWave="3">
+		</waveData>
+
 	</ship>
+
+
+	<ship name="Star Drift Ship">
+		<sprite>EnemyShip Star</sprite>
+		<health>10</health>
+		<timeToTravel>4</timeToTravel>
+		<weaponPoints>
+			<weapon type="Triple Cannon">
+				<location x="0" y="0" />
+				<fireRate delay="2.5" repeat="1" />
+			</weapon>
+		</weaponPoints>
+
+		<mirrors>
+			<mirror name="left side">
+				<start x="-50" y="100"/>
+				<end x="WINDOW_WIDTH + 50" y="100"/>
+			</mirror>
+
+			<mirror name="right side">
+				<start x="WINDOW_WIDTH + 50" y="100"/>
+				<end x="-50" y="100"/>
+			</mirror>
+		</mirrors>
+
+		<waveData maxTimeBetweenWaves="25" timeBetweenChanceForWave="3"/>
+	</ship>
+
+
 
 	<ship name="Attack from corner then return">
 
