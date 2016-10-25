@@ -60,7 +60,8 @@ inline int getInt(xml_attribute attr) {
 
 RearAttackShip::RearAttackShip(xml_node mirrorNode) {
 
-	rotation = XM_PI;
+	xml_node parentNode = mirrorNode.parent();
+
 	xml_node startNode = mirrorNode.child("start");
 	xml_node controlNode = mirrorNode.child("controlPoint");
 	xml_node climaxNode = mirrorNode.child("climax");
@@ -71,13 +72,23 @@ RearAttackShip::RearAttackShip(xml_node mirrorNode) {
 	endPos = Vector2(getInt(endNode.attribute("x")), getInt(endNode.attribute("y")));
 
 
-	// changes these to read xml
-	maxHealth = 6;
+	/*xml_node weaponPointsNode = parentNode.child("weaponPoints");
+	for (xml_node weaponNode = weaponPointsNode.child("weapon");
+		weaponNode; weaponNode = weaponNode.next_sibling()) {
+
+		const char_t* weaponType = weaponNode.attribute("type").as_string();
+
+	}*/
+
+
+	maxHealth = parentNode.child("health").text().as_int();
 
 
 	position = startPos;
 	weaponLocation = position;
 	health = maxHealth;
+
+	rotation = XM_PI;
 }
 
 

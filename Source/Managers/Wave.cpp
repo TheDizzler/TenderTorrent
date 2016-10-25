@@ -49,10 +49,6 @@ void Wave::update(double deltaTime, PlayerShip* player) {
 
 	for (EnemyShip* enemy : shipStore) {
 		if (enemy->isAlive) {
-		//EnemyShip* dead
-		//shipStore.push_back(dead);
-
-		//} else {
 			enemy->update(deltaTime, player);
 			if (enemy->readyToFire()) {
 				Bullet* bullet = enemy->launchBullet(player->getPosition());

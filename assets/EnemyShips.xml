@@ -6,7 +6,7 @@
 		<health>6</health>
 		<speed factor="3.0"/>
 		<weaponPoints>
-			<weapon type="Cannon">
+			<weapon type="Turret Cannon">
 				<location x="0" y="-8"/>
 				<fireRate delay="2.5" repeat="1" />
 			</weapon>
@@ -42,9 +42,28 @@
 
 
 	<weaponSystems>
+		<!-- For <target>, a number indicates the angle of fire, 
+			0 being straight down. "player" indicates the player is the target.
+			More that one <target> means multiple projectiles fired simultaneously. -->
 		<weaponType name="Cannon">
 			<sprite>Enemy Bullet A</sprite>
-			<targetsPlayer>true</targetsPlayer>
+			<target>0</target>
+			<damage>10</damage>
+			<bulletSpeed>400</bulletSpeed>
+		</weaponType>
+
+		<weaponType name="Turret Cannon">
+			<sprite>Enemy Bullet A</sprite>
+			<target>player</target>
+			<damage>10</damage>
+			<bulletSpeed>400</bulletSpeed>
+		</weaponType>
+
+		<weaponType name="Triple Cannon">
+			<sprite>Enemy Bullet A</sprite>
+			<target>30</target>
+			<target>0</target>
+			<target>-30</target>
 			<damage>10</damage>
 			<bulletSpeed>400</bulletSpeed>
 		</weaponType>

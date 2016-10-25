@@ -15,17 +15,7 @@ bool RearAttackWave::initialize(GFXAssetManager* gfxAssets, xml_node shipNode) {
 	GraphicsAsset* ship = gfxAssets->getAsset(shipName);
 	if (ship == NULL) {
 		wostringstream wss;
-		wss << "Unable to find asset " << shipName;
-		wss << " in RearAttackWave.";
-		GameEngine::showErrorDialog(wss.str(), L"This is bad");
-		return true;
-	}
-
-	const char_t* bulletName = "Enemy Bullet A";
-	GraphicsAsset* bullet = gfxAssets->getAsset(bulletName);
-	if (bullet == NULL) {
-		wostringstream wss;
-		wss << "Unable to find asset " << bulletName;
+		wss << "Unable to find ship asset " << shipName;
 		wss << " in RearAttackWave.";
 		GameEngine::showErrorDialog(wss.str(), L"This is bad");
 		return true;
@@ -33,26 +23,49 @@ bool RearAttackWave::initialize(GFXAssetManager* gfxAssets, xml_node shipNode) {
 	sharedShipSprite.reset(new Sprite());
 	sharedShipSprite->load(ship);
 
+	xml_node weaponSystemsNode = shipNode.parent().child("weaponSystems");
+	xml_node weaponPointsNode = shipNode.child("weaponPoints");
+	xml_node weaponNode = weaponPointsNode.child("weapon");
+	/*for (xml_node weaponNode = weaponPointsNode.child("weapon");
+		weaponNode; weaponNode = weaponNode.next_sibling()) {*/
+
+	const char_t* weaponTypeName = weaponNode.attribute("type").as_string();
+	xml_node weaponTypeNode = weaponSystemsNode.find_child_by_attribute("weaponType", "name", weaponTypeName);
+	//}
+
+	const char_t* bulletName = weaponTypeNode.child("sprite").text().as_string();
+	GraphicsAsset* bullet = gfxAssets->getAsset(bulletName);
+	if (bullet == NULL) {
+		wostringstream wss;
+		wss << "Unable to find weapon asset " << bulletName;
+		wss << " in RearAttackWave.";
+		GameEngine::showErrorDialog(wss.str(), L"This is bad");
+		return true;
+	}
+
+
 	sharedBulletSprite.reset(new Sprite());
 	sharedBulletSprite->load(bullet);
 
 
 	// fill ship store
-	for (int i = 0; i < 18; ++i) {
-		for (xml_node mirrorNode = shipNode.child("mirrors").child("mirror");
-			mirrorNode; mirrorNode = mirrorNode.next_sibling()) {
+	xml_node mirrorsNode = shipNode.child("mirrors");
+	//if (!mirrorsNode) {
+	//	for (int i = 0; i < MAX_SHIPS_IN_STORE; ++i) {
+
+
+	//	}
+	//} else {
+	for (int i = 0; i < MAX_SHIPS_IN_STORE; ++i) {
+		for (xml_node mirrorNode : shipNode.child("mirrors").children("mirror")) {
+		//= shipNode.child("mirrors").child("mirror");
+			//mirrorNode; mirrorNode = mirrorNode.next_sibling()) {
 			RearAttackShip* enemy = new RearAttackShip(mirrorNode);
 			enemy->setDimensions(sharedShipSprite.get());
 			shipStore.push_back(enemy);
 		}
-		/*RearAttackShip* enemy = new RearAttackShip(false);
-		enemy->setDimensions(sharedShipSprite.get());
-		shipStore.push_back(enemy);
-		enemy = new RearAttackShip(true);
-		enemy->setDimensions(sharedShipSprite.get());
-		shipStore.push_back(enemy);*/
 	}
-
+//}
 
 	return true;
 }
@@ -91,21 +104,11 @@ bool RearAttackWave::checkForLaunch() {
 
 void RearAttackWave::launchNextMiniWave() {
 
-	/*RearAttackShip* enemy = new RearAttackShip(false);
-	enemy->setDimensions(sharedShipSprite.get());
-	enemyShips.push_back(enemy);
-	enemy = new RearAttackShip(true);
-	enemy->setDimensions(sharedShipSprite.get());
-	enemyShips.push_back(enemy);*/
 
 	EnemyShip* next = shipStore[nextShipInStore++];
-	//EnemyShip* next = shipStore.back();
 	next->reset();
-	//activeShips.push_back(next);
-	//shipStore.pop_back();
 	next = shipStore[nextShipInStore++];
 	next->reset();
-	//activeShips.push_back(next);
 
 	if (nextShipInStore >= shipStore.size())
 		nextShipInStore = 0;

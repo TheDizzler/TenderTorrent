@@ -21,11 +21,12 @@ public:
 
 
 	//vector<EnemyShip*> enemyShips;
-	//vector<EnemyShip*> activeShips;
-	vector<EnemyShip*> shipStore;
 	vector<Bullet*> bullets;
-protected:
+	vector<EnemyShip*> shipStore;
+	//vector<Bullet*> bulletStore;
 	
+protected:
+	size_t MAX_SHIPS_IN_STORE = 18;
 	size_t nextShipInStore = 0;
 	
 	virtual bool checkForLaunch() = 0;
