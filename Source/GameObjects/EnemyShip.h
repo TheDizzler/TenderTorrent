@@ -37,7 +37,7 @@ protected:
 	int maxHealth = 10;
 	int health = 10;
 
-	bool fireReady = true;
+	bool fireReady = false;
 	//int speed = 200;
 
 

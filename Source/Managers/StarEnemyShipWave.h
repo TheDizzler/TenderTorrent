@@ -13,8 +13,5 @@ public:
 	virtual void launchNewWave() override;
 
 protected:
-	virtual bool checkForLaunch() override;
-
-private:
 
 };

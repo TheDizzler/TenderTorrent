@@ -50,18 +50,6 @@ StarEnemyShip::StarEnemyShip(xml_node mirrorNode) {
 	health = maxHealth;
 }
 
-//StarEnemyShip::StarEnemyShip(bool isRght) {
-//
-//	rightSide = isRght;
-//	if (rightSide)
-//		position = startPosRightSide;
-//	else
-//		position = startPosLeftSide;
-//
-//	weaponLocation = position;
-//
-//	health = 10;
-//}
 
 StarEnemyShip::~StarEnemyShip() {
 }
@@ -73,6 +61,7 @@ void StarEnemyShip::reset() {
 	health = maxHealth;
 	isAlive = true;
 	fired = false;
+	fireReady = false;
 }
 
 
@@ -82,6 +71,11 @@ void StarEnemyShip::update(double deltaTime, PlayerShip* player) {
 	double percent = timeAlive / timeToTravel;
 
 	position = Vector2::Lerp(startPos, endPos, percent);
+
+	if (percent >= .75 && !fired) {
+		fireReady = true;
+		fired = true;
+	}
 
 	isAlive = percent < 1;
 

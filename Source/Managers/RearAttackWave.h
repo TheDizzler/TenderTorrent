@@ -4,8 +4,6 @@
 #include "Wave.h"
 #include "../GameObjects/RearAttackShip.h"
 
-
-
 class RearAttackWave : public Wave {
 public:
 	RearAttackWave();
@@ -16,8 +14,6 @@ public:
 
 	virtual void update(double deltaTime, PlayerShip* player) override;
 
-protected:
-	virtual bool checkForLaunch() override;
 private:
 
 	void launchNextMiniWave();

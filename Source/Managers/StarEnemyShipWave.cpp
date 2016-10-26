@@ -43,13 +43,6 @@ void StarEnemyShipWave::launchNewWave() {
 
 	timeSinceLastLaunch = 0;
 
-	/*StarEnemyShip* enemy = new StarEnemyShip(false);
-	enemy->setDimensions(sharedShipSprite.get());
-	enemyShips.push_back(enemy);
-	enemy = new StarEnemyShip(true);
-	enemy->setDimensions(sharedShipSprite.get());
-	enemyShips.push_back(enemy);*/
-
 	EnemyShip* next = shipStore[nextShipInStore++];
 	next->reset();
 	next = shipStore[nextShipInStore++];
@@ -57,15 +50,4 @@ void StarEnemyShipWave::launchNewWave() {
 
 	if (nextShipInStore >= shipStore.size())
 		nextShipInStore = 0;
-}
-
-#include <random>
-bool StarEnemyShipWave::checkForLaunch() {
-	
-	mt19937 rng;
-	rng.seed(random_device{}());
-	uniform_int_distribution<mt19937::result_type> rand((int) timeSinceLastLaunch, maxTimeBetweenLaunches);
-	if (rand(rng) >= maxTimeBetweenLaunches - 2)
-		return true;
-	return false;
 }

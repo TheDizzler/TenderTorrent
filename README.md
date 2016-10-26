@@ -11,13 +11,18 @@ GUI made with DirectXTKGui https://github.com/TheDizzler/DXTKGui
 >- PugiXML (http://pugixml.org/)
 
 
-# Todo:
+# Todo now:
+>- level scroll patterns
+>- level end state :O
 >- animations!
 >- death animations
 >- sfx (warning, shooting, explosions)
 >- music
->- ~~more levels~~
->- -improve enemy movement-
->- Put WeaponSystems and EnemyWaves in XML files (for live editing)
+>- ~~improve enemy movement~~
+>- more enemy types
+>- Put WeaponSystems ~~and EnemyWaves~~ in XML files (for live editing)
+
+# Todo later:
 >- ship selection
 >- weapon upgrades
+>- ~~more levels~~

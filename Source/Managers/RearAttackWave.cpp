@@ -65,16 +65,6 @@ void RearAttackWave::update(double deltaTime, PlayerShip* player) {
 	}
 }
 
-#include <random>
-bool RearAttackWave::checkForLaunch() {
-
-	mt19937 rng;
-	rng.seed(random_device{}());
-	uniform_int_distribution<mt19937::result_type> rand((int) timeSinceLastLaunch, maxTimeBetweenLaunches);
-	if (rand(rng) >= maxTimeBetweenLaunches - 2)
-		return true;
-	return false;
-}
 
 void RearAttackWave::launchNextMiniWave() {
 

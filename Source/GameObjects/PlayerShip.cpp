@@ -20,10 +20,6 @@ PlayerShip::PlayerShip(const Vector2& pos) : Sprite(pos) {
 
 PlayerShip::~PlayerShip() {
 
-	/*delete rightWeaponSlot;
-	delete leftWeaponSlot;
-	delete centerWeaponSlot;*/
-
 	liveBullets.clear();
 }
 
@@ -34,6 +30,7 @@ void PlayerShip::reset() {
 	liveBullets.clear();
 
 	isAlive = true;
+	maxEnergy = startMaxEnergy;
 	energy = startMaxEnergy;
 	position = startPosition;
 

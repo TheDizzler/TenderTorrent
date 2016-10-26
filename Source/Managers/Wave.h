@@ -27,7 +27,7 @@ protected:
 	size_t MAX_SHIPS_IN_STORE = 18;
 	size_t nextShipInStore = 0;
 	
-	virtual bool checkForLaunch() = 0;
+	virtual bool checkForLaunch();
 
 	//unique_ptr<Sprite> sharedShipSprite;
 
@@ -36,6 +36,8 @@ protected:
 	double timeUntilNextCheck = timeBetweenChecks;
 	double timeSinceLastLaunch = 0;
 	int maxTimeBetweenLaunches = 25;
+
+
 private:
 
 

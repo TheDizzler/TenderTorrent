@@ -74,6 +74,7 @@ void RearAttackShip::reset() {
 	timeAlive = 0;
 	isAlive = true;
 	fired = false;
+	fireReady = false;
 }
 
 
@@ -98,13 +99,13 @@ void RearAttackShip::update(double deltaTime, PlayerShip* player) {
 	//	//percent *= percent;
 	//	position = Vector2::Lerp(climaxPos, endPos, percent);
 
-	if (position.y > Globals::WINDOW_HEIGHT + 120) {
-		isAlive = false;
-	}
+	
 
 	if (!fired && timeAlive >= timeToFire) {
 		fireReady = true;
 		fired = true;
+	} else if (position.y > Globals::WINDOW_HEIGHT + 120) {
+		isAlive = false;
 	}
 
 	weaponLocation = position;

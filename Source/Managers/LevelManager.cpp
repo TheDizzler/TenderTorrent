@@ -91,6 +91,7 @@ bool LevelManager::initialize(ComPtr<ID3D11Device> device, MouseController* mous
 	return true;
 }
 
+
 bool LevelManager::loadLevel(ComPtr<ID3D11Device> device, const char_t* levelFileName) {
 
 	playState = LOADING;
@@ -192,7 +193,6 @@ void LevelManager::update(double deltaTime,
 			playerShip->update(deltaTime, keys, mouse);
 			waveManager->update(deltaTime, playerShip.get());
 
-			//if (!pauseDownLast && keys->keyDown[KeyboardController::PAUSE]) {
 			if (!pauseDownLast && keyState.Escape) {
 				playState = PAUSED;
 				pauseDownLast = true;
@@ -230,7 +230,6 @@ void LevelManager::update(double deltaTime,
 
 			continueButton->update(deltaTime);
 			if (continueButton->clicked()
-				//|| (!pauseDownLast && keys->keyDown[KeyboardController::PAUSE])) {
 				|| (!pauseDownLast && keyState.Escape)) {
 				playState = PLAYING;
 				pauseDownLast = true;
@@ -258,7 +257,6 @@ void LevelManager::update(double deltaTime,
 		energyLabel->setText(ws);
 	}
 
-	//pauseDownLast = keys->keyDown[KeyboardController::PAUSE];
 	pauseDownLast = keyState.Escape;
 }
 
@@ -267,8 +265,6 @@ void LevelManager::draw(SpriteBatch* batch) {
 
 	bgManager->draw(batch);
 
-	//for (auto const& label : textLabels)
-		//label->draw(batch);
 
 	timerLabel->draw(batch);
 	scoreLabel->draw(batch);
@@ -280,11 +276,7 @@ void LevelManager::draw(SpriteBatch* batch) {
 
 
 	if (playState == PAUSED) {
-		//for (int w = 0; w <= Globals::WINDOW_WIDTH; w += 16)
-			//for (int h = 0; h <= Globals::WINDOW_HEIGHT; h += 16) {
-				//pauseOverlay->setPosition(Vector2(w, h));
 		pauseOverlay->draw(batch);
-			//}
 		exitButton->draw(batch);
 		continueButton->draw(batch);
 		pauseLabel->draw(batch);
