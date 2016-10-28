@@ -16,6 +16,16 @@ StarEnemyShip::StarEnemyShip(xml_node mirrorNode) {
 	endPos = Vector2(getInt(endNode.attribute("x")), getInt(endNode.attribute("y")));
 
 	xml_node weaponPointsNode = shipNode.child("weaponPoints");
+	//xml_node weaponNode = weaponPointsNode.child("weapon");
+	xml_node weaponSystemsNode = shipNode.parent().child("weaponSystems");
+
+	for (xml_node weaponNode = weaponPointsNode.child("weapon");
+		weaponNode; weaponNode = weaponNode.next_sibling()) {
+
+		weaponSystems.push_back(unique_ptr<EnemyWeaponSystem>(new EnemyWeaponSystem(weaponNode, weaponSystemsNode)));
+
+	}
+	/*xml_node weaponPointsNode = shipNode.child("weaponPoints");
 	xml_node weaponNode = weaponPointsNode.child("weapon");
 	xml_node weaponSystemsNode = shipNode.parent().child("weaponSystems");
 
@@ -38,7 +48,7 @@ StarEnemyShip::StarEnemyShip(xml_node mirrorNode) {
 		bullet->bulletSpeed = bulletSpeed;
 		bullet->load(bulletAsset);
 		bulletStore.push_back(bullet);
-	}
+	}*/
 
 
 	timeToTravel = shipNode.child("timeToTravel").text().as_double();
@@ -46,7 +56,7 @@ StarEnemyShip::StarEnemyShip(xml_node mirrorNode) {
 
 
 	position = startPos;
-	weaponLocation = position;
+	//weaponLocation = position;
 	health = maxHealth;
 }
 
@@ -57,28 +67,41 @@ StarEnemyShip::~StarEnemyShip() {
 
 void StarEnemyShip::reset() {
 	position = startPos;
-	weaponLocation = position;
+	//weaponLocation = position;
 	health = maxHealth;
+	timeAlive = 0;
 	isAlive = true;
-	fired = false;
-	fireReady = false;
+	//fired = false;
+	//fireReady = false;
+	for (auto const& weapon : weaponSystems) {
+		weapon->updatePosition(position);
+		weapon->fired = false;
+	}
 }
 
 
-void StarEnemyShip::update(double deltaTime, PlayerShip* player) {
+void StarEnemyShip::update(double deltaTime, PlayerShip* player, vector<Bullet*>& liveBullets) {
 
 	timeAlive += deltaTime;
 	double percent = timeAlive / timeToTravel;
 
 	position = Vector2::Lerp(startPos, endPos, percent);
 
-	if (percent >= .75 && !fired) {
+	/*if (percent >= .75 && !fired) {
 		fireReady = true;
 		fired = true;
-	}
+	}*/
 
 	isAlive = percent < 1;
 
-	weaponLocation = position;
+	for (auto const& weapon : weaponSystems) {
+		weapon->updatePosition(position);
+		if (percent >= .75 && !weapon->fired) {
+			//fireReady = true;
+			weapon->fired = true;
+			Bullet* bullet = weapon->launchBullet(player->getPosition());
+			liveBullets.push_back(bullet);
+		}
+	}
 	EnemyShip::update(deltaTime);
 }

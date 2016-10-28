@@ -2,7 +2,6 @@
 #pragma once
 
 #include "WeaponSystem.h"
-#include "SunBullet.h"
 
 class Turret : public WeaponSystem {
 public:

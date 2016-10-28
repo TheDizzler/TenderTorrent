@@ -6,47 +6,63 @@
 #include "EnemyBullet.h"
 
 
-class EnemyShip : public Sprite {
 
+
+class EnemyShip : public Sprite {
+protected:
+	struct EnemyWeaponSystem {
+		EnemyWeaponSystem(xml_node weaponPointNode, xml_node weaponSystemsNode);
+		~EnemyWeaponSystem();
+
+		void reset(const Vector2& shipPosition);
+
+		Vector2 systemLocation;
+		vector<EnemyBullet*> bulletStore;
+		size_t nextBulletInStore = 0;
+		size_t MAX_BULLETS_IN_STORE = 1;
+
+		bool fired = false;
+		double timeSinceFired = 0;
+		//int timesFired = 0;
+
+		void updatePosition(Vector2 shipPosition);
+		//bool fireReady = false;
+		//bool readyToFire();
+		virtual EnemyBullet* launchBullet(Vector2 target);
+
+	private:
+		/* Weapon system position relative to ship's origin. */
+		Vector2 positionOffset;
+	};
 public:
 	/** For constructing base sprites */
 	EnemyShip();
 	/** For constructing actual enemies seen on stage. */
 	EnemyShip(const Vector2& position);
 	~EnemyShip();
-	virtual void reset() = 0;
+	virtual void reset();
 
-	virtual void update(double deltaTime, PlayerShip* player) = 0;
+	virtual void update(double deltaTime, PlayerShip* player, vector<Bullet*>& liveBullets) = 0;
 	virtual void update(double deltaTime);
-	//virtual void draw(SpriteBatch* batch, Sprite* baseShip);
 
-	bool readyToFire();
-	virtual EnemyBullet* launchBullet(Vector2 target);
+	//bool readyToFire();
+
 
 	void takeDamage(int damageTaken);
 
 	/** Points awarded for killing. */
 	int points = 100;
 
+	vector<unique_ptr<EnemyWeaponSystem>> weaponSystems;
+
 protected:
 
-	vector<EnemyBullet*> bulletStore;
-	size_t nextBulletInStore = 0;
-	size_t MAX_BULLETS_IN_STORE = 1;
 
 	int maxHealth = 10;
 	int health = 10;
 
-	bool fireReady = false;
-	//int speed = 200;
+	Vector2 startPos;
 
-
-	Vector2 weaponLocation;
-
-	double timeSinceFired = 0;
-	int timesFired = 0;
 	double timeAlive = 0;
-
-
 
 };

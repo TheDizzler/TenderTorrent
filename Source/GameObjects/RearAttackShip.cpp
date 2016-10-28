@@ -1,6 +1,6 @@
 #include "RearAttackShip.h"
 
-#include "../Engine/GameEngine.h"
+//#include "../Engine/GameEngine.h"
 #include "../globals.h"
 using namespace Globals;
 RearAttackShip::RearAttackShip(xml_node mirrorNode) {
@@ -18,32 +18,35 @@ RearAttackShip::RearAttackShip(xml_node mirrorNode) {
 
 
 	xml_node weaponPointsNode = shipNode.child("weaponPoints");
-	xml_node weaponNode = weaponPointsNode.child("weapon");
+	//xml_node weaponNode = weaponPointsNode.child("weapon");
 	xml_node weaponSystemsNode = shipNode.parent().child("weaponSystems");
 
-	/*for (xml_node weaponNode = weaponPointsNode.child("weapon");
-		weaponNode; weaponNode = weaponNode.next_sibling()) {*/
-	const char_t* weaponTypeName = weaponNode.attribute("type").as_string();
-	xml_node weaponTypeNode = weaponSystemsNode.find_child_by_attribute("weaponType", "name", weaponTypeName);
-	int damage = weaponTypeNode.child("damage").text().as_int();
-	int bulletSpeed = weaponTypeNode.child("bulletSpeed").text().as_int();
-	const char_t* bulletName = weaponTypeNode.child("sprite").text().as_string();
-	GraphicsAsset* bulletAsset = GameManager::gfxAssets->getAsset(bulletName);
-	if (bulletAsset == NULL) {
-		wostringstream wss;
-		wss << "Unable to find weapon asset " << bulletName;
-		wss << " in RearAttackShip.";
-		GameEngine::showErrorDialog(wss.str(), L"This is bad");
-		return;
+	for (xml_node weaponNode = weaponPointsNode.child("weapon");
+		weaponNode; weaponNode = weaponNode.next_sibling()) {
+
+		weaponSystems.push_back(unique_ptr<EnemyWeaponSystem>(new EnemyWeaponSystem(weaponNode, weaponSystemsNode)));
+
+		/*const char_t* weaponTypeName = weaponNode.attribute("type").as_string();
+		xml_node weaponTypeNode = weaponSystemsNode.find_child_by_attribute("weaponType", "name", weaponTypeName);
+		int damage = weaponTypeNode.child("damage").text().as_int();
+		int bulletSpeed = weaponTypeNode.child("bulletSpeed").text().as_int();
+		const char_t* bulletName = weaponTypeNode.child("sprite").text().as_string();
+		GraphicsAsset* bulletAsset = GameManager::gfxAssets->getAsset(bulletName);
+		if (bulletAsset == NULL) {
+			wostringstream wss;
+			wss << "Unable to find weapon asset " << bulletName;
+			wss << " in RearAttackShip.";
+			GameEngine::showErrorDialog(wss.str(), L"This is bad");
+			return;
+		}
+		for (int i = 0; i < MAX_BULLETS_IN_STORE; ++i) {
+			EnemyBullet* bullet = new EnemyBullet();
+			bullet->damage = damage;
+			bullet->bulletSpeed = bulletSpeed;
+			bullet->load(bulletAsset);
+			bulletStore.push_back(bullet);
+		}*/
 	}
-	for (int i = 0; i < MAX_BULLETS_IN_STORE; ++i) {
-		EnemyBullet* bullet = new EnemyBullet();
-		bullet->damage = damage;
-		bullet->bulletSpeed = bulletSpeed;
-		bullet->load(bulletAsset);
-		bulletStore.push_back(bullet);
-	}
-	//}
 
 
 
@@ -52,7 +55,7 @@ RearAttackShip::RearAttackShip(xml_node mirrorNode) {
 
 
 	position = startPos;
-	weaponLocation = position;
+	//weaponLocation = position;
 	health = maxHealth;
 
 	rotation = XM_PI;
@@ -67,20 +70,19 @@ RearAttackShip::RearAttackShip() {
 RearAttackShip::~RearAttackShip() {
 }
 
-void RearAttackShip::reset() {
-	position = startPos;
-	weaponLocation = position;
-	health = maxHealth;
-	timeAlive = 0;
-	isAlive = true;
-	fired = false;
-	fireReady = false;
-}
+//void RearAttackShip::reset() {
+//	position = startPos;
+//	for (auto const& weapon : weaponSystems)
+//		weapon->reset(position);
+//	health = maxHealth;
+//	timeAlive = 0;
+//	isAlive = true;
+//}
 
 
 double timeToClimax = 3.0;
 double timeToFire = 2.5;
-void RearAttackShip::update(double deltaTime, PlayerShip* player) {
+void RearAttackShip::update(double deltaTime, PlayerShip* player, vector<Bullet*>& liveBullets) {
 
 	timeAlive += deltaTime;
 
@@ -99,18 +101,24 @@ void RearAttackShip::update(double deltaTime, PlayerShip* player) {
 	//	//percent *= percent;
 	//	position = Vector2::Lerp(climaxPos, endPos, percent);
 
-	
 
-	if (!fired && timeAlive >= timeToFire) {
-		fireReady = true;
-		fired = true;
-	} else if (position.y > Globals::WINDOW_HEIGHT + 120) {
-		isAlive = false;
+	for (auto const& weapon : weaponSystems) {
+		weapon->updatePosition(position);
+		if (!weapon->fired && timeAlive >= timeToFire) {
+			//fireReady = true;
+			weapon->fired = true;
+			Bullet* bullet = weapon->launchBullet(player->getPosition());
+			liveBullets.push_back(bullet);
+		}
 	}
 
-	weaponLocation = position;
+
 
 	EnemyShip::update(deltaTime);
+
+	if (position.y > Globals::WINDOW_HEIGHT + 120) {
+		isAlive = false;
+	}
 }
 
 

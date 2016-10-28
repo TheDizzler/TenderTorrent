@@ -22,15 +22,12 @@ bool StarEnemyShipWave::initialize(GFXAssetManager* gfxAssets, xml_node shipNode
 		GameEngine::showErrorDialog(wss.str(), L"This is bad");
 		return true;
 	}
-	//sharedShipSprite.reset(new Sprite());
-	//sharedShipSprite->load(ship);
 
 	MAX_SHIPS_IN_STORE = 4;
 
 	for (int i = 0; i < MAX_SHIPS_IN_STORE; ++i) {
 		for (xml_node mirrorNode : shipNode.child("mirrors").children("mirror")) {
 			StarEnemyShip* enemy = new StarEnemyShip(mirrorNode);
-			//enemy->setDimensions(sharedShipSprite.get());
 			enemy->load(ship);
 			shipStore.push_back(enemy);
 		}

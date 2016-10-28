@@ -25,16 +25,12 @@ bool RearAttackWave::initialize(GFXAssetManager* gfxAssets, xml_node shipNode) {
 		GameEngine::showErrorDialog(wss.str(), L"This is bad");
 		return true;
 	}
-	//sharedShipSprite.reset(new Sprite());
-	//sharedShipSprite->load(ship);
-
 
 	// fill ship store
 	xml_node mirrorsNode = shipNode.child("mirrors");
 	for (int i = 0; i < MAX_SHIPS_IN_STORE; ++i) {
 		for (xml_node mirrorNode : shipNode.child("mirrors").children("mirror")) {
 			RearAttackShip* enemy = new RearAttackShip(mirrorNode);
-			//enemy->setDimensions(sharedShipSprite.get());
 			enemy->load(ship);
 			shipStore.push_back(enemy);
 		}

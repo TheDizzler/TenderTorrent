@@ -8,10 +8,8 @@ WeaponSystem::WeaponSystem(Vector2 offset) {
 
 WeaponSystem::~WeaponSystem() {
 
-	for each (Bullet* bullet in bulletStore)
-		delete bullet;
-
 }
+
 
 void WeaponSystem::loadBulletTexture(GraphicsAsset* bulletAsset) {
 

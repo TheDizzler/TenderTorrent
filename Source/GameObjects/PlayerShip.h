@@ -1,8 +1,6 @@
 #include "../pch.h"
 #pragma once
 
-//#include <dinput.h>
-
 #include "../Managers/GFXAssetManager.h"
 
 #include "../DXTKGui/Controllers/MouseController.h"

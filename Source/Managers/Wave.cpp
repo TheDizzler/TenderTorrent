@@ -46,11 +46,17 @@ void Wave::update(double deltaTime, PlayerShip* player) {
 
 	for (EnemyShip* enemy : shipStore) {
 		if (enemy->isAlive) {
-			enemy->update(deltaTime, player);
-			if (enemy->readyToFire()) {
+			enemy->update(deltaTime, player, liveBullets);
+			/*if (enemy->readyToFire()) {
 				Bullet* bullet = enemy->launchBullet(player->getPosition());
 				liveBullets.push_back(bullet);
-			}
+			}*/
+
+			/*for (auto const& weapon : enemy->weaponSystems) {
+			if (weapon->readyToFire()) {
+
+
+			}*/
 		}
 	}
 

@@ -2,7 +2,7 @@
 #pragma once
 
 #include "WeaponSystem.h"
-#include "LaserBolt.h"
+//#include "LaserBolt.h"
 
 /** !!!!!!!!!!!!!!
 	TODO:

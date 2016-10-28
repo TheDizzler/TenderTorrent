@@ -13,18 +13,16 @@ public:
 	RearAttackShip(xml_node shipNode);
 	~RearAttackShip();
 
-	virtual void reset() override;
 
-	virtual void update(double deltaTime, PlayerShip* player);
+	virtual void update(double deltaTime, PlayerShip* player, vector<Bullet*>& liveBullets) override;
 
 
 
 private:
 
-	bool fired = false;
+	
 
 	Vector2 controlPoint;
-	Vector2 startPos;
 	Vector2 climaxPos;
 	Vector2 endPos;
 

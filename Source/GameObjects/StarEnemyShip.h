@@ -13,14 +13,14 @@ public:
 
 	virtual void reset() override;
 
-	virtual void update(double deltaTime, PlayerShip* player);
+	virtual void update(double deltaTime, PlayerShip* player, vector<Bullet*>& liveBullets) override;
 
 	//virtual EnemyBullet* launchBullet(Vector2 target);
 
 
 private:
 
-	bool fired = false;
+	//bool fired = false;
 	double timeToTravel;
 
 	Vector2 startPos;

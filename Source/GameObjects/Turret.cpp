@@ -1,5 +1,8 @@
 #include "Turret.h"
 
+#include "SunBullet.h"
+
+
 Turret::Turret(Vector2 locationOffset) : WeaponSystem(locationOffset) {
 
 	maxStoreSize = 12;
