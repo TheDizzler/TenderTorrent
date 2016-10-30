@@ -3,6 +3,7 @@
 
 #include "RearAttackWave.h"
 #include "StarEnemyShipWave.h"
+#include "ArrowEnemyWave.h"
 
 using namespace std;
 

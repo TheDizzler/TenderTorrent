@@ -23,8 +23,15 @@ bool WaveManager::initialize(GFXAssetManager* gfxAssets) {
 		return false;
 	waves.push_back(wave);
 
+	shipNode = shipNode.next_sibling();
 	wave = new StarEnemyShipWave();
-	if (!wave->initialize(gfxAssets, shipNode.next_sibling()))
+	if (!wave->initialize(gfxAssets, shipNode))
+		return false;
+	waves.push_back(wave);
+
+	shipNode = shipNode.next_sibling();
+	wave = new ArrowEnemyWave();
+	if (!wave->initialize(gfxAssets, shipNode))
 		return false;
 	waves.push_back(wave);
 
@@ -50,7 +57,6 @@ void WaveManager::update(double deltaTime, PlayerShip* player) {
 		for (Bullet* bullet : wave->liveBullets) {
 			bullet->update(deltaTime);
 			if (bullet->getHitArea()->collision(player->getHitArea())) {
-
 				bullet->isAlive = false;
 				player->takeDamage(bullet->damage);
 			}

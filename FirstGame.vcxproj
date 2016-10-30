@@ -96,6 +96,7 @@
     <ClCompile Include="Source\Engine\GraphicsEngine.cpp" />
     <ClCompile Include="Source\Engine\Input.cpp" />
     <ClCompile Include="Source\Engine\main.cpp" />
+    <ClCompile Include="Source\GameObjects\ArrowEnemyShip.cpp" />
     <ClCompile Include="Source\GameObjects\Bullet.cpp" />
     <ClCompile Include="Source\GameObjects\EnemyBullet.cpp" />
     <ClCompile Include="Source\GameObjects\EnemyShip.cpp" />
@@ -109,6 +110,7 @@
     <ClCompile Include="Source\GameObjects\SunBullet.cpp" />
     <ClCompile Include="Source\GameObjects\Turret.cpp" />
     <ClCompile Include="Source\GameObjects\WeaponSystem.cpp" />
+    <ClCompile Include="Source\Managers\ArrowEnemyWave.cpp" />
     <ClCompile Include="Source\Managers\BackgroundManager.cpp" />
     <ClCompile Include="Source\Managers\GameManager.cpp" />
     <ClCompile Include="Source\Managers\GFXAssetManager.cpp" />
@@ -164,6 +166,7 @@
     <ClInclude Include="Source\GameObjects\PlayerShip.h" />
     <ClInclude Include="Source\GameObjects\RearAttackShip.h" />
     <ClInclude Include="Source\GameObjects\StarEnemyShip.h" />
+    <ClInclude Include="Source\GameObjects\ArrowEnemyShip.h" />
     <ClInclude Include="Source\GameObjects\SunBullet.h" />
     <ClInclude Include="Source\GameObjects\Turret.h" />
     <ClInclude Include="Source\GameObjects\WeaponSystem.h" />
@@ -176,6 +179,7 @@
     <ClInclude Include="Source\Managers\MenuManager.h" />
     <ClInclude Include="Source\Managers\RearAttackWave.h" />
     <ClInclude Include="Source\Managers\StarEnemyShipWave.h" />
+    <ClInclude Include="Source\Managers\ArrowEnemyWave.h" />
     <ClInclude Include="Source\Managers\Wave.h" />
     <ClInclude Include="Source\Managers\WaveManager.h" />
     <ClInclude Include="Source\pch.h" />
@@ -196,7 +200,9 @@
     <Xml Include="assets\mako.xml">
       <SubType>Designer</SubType>
     </Xml>
-    <Xml Include="assets\shara.xml" />
+    <Xml Include="assets\shara.xml">
+      <SubType>Designer</SubType>
+    </Xml>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{E9C22AAC-8D4D-4D44-8969-65311A131B1D}</ProjectGuid>

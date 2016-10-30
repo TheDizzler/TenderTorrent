@@ -17,12 +17,10 @@ namespace Globals {
 	ws << "some writing here" << someVariable << "\n";
 	OutputDebugString(ws.str().c_str());*/
 
-	inline int getInt(xml_attribute attr) {
+	
 
-		string value = attr.as_string();
-		if (isdigit(value[0]))
-			return attr.as_int();
-
+	inline int getIntFrom(string value) {
+		
 		int i = value.find_first_of(" ");
 		string token = value.substr(0, i);
 
@@ -69,5 +67,25 @@ namespace Globals {
 		OutputDebugString(ws.str().c_str());*/
 
 		return num;
+
 	}
+
+	/* Extract int from node text. */
+	inline int getIntFrom(xml_node node) {
+
+		string value = node.text().as_string();
+		if (isdigit(value[0]))
+			return node.text().as_int();
+		return getIntFrom(value);
+	}
+
+	/* Extract int from node attribute. */
+	inline int getIntFrom(xml_attribute attr) {
+
+		string value = attr.as_string();
+		if (isdigit(value[0]))
+			return attr.as_int();
+		return getIntFrom(value);
+	}
+
 };

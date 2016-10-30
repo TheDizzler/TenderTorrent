@@ -7,10 +7,7 @@ Wave::~Wave() {
 
 	for (EnemyShip* enemy : shipStore)
 		delete enemy;
-	//activeShips.clear();
 	shipStore.clear();
-	//for (Bullet* bullet : bullets)
-		//delete bullet;
 
 	// bullets are held in ship's store
 	liveBullets.clear();
@@ -38,8 +35,6 @@ void Wave::update(double deltaTime, PlayerShip* player) {
 			launchNewWave();
 	}
 
-	//activeShips.erase(remove_if(activeShips.begin(), activeShips.end(),
-		//[](const Sprite* sprite) { return !sprite->isAlive; }), activeShips.end());
 	liveBullets.erase(remove_if(liveBullets.begin(), liveBullets.end(),
 		[](const Sprite* sprite) { return !sprite->isAlive; }), liveBullets.end());
 
@@ -47,16 +42,6 @@ void Wave::update(double deltaTime, PlayerShip* player) {
 	for (EnemyShip* enemy : shipStore) {
 		if (enemy->isAlive) {
 			enemy->update(deltaTime, player, liveBullets);
-			/*if (enemy->readyToFire()) {
-				Bullet* bullet = enemy->launchBullet(player->getPosition());
-				liveBullets.push_back(bullet);
-			}*/
-
-			/*for (auto const& weapon : enemy->weaponSystems) {
-			if (weapon->readyToFire()) {
-
-
-			}*/
 		}
 	}
 
@@ -67,7 +52,7 @@ void Wave::draw(SpriteBatch * batch) {
 
 	for (EnemyShip* enemy : shipStore) {
 		if (enemy->isAlive)
-			enemy->draw(batch/*, sharedShipSprite.get()*/);
+			enemy->draw(batch);
 	}
 
 	for (Bullet* bullet : liveBullets)

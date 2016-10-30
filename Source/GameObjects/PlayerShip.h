@@ -10,7 +10,7 @@
 #include "Turret.h"
 
 
-static Vector2 startPosition(Globals::WINDOW_WIDTH / 2, Globals::WINDOW_HEIGHT + 175);
+static const Vector2 PLAYER_START_POSITION(Globals::WINDOW_WIDTH / 2, Globals::WINDOW_HEIGHT + 175);
 
 
 class PlayerShip : public Sprite {

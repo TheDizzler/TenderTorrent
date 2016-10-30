@@ -56,7 +56,7 @@ bool LevelManager::initialize(ComPtr<ID3D11Device> device, MouseController* mous
 	if (!waveManager->initialize(GameManager::gfxAssets.get()))
 		return false;
 
-	playerShip.reset(new PlayerShip(startPosition));
+	playerShip.reset(new PlayerShip(PLAYER_START_POSITION));
 	playerShip->load(GameManager::gfxAssets->getAsset("PlayerShip Hull"));
 	if (!playerShip->loadBullet(GameManager::gfxAssets.get())) {
 		MessageBox(NULL, L"Failed to load weapons", L"ERROR", MB_OK);

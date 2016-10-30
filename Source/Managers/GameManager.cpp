@@ -27,6 +27,11 @@ bool GameManager::initializeGame(HWND hwnd, ComPtr<ID3D11Device> dvc, MouseContr
 
 	xml_node guiAssetsNode = docAssMan->child("root").child("gui");
 	xml_node gfxAssetNode = docAssMan->child("root").child("gfx");
+	gfxAssets.reset(new GFXAssetManager(gfxAssetNode));
+	if (!gfxAssets->initialize(device)) {
+		MessageBox(0, L"Failed to load GFX Assets.", L"Fatal Error", MB_OK);
+		return false;
+	}
 
 	guiFactory.reset(new GUIFactory(hwnd, guiAssetsNode));
 	if (!guiFactory->initialize(device, gameEngine->getDeviceContext(),
@@ -37,11 +42,7 @@ bool GameManager::initializeGame(HWND hwnd, ComPtr<ID3D11Device> dvc, MouseContr
 	}
 	gameEngine->constructErrorDialogs();
 
-	gfxAssets.reset(new GFXAssetManager(gfxAssetNode));
-	if (!gfxAssets->initialize(device)) {
-		MessageBox(0, L"Failed to load GFX Assets.", L"Fatal Error", MB_OK);
-		return false;
-	}
+	
 
 	menuScreen.reset(new MenuManager());
 	menuScreen->setGameManager(this);

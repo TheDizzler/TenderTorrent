@@ -1,54 +1,41 @@
-#include "RearAttackWave.h"
+#include "ArrowEnemyWave.h"
 
-RearAttackWave::RearAttackWave() {
-
+ArrowEnemyWave::ArrowEnemyWave() {
 }
 
-RearAttackWave::~RearAttackWave() {
+
+ArrowEnemyWave::~ArrowEnemyWave() {
 }
 
 #include "../Engine/GameEngine.h"
-bool RearAttackWave::initialize(GFXAssetManager* gfxAssets, xml_node shipNode) {
-
+bool ArrowEnemyWave::initialize(GFXAssetManager * gfxAssets, xml_node shipNode) {
+	
 	xml_node waveDataNode = shipNode.child("waveData");
 	maxTimeBetweenLaunches = waveDataNode.attribute("maxTimeBetweenWaves").as_double();
 	timeBetweenChecks = waveDataNode.attribute("timeBetweenChanceForWave").as_double();
-
 
 	const char_t* shipName = shipNode.child("sprite").text().as_string();
 	GraphicsAsset* ship = gfxAssets->getAsset(shipName);
 	if (ship == NULL) {
 		wostringstream wss;
-		wss << "Unable to find ship asset " << shipName;
-		wss << " in RearAttackWave.";
+		wss << "Unable to find asset " << shipName;
+		wss << " for ArrowEnemyWave.";
 		GameEngine::showErrorDialog(wss.str(), L"This is bad");
 		return true;
 	}
 
-	MAX_SHIPS_IN_STORE = 6;
-	// fill ship store
-	xml_node mirrorsNode = shipNode.child("mirrors");
+	MAX_SHIPS_IN_STORE = 9;
+
 	for (int i = 0; i < MAX_SHIPS_IN_STORE; ++i) {
-		for (xml_node mirrorNode : shipNode.child("mirrors").children("mirror")) {
-			RearAttackShip* enemy = new RearAttackShip(mirrorNode);
+			ArrowEnemyShip* enemy = new ArrowEnemyShip(shipNode);
 			enemy->load(ship);
 			shipStore.push_back(enemy);
-		}
 	}
-
 
 	return true;
 }
 
-void RearAttackWave::launchNewWave() {
-
-	timeSinceLastLaunch = 0;
-	miniWavesLaunched = 0;
-
-	launchNextMiniWave();
-}
-
-void RearAttackWave::update(double deltaTime, PlayerShip* player) {
+void ArrowEnemyWave::update(double deltaTime, PlayerShip* player) {
 
 	Wave::update(deltaTime, player);
 
@@ -61,13 +48,17 @@ void RearAttackWave::update(double deltaTime, PlayerShip* player) {
 	}
 }
 
+void ArrowEnemyWave::launchNewWave() {
 
-void RearAttackWave::launchNextMiniWave() {
+	timeSinceLastLaunch = 0;
+	miniWavesLaunched = 0;
 
+	launchNextMiniWave();
+}
+
+void ArrowEnemyWave::launchNextMiniWave() {
 
 	EnemyShip* next = shipStore[nextShipInStore++];
-	next->reset();
-	next = shipStore[nextShipInStore++];
 	next->reset();
 
 	if (nextShipInStore >= shipStore.size())

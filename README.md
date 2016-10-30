@@ -25,4 +25,4 @@ GUI made with DirectXTKGui https://github.com/TheDizzler/DXTKGui
 # Todo later:
 >- ship selection
 >- weapon upgrades
->- ~~more levels~~
+>- more levels

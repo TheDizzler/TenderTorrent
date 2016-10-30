@@ -13,6 +13,7 @@
 		<!-- Enemy ship sprites -->
 		<sprite name="EnemyShip RearAttack" file="enemy ship A.dds"/>
 		<sprite name="EnemyShip Star" file="enemy ship B.dds"/>
+		<sprite name="EnemyShip Arrow" file="enemy ship arrow.dds"/>
 
 		<!-- Player ship sprites -->
 		<sprite name="PlayerShip Hull" file="HeroShip.dds"/>

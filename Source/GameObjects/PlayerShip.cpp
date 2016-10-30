@@ -3,7 +3,7 @@
 
 PlayerShip::PlayerShip(const Vector2& pos) : Sprite(pos) {
 
-	position = startPosition;
+	position = PLAYER_START_POSITION;
 
 	rightWeaponSlot.reset(new WeaponSystem(Vector2(26, -15)));
 	leftWeaponSlot.reset(new WeaponSystem(Vector2(-26, -15)));
@@ -32,7 +32,7 @@ void PlayerShip::reset() {
 	isAlive = true;
 	maxEnergy = startMaxEnergy;
 	energy = startMaxEnergy;
-	position = startPosition;
+	position = PLAYER_START_POSITION;
 
 	rightWeaponSlot->update(0, position);
 	leftWeaponSlot->update(0, position);

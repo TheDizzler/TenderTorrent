@@ -11,12 +11,6 @@ EnemyShip::EnemyShip(const Vector2& position) : Sprite(position) {
 }
 
 EnemyShip::~EnemyShip() {
-
-	/*for (Bullet* bullet : bulletStore)
-		delete bullet;
-
-	bulletStore.clear();*/
-
 	weaponSystems.clear();
 }
 
@@ -34,13 +28,6 @@ void EnemyShip::update(double deltaTime) {
 	Sprite::update(deltaTime);
 }
 
-//bool EnemyShip::readyToFire() {
-//
-//
-//	return false;
-//}
-
-
 
 void EnemyShip::takeDamage(int damageTaken) {
 	health -= damageTaken;
@@ -49,7 +36,7 @@ void EnemyShip::takeDamage(int damageTaken) {
 
 
 #include "../Engine/GameEngine.h"
-EnemyShip::EnemyWeaponSystem::EnemyWeaponSystem(xml_node weaponPointNode, xml_node weaponSystemsNode) {
+EnemyShip::EnemyWeaponSystem::EnemyWeaponSystem(xml_node weaponPointNode, xml_node weaponSystemsNode, bool mirrored) {
 
 	const char_t* weaponTypeName = weaponPointNode.attribute("type").as_string();
 	xml_node weaponTypeNode = weaponSystemsNode.find_child_by_attribute("weaponType", "name", weaponTypeName);
@@ -64,14 +51,24 @@ EnemyShip::EnemyWeaponSystem::EnemyWeaponSystem(xml_node weaponPointNode, xml_no
 		GameEngine::showErrorDialog(wss.str(), L"This is bad");
 		return;
 	}
+	float angle = weaponPointNode.child("angle").text().as_float()*XM_PI / 180;
+	Vector2 direction;
+	if (mirrored)
+		direction = Vector2(1, 1);
+	else
+		direction = Vector2(-1, 1);
+	direction *= Vector2(sin(angle), cos(angle));
+	direction.Normalize();
 	for (int i = 0; i < MAX_BULLETS_IN_STORE; ++i) {
 		EnemyBullet* bullet = new EnemyBullet();
 		bullet->damage = damage;
 		bullet->bulletSpeed = bulletSpeed;
+		bullet->direction = direction;
 		bullet->load(bulletAsset);
 		bulletStore.push_back(bullet);
 	}
 
+	fireDelay = weaponPointNode.child("fireRate").attribute("delay").as_float();
 	positionOffset = Vector2(weaponPointNode.child("location").attribute("x").as_int(),
 		weaponPointNode.child("location").attribute("y").as_int());
 }
@@ -85,7 +82,6 @@ EnemyShip::EnemyWeaponSystem::~EnemyWeaponSystem() {
 void EnemyShip::EnemyWeaponSystem::reset(const Vector2 & shipPosition) {
 	systemLocation = shipPosition + positionOffset;
 	fired = false;
-	//fireReady = false;
 }
 
 void EnemyShip::EnemyWeaponSystem::updatePosition(Vector2 shipPosition) {
@@ -103,6 +99,18 @@ EnemyBullet* EnemyShip::EnemyWeaponSystem::launchBullet(Vector2 target) {
 
 	if (nextBulletInStore >= bulletStore.size())
 		nextBulletInStore = 0;
+	return bullet;
+}
+
+EnemyBullet * EnemyShip::EnemyWeaponSystem::launchBullet() {
+
+	EnemyBullet* bullet = bulletStore[nextBulletInStore++];
+	bullet->setPosition(systemLocation);
+	bullet->isAlive = true;
+
+	if (nextBulletInStore >= bulletStore.size())
+		nextBulletInStore = 0;
+
 	return bullet;
 }
 

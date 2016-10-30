@@ -24,7 +24,7 @@ public:
 	vector<EnemyShip*> shipStore;
 	
 protected:
-	size_t MAX_SHIPS_IN_STORE = 18;
+	size_t MAX_SHIPS_IN_STORE = 2;
 	size_t nextShipInStore = 0;
 	
 	virtual bool checkForLaunch();

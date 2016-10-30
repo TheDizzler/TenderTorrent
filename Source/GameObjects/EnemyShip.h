@@ -11,7 +11,7 @@
 class EnemyShip : public Sprite {
 protected:
 	struct EnemyWeaponSystem {
-		EnemyWeaponSystem(xml_node weaponPointNode, xml_node weaponSystemsNode);
+		EnemyWeaponSystem(xml_node weaponPointNode, xml_node weaponSystemsNode, bool mirrored = false);
 		~EnemyWeaponSystem();
 
 		void reset(const Vector2& shipPosition);
@@ -23,19 +23,22 @@ protected:
 
 		bool fired = false;
 		double timeSinceFired = 0;
+		float fireDelay = 0;
 		//int timesFired = 0;
 
 		void updatePosition(Vector2 shipPosition);
-		//bool fireReady = false;
-		//bool readyToFire();
-		virtual EnemyBullet* launchBullet(Vector2 target);
+		/** Launches projectile at target. */
+		EnemyBullet* launchBullet(Vector2 target);
+		/** Luanches projectile at set angle. */
+		EnemyBullet* launchBullet();
 
 	private:
 		/* Weapon system position relative to ship's origin. */
 		Vector2 positionOffset;
+		//Vector2 direction;
 	};
 public:
-	/** For constructing base sprites */
+	/** For constructing base sprites. VESTIGIAL. */
 	EnemyShip();
 	/** For constructing actual enemies seen on stage. */
 	EnemyShip(const Vector2& position);
@@ -44,9 +47,6 @@ public:
 
 	virtual void update(double deltaTime, PlayerShip* player, vector<Bullet*>& liveBullets) = 0;
 	virtual void update(double deltaTime);
-
-	//bool readyToFire();
-
 
 	void takeDamage(int damageTaken);
 

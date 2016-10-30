@@ -28,7 +28,7 @@
 			</mirror>
 		</mirrors>
 
-		<waveData maxTimeBetweenWaves="25" timeBetweenChanceForWave="3">
+		<waveData maxTimeBetweenWaves="20" timeBetweenChanceForWave="3">
 		</waveData>
 
 	</ship>
@@ -37,7 +37,7 @@
 	<ship name="Star Drift Ship">
 		<sprite>EnemyShip Star</sprite>
 		<health>10</health>
-		<timeToTravel>4</timeToTravel>
+		<timeToTravel>4.8</timeToTravel>
 		<weaponPoints>
 			<weapon type="Cannon">
 				<location x="0" y="0" />
@@ -68,9 +68,26 @@
 			</mirror>
 		</mirrors>
 
-		<waveData maxTimeBetweenWaves="25" timeBetweenChanceForWave="3"/>
+		<waveData maxTimeBetweenWaves="20" timeBetweenChanceForWave="4"/>
 	</ship>
 
+
+	<ship name="ArrowEnemyShip">
+		<!-- A ship that comes in threes and has a random start location at the bottom of the screen.
+		First flies straight then drifts in a new direction after firing. -->
+		<sprite>EnemyShip Arrow</sprite>
+		<health>5</health>
+		<timeToTravel>5</timeToTravel>
+		<midPoint>WINDOW_HEIGHT / 2</midPoint>
+		<weaponPoints>
+			<weapon type="Turret Cannon">
+				<location x="0" y="0" />
+				<fireRate delay=".5" repeat="3" />
+			</weapon>
+		</weaponPoints>
+
+		<waveData maxTimeBetweenWaves="20" timeBetweenChanceForWave="5" />
+	</ship>
 
 
 	<ship name="Attack from corner then return">

@@ -219,6 +219,12 @@
     <ClCompile Include="Source\pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\GameObjects\ArrowEnemyShip.cpp">
+      <Filter>Source Files\EnemyShips</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Managers\ArrowEnemyWave.cpp">
+      <Filter>Source Files\EnemyShips</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\globals.h">
@@ -373,6 +379,12 @@
     </ClInclude>
     <ClInclude Include="Source\pch.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Managers\ArrowEnemyWave.h">
+      <Filter>Header Files\EnemyShips</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameObjects\ArrowEnemyShip.h">
+      <Filter>Header Files\EnemyShips</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
