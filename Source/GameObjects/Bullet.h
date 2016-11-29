@@ -1,10 +1,10 @@
 #include "../pch.h"
 #pragma once
 
-
+#include "Graphics\AnimatedSprite.h"
 static const Vector2 weaponStore = Vector2(-511, -511);
 
-class Bullet : public Sprite {
+class Bullet : public /*Sprite*/ AnimatedSprite {
 public:
 	/** For constructing base bullet sprites */
 	Bullet();
@@ -13,7 +13,6 @@ public:
 	~Bullet();
 
 	virtual void update(double deltaTime);
-	//void draw(SpriteBatch* batch, Sprite* baseSprite);
 
 	/** Normalized direction vector of projectile. */
 	Vector2 direction;

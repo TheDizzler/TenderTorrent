@@ -7,9 +7,10 @@ ArrowEnemyWave::ArrowEnemyWave() {
 ArrowEnemyWave::~ArrowEnemyWave() {
 }
 
+int shipWidth;
 #include "../Engine/GameEngine.h"
 bool ArrowEnemyWave::initialize(GFXAssetManager * gfxAssets, xml_node shipNode) {
-	
+
 	xml_node waveDataNode = shipNode.child("waveData");
 	maxTimeBetweenLaunches = waveDataNode.attribute("maxTimeBetweenWaves").as_double();
 	timeBetweenChecks = waveDataNode.attribute("timeBetweenChanceForWave").as_double();
@@ -24,12 +25,14 @@ bool ArrowEnemyWave::initialize(GFXAssetManager * gfxAssets, xml_node shipNode) 
 		return true;
 	}
 
+	shipWidth = ship->getWidth() * 2;
+
 	MAX_SHIPS_IN_STORE = 9;
 
 	for (int i = 0; i < MAX_SHIPS_IN_STORE; ++i) {
-			ArrowEnemyShip* enemy = new ArrowEnemyShip(shipNode);
-			enemy->load(ship);
-			shipStore.push_back(enemy);
+		ArrowEnemyShip* enemy = new ArrowEnemyShip(shipNode);
+		enemy->load(ship);
+		shipStore.push_back(enemy);
 	}
 
 	return true;
@@ -48,18 +51,29 @@ void ArrowEnemyWave::update(double deltaTime, PlayerShip* player) {
 	}
 }
 
+#include <random>
+int startX;
 void ArrowEnemyWave::launchNewWave() {
 
 	timeSinceLastLaunch = 0;
 	miniWavesLaunched = 0;
+
+	mt19937 rng;
+	rng.seed(random_device{}());
+	uniform_int_distribution<mt19937::result_type> rand(shipWidth, Globals::WINDOW_WIDTH - shipWidth);
+	startX = rand(rng);
+	/*startPos.x = rand(rng);
+	position = startPos;
+	midPos.x = startPos.x;*/
 
 	launchNextMiniWave();
 }
 
 void ArrowEnemyWave::launchNextMiniWave() {
 
-	EnemyShip* next = shipStore[nextShipInStore++];
+	ArrowEnemyShip* next = (ArrowEnemyShip*) shipStore[nextShipInStore++];
 	next->reset();
+	next->setStart(startX);
 
 	if (nextShipInStore >= shipStore.size())
 		nextShipInStore = 0;

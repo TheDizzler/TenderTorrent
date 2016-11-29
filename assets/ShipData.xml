@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root game="TenderTorrent" xml="ShipData" dir="assets/">
+
+	<weaponSystems>
+
+		<weaponSlots>
+
+
+		</weaponSlots>
+		
+		
+		<turrets>
+
+			<turret name="Sun Cannon">
+				<bullet type="Sun Bullet"/>
+			</turret>
+
+
+		</turrets>
+	</weaponSystems>
+
+</root>

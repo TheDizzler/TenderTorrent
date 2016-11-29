@@ -23,5 +23,5 @@ void EnemyBullet::update(double deltaTime) {
 
 
 	//hitArea->position = Vector2(position.x - width / 2, position.y - height / 2);
-	Sprite::update(deltaTime);
+	AnimatedSprite::update(deltaTime);
 }

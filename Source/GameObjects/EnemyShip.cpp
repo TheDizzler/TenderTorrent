@@ -43,7 +43,9 @@ EnemyShip::EnemyWeaponSystem::EnemyWeaponSystem(xml_node weaponPointNode, xml_no
 	int damage = weaponTypeNode.child("damage").text().as_int();
 	int bulletSpeed = weaponTypeNode.child("bulletSpeed").text().as_int();
 	const char_t* bulletName = weaponTypeNode.child("sprite").text().as_string();
-	GraphicsAsset* bulletAsset = GameManager::gfxAssets->getAsset(bulletName);
+	//GraphicsAsset* bulletAsset = GameManager::gfxAssets->getAsset(bulletName);
+	shared_ptr<Animation> bulletAsset;
+	bulletAsset = GameManager::gfxAssets->getAnimation(bulletName);
 	if (bulletAsset == NULL) {
 		wostringstream wss;
 		wss << "Unable to find weapon asset " << bulletName;

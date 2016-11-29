@@ -4,9 +4,29 @@
 	<gfx dir="gfx/">
 
 		<!-- Bullets and other shooty things -->
-		<sprite name="Enemy Bullet A" file="bullet yellow.dds"/>
+		<spritesheet file="bullet sheet.dds">
+			<animation name="Enemy Bullet A" timePerFrame=".5">
+				<sprite x="0"  y="0"  width="14" height="14" />
+				<sprite x="15" y="0"  width="14" height="14" />
+				<sprite x="30" y="0"  width="14" height="14" />
+				<sprite x="45" y="0"  width="14" height="14" />
+				<sprite x="60"  y="0" width="14" height="14" />
+				<sprite x="75" y="0" width="14" height="14" />
+				<sprite x="90" y="0" width="14" height="14" />
+			</animation>
+			<animation name="Laserbolt" timePerFrame=".75">
+				<sprite x="0" y="24" width="10" height="34" />
+				<sprite x="11" y="24" width="10" height="34" />
+				<sprite x="22" y="24" width="10" height="34" />
+				<sprite x="33" y="24" width="10" height="34" />
+				<sprite x="44" y="24" width="10" height="34" />
+				<sprite x="55" y="24" width="10" height="34" />
+			</animation>
+		</spritesheet>
+
+		<!--sprite name="Enemy Bullet A" file="bullet yellow.dds"/-->
 		<sprite name="Cross Bullet" file="cross bullet.dds"/>
-		<sprite name="Laserbolt" file="laserbolt(24x24).dds"/>
+		<!--sprite name="Laserbolt" file="laserbolt(24x24).dds"/-->
 		<sprite name="Sun Bullet" file="sunball.dds"/>
 
 
@@ -19,7 +39,7 @@
 		<sprite name="PlayerShip Hull" file="HeroShip.dds"/>
 		<sprite name="PlayerShip Turret" file="Turret(24x24).dds"/>
 
-		
+
 
 
 		<!-- Miscl stuff -->

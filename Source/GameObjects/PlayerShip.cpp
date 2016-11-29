@@ -55,14 +55,14 @@ void PlayerShip::reset() {
 
 bool PlayerShip::loadBullet(GFXAssetManager* gfxAsset) {
 
-	rightWeaponSlot->loadBulletTexture(gfxAsset->getAsset("Cross Bullet"));
-	leftWeaponSlot->loadBulletTexture(gfxAsset->getAsset("Cross Bullet"));
-	centerWeaponSlot->loadBulletTexture(gfxAsset->getAsset("Laserbolt"));
+	rightWeaponSlot->loadBulletTexture(gfxAsset->getAnimation("Cross Bullet"));
+	leftWeaponSlot->loadBulletTexture(gfxAsset->getAnimation("Cross Bullet"));
+	centerWeaponSlot->loadBulletTexture(gfxAsset->getAnimation("Laserbolt"));
 
 	leftTurret->loadTurretTexture(gfxAsset->getAsset("PlayerShip Turret"));
 	rightTurret->loadTurretTexture(gfxAsset->getAsset("PlayerShip Turret"));
-	leftTurret->loadBulletTexture(gfxAsset->getAsset("Sun Bullet"));
-	rightTurret->loadBulletTexture(gfxAsset->getAsset("Sun Bullet"));
+	leftTurret->loadBulletTexture(gfxAsset->getAnimation("Sun Bullet"));
+	rightTurret->loadBulletTexture(gfxAsset->getAnimation("Sun Bullet"));
 
 	return true;
 }
@@ -129,7 +129,7 @@ void PlayerShip::update(double deltaTime,
 	leftTurret->update(deltaTime, position, mouse->getPosition());
 
 	liveBullets.erase(remove_if(liveBullets.begin(), liveBullets.end(),
-		[](const Sprite* sprite) { return !sprite->isAlive; }), liveBullets.end());
+		[](const Bullet* bullet) { return !bullet->isAlive; }), liveBullets.end());
 
 
 

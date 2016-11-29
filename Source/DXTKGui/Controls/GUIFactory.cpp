@@ -671,8 +671,9 @@ bool GUIFactory::getGUIAssetsFromXML() {
 				frames.push_back(move(frame));
 
 			}
+			float frameTime = animationNode.attribute("timePerFrame").as_float();
 			shared_ptr<Animation> animationAsset;
-			animationAsset.reset(new Animation(masterAsset->getTexture(), frames));
+			animationAsset.reset(new Animation(masterAsset->getTexture(), frames, frameTime));
 			animationMap[name] = animationAsset;
 		}
 

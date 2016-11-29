@@ -12,10 +12,10 @@ Turret::Turret(Vector2 locationOffset) : WeaponSystem(locationOffset) {
 Turret::~Turret() {
 }
 
-void Turret::loadTurretTexture(GraphicsAsset* bulletAsset) {
+void Turret::loadTurretTexture(GraphicsAsset* turretAsset) {
 
 	turretSprite.reset(new Sprite(weaponLocation));
-	turretSprite->load(bulletAsset);
+	turretSprite->load(turretAsset);
 }
 
 
@@ -26,14 +26,14 @@ Bullet* Turret::fire() {
 	return bullet;
 }
 
-void Turret::fillBulletStore(GraphicsAsset* bulletAsset) {
-
-	for (int i = 0; i < maxStoreSize; ++i) {
-		Bullet* bullet = new SunBullet(weaponStore);
-		bullet->load(bulletAsset);
-		bulletStore.push_back(bullet);
-	}
-}
+//void Turret::fillBulletStore(/*GraphicsAsset**/ shared_ptr<Animation> bulletAsset) {
+//
+//	for (int i = 0; i < maxStoreSize; ++i) {
+//		Bullet* bullet = new SunBullet(weaponStore);
+//		bullet->load(bulletAsset);
+//		bulletStore.push_back(bullet);
+//	}
+//}
 
 
 void Turret::update(double deltaTime, Vector2 positionUpdate, const Vector2& mousePosition) {

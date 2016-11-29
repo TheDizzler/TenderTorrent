@@ -8,7 +8,7 @@ public:
 	Turret(Vector2 locationOffset);
 	~Turret();
 
-	virtual void loadTurretTexture(GraphicsAsset* bulletAsset);
+	virtual void loadTurretTexture(GraphicsAsset* turretAsset);
 
 	virtual Bullet* fire();
 
@@ -17,7 +17,7 @@ public:
 
 
 protected:
-	virtual void fillBulletStore(GraphicsAsset* bulletAsset);
+	//virtual void fillBulletStore(/*GraphicsAsset**/ shared_ptr<Animation> bulletAsset);
 
 private:
 

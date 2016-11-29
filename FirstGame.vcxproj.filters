@@ -225,6 +225,9 @@
     <ClCompile Include="Source\Managers\ArrowEnemyWave.cpp">
       <Filter>Source Files\EnemyShips</Filter>
     </ClCompile>
+    <ClCompile Include="Source\GameObjects\Graphics\AnimatedSprite.cpp">
+      <Filter>Source Files\Engine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\globals.h">
@@ -386,6 +389,9 @@
     <ClInclude Include="Source\GameObjects\ArrowEnemyShip.h">
       <Filter>Header Files\EnemyShips</Filter>
     </ClInclude>
+    <ClInclude Include="Source\GameObjects\Graphics\AnimatedSprite.h">
+      <Filter>Header Files\Engine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -403,6 +409,9 @@
     </Xml>
     <Xml Include="assets\EnemyShips.xml">
       <Filter>Source Files\EnemyShips</Filter>
+    </Xml>
+    <Xml Include="assets\ShipData.xml">
+      <Filter>Source Files\PlayerShip</Filter>
     </Xml>
   </ItemGroup>
 </Project>

@@ -14,7 +14,7 @@ public:
 	WeaponSystem(Vector2 locationOffset);
 	~WeaponSystem();
 
-	virtual void loadBulletTexture(GraphicsAsset* bulletAsset);
+	virtual void loadBulletTexture(/*GraphicsAsset**/ shared_ptr<Animation> bulletAsset);
 
 	virtual void setWeaponStats(int energyCost, float coolDownTime);
 
@@ -38,7 +38,7 @@ protected:
 	Vector2 weaponLocation;
 
 	int maxStoreSize = 24;
-	virtual void fillBulletStore(GraphicsAsset* bulletAsset);
+	virtual void fillBulletStore(/*GraphicsAsset**/ shared_ptr<Animation> bulletAsset);
 	std::vector<Bullet*> bulletStore;
 
 	int nextBullet = 0;

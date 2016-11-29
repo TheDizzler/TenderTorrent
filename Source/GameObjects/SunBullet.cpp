@@ -27,5 +27,5 @@ void SunBullet::update(double deltaTime) {
 		timeAlive = 0;
 	}
 
-	Sprite::update(deltaTime);
+	AnimatedSprite::update(deltaTime);
 }

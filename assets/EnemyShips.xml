@@ -86,7 +86,7 @@
 			</weapon>
 		</weaponPoints>
 
-		<waveData maxTimeBetweenWaves="20" timeBetweenChanceForWave="5" />
+		<waveData maxTimeBetweenWaves="20" timeBetweenChanceForWave="3" />
 	</ship>
 
 

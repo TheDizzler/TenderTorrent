@@ -36,7 +36,7 @@ void Wave::update(double deltaTime, PlayerShip* player) {
 	}
 
 	liveBullets.erase(remove_if(liveBullets.begin(), liveBullets.end(),
-		[](const Sprite* sprite) { return !sprite->isAlive; }), liveBullets.end());
+		[](const Bullet* bullet) { return !bullet->isAlive; }), liveBullets.end());
 
 
 	for (EnemyShip* enemy : shipStore) {

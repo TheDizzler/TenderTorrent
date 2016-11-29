@@ -1,12 +1,12 @@
 #include "Bullet.h"
 
-Bullet::Bullet() :Sprite(SimpleMath::Vector2(0, 0)) {
+Bullet::Bullet() :AnimatedSprite(weaponStore) {
 	isAlive = false;
 }
 
-Bullet::Bullet(const Vector2 &position) : Sprite(position) {
+Bullet::Bullet(const Vector2 &position) : AnimatedSprite(position) {
 
-	hitArea.reset(new HitArea(position, Vector2(width, height)));
+	/*hitArea.reset(new HitArea(position, Vector2(getWidth(), getHeight())));*/
 	isAlive = false;
 }
 
@@ -24,15 +24,7 @@ void Bullet::update(double deltaTime) {
 		timeAlive = 0;
 	}
 
-	Sprite::update(deltaTime);
+	AnimatedSprite::update(deltaTime);
 }
-
-//void Bullet::draw(SpriteBatch* batch, Sprite* baseSprite) {
-//
-//	batch->Draw(baseSprite->getTexture().Get(), position,
-//		&(baseSprite->getRect()), tint, rotation, baseSprite->getOrigin(),
-//		scale, SpriteEffects_None, layerDepth);
-//
-//}
 
 

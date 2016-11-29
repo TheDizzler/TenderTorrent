@@ -100,6 +100,7 @@
     <ClCompile Include="Source\GameObjects\Bullet.cpp" />
     <ClCompile Include="Source\GameObjects\EnemyBullet.cpp" />
     <ClCompile Include="Source\GameObjects\EnemyShip.cpp" />
+    <ClCompile Include="Source\GameObjects\Graphics\AnimatedSprite.cpp" />
     <ClCompile Include="Source\GameObjects\Graphics\Background.cpp" />
     <ClCompile Include="Source\GameObjects\Graphics\BackgroundLayer.cpp" />
     <ClCompile Include="Source\GameObjects\LaserBolt.cpp" />
@@ -159,6 +160,7 @@
     <ClInclude Include="Source\GameObjects\Bullet.h" />
     <ClInclude Include="Source\GameObjects\EnemyBullet.h" />
     <ClInclude Include="Source\GameObjects\EnemyShip.h" />
+    <ClInclude Include="Source\GameObjects\Graphics\AnimatedSprite.h" />
     <ClInclude Include="Source\GameObjects\Graphics\Background.h" />
     <ClInclude Include="Source\GameObjects\Graphics\BackgroundLayer.h" />
     <ClInclude Include="Source\GameObjects\LaserBolt.h" />
@@ -203,6 +205,7 @@
     <Xml Include="assets\shara.xml">
       <SubType>Designer</SubType>
     </Xml>
+    <Xml Include="assets\ShipData.xml" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{E9C22AAC-8D4D-4D44-8969-65311A131B1D}</ProjectGuid>

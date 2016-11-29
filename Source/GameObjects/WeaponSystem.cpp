@@ -11,7 +11,7 @@ WeaponSystem::~WeaponSystem() {
 }
 
 
-void WeaponSystem::loadBulletTexture(GraphicsAsset* bulletAsset) {
+void WeaponSystem::loadBulletTexture(/*GraphicsAsset**/ shared_ptr<Animation> bulletAsset) {
 
 	//baseBulletSprite.reset(new Sprite());
 	//baseBulletSprite->load(bulletAsset);
@@ -20,7 +20,7 @@ void WeaponSystem::loadBulletTexture(GraphicsAsset* bulletAsset) {
 }
 
 
-void WeaponSystem::fillBulletStore(GraphicsAsset* bulletAsset) {
+void WeaponSystem::fillBulletStore(/*GraphicsAsset**/ shared_ptr<Animation> bulletAsset) {
 
 	for (int i = 0; i < maxStoreSize; ++i) {
 		Bullet* bullet = new Bullet(weaponStore);
