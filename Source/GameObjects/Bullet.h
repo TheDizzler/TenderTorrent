@@ -15,7 +15,7 @@ public:
 	virtual void update(double deltaTime);
 
 	/** Normalized direction vector of projectile. */
-	Vector2 direction;
+	Vector2 direction = Vector2(0, -1);
 
 
 	int damage = 1;

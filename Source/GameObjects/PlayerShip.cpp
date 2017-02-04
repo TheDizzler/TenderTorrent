@@ -92,11 +92,11 @@ void PlayerShip::update(double deltaTime,
 	auto keyState = Keyboard::Get().GetState();
 
 	//if (keys->keyDown[KeyboardController::LEFT])
-	if (keyState.Left)
+	if (keyState.A)
 		position.x -= currentSpeed * deltaTime;
 
 	//if (keys->keyDown[KeyboardController::RIGHT])
-	if (keyState.Right)
+	if (keyState.D)
 		position.x += currentSpeed * deltaTime;
 
 	if (position.x < 0 + width / 2)
@@ -107,9 +107,9 @@ void PlayerShip::update(double deltaTime,
 	
 
 	//if (keys->keyDown[KeyboardController::UP])
-	if (keyState.Up)
+	if (keyState.W)
 		position.y -= currentSpeed * deltaTime;
-	if (keyState.Down)
+	if (keyState.S)
 	//if (keys->keyDown[KeyboardController::DOWN])
 		position.y += currentSpeed * deltaTime;
 
@@ -132,8 +132,6 @@ void PlayerShip::update(double deltaTime,
 		[](const Bullet* bullet) { return !bullet->isAlive; }), liveBullets.end());
 
 
-
-	//if (keys->keyDown[KeyboardController::FIRE]) {
 	if (keyState.Space) {
 		for (WeaponSystem* weaponSlot : weaponSlots) {
 			if (energy >= weaponSlot->energyCost

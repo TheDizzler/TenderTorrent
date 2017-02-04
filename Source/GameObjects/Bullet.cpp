@@ -15,7 +15,9 @@ Bullet::~Bullet() {
 
 void Bullet::update(double deltaTime) {
 
-	position.y -= bulletSpeed * deltaTime;
+	float deltaSpeed = deltaTime*bulletSpeed;
+	Vector2 newposition = position + direction*deltaSpeed;
+	setPosition(newposition);
 	timeAlive += deltaTime;
 
 	if (position.y < 0) {

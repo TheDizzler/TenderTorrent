@@ -17,8 +17,10 @@ SunBullet::~SunBullet() {
 void SunBullet::update(double deltaTime) {
 
 	float deltaSpeed = deltaTime*bulletSpeed;
-	position.x += direction.x*deltaSpeed;
-	position.y += direction.y*deltaSpeed;
+	Vector2 newposition = position + direction*deltaSpeed;
+	setPosition(newposition);
+	/*position.x += direction.x*deltaSpeed;
+	position.y += direction.y*deltaSpeed;*/
 
 	if (position.y < 0 || position.y > Globals::WINDOW_HEIGHT
 		|| position.x < 0 || position.x > Globals::WINDOW_WIDTH) {

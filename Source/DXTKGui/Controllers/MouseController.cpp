@@ -19,7 +19,6 @@ MouseController::MouseController(HWND hWnd, Mouse& mse) {
 
 
 MouseController::~MouseController() {
-int i = 6;
 }
 
 #include "../Controls/GUIFactory.h"

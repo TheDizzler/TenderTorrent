@@ -1,10 +1,6 @@
 #include "AnimatedSprite.h"
 
 
-
-//AnimatedSprite::AnimatedSprite() {
-//}
-
 AnimatedSprite::AnimatedSprite(const Vector2& pos) {
 	position = pos;
 	hitArea.reset(new HitArea(position, Vector2(0, 0)));
@@ -30,7 +26,7 @@ void AnimatedSprite::update(double deltaTime) {
 	currentFrameTime += deltaTime;
 	if (currentFrameTime >= animation->timePerFrame) {
 		if (++currentFrameIndex >= animation->animationFrames.size())
-			currentFrameIndex = -1;
+			currentFrameIndex = 0;
 		currentFrameTime = 0;
 	}
 }
@@ -105,8 +101,8 @@ void AnimatedSprite::setOrigin(const Vector2& orgn) {
 void AnimatedSprite::setScale(const Vector2& scl) {
 
 	scale = scl;
-	hitArea->position = Vector2(position.x - origin.x*scale.x,
-		position.y - origin.y*scale.y);
+	hitArea->position = Vector2(position.x - origin.x * scale.x,
+		position.y - origin.y * scale.y);
 	hitArea->size = Vector2(getWidth() * scale.x, getHeight() * scale.y);
 }
 

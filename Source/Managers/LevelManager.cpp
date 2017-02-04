@@ -68,14 +68,17 @@ bool LevelManager::initialize(ComPtr<ID3D11Device> device, MouseController* mous
 
 	timerLabel.reset(new TextLabel(Vector2(500, 10),
 		GameManager::guiFactory->getFont("Arial")));
+	timerLabel->setTint(Vector4(0, 0, 0, 1));
 	//textLabels.push_back(timerLabel.get());
 
 	scoreLabel.reset(new TextLabel(Vector2(10, 10),
 		GameManager::guiFactory->getFont("Arial")));
+	scoreLabel->setTint(Vector4(0, 0, 0, 1));
 	//textLabels.push_back(scoreLabel.get());
 
 	energyLabel.reset(new TextLabel(Vector2(10, 30),
 		GameManager::guiFactory->getFont("Arial")));
+	energyLabel->setTint(Vector4(0, 0, 0, 1));
 	//textLabels.push_back(energyLabel.get());
 
 
