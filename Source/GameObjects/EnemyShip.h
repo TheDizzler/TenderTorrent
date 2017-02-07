@@ -19,7 +19,7 @@ protected:
 		Vector2 systemLocation;
 		vector<EnemyBullet*> bulletStore;
 		size_t nextBulletInStore = 0;
-		size_t MAX_BULLETS_IN_STORE = 1;
+		size_t MAX_BULLETS_IN_STORE = 3;
 
 		bool fired = false;
 		double timeSinceFired = 0;
