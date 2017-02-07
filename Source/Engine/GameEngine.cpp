@@ -73,7 +73,7 @@ public:
 bool GameEngine::initStage() {
 
 	game.reset(new GameManager(this));
-	if (!game->initializeGame(hwnd, device, mouse.get()))
+	if (!game->initializeGame(hwnd, device, mouse))
 		return false;
 
 	return true;
@@ -147,11 +147,11 @@ void GameEngine::update(double deltaTime) {
 
 	mouse->saveMouseState();
 	keys->saveKeyboardState();
-	GameManager::guiFactory->updateMouse();
+	//GameManager::guiFactory->updateMouse();
 	if (showDialog->isOpen) {
 		showDialog->update(deltaTime);
 	} else
-		game->update(deltaTime, keys.get(), mouse.get());
+		game->update(deltaTime, mouse);
 }
 
 

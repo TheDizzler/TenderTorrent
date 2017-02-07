@@ -146,7 +146,7 @@ void ListBox::update(double deltaTime) {
 
 	for (int j = firstItemToDisplay;
 		j < firstItemToDisplay + itemsToDisplay; ++j) {
-		if (listItems[j]->update(deltaTime, mouse.get())) {
+		if (listItems[j]->update(deltaTime, mouse)) {
 			if (!multiSelect) {
 				for (int i = 0; i < listItems.size(); ++i) {
 					if (listItems[i] == listItems[j]) {
@@ -337,7 +337,7 @@ const wchar_t* ListItem::toString() {
 }
 
 
-bool ListItem::update(double deltaTime, MouseController* mouse) {
+bool ListItem::update(double deltaTime, shared_ptr<MouseController> mouse) {
 
 	if ((isHover = hitArea->contains(mouse->getPosition()))) {
 

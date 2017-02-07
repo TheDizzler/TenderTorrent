@@ -16,7 +16,7 @@ void LevelManager::setGameManager(GameManager* gm) {
 
 #include "../assets.h"
 #include "GameManager.h"
-bool LevelManager::initialize(ComPtr<ID3D11Device> device, MouseController* mouse) {
+bool LevelManager::initialize(ComPtr<ID3D11Device> device, shared_ptr<MouseController> mouse) {
 
 	levelManifest.reset(new xml_document());
 	xml_parse_result result = levelManifest->load_file(Assets::levelManifestFile);
@@ -93,8 +93,7 @@ bool LevelManager::loadLevel(ComPtr<ID3D11Device> device, const char_t* levelFil
 }
 
 
-void LevelManager::update(double deltaTime,
-	KeyboardController* keys, MouseController* mouse) {
+void LevelManager::update(double deltaTime, shared_ptr<MouseController> mouse) {
 
 	auto keyState = Keyboard::Get().GetState();
 	switch (playState) {
@@ -127,7 +126,7 @@ void LevelManager::update(double deltaTime,
 
 
 			bgManager->update(deltaTime, playerShip.get());
-			playerShip->update(deltaTime, keys, mouse);
+			playerShip->update(deltaTime, mouse);
 			waveManager->update(deltaTime, playerShip.get());
 
 			if (!pauseDownLast && keyState.Escape) {

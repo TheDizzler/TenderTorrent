@@ -12,10 +12,10 @@ GameManager::~GameManager() {
 
 #include "../DXTKGui/GuiAssets.h"
 #include "../Engine/GameEngine.h"
-bool GameManager::initializeGame(HWND hwnd, ComPtr<ID3D11Device> dvc, MouseController* ms) {
+bool GameManager::initializeGame(HWND hwnd, ComPtr<ID3D11Device> dvc, shared_ptr<MouseController> mouse) {
 
 	device = dvc;
-	mouse = ms;
+	//mouse = ms;
 
 	// get graphical assets from xml file
 	docAssMan.reset(new pugi::xml_document());
@@ -35,7 +35,7 @@ bool GameManager::initializeGame(HWND hwnd, ComPtr<ID3D11Device> dvc, MouseContr
 
 	guiFactory.reset(new GUIFactory(hwnd, guiAssetsNode));
 	if (!guiFactory->initialize(device, gameEngine->getDeviceContext(),
-		gameEngine->getSwapChain(), gameEngine->getSpriteBatch())) {
+		gameEngine->getSwapChain(), gameEngine->getSpriteBatch(), mouse)) {
 
 		MessageBox(0, L"Failed to load GUIFactory", L"Fatal Error", MB_OK);
 		return false;
@@ -70,8 +70,7 @@ bool GameManager::initializeGame(HWND hwnd, ComPtr<ID3D11Device> dvc, MouseContr
 }
 
 
-void GameManager::update(double deltaTime, KeyboardController* keys,
-	MouseController* mouse) {
+void GameManager::update(double deltaTime, shared_ptr<MouseController> mouse) {
 	
 	if (switchTo != NULL) {
 		if (transitionManager->runTransition(deltaTime)) {
@@ -79,7 +78,7 @@ void GameManager::update(double deltaTime, KeyboardController* keys,
 			switchTo = NULL;
 		}
 	} else
-		currentScreen->update(deltaTime, keys, mouse);
+		currentScreen->update(deltaTime, mouse);
 }
 
 

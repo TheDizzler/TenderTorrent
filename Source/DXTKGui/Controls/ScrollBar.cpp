@@ -184,7 +184,7 @@ void ScrollBar::update(double deltaTime) {
 
 	isHover = scrollBarTrack->getHitArea()->contains(mouse->getPosition());
 
-	scrubber->update(deltaTime, mouse.get());
+	scrubber->update(deltaTime, mouse);
 
 	if (!scrubber->hovering() && isHover && mouse->leftButton()) {
 
@@ -359,7 +359,7 @@ void Scrubber::setDimensions(const Sprite* scrollBarTrack,
 	minMaxDifference = maxPosition.y - minPosition.y;
 }
 
-void Scrubber::update(double deltaTime, MouseController* mouse) {
+void Scrubber::update(double deltaTime, shared_ptr<MouseController> mouse) {
 
 	isHover = hitArea->contains(mouse->getPosition());
 

@@ -14,7 +14,7 @@ void MenuManager::setGameManager(GameManager* gm) {
 
 
 
-bool MenuManager::initialize(ComPtr<ID3D11Device> device, MouseController* mouse) {
+bool MenuManager::initialize(ComPtr<ID3D11Device> device, shared_ptr<MouseController> mouse) {
 
 
 	if (!mouse->loadMouseIcon(GameManager::guiFactory.get(), "Mouse Reticle"))
@@ -29,7 +29,7 @@ bool MenuManager::initialize(ComPtr<ID3D11Device> device, MouseController* mouse
 	configScreen->setGameManager(game);
 	if (!configScreen->initialize(device, mouse))
 		return false;
-	configScreen->update(0, NULL, mouse);
+	configScreen->update(0, mouse);
 
 	levelSelectScreen.reset(new LevelSelectScreen(this));
 	if (!levelSelectScreen->initialize(device, mouse)) {
@@ -51,8 +51,7 @@ bool MenuManager::initialize(ComPtr<ID3D11Device> device, MouseController* mouse
 
 
 bool lastStateDown;
-void MenuManager::update(double deltaTime,
-	KeyboardController* keys, MouseController* mouse) {
+void MenuManager::update(double deltaTime, shared_ptr<MouseController> mouse) {
 
 
 	//Vector2 mousePos = mouse->getPosition();
@@ -83,7 +82,7 @@ void MenuManager::update(double deltaTime,
 			switchTo = NULL;
 		}
 	} else
-		currentScreen->update(deltaTime, keys, mouse);
+		currentScreen->update(deltaTime, mouse);
 
 }
 
@@ -160,7 +159,7 @@ MainScreen::~MainScreen() {
 }
 
 
-bool MainScreen::initialize(ComPtr<ID3D11Device> device, MouseController* mouse) {
+bool MainScreen::initialize(ComPtr<ID3D11Device> device, shared_ptr<MouseController> mouse) {
 
 	Vector2 buttonpos = Vector2(Globals::WINDOW_WIDTH / 2, Globals::WINDOW_HEIGHT / 8);
 	Vector2 buttonsize = Vector2(Globals::WINDOW_WIDTH / 4, 0);
@@ -232,8 +231,7 @@ bool MainScreen::initialize(ComPtr<ID3D11Device> device, MouseController* mouse)
 }
 
 Keyboard::KeyboardStateTracker keyTracker;
-void MainScreen::update(double deltaTime,
-	KeyboardController* keys, MouseController* mouse) {
+void MainScreen::update(double deltaTime, shared_ptr<MouseController> mouse) {
 
 
 	auto state = Keyboard::Get().GetState();
@@ -282,7 +280,7 @@ ConfigScreen::~ConfigScreen() {
 
 int MARGIN = 10;
 int itemHeight = 32;
-bool ConfigScreen::initialize(ComPtr<ID3D11Device> device, MouseController* mouse) {
+bool ConfigScreen::initialize(ComPtr<ID3D11Device> device, shared_ptr<MouseController> mouse) {
 
 	Vector2 controlPos = Vector2(50, 50);
 	// Labels for displaying pressed info
@@ -394,7 +392,7 @@ bool ConfigScreen::initialize(ComPtr<ID3D11Device> device, MouseController* mous
 }
 
 
-void ConfigScreen::update(double deltaTime, KeyboardController* keys, MouseController* mouse) {
+void ConfigScreen::update(double deltaTime, shared_ptr<MouseController> mouse) {
 
 	auto state = Keyboard::Get().GetState();
 	keyTracker.Update(state);

@@ -231,6 +231,9 @@
     <ClCompile Include="Source\Managers\GUIOverlay.cpp">
       <Filter>Source Files\Managers</Filter>
     </ClCompile>
+    <ClCompile Include="Source\DXTKGui\Controls\Spinner.cpp">
+      <Filter>Source Files\DXTKGui\Controls</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\globals.h">
@@ -323,9 +326,6 @@
     <ClInclude Include="Source\DXTKGui\Controls\GUIControl.h">
       <Filter>Header Files\DXTKGui\Controls</Filter>
     </ClInclude>
-    <ClInclude Include="Source\DXTKGui\Controls\GUIFactory.h">
-      <Filter>Header Files\DXTKGui</Filter>
-    </ClInclude>
     <ClInclude Include="Source\DXTKGui\BaseGraphics\IElement2D.h">
       <Filter>Header Files\DXTKGui\BaseClasses</Filter>
     </ClInclude>
@@ -397,6 +397,12 @@
     </ClInclude>
     <ClInclude Include="Source\Managers\GUIOverlay.h">
       <Filter>Header Files\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DXTKGui\Controls\Spinner.h">
+      <Filter>Header Files\DXTKGui\Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DXTKGui\Controls\GUIFactory.h">
+      <Filter>Header Files\DXTKGui\Controls</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

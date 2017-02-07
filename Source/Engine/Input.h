@@ -17,8 +17,8 @@ public:
 
 protected:
 
-	std::unique_ptr<KeyboardController> keys;
-	std::unique_ptr<MouseController> mouse;
+	unique_ptr<KeyboardController> keys;
+	shared_ptr<MouseController> mouse;
 
 };
 

@@ -18,10 +18,10 @@ public:
 	~GameManager();
 
 
-	bool initializeGame(HWND hwnd, ComPtr<ID3D11Device> device, MouseController* mouse);
+	bool initializeGame(HWND hwnd, ComPtr<ID3D11Device> device, shared_ptr<MouseController> mouse);
 
 
-	void update(double deltaTime, KeyboardController* keys, MouseController* mouse);
+	void update(double deltaTime, shared_ptr<MouseController> mouse);
 	void draw(SpriteBatch* batch);
 
 
@@ -59,7 +59,7 @@ private:
 	unique_ptr<xml_document> docAssMan;
 
 	GameEngine* gameEngine;
-	MouseController* mouse;
+	//shared_ptr<MouseController> mouse;
 	ComPtr<ID3D11Device> device;
 	
 	unique_ptr<ScreenTransitions::ScreenTransitionManager> transitionManager;

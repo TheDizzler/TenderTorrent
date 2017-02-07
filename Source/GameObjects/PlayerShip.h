@@ -30,8 +30,8 @@ public:
 
 	/** Update to perform before action starts.
 		Return true when ship has moved into position. */
-	bool startUpdate(double deltaTime, MouseController* mouse);
-	void update(double deltaTime, const KeyboardController* keys, MouseController* mouse);
+	bool startUpdate(double deltaTime, shared_ptr<MouseController> mouse);
+	void update(double deltaTime, shared_ptr<MouseController> mouse);
 	virtual void draw(SpriteBatch* batch);
 
 	void takeDamage(int damageTaken);

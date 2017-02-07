@@ -13,7 +13,7 @@ LevelSelectScreen::~LevelSelectScreen() {
 #include "../assets.h"
 #include "../Engine/GameEngine.h"
 #include "GameManager.h"
-bool LevelSelectScreen::initialize(ComPtr<ID3D11Device> device, MouseController* mouse) {
+bool LevelSelectScreen::initialize(ComPtr<ID3D11Device> device, shared_ptr<MouseController> mouse) {
 
 
 	levelManifest.reset(new xml_document());
@@ -52,8 +52,7 @@ void LevelSelectScreen::setGameManager(GameManager* gm) {
 }
 
 //Keyboard::KeyboardStateTracker keyTracker;
-void LevelSelectScreen::update(double deltaTime,
-	KeyboardController* keys, MouseController* mouse) {
+void LevelSelectScreen::update(double deltaTime, shared_ptr<MouseController> mouse) {
 
 	auto state = Keyboard::Get().GetState();
 	//keyTracker.Update(state);
@@ -136,7 +135,7 @@ LevelSelection::LevelSelection(const Vector2& position,
 
 }
 
-void LevelSelection::update(double deltaTime, MouseController* mouse) {
+void LevelSelection::update(double deltaTime, shared_ptr<MouseController> mouse) {
 
 	if (hitArea->contains(mouse->getPosition())) {
 		isHover = true;

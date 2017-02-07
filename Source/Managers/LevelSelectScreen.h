@@ -7,7 +7,7 @@ public:
 
 	LevelSelection(const Vector2& position, pugi::xml_node levelNode);
 
-	void update(double deltaTime, MouseController* mouse);
+	void update(double deltaTime, shared_ptr<MouseController> mouse);
 	void draw(SpriteBatch* batch);
 
 	const Vector2& getSize();
@@ -83,10 +83,10 @@ public:
 	LevelSelectScreen(MenuManager* menuManager);
 	~LevelSelectScreen();
 
-	virtual bool initialize(ComPtr<ID3D11Device> device, MouseController* mouse) override;
+	virtual bool initialize(ComPtr<ID3D11Device> device, shared_ptr<MouseController> mouse) override;
 	virtual void setGameManager(GameManager * game) override;
 
-	virtual void update(double deltaTime, KeyboardController* keys, MouseController* mouse) override;
+	virtual void update(double deltaTime, shared_ptr<MouseController> mouse) override;
 	virtual void draw(SpriteBatch* batch) override;
 
 	virtual void pause() override;

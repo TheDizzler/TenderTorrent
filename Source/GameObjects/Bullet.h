@@ -4,7 +4,7 @@
 #include "Graphics\AnimatedSprite.h"
 static const Vector2 weaponStore = Vector2(-511, -511);
 
-class Bullet : public /*Sprite*/ AnimatedSprite {
+class Bullet : public AnimatedSprite {
 public:
 	/** For constructing base bullet sprites */
 	Bullet();

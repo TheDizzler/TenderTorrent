@@ -47,14 +47,13 @@ public:
 
 	virtual void setGameManager(GameManager* game);
 
-	virtual bool initialize(ComPtr<ID3D11Device> device, MouseController* mouse);
+	virtual bool initialize(ComPtr<ID3D11Device> device, shared_ptr<MouseController> mouse);
 
 
 	bool loadLevel(ComPtr<ID3D11Device> device, const char_t* levelFileName);
 
 
-	virtual void update(double deltaTime, KeyboardController* keys,
-		MouseController* mouse);
+	virtual void update(double deltaTime, shared_ptr<MouseController> mouse);
 	virtual void draw(SpriteBatch* batch);
 
 	virtual void pause() override;

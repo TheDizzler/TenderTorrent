@@ -67,7 +67,7 @@ bool PlayerShip::loadBullet(GFXAssetManager* gfxAsset) {
 	return true;
 }
 
-bool PlayerShip::startUpdate(double deltaTime, MouseController* mouse) {
+bool PlayerShip::startUpdate(double deltaTime, shared_ptr<MouseController> mouse) {
 
 	position.y -= firingSpeed * deltaTime;
 	rightTurret->update(deltaTime, position, mouse->getPosition());
@@ -77,8 +77,7 @@ bool PlayerShip::startUpdate(double deltaTime, MouseController* mouse) {
 
 
 #include <algorithm>
-void PlayerShip::update(double deltaTime,
-	const KeyboardController* keys, MouseController* mouse) {
+void PlayerShip::update(double deltaTime, shared_ptr<MouseController> mouse) {
 
 	if (!isAlive) {
 

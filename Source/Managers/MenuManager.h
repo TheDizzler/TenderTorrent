@@ -107,9 +107,9 @@ public:
 	MenuManager();
 	~MenuManager();
 
-	virtual bool initialize(ComPtr<ID3D11Device> device, MouseController* mouse) override;
+	virtual bool initialize(ComPtr<ID3D11Device> device, shared_ptr<MouseController> mouse) override;
 	virtual void setGameManager(GameManager* game) override;
-	virtual void update(double deltaTime, KeyboardController* keys, MouseController* mouse) override;
+	virtual void update(double deltaTime, shared_ptr<MouseController> mouse) override;
 	virtual void draw(SpriteBatch* batch) override;
 
 
@@ -160,9 +160,8 @@ public:
 	ConfigScreen(MenuManager* manager);
 	~ConfigScreen();
 
-	virtual bool initialize(ComPtr<ID3D11Device> device, MouseController* mouse) override;
-	virtual void update(double deltaTime,
-		KeyboardController* keys, MouseController* mouse) override;
+	virtual bool initialize(ComPtr<ID3D11Device> device, shared_ptr<MouseController> mouse) override;
+	virtual void update(double deltaTime, shared_ptr<MouseController> mouse) override;
 	virtual void draw(SpriteBatch* batch) override;
 
 private:
@@ -185,9 +184,8 @@ public:
 	MainScreen(MenuManager* manager);
 	~MainScreen();
 
-	virtual bool initialize(ComPtr<ID3D11Device> device, MouseController* mouse) override;
-	virtual void update(double deltaTime, KeyboardController* keys,
-		MouseController* mouse) override;
+	virtual bool initialize(ComPtr<ID3D11Device> device, shared_ptr<MouseController> mouse) override;
+	virtual void update(double deltaTime, shared_ptr<MouseController> mouse) override;
 	virtual void draw(SpriteBatch * batch) override;
 
 private:

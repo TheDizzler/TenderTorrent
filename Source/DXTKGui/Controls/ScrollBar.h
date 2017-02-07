@@ -14,7 +14,7 @@ public:
 	void setDimensions(const Sprite* scrollBarTrack,
 		double percentShowing, double maxPercent);
 
-	virtual void update(double deltaTime, MouseController* mouse);
+	virtual void update(double deltaTime, shared_ptr<MouseController> mouse);
 
 	virtual void setPosition(const Vector2& position) override;
 	virtual void moveBy(const Vector2& moveVector) override;

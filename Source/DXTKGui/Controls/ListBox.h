@@ -19,7 +19,7 @@ public:
 	const wchar_t* toString();
 
 	/** Returns true if item pressed. */
-	bool update(double deltaTime, MouseController* mouse);
+	bool update(double deltaTime, shared_ptr<MouseController> mouse);
 	void updatePosition(const Vector2& position);
 	virtual void draw(SpriteBatch* batch);
 

@@ -23,8 +23,12 @@ public:
 	virtual const float getAlpha() const override;
 	virtual const int getWidth() const override;
 	virtual const int getHeight() const override;
+	virtual const float getLayerDepth() const override;
 	const RECT getRect() const;
 	const HitArea* getHitArea() const;
+	
+
+	
 
 	virtual void moveBy(const Vector2 & moveVector) override;
 	virtual void setPosition(const Vector2 & position) override;
@@ -33,6 +37,7 @@ public:
 	virtual void setRotation(const float rotation) override;
 	virtual void setTint(const XMFLOAT4 color) override;
 	virtual void setAlpha(const float alpha) override;
+	virtual void setLayerDepth(const float depth) override;
 
 	bool isAlive = true;
 	
@@ -51,6 +56,5 @@ protected:
 
 	Vector2 scale = Vector2(1, 1);
 	unique_ptr<HitArea> hitArea;
-
 
 };

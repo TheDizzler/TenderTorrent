@@ -118,3 +118,11 @@ void AnimatedSprite::setAlpha(const float alpha) {
 	tint.w = alpha;
 }
 
+const float AnimatedSprite::getLayerDepth() const {
+	return layerDepth;
+}
+
+void AnimatedSprite::setLayerDepth(const float depth) {
+	layerDepth = depth;
+}
+

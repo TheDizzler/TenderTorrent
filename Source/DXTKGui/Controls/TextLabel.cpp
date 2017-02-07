@@ -77,7 +77,7 @@ void TextLabel::setText(string text) {
 
 	wostringstream wss;
 	wss << text.c_str();
-	setText(wss);
+	setText(wss.str());
 }
 
 void TextLabel::setText(wostringstream& text) {
@@ -170,7 +170,6 @@ const Vector2& TextLabel::getPosition() const {
 
 
 int const TextLabel::getWidth() const {
-
 	return hitArea->size.x;
 }
 
