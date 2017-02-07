@@ -28,7 +28,6 @@ bool Background::load(ComPtr<ID3D11Device> device, const char_t* xmlFile) {
 
 	string filepath = levelRoot.attribute("dir").as_string();
 	filepath += levelRoot.child("base").text().as_string();
-	//const char_t* baseFile = 
 
 
 	unique_ptr<GraphicsAsset> bgLayerAsset;

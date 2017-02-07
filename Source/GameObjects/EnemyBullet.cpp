@@ -14,8 +14,8 @@ EnemyBullet::~EnemyBullet() {
 #include "../globals.h"
 void EnemyBullet::update(double deltaTime) {
 
-	position += direction*deltaTime*bulletSpeed;
-
+	Vector2 newpos = position + direction*deltaTime*bulletSpeed;
+	setPosition(newpos);
 	if (position.x < 0 || position.x > Globals::WINDOW_WIDTH
 		|| position.y < 0 || position.y > Globals::WINDOW_HEIGHT)
 
