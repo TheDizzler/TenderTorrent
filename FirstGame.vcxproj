@@ -115,6 +115,7 @@
     <ClCompile Include="Source\Managers\BackgroundManager.cpp" />
     <ClCompile Include="Source\Managers\GameManager.cpp" />
     <ClCompile Include="Source\Managers\GFXAssetManager.cpp" />
+    <ClCompile Include="Source\Managers\GUIOverlay.cpp" />
     <ClCompile Include="Source\Managers\LevelManager.cpp" />
     <ClCompile Include="Source\Managers\LevelSelectScreen.cpp" />
     <ClCompile Include="Source\Managers\MenuManager.cpp" />
@@ -176,6 +177,7 @@
     <ClInclude Include="Source\Managers\BackgroundManager.h" />
     <ClInclude Include="Source\Managers\GameManager.h" />
     <ClInclude Include="Source\Managers\GFXAssetManager.h" />
+    <ClInclude Include="Source\Managers\GUIOverlay.h" />
     <ClInclude Include="Source\Managers\LevelManager.h" />
     <ClInclude Include="Source\Managers\LevelSelectScreen.h" />
     <ClInclude Include="Source\Managers\MenuManager.h" />

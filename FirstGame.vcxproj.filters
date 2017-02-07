@@ -228,6 +228,9 @@
     <ClCompile Include="Source\GameObjects\Graphics\AnimatedSprite.cpp">
       <Filter>Source Files\Engine</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Managers\GUIOverlay.cpp">
+      <Filter>Source Files\Managers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\globals.h">
@@ -391,6 +394,9 @@
     </ClInclude>
     <ClInclude Include="Source\GameObjects\Graphics\AnimatedSprite.h">
       <Filter>Header Files\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Managers\GUIOverlay.h">
+      <Filter>Header Files\Managers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

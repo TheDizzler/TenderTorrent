@@ -65,30 +65,9 @@ bool LevelManager::initialize(ComPtr<ID3D11Device> device, MouseController* mous
 	playerShip->setDimensions(playerShip.get());
 
 
-
-	timerLabel.reset(new TextLabel(Vector2(500, 10),
-		GameManager::guiFactory->getFont("Arial")));
-	timerLabel->setTint(Vector4(0, 0, 0, 1));
-	//textLabels.push_back(timerLabel.get());
-
-	scoreLabel.reset(new TextLabel(Vector2(10, 10),
-		GameManager::guiFactory->getFont("Arial")));
-	scoreLabel->setTint(Vector4(0, 0, 0, 1));
-	//textLabels.push_back(scoreLabel.get());
-
-	energyLabel.reset(new TextLabel(Vector2(10, 30),
-		GameManager::guiFactory->getFont("Arial")));
-	energyLabel->setTint(Vector4(0, 0, 0, 1));
-	//textLabels.push_back(energyLabel.get());
-
-
-
-	/*pauseOverlay.reset(new Sprite(Vector2(0, 0)));
-	if (!pauseOverlay->load(device, Assets::pauseOverlayFile)) {
-		MessageBox(NULL, L"Failed to pause overlay", L"ERROR", MB_OK);
-		return false;
-	}*/
-
+	guiOverlay = make_unique<GUIOverlay>();
+	guiOverlay->exitButton->setOnClickListener(new ExitButtonListener(this));
+	guiOverlay->continueButton->setOnClickListener(new ContinueButtonListener(this));
 
 
 	return true;
@@ -98,50 +77,6 @@ bool LevelManager::initialize(ComPtr<ID3D11Device> device, MouseController* mous
 bool LevelManager::loadLevel(ComPtr<ID3D11Device> device, const char_t* levelFileName) {
 
 	playState = LOADING;
-
-	pauseOverlay.reset(
-		GameManager::guiFactory->createRectangle(Vector2(0, 0),
-			Vector2(Globals::WINDOW_WIDTH, Globals::WINDOW_HEIGHT)));
-	pauseOverlay->setTint(Color(1, .588, 1, .8)); //should be pinkish
-
-
-	pauseLabel.reset(new TextLabel(
-		GameManager::guiFactory->getFont("BlackCloak")));
-	pauseLabel->setText(L"Paused");
-	pauseLabel->setScale(Vector2(1, 1.5));
-	Vector2 size = pauseLabel->measureString();
-	pauseLabel->setPosition(Vector2(
-		(Globals::WINDOW_WIDTH - size.x) / 2, (Globals::WINDOW_HEIGHT - size.y) / 2));
-
-
-	exitButton.reset(
-		GameManager::guiFactory->createImageButton(
-			Vector2(Globals::WINDOW_WIDTH / 4, Globals::WINDOW_HEIGHT * 3 / 4),
-			"Button Up", "Button Down"));
-	exitButton->setText(L"Exit");
-	Vector2 moveBy = Vector2(exitButton->getScaledWidth() / 2, 0);
-	exitButton->moveBy(-moveBy);
-
-
-
-	continueButton.reset(
-		GameManager::guiFactory->createImageButton(
-			Vector2(Globals::WINDOW_WIDTH * 3 / 4, Globals::WINDOW_HEIGHT * 3 / 4),
-			"Button Up", "Button Down"));
-	continueButton->setText(L"Continue");
-	continueButton->moveBy(-moveBy);
-
-
-
-
-	warningLabel.reset(new TextLabel(
-		Vector2((Globals::WINDOW_WIDTH) / 2, (Globals::WINDOW_HEIGHT) / 2),
-		GameManager::guiFactory->getFont("BlackCloak")));
-	warningLabel->setText("GET READY!");
-	warningLabel->setScale(Vector2(1, 1.5));
-	size = warningLabel->measureString(L"GET READY!");
-	warningLabel->moveBy(-size / 2);
-
 
 	if (!bgManager->loadLevel(device, levelFileName))
 		return false;
@@ -181,7 +116,6 @@ void LevelManager::update(double deltaTime,
 				}
 
 				for (BackgroundLayer* layer : bgManager->getLayers()) {
-
 					if (bullet->getHitArea()->collision(layer->getHitArea())) {
 						if (layer->isAlive) {
 							layer->takeDamage(bullet->damage);
@@ -212,31 +146,16 @@ void LevelManager::update(double deltaTime,
 					delayedPause = false;
 				} else
 					playState = PLAYING;
-				//textLabels.pop_back();
 			} else
-				displayWarning(deltaTime);
+				guiOverlay->updateWarning(deltaTime);
 			break;
 		case PAUSED:
-			displayPause(deltaTime);
-
-			exitButton->update(deltaTime);
-			if (exitButton->clicked()) {
-				waveManager->clear();
-				bgManager->clear();
-				//playerShip->clear();
-
-
-				pauseDownLast = true;
-
-				game->loadMainMenu();
-			}
-
-			continueButton->update(deltaTime);
-			if (continueButton->clicked()
-				|| (!pauseDownLast && keyState.Escape)) {
+			guiOverlay->updatePaused(deltaTime);
+			if (!pauseDownLast && keyState.Escape) {
 				playState = PLAYING;
 				pauseDownLast = true;
 			}
+
 			break;
 
 	}
@@ -244,20 +163,20 @@ void LevelManager::update(double deltaTime,
 	{
 		wostringstream ws;
 		ws << "Score: " << score;
-		scoreLabel->setText(ws);
+		guiOverlay->scoreLabel->setText(ws);
 	}
 
 	{
 		wostringstream ws;
 		ws << "Time: " << (int) totalPlayTime << "s";
-		timerLabel->setText(ws);
+		guiOverlay->timerLabel->setText(ws);
 	}
 
 
 	{
 		wostringstream ws;
 		ws << "Energy: " << playerShip->energy;
-		energyLabel->setText(ws);
+		guiOverlay->energyLabel->setText(ws);
 	}
 
 	pauseDownLast = keyState.Escape;
@@ -269,23 +188,16 @@ void LevelManager::draw(SpriteBatch* batch) {
 	bgManager->draw(batch);
 
 
-	timerLabel->draw(batch);
-	scoreLabel->draw(batch);
-	energyLabel->draw(batch);
-
-
 	playerShip->draw(batch);
 	waveManager->draw(batch);
 
+	guiOverlay->draw(batch);
+
 
 	if (playState == PAUSED) {
-		pauseOverlay->draw(batch);
-		exitButton->draw(batch);
-		continueButton->draw(batch);
-		pauseLabel->draw(batch);
-
+		guiOverlay->drawPaused(batch);
 	} else if (playState == STARTING)
-		warningLabel->draw(batch);
+		guiOverlay->drawWarning(batch);
 }
 
 void LevelManager::pause() {
@@ -298,45 +210,29 @@ void LevelManager::pause() {
 }
 
 
-bool rInc = true;
-bool gInc = false;
-bool bInc = true;
-
-/** Changes the Green and Blue variables between 0 and 1. */
-void LevelManager::displayWarning(double deltaTime) {
-
-	//Color color = warningFont->getTint();
-	Color color = warningLabel->getTint();
-	float r = color.G();
-	if (rInc) {
-		r += 5 * deltaTime;
-		if (r >= 1)
-			rInc = false;
-	} else {
-		r -= 5 * deltaTime;
-		if (r <= 0)
-			rInc = true;
-	}
-
-	//warningFont->setTint(Color(Vector3(1, r, r)));
-	warningLabel->setTint(Vector4(1, r, r, 1));
+void LevelManager::resume() {
+	playState = PLAYING;
+	pauseDownLast = true;
 }
 
-/** Changes the Red variable between 0 and 1. */
-void LevelManager::displayPause(double deltaTime) {
+void LevelManager::exitLevel() {
 
-	Color color = pauseLabel->getTint();
+	waveManager->clear();
+	bgManager->clear();
+	//playerShip->clear();
 
-	if (rInc) {
-		color.R(color.R() + deltaTime);
-		if (color.R() >= 1)
-			rInc = false;
-	} else {
-		color.R(color.R() - deltaTime);
-		if (color.R() <= 0)
-			rInc = true;
-	}
 
-	pauseLabel->setTint(color);
+	pauseDownLast = true;
+
+	game->loadMainMenu();
 }
 
+void ExitButtonListener::onClick(Button* button) {
+
+	lvlManager->exitLevel();
+}
+
+void ContinueButtonListener::onClick(Button * button) {
+
+	lvlManager->resume();
+}

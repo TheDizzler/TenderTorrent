@@ -1,15 +1,40 @@
 #include "../pch.h"
 #pragma once
 
-//#include "../DXTKGui/BaseGraphics/screen.h"
-//#include "../DXTKGui/Controls/Button.h"
+#include "GUIOverlay.h"
+
 #include "../GameObjects/PlayerShip.h"
 #include "WaveManager.h"
 #include "BackgroundManager.h"
 
 
+class LevelManager;
+class ContinueButtonListener: public Button::OnClickListener {
+public:
+	ContinueButtonListener(LevelManager* lvlMan) : lvlManager(lvlMan){}
+
+	virtual void onClick(Button * button) override;
+private:
+	LevelManager* lvlManager;
+
+};
+
+
+class ExitButtonListener : public Button::OnClickListener {
+public:
+	ExitButtonListener(LevelManager* level) : lvlManager(level) {
+	}
+
+	virtual void onClick(Button* button) override;
+private:
+	LevelManager* lvlManager;
+
+};
+
 
 class LevelManager : public Screen {
+friend class ExitButtonListener;
+friend class ContinueButtonListener;
 public:
 
 	enum PlayState {
@@ -46,9 +71,9 @@ private:
 	unique_ptr<BackgroundManager> bgManager;
 	unique_ptr<WaveManager> waveManager;
 
-	//DIMOUSESTATE mouseLastState;
+	unique_ptr<GUIOverlay> guiOverlay;
 
-	unique_ptr<Button> exitButton;
+	/*unique_ptr<Button> exitButton;
 	unique_ptr<Button> continueButton;
 
 	unique_ptr<TextLabel> timerLabel;
@@ -56,11 +81,12 @@ private:
 	unique_ptr<TextLabel> energyLabel;
 	unique_ptr<TextLabel> pauseLabel;
 	unique_ptr<TextLabel> warningLabel;
-	//vector<unique_ptr<TextLabel>> textLabels;
+
+	unique_ptr<RectangleSprite> pauseOverlay;*/
 
 	unique_ptr<PlayerShip> playerShip;
 
-	unique_ptr<RectangleSprite> pauseOverlay;
+
 
 
 	float timeStep = 1.0f / 60.0f;
@@ -75,8 +101,10 @@ private:
 	bool delayedPause = false;
 	bool pauseDownLast = false;
 	//double pauseDelay = 0;
-	void displayWarning(double deltaTime);
-	void displayPause(double deltaTime);
 
-	
+	void resume();
+	void exitLevel();
+
+
+
 };
