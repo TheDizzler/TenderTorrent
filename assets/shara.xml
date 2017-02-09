@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <level name="shara" scale="1.5" numLayers="2" dir="assets/bg/">
 
+	<waypoints>
+		<start center="true" x="69" y="99"/>
+		<waypoint x="" y=""/>
+		<end x="" y="" />
+	</waypoints>
+
 	<base layer="0">shara00.dds</base>
 	<backgroundLayer layer="1">
 		shara01a.dds

@@ -129,9 +129,6 @@
     <ClCompile Include="Source\GameObjects\Graphics\BackgroundLayer.cpp">
       <Filter>Source Files\Backgrounds</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Managers\BackgroundManager.cpp">
-      <Filter>Source Files\Backgrounds</Filter>
-    </ClCompile>
     <ClCompile Include="Source\GameObjects\Graphics\Background.cpp">
       <Filter>Source Files\Backgrounds</Filter>
     </ClCompile>
@@ -234,6 +231,9 @@
     <ClCompile Include="Source\DXTKGui\Controls\Spinner.cpp">
       <Filter>Source Files\DXTKGui\Controls</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Engine\Camera.cpp">
+      <Filter>Source Files\Engine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\globals.h">
@@ -285,9 +285,6 @@
       <Filter>Header Files\EnemyShips</Filter>
     </ClInclude>
     <ClInclude Include="Source\GameObjects\Graphics\BackgroundLayer.h">
-      <Filter>Header Files\Backgrounds</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Managers\BackgroundManager.h">
       <Filter>Header Files\Backgrounds</Filter>
     </ClInclude>
     <ClInclude Include="Source\GameObjects\Graphics\Background.h">
@@ -403,6 +400,9 @@
     </ClInclude>
     <ClInclude Include="Source\DXTKGui\Controls\GUIFactory.h">
       <Filter>Header Files\DXTKGui\Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Camera.h">
+      <Filter>Header Files\Engine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -598,7 +598,7 @@ GraphicsAsset* GUIFactory::createTextureFromScreen(Screen* screen, Color bgColor
 
 	batch->Begin(SpriteSortMode_Immediate);
 	{
-		screen->draw(batch);
+		screen->safedraw(batch);
 	}
 	batch->End();
 

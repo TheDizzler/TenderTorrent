@@ -9,6 +9,10 @@ public:
 	GUIOverlay();
 	~GUIOverlay();
 
+	const Vector2& getPlayArea();
+	const Vector2& getPlayPosition();
+
+
 	void updateWarning(double deltaTime);
 	void updatePaused(double deltaTime);
 	void draw(SpriteBatch* batch);
@@ -27,6 +31,7 @@ public:
 	unique_ptr<RectangleSprite> pauseOverlay;
 private:
 
+	unique_ptr<RectangleSprite> hudBG;
 	//vector<GUIControl* > activeControls;
 
 	//inline void displayWarning(double deltaTime);

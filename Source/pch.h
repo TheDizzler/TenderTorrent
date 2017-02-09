@@ -23,6 +23,7 @@
 
 #include "DXTKGui\Controls\GUIFactory.h"
 
+using namespace std;
 using namespace pugi;
 using namespace DirectX;
 using namespace Microsoft::WRL;

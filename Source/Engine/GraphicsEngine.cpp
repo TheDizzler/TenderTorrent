@@ -1,6 +1,6 @@
 #include "GraphicsEngine.h"
 
-//#include <DirectXColors.h>
+shared_ptr<Camera> camera;
 
 
 GraphicsEngine::GraphicsEngine() {
@@ -39,7 +39,9 @@ bool GraphicsEngine::initD3D(HWND h) {
 
 	initializeViewport();
 
-
+	camera = make_shared<Camera>(Globals::WINDOW_WIDTH, Globals::WINDOW_HEIGHT);
+	camera->viewport = &viewport;
+	deviceContext->RSSetViewports(1, viewport.Get11());
 
 	// create SpriteBatch
 	batch.reset(new SpriteBatch(deviceContext.Get()));
@@ -198,7 +200,7 @@ bool GraphicsEngine::initializeRenderTarget() {
 void GraphicsEngine::initializeViewport() {
 
 	/** **** Create Viewport **** **/
-	D3D11_VIEWPORT viewport;
+	/*D3D11_VIEWPORT viewport;
 	ZeroMemory(&viewport, sizeof(D3D11_VIEWPORT));
 
 	viewport.TopLeftX = 0;
@@ -208,7 +210,11 @@ void GraphicsEngine::initializeViewport() {
 	viewport.MinDepth = 0.0f;
 	viewport.MaxDepth = 1.0f;
 
-	deviceContext->RSSetViewports(1, &viewport);
+	deviceContext->RSSetViewports(1, &viewport);*/
+
+
+	/** **** Create SimpleMath Viewport **** */
+	viewport = Viewport(0, 0, Globals::WINDOW_WIDTH, Globals::WINDOW_HEIGHT, 0, 1);
 
 }
 

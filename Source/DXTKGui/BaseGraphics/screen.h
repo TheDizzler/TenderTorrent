@@ -15,6 +15,8 @@ public:
 	virtual void update(double deltaTime,
 		/*KeyboardController* keys, */shared_ptr<MouseController> mouse) = 0;
 	virtual void draw(SpriteBatch* batch) = 0;
+	/* Draw command that guarantees no batch->Begin() calls. */
+	virtual void safedraw(SpriteBatch* batch) = 0;
 	virtual void pause() = 0;
 	
 };

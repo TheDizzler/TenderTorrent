@@ -93,6 +93,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Source\Engine\Camera.cpp" />
     <ClCompile Include="Source\Engine\GameEngine.cpp" />
     <ClCompile Include="Source\Engine\GraphicsEngine.cpp" />
     <ClCompile Include="Source\Engine\Input.cpp" />
@@ -113,7 +114,6 @@
     <ClCompile Include="Source\GameObjects\Turret.cpp" />
     <ClCompile Include="Source\GameObjects\WeaponSystem.cpp" />
     <ClCompile Include="Source\Managers\ArrowEnemyWave.cpp" />
-    <ClCompile Include="Source\Managers\BackgroundManager.cpp" />
     <ClCompile Include="Source\Managers\GameManager.cpp" />
     <ClCompile Include="Source\Managers\GFXAssetManager.cpp" />
     <ClCompile Include="Source\Managers\GUIOverlay.cpp" />
@@ -157,6 +157,7 @@
     <ClInclude Include="Source\DXTKGui\Effects\TransitionEffects.h" />
     <ClInclude Include="Source\DXTKGui\GuiAssets.h" />
     <ClInclude Include="Source\DXTKGui\StringHelper.h" />
+    <ClInclude Include="Source\Engine\Camera.h" />
     <ClInclude Include="Source\Engine\GameEngine.h" />
     <ClInclude Include="Source\Engine\GraphicsEngine.h" />
     <ClInclude Include="Source\Engine\Input.h" />
@@ -176,7 +177,6 @@
     <ClInclude Include="Source\GameObjects\Turret.h" />
     <ClInclude Include="Source\GameObjects\WeaponSystem.h" />
     <ClInclude Include="Source\globals.h" />
-    <ClInclude Include="Source\Managers\BackgroundManager.h" />
     <ClInclude Include="Source\Managers\GameManager.h" />
     <ClInclude Include="Source\Managers\GFXAssetManager.h" />
     <ClInclude Include="Source\Managers\GUIOverlay.h" />

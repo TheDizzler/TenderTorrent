@@ -1,7 +1,7 @@
 #include "GameManager.h"
 
-unique_ptr<GUIFactory> GameManager::guiFactory;
-unique_ptr<GFXAssetManager> GameManager::gfxAssets;
+unique_ptr<GUIFactory> guiFactory;
+unique_ptr<GFXAssetManager> gfxAssets;
 
 GameManager::GameManager(GameEngine* gmngn) {
 	gameEngine = gmngn;
@@ -42,7 +42,7 @@ bool GameManager::initializeGame(HWND hwnd, ComPtr<ID3D11Device> dvc, shared_ptr
 	}
 	gameEngine->constructErrorDialogs();
 
-	
+
 
 	menuScreen.reset(new MenuManager());
 	menuScreen->setGameManager(this);
@@ -54,13 +54,13 @@ bool GameManager::initializeGame(HWND hwnd, ComPtr<ID3D11Device> dvc, shared_ptr
 	levelScreen->setGameManager(this);
 	if (!levelScreen->initialize(device, mouse))
 		return false;
-	
+
 
 	currentScreen = menuScreen.get();
 
 	transitionManager.reset(
 		new ScreenTransitions::ScreenTransitionManager(
-			GameManager::guiFactory.get(), "Default Transition BG"));
+			guiFactory.get(), "Default Transition BG"));
 	transitionManager->setTransition(
 		//new ScreenTransitions::FlipScreenTransition(true));
 		new ScreenTransitions::SquareFlipScreenTransition());
@@ -71,22 +71,29 @@ bool GameManager::initializeGame(HWND hwnd, ComPtr<ID3D11Device> dvc, shared_ptr
 
 
 void GameManager::update(double deltaTime, shared_ptr<MouseController> mouse) {
-	
+
 	if (switchTo != NULL) {
+
 		if (transitionManager->runTransition(deltaTime)) {
 			currentScreen = switchTo;
 			switchTo = NULL;
 		}
+
 	} else
 		currentScreen->update(deltaTime, mouse);
 }
 
 
-void GameManager::draw(SpriteBatch * batch) {
+void GameManager::draw(SpriteBatch* batch) {
 	if (switchTo != NULL) {
-		transitionManager->drawTransition(batch);
+		batch->Begin(SpriteSortMode_Deferred);
+		{
+			transitionManager->drawTransition(batch);
+		}
+		batch->End();
 	} else
 		currentScreen->draw(batch);
+
 }
 
 void GameManager::loadLevel(string levelName) {
@@ -102,7 +109,7 @@ void GameManager::loadLevel(string levelName) {
 	lastScreen = currentScreen;
 	//currentScreen = levelScreen.get();
 
-	
+
 }
 
 void GameManager::loadMainMenu() {

@@ -24,7 +24,7 @@ bool LevelSelectScreen::initialize(ComPtr<ID3D11Device> device, shared_ptr<Mouse
 		return false;
 	}
 
-	titleLabel.reset(GameManager::guiFactory->createTextLabel(Vector2::Zero, L"Choose a Level"));
+	titleLabel.reset(guiFactory->createTextLabel(Vector2::Zero, L"Choose a Level"));
 	titleLabel->setScale(Vector2(3, 3));
 	Vector2 titlesize = titleLabel->measureString();
 	Vector2 titlepos = Vector2((Globals::WINDOW_WIDTH - titlesize.x) / 2, 10);
@@ -66,7 +66,17 @@ void LevelSelectScreen::update(double deltaTime, shared_ptr<MouseController> mou
 }
 
 void LevelSelectScreen::draw(SpriteBatch* batch) {
+	batch->Begin(SpriteSortMode_Deferred);
+	{
+		titleLabel->draw(batch);
+		for (auto const& selection : levelSelections) {
+			selection->draw(batch);
+		}
+	}
+	batch->End();
+}
 
+void LevelSelectScreen::safedraw(SpriteBatch* batch) {
 	titleLabel->draw(batch);
 	for (auto const& selection : levelSelections) {
 		selection->draw(batch);
@@ -108,12 +118,12 @@ LevelSelection::LevelSelection(const Vector2& position,
 	);
 
 	picFrame.reset(
-		GameManager::guiFactory->createRectangleFrame(picpos, picsize,
+		guiFactory->createRectangleFrame(picpos, picsize,
 			properties.child("frameThickness").attribute("value").as_int(), frameColor));
 
 	Vector2 labelpos = picpos;
 	labelpos.y += picsize.y + frameMargin.y;
-	label.reset(GameManager::guiFactory->createTextLabel(labelpos));
+	label.reset(guiFactory->createTextLabel(labelpos));
 	label->setText(levelNode.attribute("name").as_string());
 	labelColor = label->getTint();
 
@@ -125,7 +135,7 @@ LevelSelection::LevelSelection(const Vector2& position,
 
 	previewPic.reset(new Sprite(picpos));
 	previewPic->load(
-		GameManager::gfxAssets->getAsset(levelNode.attribute("preview").as_string()));
+		gfxAssets->getAsset(levelNode.attribute("preview").as_string()));
 	previewPic->setOrigin(Vector2::Zero);
 
 	Vector2 labelsize = label->measureString();

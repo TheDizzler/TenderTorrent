@@ -104,11 +104,11 @@ const float Sprite::getLayerDepth() const {
 }
 
 const int Sprite::getWidth() const {
-	return width;
+	return width * scale.x;
 }
 
 const int Sprite::getHeight() const {
-	return height;
+	return height * scale.y;
 }
 
 

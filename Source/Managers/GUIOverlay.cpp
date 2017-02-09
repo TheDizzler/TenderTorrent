@@ -4,28 +4,31 @@
 
 GUIOverlay::GUIOverlay() {
 
-	timerLabel.reset(GameManager::guiFactory->createTextLabel(Vector2(500, 10)));
+	hudBG.reset(guiFactory->createRectangle(Vector2::Zero, Vector2(Globals::WINDOW_WIDTH, 75)));
+	hudBG->setTint(Vector4(.75, .75, .75, 1));
+
+	timerLabel.reset(guiFactory->createTextLabel(Vector2(500, 10)));
 	timerLabel->setTint(Vector4(0, 0, 0, 1));
 	//textLabels.push_back(timerLabel.get());
 
 	//activeControls.push_back(timerLabel.get());
 
-	scoreLabel.reset(GameManager::guiFactory->createTextLabel(Vector2(10, 10)));
+	scoreLabel.reset(guiFactory->createTextLabel(Vector2(10, 10)));
 	scoreLabel->setTint(Vector4(0, 0, 0, 1));
 	//textLabels.push_back(scoreLabel.get());
 	//activeControls.push_back(scoreLabel.get());
 
-	energyLabel.reset(GameManager::guiFactory->createTextLabel(Vector2(10, 30)));
+	energyLabel.reset(guiFactory->createTextLabel(Vector2(10, 30)));
 	energyLabel->setTint(Vector4(0, 0, 0, 1));
 	//activeControls.push_back(energyLabel.get());
 
 	pauseOverlay.reset(
-		GameManager::guiFactory->createRectangle(Vector2(0, 0),
+		guiFactory->createRectangle(Vector2(0, 0),
 			Vector2(Globals::WINDOW_WIDTH, Globals::WINDOW_HEIGHT)));
 	pauseOverlay->setTint(Color(1, .588, 1, .8)); //should be pinkish
 
 
-	pauseLabel.reset(GameManager::guiFactory->createTextLabel(Vector2::Zero, "BlackCloak"));
+	pauseLabel.reset(guiFactory->createTextLabel(Vector2::Zero, "BlackCloak"));
 	pauseLabel->setText(L"Paused");
 	pauseLabel->setScale(Vector2(1, 1.5));
 	Vector2 size = pauseLabel->measureString();
@@ -33,16 +36,16 @@ GUIOverlay::GUIOverlay() {
 		(Globals::WINDOW_WIDTH - size.x) / 2, (Globals::WINDOW_HEIGHT - size.y) / 2));
 
 
-	exitButton.reset(GameManager::guiFactory->createImageButton(
+	exitButton.reset(guiFactory->createImageButton(
 		Vector2(Globals::WINDOW_WIDTH / 4, Globals::WINDOW_HEIGHT * 3 / 4),
 		"Button Up", "Button Down"));
 	exitButton->setText(L"Exit");
 	Vector2 moveBy = Vector2(exitButton->getScaledWidth() / 2, 0);
 	exitButton->moveBy(-moveBy);
-	
 
 
-	continueButton.reset(GameManager::guiFactory->createImageButton(
+
+	continueButton.reset(guiFactory->createImageButton(
 		Vector2(Globals::WINDOW_WIDTH * 3 / 4, Globals::WINDOW_HEIGHT * 3 / 4),
 		"Button Up", "Button Down"));
 	continueButton->setText(L"Continue");
@@ -51,7 +54,7 @@ GUIOverlay::GUIOverlay() {
 
 
 
-	warningLabel.reset(GameManager::guiFactory->createTextLabel(
+	warningLabel.reset(guiFactory->createTextLabel(
 		Vector2((Globals::WINDOW_WIDTH) / 2, (Globals::WINDOW_HEIGHT) / 2),
 		"BlackCloak"));
 	warningLabel->setText("GET READY!");
@@ -64,6 +67,15 @@ GUIOverlay::GUIOverlay() {
 GUIOverlay::~GUIOverlay() {
 	//activeControls.clear();
 }
+
+const Vector2& GUIOverlay::getPlayArea() {
+	return hudBG->getSize();
+}
+
+const Vector2& GUIOverlay::getPlayPosition() {
+	return hudBG->getPosition();
+}
+
 
 bool rInc = true;
 bool gInc = false;

@@ -5,9 +5,6 @@ LevelManager::LevelManager() {
 
 LevelManager::~LevelManager() {
 
-	/*for (TextLabel* label : textLabels)
-		delete label;*/
-	//textLabels.clear();
 }
 
 void LevelManager::setGameManager(GameManager* gm) {
@@ -16,6 +13,7 @@ void LevelManager::setGameManager(GameManager* gm) {
 
 #include "../assets.h"
 #include "GameManager.h"
+#include "../Engine/GameEngine.h"
 bool LevelManager::initialize(ComPtr<ID3D11Device> device, shared_ptr<MouseController> mouse) {
 
 	levelManifest.reset(new xml_document());
@@ -29,36 +27,19 @@ bool LevelManager::initialize(ComPtr<ID3D11Device> device, shared_ptr<MouseContr
 		return false;
 	}
 
-	/*guiFont.reset(new FontSet());
-	if (!guiFont->load(device, Assets::arialFontFile))
-		return false;
-	guiFont->setTint(DirectX::Colors::Black.v);
 
-	pauseFont.reset(new FontSet());
-	if (!pauseFont->load(device, Assets::arialFontFile))
-		return false;
-	pauseFont->setTint(Color(Vector3(0, 1, 1)));
-	pauseFont->setScale(Vector2(1.5, 1.5));
-
-	warningFont.reset(new FontSet());
-	if (!warningFont->load(device, Assets::arialFontFile))
-		return false;
-	warningFont->setTint(DirectX::Colors::White.v);
-	warningFont->setScale(Vector2(2, 2));*/
-
-
-	if (!mouse->loadMouseIcon(GameManager::guiFactory.get(), "Mouse Reticle"))
+	if (!mouse->loadMouseIcon(guiFactory.get(), "Mouse Reticle"))
 		return false;
 
-	bgManager.reset(new BackgroundManager());
+	bgManager.reset(new Background());
 
 	waveManager.reset(new WaveManager());
-	if (!waveManager->initialize(GameManager::gfxAssets.get()))
+	if (!waveManager->initialize(gfxAssets.get()))
 		return false;
 
 	playerShip.reset(new PlayerShip(PLAYER_START_POSITION));
-	playerShip->load(GameManager::gfxAssets->getAsset("PlayerShip Hull"));
-	if (!playerShip->loadBullet(GameManager::gfxAssets.get())) {
+	playerShip->load(gfxAssets->getAsset("PlayerShip Hull"));
+	if (!playerShip->loadBullet(gfxAssets.get())) {
 		MessageBox(NULL, L"Failed to load weapons", L"ERROR", MB_OK);
 		return false;
 	}
@@ -69,6 +50,9 @@ bool LevelManager::initialize(ComPtr<ID3D11Device> device, shared_ptr<MouseContr
 	guiOverlay->exitButton->setOnClickListener(new ExitButtonListener(this));
 	guiOverlay->continueButton->setOnClickListener(new ContinueButtonListener(this));
 
+	Vector2 viewarea = guiOverlay->getPlayArea(); // for some reason this step is necessary
+	Vector2 viewposition = guiOverlay->getPlayPosition();
+	camera->updateViewport(viewarea, viewposition);
 
 	return true;
 }
@@ -82,7 +66,7 @@ bool LevelManager::loadLevel(ComPtr<ID3D11Device> device, const char_t* levelFil
 		return false;
 
 	waveManager.reset(new WaveManager());
-	if (!waveManager->initialize(GameManager::gfxAssets.get()))
+	if (!waveManager->initialize(gfxAssets.get()))
 		return false;
 
 	totalPlayTime = 0;
@@ -114,7 +98,7 @@ void LevelManager::update(double deltaTime, shared_ptr<MouseController> mouse) {
 					}
 				}
 
-				for (BackgroundLayer* layer : bgManager->getLayers()) {
+				for (BackgroundLayer* layer : bgManager->bgLayers) {
 					if (bullet->getHitArea()->collision(layer->getHitArea())) {
 						if (layer->isAlive) {
 							layer->takeDamage(bullet->damage);
@@ -181,22 +165,38 @@ void LevelManager::update(double deltaTime, shared_ptr<MouseController> mouse) {
 	pauseDownLast = keyState.Escape;
 }
 
-
+#include "../Engine/GameEngine.h"
 void LevelManager::draw(SpriteBatch* batch) {
 
+	batch->Begin(SpriteSortMode_Deferred, NULL, NULL, NULL, NULL, NULL, camera->translationMatrix());
+	{
+		bgManager->draw(batch);
+
+
+		playerShip->draw(batch);
+		waveManager->draw(batch);
+	}
+	batch->End();
+
+	batch->Begin(SpriteSortMode_Deferred);
+	{
+		guiOverlay->draw(batch);
+
+
+		if (playState == PAUSED) {
+			guiOverlay->drawPaused(batch);
+		} else if (playState == STARTING)
+			guiOverlay->drawWarning(batch);
+	}
+	batch->End();
+}
+
+void LevelManager::safedraw(SpriteBatch* batch) {
 	bgManager->draw(batch);
 
 
 	playerShip->draw(batch);
 	waveManager->draw(batch);
-
-	guiOverlay->draw(batch);
-
-
-	if (playState == PAUSED) {
-		guiOverlay->drawPaused(batch);
-	} else if (playState == STARTING)
-		guiOverlay->drawWarning(batch);
 }
 
 void LevelManager::pause() {

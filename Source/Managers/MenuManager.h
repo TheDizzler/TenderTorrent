@@ -111,7 +111,7 @@ public:
 	virtual void setGameManager(GameManager* game) override;
 	virtual void update(double deltaTime, shared_ptr<MouseController> mouse) override;
 	virtual void draw(SpriteBatch* batch) override;
-
+	virtual void safedraw(SpriteBatch* batch) override;
 
 	virtual void pause() override;
 
@@ -163,7 +163,7 @@ public:
 	virtual bool initialize(ComPtr<ID3D11Device> device, shared_ptr<MouseController> mouse) override;
 	virtual void update(double deltaTime, shared_ptr<MouseController> mouse) override;
 	virtual void draw(SpriteBatch* batch) override;
-
+	virtual void safedraw(SpriteBatch* batch) override;
 private:
 	void populateDisplayList(vector<ComPtr<IDXGIOutput> > displays);
 	void populateDisplayModeList(vector<DXGI_MODE_DESC> displayModes);
@@ -187,6 +187,7 @@ public:
 	virtual bool initialize(ComPtr<ID3D11Device> device, shared_ptr<MouseController> mouse) override;
 	virtual void update(double deltaTime, shared_ptr<MouseController> mouse) override;
 	virtual void draw(SpriteBatch * batch) override;
+	virtual void safedraw(SpriteBatch* batch) override;
 
 private:
 	unique_ptr<Dialog> exitDialog;

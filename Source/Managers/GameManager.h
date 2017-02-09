@@ -6,7 +6,10 @@
 #include "LevelManager.h"
 #include "MenuManager.h"
 
+extern unique_ptr<GUIFactory> guiFactory;
+extern unique_ptr<GFXAssetManager> gfxAssets;
 
+//extern unique_ptr<GUIOverlay> guiOverlay;
 
 class GameEngine;
 
@@ -47,8 +50,7 @@ public:
 	size_t getSelectedDisplayModeIndex();
 
 
-	static unique_ptr<GUIFactory> guiFactory;
-	static unique_ptr<GFXAssetManager> gfxAssets;
+	
 private:
 
 	Screen* currentScreen = 0;
@@ -59,7 +61,7 @@ private:
 	unique_ptr<xml_document> docAssMan;
 
 	GameEngine* gameEngine;
-	//shared_ptr<MouseController> mouse;
+	
 	ComPtr<ID3D11Device> device;
 	
 	unique_ptr<ScreenTransitions::ScreenTransitionManager> transitionManager;

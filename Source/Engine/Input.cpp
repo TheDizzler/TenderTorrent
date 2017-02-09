@@ -16,8 +16,8 @@ bool Input::initRawInput(HWND hwnd) {
 
 	keys.reset(new KeyboardController());
 	mouse = make_unique<MouseController>(hwnd);
-	if (GameManager::guiFactory != NULL)
-		mouse->loadMouseIcon(GameManager::guiFactory.get(), "Mouse Icon");
+	if (guiFactory != NULL)
+		mouse->loadMouseIcon(guiFactory.get(), "Mouse Icon");
 
 
 	return true;

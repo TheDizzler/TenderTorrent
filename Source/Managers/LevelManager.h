@@ -5,7 +5,7 @@
 
 #include "../GameObjects/PlayerShip.h"
 #include "WaveManager.h"
-#include "BackgroundManager.h"
+#include "../GameObjects/Graphics/Background.h"
 
 
 class LevelManager;
@@ -54,7 +54,8 @@ public:
 
 
 	virtual void update(double deltaTime, shared_ptr<MouseController> mouse);
-	virtual void draw(SpriteBatch* batch);
+	virtual void draw(SpriteBatch* batch) override;
+	virtual void safedraw(SpriteBatch* batch) override;
 
 	virtual void pause() override;
 
@@ -67,21 +68,11 @@ private:
 
 	GameManager* game;
 
-	unique_ptr<BackgroundManager> bgManager;
+	unique_ptr<Background> bgManager;
 	unique_ptr<WaveManager> waveManager;
 
 	unique_ptr<GUIOverlay> guiOverlay;
 
-	/*unique_ptr<Button> exitButton;
-	unique_ptr<Button> continueButton;
-
-	unique_ptr<TextLabel> timerLabel;
-	unique_ptr<TextLabel> scoreLabel;
-	unique_ptr<TextLabel> energyLabel;
-	unique_ptr<TextLabel> pauseLabel;
-	unique_ptr<TextLabel> warningLabel;
-
-	unique_ptr<RectangleSprite> pauseOverlay;*/
 
 	unique_ptr<PlayerShip> playerShip;
 

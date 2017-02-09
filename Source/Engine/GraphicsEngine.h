@@ -3,7 +3,9 @@
 
 #include "../globals.h"
 
-using namespace std;
+#include "Camera.h"
+
+extern shared_ptr<Camera> camera;
 
 
 class GraphicsEngine {
@@ -70,7 +72,9 @@ protected:
 
 	//D3D_DRIVER_TYPE driverType;
 	D3D_FEATURE_LEVEL featureLevel;
-	D3D11_VIEWPORT viewport;
+	//D3D11_VIEWPORT viewport;
+	Viewport viewport;
+
 	/* List of all gfx cards on this machine. */
 	vector<ComPtr<IDXGIAdapter> > adapters;
 	/* List of all monitors available with this adapter. */

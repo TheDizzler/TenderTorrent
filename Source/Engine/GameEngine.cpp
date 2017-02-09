@@ -50,6 +50,7 @@ bool GameEngine::initEngine(HWND hw, HINSTANCE hInstance) {
 		return false;
 	}
 
+	
 	ShowCursor(false);
 
 	return true;
@@ -81,7 +82,7 @@ bool GameEngine::initStage() {
 
 void GameEngine::constructErrorDialogs() {
 
-	errorDialog.reset(GameManager::guiFactory->createDialog(true));
+	errorDialog.reset(guiFactory->createDialog(true));
 	Vector2 dialogPos, dialogSize;
 	dialogSize = Vector2(Globals::WINDOW_WIDTH / 2, Globals::WINDOW_HEIGHT / 2);
 	dialogPos = dialogSize;
@@ -90,7 +91,7 @@ void GameEngine::constructErrorDialogs() {
 	errorDialog->setDimensions(dialogPos, dialogSize);
 	errorDialog->setTint(Color(0, 120, 207));
 	unique_ptr<Button> quitButton;
-	quitButton.reset(GameManager::guiFactory->createButton());
+	quitButton.reset(guiFactory->createButton());
 	quitButton->setText(L"Exit Program");
 	quitButton->setOnClickListener(new QuitButtonListener(this));
 	errorDialog->setCancelButton(move(quitButton));
@@ -100,14 +101,14 @@ void GameEngine::constructErrorDialogs() {
 	scrollBarDesc.upPressedButtonImage = "ScrollBar Up Pressed Custom";
 	scrollBarDesc.trackImage = "ScrollBar Track Custom";
 	scrollBarDesc.scrubberImage = "Scrubber Custom";*/
-	warningDialog.reset(GameManager::guiFactory->createDialog(true));
+	warningDialog.reset(guiFactory->createDialog(true));
 
 	warningDialog->setDimensions(dialogPos, dialogSize);
 	//warningDialog->setScrollBar(scrollBarDesc);
 	warningDialog->setTint(Color(0, 120, 207));
 	warningDialog->setCancelButton(L"Continue");
 	unique_ptr<Button> quitButton2;
-	quitButton2.reset(GameManager::guiFactory->createButton());
+	quitButton2.reset(guiFactory->createButton());
 	quitButton2->setText(L"Exit Program");
 	quitButton2->setOnClickListener(new QuitButtonListener(this));
 	warningDialog->setConfirmButton(move(quitButton2));
@@ -147,7 +148,7 @@ void GameEngine::update(double deltaTime) {
 
 	mouse->saveMouseState();
 	keys->saveKeyboardState();
-	//GameManager::guiFactory->updateMouse();
+	
 	if (showDialog->isOpen) {
 		showDialog->update(deltaTime);
 	} else
@@ -159,15 +160,20 @@ void GameEngine::update(double deltaTime) {
 void GameEngine::render(double deltaTime) {
 
 	deviceContext->ClearRenderTargetView(renderTargetView.Get(), Colors::PeachPuff);
-	/*CommonStates blendState(device.Get());*/
-	batch->Begin(SpriteSortMode_Deferred/*, blendState.NonPremultiplied()*/);
-	{
+	
+	/*batch->Begin(SpriteSortMode_Deferred, NULL, NULL, NULL, NULL, NULL, camera->translationMatrix());
+	{*/
 		game->draw(batch.get());
+	/*}
+	batch->End();
+	*/
+
+	batch->Begin(SpriteSortMode_Deferred);
+	{
 		showDialog->draw(batch.get());
 		mouse->draw(batch.get());
 	}
 	batch->End();
-
 
 	swapChain->Present(0, 0);
 }

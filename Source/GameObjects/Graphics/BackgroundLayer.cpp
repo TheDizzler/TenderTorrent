@@ -24,7 +24,7 @@ void BackgroundLayer::setHitArea(const Vector2& hitPos, const Vector2& size) {
 	Vector2 textPos(offset.x + hitArea->size.x * 3 / 4, offset.y + hitArea->size.y * 3 / 4);
 	//healthLabel.reset(new TextLabel(textPos, font));
 	//healthLabel->setText(to_string(health));
-	healthLabel.reset(GameManager::guiFactory->createTextLabel(textPos, to_wstring(health)));
+	healthLabel.reset(guiFactory->createTextLabel(textPos, to_wstring(health)));
 	
 
 

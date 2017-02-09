@@ -1,21 +1,40 @@
 #include "Background.h"
 
-Background::Background() : Sprite() {
+Background::Background() {
 
 
 }
 
 Background::~Background() {
 
+	clear();
+
+}
+
+void Background::clear() {
+
 	for each (BackgroundLayer* bgLayer in bgLayers)
 		delete bgLayer;
+	bgLayers.clear();
 
 	bgLayerAssets.clear();
+
+	while (waypoints.size() > 0) {
+		delete waypoints.front();
+		waypoints.pop();
+	}
+	
+	if (currentWaypoint)
+		delete currentWaypoint;
+	currentWaypoint = NULL;
+	if (lastWaypoint)
+		delete lastWaypoint;
+	lastWaypoint = NULL;
 }
 
 #include "../../DXTKGui/StringHelper.h"
 #include "../../Engine/GameEngine.h"
-bool Background::load(ComPtr<ID3D11Device> device, const char_t* xmlFile) {
+bool Background::loadLevel(ComPtr<ID3D11Device> device, const char_t* xmlFile) {
 
 	xml_document doc;
 
@@ -38,37 +57,99 @@ bool Background::load(ComPtr<ID3D11Device> device, const char_t* xmlFile) {
 		GameEngine::showErrorDialog(wss.str(), L"Fatal Error");
 		return false;
 	}
-
-	Sprite::load(bgLayerAsset.get());
+	baseBG = make_unique<Sprite>();
+	baseBG->load(bgLayerAsset.get());
+	baseBG->setOrigin(Vector2::Zero);
 	bgLayerAssets.push_back(move(bgLayerAsset));
 
 
-	float scaleFactor = levelRoot.attribute("scale").as_float();
-	scale = Vector2(scaleFactor, scaleFactor);
+	float scaleFactor = levelRoot.attribute("scale").as_float(); // change this camera zoom?
+	baseBG->setScale(Vector2(scaleFactor, scaleFactor));
 
+	xml_node waypointsNode = levelRoot.child("waypoints");
+	xml_node startWP = waypointsNode.child("start");
 
-	position.x += width*scale.x / 2; // set initial position of level
-	position.y -= height*scale.y / 2;
+	// set initial position of level
+	if (startWP.attribute("center").as_bool() == true) {
+		//position.x += width*scale.x / 2; 
+		//position.y -= height*scale.y / 2;
+		lastWaypoint = new Waypoint(
+			Vector2(baseBG->getWidth() / 2, baseBG->getHeight()), 0);
+	} else {
+		lastWaypoint = new Waypoint(
+			Vector2(startWP.attribute("x").as_int(), startWP.attribute("y").as_int()), 0);
+	}
 
+	for (xml_node waypoint : waypointsNode.children("waypoint")) {
+		waypoints.push(new Waypoint(
+			Vector2(waypoint.attribute("x").as_int(), waypoint.attribute("y").as_int()),
+			waypoint.attribute("speed").as_float()));
 
-	/*healthFont = move(GameManager::guiFactory->getFont("Arial"));
-	healthFont->setTint(Vector4(1, 1, 1, 1));*/
+	}
+
+	// last waypoint
+	xml_node endWP = waypointsNode.child("end");
+	waypoints.push(new Waypoint(
+		Vector2(endWP.attribute("x").as_int(), endWP.attribute("y").as_int()),
+		endWP.attribute("speed").as_float()));
 
 
 	cornerFrame.reset(new Sprite());
-	cornerFrame->load(GameManager::gfxAssets->getAsset("Corner Frame"));
+	cornerFrame->load(gfxAssets->getAsset("Corner Frame"));
+
+	camera->setLevel(this);
+	camera->centerOn(lastWaypoint->dest);
+	currentWaypoint = waypoints.front();
+	waypoints.pop();
 
 	return loadLevel(device, levelRoot);
 }
 
-void Background::clear() {
 
-	for each (BackgroundLayer* bgLayer in bgLayers)
-		delete bgLayer;
 
-	bgLayers.clear();
-	bgLayerAssets.clear();
+int Background::getWidth() {
+	return baseBG->getWidth();
 }
+
+int Background::getHeight() {
+	return baseBG->getHeight();
+}
+
+
+float CONSTANT = 150;
+double totalWaypointTime = 0;
+void Background::update(double deltaTime, PlayerShip* player) {
+
+	totalWaypointTime += currentWaypoint->scrollSpeed * deltaTime;
+	double t = totalWaypointTime / CONSTANT;
+
+	Vector2 newpos = Vector2::Lerp(lastWaypoint->dest, currentWaypoint->dest, t);
+	camera->setCameraPosition(newpos);
+
+	if (t >= 1) {
+		totalWaypointTime = 0;
+		delete lastWaypoint;
+		lastWaypoint = currentWaypoint;
+		currentWaypoint = NULL;
+		if (waypoints.size() == 0) {
+
+			levelFinished = true;
+		} else {
+			currentWaypoint = waypoints.front();
+			waypoints.pop();
+		}
+	}
+	/*for (BackgroundLayer* layer : bgLayers)
+		layer->setPosition(posChange);*/
+}
+
+void Background::draw(SpriteBatch * batch) {
+
+	baseBG->draw(batch);
+	for (BackgroundLayer* layer : bgLayers)
+		layer->draw(batch, cornerFrame.get());
+}
+
 
 
 bool Background::loadLevel(ComPtr<ID3D11Device> device, xml_node levelRoot) {
@@ -81,7 +162,7 @@ bool Background::loadLevel(ComPtr<ID3D11Device> device, xml_node levelRoot) {
 		StringHelper::trim(file);
 		string filepath = dir + file;
 
-		
+
 		unique_ptr<GraphicsAsset> layerAsset;
 		layerAsset.reset(new GraphicsAsset());
 		if (!layerAsset->load(device, StringHelper::convertCharStarToWCharT(filepath.c_str()))) {
@@ -93,7 +174,7 @@ bool Background::loadLevel(ComPtr<ID3D11Device> device, xml_node levelRoot) {
 
 
 		bgLayer->load(layerAsset.get());
-		bgLayer->setInitialPosition(position, scale);
+		bgLayer->setInitialPosition(baseBG->getPosition(), baseBG->getScale());
 
 		bgLayerAssets.push_back(move(layerAsset));
 
@@ -111,22 +192,4 @@ bool Background::loadLevel(ComPtr<ID3D11Device> device, xml_node levelRoot) {
 
 	return true;
 }
-
-
-void Background::update(double deltaTime, PlayerShip* player) {
-
-	Vector2 posChange = Vector2(0, 15 * deltaTime);
-	position += posChange;
-
-	for (BackgroundLayer* layer : bgLayers)
-		layer->setPosition(posChange);
-}
-
-void Background::draw(SpriteBatch * batch) {
-
-	Sprite::draw(batch);
-	for (BackgroundLayer* layer : bgLayers)
-		layer->draw(batch, cornerFrame.get());
-}
-
 

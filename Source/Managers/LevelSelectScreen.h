@@ -88,6 +88,7 @@ public:
 
 	virtual void update(double deltaTime, shared_ptr<MouseController> mouse) override;
 	virtual void draw(SpriteBatch* batch) override;
+	virtual void safedraw(SpriteBatch* batch) override;
 
 	virtual void pause() override;
 
