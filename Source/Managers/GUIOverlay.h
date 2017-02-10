@@ -15,9 +15,11 @@ public:
 
 	void updateWarning(double deltaTime);
 	void updatePaused(double deltaTime);
+	//void drawGameOver(double deltaTime);
 	void draw(SpriteBatch* batch);
 	void drawPaused(SpriteBatch* batch);
 	void drawWarning(SpriteBatch* batch);
+	void drawGameOver(SpriteBatch* batch);
 
 	unique_ptr<Button> exitButton;
 	unique_ptr<Button> continueButton;
@@ -27,6 +29,7 @@ public:
 	unique_ptr<TextLabel> energyLabel;
 	unique_ptr<TextLabel> pauseLabel;
 	unique_ptr<TextLabel> warningLabel;
+	unique_ptr<TextLabel> gameOverLabel;
 
 	unique_ptr<RectangleSprite> pauseOverlay;
 private:

@@ -24,13 +24,16 @@ public:
 	int getWidth();
 	int getHeight();
 
-	void update(double deltaTime, PlayerShip* player);
+	const Vector2& getStartPosition();
+
+	bool startUpdate(double deltaTime);
+	bool update(double deltaTime, PlayerShip* player);
 	void draw(SpriteBatch* batch);
 
+	vector<unique_ptr<BackgroundLayer>> bgLayers;
+	//vector<BackgroundLayer*> bgLayers;
 
-	vector<BackgroundLayer*> bgLayers;
-
-	bool levelFinished = false;
+	//bool levelFinished = false;
 private:
 
 	queue<Waypoint*> waypoints;

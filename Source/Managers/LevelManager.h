@@ -38,7 +38,7 @@ friend class ContinueButtonListener;
 public:
 
 	enum PlayState {
-		LOADING, STARTING, PAUSED, PLAYING
+		LOADING, STARTING, PAUSED, PLAYING, FINISHED, GAMEOVER
 	};
 
 
@@ -86,6 +86,8 @@ private:
 
 	double totalPlayTime = 0;
 	int score = 0;
+
+	double gameOverTimer = 0;
 
 	bool isPaused;
 	bool delayedPause = false;

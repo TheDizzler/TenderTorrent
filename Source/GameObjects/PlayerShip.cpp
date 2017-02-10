@@ -23,7 +23,7 @@ PlayerShip::~PlayerShip() {
 	liveBullets.clear();
 }
 
-void PlayerShip::reset() {
+void PlayerShip::reset(/*const Vector2& levelStart*/) {
 
 	for each (Bullet* bullet in liveBullets)
 		bullet->isAlive = false;
@@ -33,6 +33,8 @@ void PlayerShip::reset() {
 	maxEnergy = startMaxEnergy;
 	energy = startMaxEnergy;
 	position = PLAYER_START_POSITION;
+	/*position = levelStart;
+	position.y += Globals::WINDOW_HEIGHT / 2;*/
 
 	rightWeaponSlot->update(0, position);
 	leftWeaponSlot->update(0, position);
@@ -103,7 +105,7 @@ void PlayerShip::update(double deltaTime, shared_ptr<MouseController> mouse) {
 	if (position.x > Globals::WINDOW_WIDTH - width / 2)
 		position.x = Globals::WINDOW_WIDTH - width / 2;
 
-	
+
 
 	//if (keys->keyDown[KeyboardController::UP])
 	if (keyState.W)

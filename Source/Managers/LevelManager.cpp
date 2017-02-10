@@ -98,18 +98,20 @@ void LevelManager::update(double deltaTime, shared_ptr<MouseController> mouse) {
 					}
 				}
 
-				for (BackgroundLayer* layer : bgManager->bgLayers) {
+				//for (BackgroundLayer* layer : bgManager->bgLayers) {
+				for (const auto& layer : bgManager->bgLayers) {
 					if (bullet->getHitArea()->collision(layer->getHitArea())) {
-						if (layer->isAlive) {
-							layer->takeDamage(bullet->damage);
-							bullet->isAlive = false;
-						}
+						//if (layer->isAlive) {
+						layer->takeDamage(bullet->damage);
+						bullet->isAlive = false;
+					//}
 					}
 				}
 			}
 
 
-			bgManager->update(deltaTime, playerShip.get());
+			if (bgManager->update(deltaTime, playerShip.get()))
+				playState = PlayState::FINISHED;
 			playerShip->update(deltaTime, mouse);
 			waveManager->update(deltaTime, playerShip.get());
 
@@ -118,19 +120,34 @@ void LevelManager::update(double deltaTime, shared_ptr<MouseController> mouse) {
 				pauseDownLast = true;
 			}
 
-			if (!playerShip->isAlive)
-				game->loadMainMenu();
+			if (!playerShip->isAlive) {
+				playState = PlayState::FINISHED;
+			}
 			break;
 		case STARTING:
-
-			if (playerShip->startUpdate(deltaTime, mouse)) {
-				if (delayedPause) {
-					playState = PAUSED;
-					delayedPause = false;
+			if (bgManager->startUpdate(deltaTime)) {
+				if (playerShip->startUpdate(deltaTime, mouse)) {
+					if (delayedPause) {
+						playState = PAUSED;
+						delayedPause = false;
+					} else
+						playState = PLAYING;
 				} else
-					playState = PLAYING;
-			} else
-				guiOverlay->updateWarning(deltaTime);
+					guiOverlay->updateWarning(deltaTime);
+			}
+			break;
+		case FINISHED:
+			waveManager->update(deltaTime, playerShip.get());
+			gameOverTimer += deltaTime;
+			if (gameOverTimer > 5 || keyState.Escape || keyState.Enter)
+				game->loadMainMenu();
+			break;
+		case GAMEOVER:
+			bgManager->update(deltaTime, playerShip.get());
+			waveManager->update(deltaTime, playerShip.get());
+			gameOverTimer += deltaTime;
+			if (gameOverTimer > 5 || keyState.Escape || keyState.Enter)
+				game->loadMainMenu();
 			break;
 		case PAUSED:
 			guiOverlay->updatePaused(deltaTime);
@@ -172,21 +189,30 @@ void LevelManager::draw(SpriteBatch* batch) {
 	{
 		bgManager->draw(batch);
 
-
-		playerShip->draw(batch);
-		waveManager->draw(batch);
 	}
 	batch->End();
 
+
+
 	batch->Begin(SpriteSortMode_Deferred);
 	{
+
+		playerShip->draw(batch);
+		waveManager->draw(batch);
+
 		guiOverlay->draw(batch);
 
-
-		if (playState == PAUSED) {
-			guiOverlay->drawPaused(batch);
-		} else if (playState == STARTING)
-			guiOverlay->drawWarning(batch);
+		switch (playState) {
+			case PAUSED:
+				guiOverlay->drawPaused(batch);
+				break;
+			case STARTING:
+				guiOverlay->drawWarning(batch);
+				break;
+			case GAMEOVER:
+				guiOverlay->drawGameOver(batch);
+				break;
+		}
 	}
 	batch->End();
 }

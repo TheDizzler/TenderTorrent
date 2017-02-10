@@ -43,7 +43,7 @@ public:
 
 	virtual void load(GraphicsAsset* const graphicsAsset);
 
-	const HitArea* getHitArea() const;
+	virtual const HitArea* getHitArea() const;
 	virtual const Vector2& getPosition() const override;
 	virtual const Vector2& getOrigin() const override;
 	virtual const Vector2& getScale() const override;

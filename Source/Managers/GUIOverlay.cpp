@@ -4,8 +4,8 @@
 
 GUIOverlay::GUIOverlay() {
 
-	hudBG.reset(guiFactory->createRectangle(Vector2::Zero, Vector2(Globals::WINDOW_WIDTH, 75)));
-	hudBG->setTint(Vector4(.75, .75, .75, 1));
+	hudBG.reset(guiFactory->createRectangle(Vector2::Zero, Vector2(Globals::WINDOW_WIDTH, 50)));
+	hudBG->setTint(Vector4(1, 0, 1, 1));
 
 	timerLabel.reset(guiFactory->createTextLabel(Vector2(500, 10)));
 	timerLabel->setTint(Vector4(0, 0, 0, 1));
@@ -35,6 +35,13 @@ GUIOverlay::GUIOverlay() {
 	pauseLabel->setPosition(Vector2(
 		(Globals::WINDOW_WIDTH - size.x) / 2, (Globals::WINDOW_HEIGHT - size.y) / 2));
 
+	gameOverLabel.reset(guiFactory->createTextLabel(Vector2::Zero, "BlackCloak"));
+	gameOverLabel->setText("Game Over");
+	gameOverLabel->setScale(Vector2(1, 1.5));
+	size = gameOverLabel->measureString();
+	gameOverLabel->setPosition(Vector2(
+		(Globals::WINDOW_WIDTH - size.x) / 2, (Globals::WINDOW_HEIGHT - size.y) / 2));
+	gameOverLabel->setTint(Color(0, 0, 0, 1));
 
 	exitButton.reset(guiFactory->createImageButton(
 		Vector2(Globals::WINDOW_WIDTH / 4, Globals::WINDOW_HEIGHT * 3 / 4),
@@ -122,8 +129,10 @@ void GUIOverlay::updatePaused(double deltaTime) {
 
 }
 
+
 void GUIOverlay::draw(SpriteBatch* batch) {
 
+	hudBG->draw(batch);
 	timerLabel->draw(batch);
 	scoreLabel->draw(batch);
 	energyLabel->draw(batch);
@@ -141,6 +150,10 @@ void GUIOverlay::drawPaused(SpriteBatch* batch) {
 
 void GUIOverlay::drawWarning(SpriteBatch* batch) {
 	warningLabel->draw(batch);
+}
+
+void GUIOverlay::drawGameOver(SpriteBatch* batch) {
+	gameOverLabel->draw(batch);
 }
 
 

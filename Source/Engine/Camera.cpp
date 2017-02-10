@@ -66,6 +66,12 @@ void Camera::adjustZoom(float amount) {
 	viewY = (viewportHeight / zoom / 2);
 }
 
+void Camera::setZoom(float zoomAmount) {
+	zoom = zoomAmount;
+	viewX = (viewportWidth / zoom / 2);
+	viewY = (viewportHeight / zoom / 2);
+}
+
 
 void Camera::moveCamera(const Vector2& cameraMovement) {
 

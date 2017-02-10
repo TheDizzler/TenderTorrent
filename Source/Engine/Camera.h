@@ -29,6 +29,7 @@ public:
 
 
 	void adjustZoom(float amount);
+	void setZoom(float zoomAmount);
 	/** Move the camera in an X and Y amount based on the cameraMovement param.
 	*	If clampToMap is true the camera will try not to pan outside of the
 	*	bounds of the map. */

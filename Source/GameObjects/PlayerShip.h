@@ -9,7 +9,7 @@
 #include "../globals.h"
 #include "Turret.h"
 
-
+/* In screenspace. */
 static const Vector2 PLAYER_START_POSITION(Globals::WINDOW_WIDTH / 2, Globals::WINDOW_HEIGHT + 175);
 
 
@@ -19,7 +19,7 @@ public:
 	PlayerShip(const Vector2& position);
 	~PlayerShip();
 
-	void reset();
+	void reset(/*const Vector2& levelStart*/);
 	//void clear();
 
 	/*

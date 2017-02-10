@@ -596,12 +596,12 @@ GraphicsAsset* GUIFactory::createTextureFromScreen(Screen* screen, Color bgColor
 
 	deviceContext->ClearRenderTargetView(textureRenderTargetView.Get(), bgColor);
 
-	batch->Begin(SpriteSortMode_Immediate);
+	/*batch->Begin(SpriteSortMode_Immediate);
 	{
 		screen->safedraw(batch);
 	}
-	batch->End();
-
+	batch->End();*/
+	screen->draw(batch);
 
 	deviceContext->OMSetRenderTargets(1, oldRenderTargetView.GetAddressOf(), nullptr);
 
