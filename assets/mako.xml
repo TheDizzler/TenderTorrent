@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<level name="mako" scale="2.5" numLayers="9" dir="assets/bg/">
+<level name="mako" scale="1.0" numLayers="9" dir="assets/bg/">
 
 
 
 	<waypoints>
 		<intro x="357" y="0" />
 		<start center="false" x="400" y="1400" speed="60"/>
-		<waypoint x="615" y="851" speed="21"/>
+		<!--waypoint x="615" y="851" speed="81"/>
 		<waypoint x="162" y="1203" speed="42" />
-		<waypoint x="162" y="641" speed="23" />
-		<end x="395" y="0" speed="64" />
+		<waypoint x="162" y="641" speed="23" /-->
+		<end x="395" y="0" speed="5" />
 	</waypoints>
 
 	<!-- Background data -->

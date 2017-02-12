@@ -125,6 +125,10 @@ Vector2& Camera::worldToScreen(Vector2 worldPosition) {
 	return Vector2::Transform(worldPosition, translationMatrix());
 }
 
+float Camera::getZoom() {
+	return zoom;
+}
+
 Vector2* Camera::screenToWorld(Vector2 screenPosition) {
 
 	Vector2* vec = new Vector2();

@@ -30,6 +30,10 @@ void Background::clear() {
 	if (lastWaypoint)
 		delete lastWaypoint;
 	lastWaypoint = NULL;
+
+	introScrollDone = false;
+	waitDone = false;
+	totalWaypointTime = 0;
 }
 
 #include "../../DXTKGui/StringHelper.h"
@@ -103,6 +107,7 @@ bool Background::loadLevel(ComPtr<ID3D11Device> device, const char_t* xmlFile) {
 
 	cornerFrame.reset(new Sprite());
 	cornerFrame->load(gfxAssets->getAsset("Corner Frame"));
+	//cornerFrame->setPosition(Vector2(500, 500));
 
 	camera->setLevel(this);
 	camera->centerOn(lastWaypoint->dest);
@@ -126,11 +131,7 @@ const Vector2& Background::getStartPosition() {
 	return lastWaypoint->dest;
 }
 
-bool introScrollDone = false;
-
 float CONSTANT = 150;
-double totalWaypointTime = 0;
-bool waitDone = false;
 bool Background::startUpdate(double deltaTime) {
 
 	if (introScrollDone)
@@ -160,7 +161,7 @@ bool Background::startUpdate(double deltaTime) {
 }
 
 
-bool Background::update(double deltaTime, PlayerShip* player) {
+bool Background::update(double deltaTime, shared_ptr<MouseController> mouse) {
 
 	totalWaypointTime += currentWaypoint->scrollSpeed * deltaTime;
 	double t = totalWaypointTime / CONSTANT;
@@ -180,18 +181,17 @@ bool Background::update(double deltaTime, PlayerShip* player) {
 			waypoints.pop();
 		}
 	}
-	//for (BackgroundLayer* layer : bgLayers)
+
 	for (const auto& layer : bgLayers)
-		layer->updateProjectedHitArea();
+		layer->update(deltaTime);
 	return false;
 }
 
 void Background::draw(SpriteBatch * batch) {
 
 	baseBG->draw(batch);
-	//for (BackgroundLayer* layer : bgLayers)
 	for (const auto& layer : bgLayers)
-		layer->draw(batch, cornerFrame.get());
+		layer->draw(batch);
 }
 
 
@@ -228,12 +228,14 @@ bool Background::loadLevel(ComPtr<ID3D11Device> device, xml_node levelRoot) {
 
 
 		unique_ptr<BackgroundLayer> bgLayer = make_unique<BackgroundLayer>();
-		bgLayer->setLayerDepth(bgLayerNode.attribute("layer").as_float());
-		bgLayer->load(spriteAsset.get());
+		bgLayer->load(spriteAsset.get(), cornerFrame);
+		//bgLayer->setLayerDepth(bgLayerNode.attribute("layer").as_float());
 		bgLayer->setHealth(bgLayerNode.attribute("health").as_int());
 		bgLayerAssets.push_back(move(spriteAsset));
-		bgLayer->setInitialPosition(worldPosition, baseBG->getScale());
 		bgLayer->setMatrixFunction([&]() -> Matrix {return camera->translationMatrix(); });
+		bgLayer->setCameraZoom([&]() -> float { return camera->getZoom(); });
+		bgLayer->setInitialPosition(worldPosition, baseBG->getScale());
+
 
 
 

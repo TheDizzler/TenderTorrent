@@ -6,10 +6,17 @@ BackgroundLayer::BackgroundLayer() {
 BackgroundLayer::~BackgroundLayer() {
 }
 
-void BackgroundLayer::load(GraphicsAsset* const graphicsAsset) {
+void BackgroundLayer::load(GraphicsAsset* const graphicsAsset, shared_ptr<Sprite> cornerFrame) {
 	whole = make_unique<Sprite>();
 	whole->load(graphicsAsset);
 	whole->setOrigin(Vector2::Zero);
+
+	//frame = cornerFrame;
+	frameTexture = cornerFrame->getTexture();
+	frameRect = cornerFrame->getRect();
+	frameTint = cornerFrame->getTint();
+	frameOrigin = cornerFrame->getOrigin();
+	frameLayerDepth = cornerFrame->getLayerDepth();
 }
 
 void BackgroundLayer::loadPiece(GraphicsAsset* const graphicsAsset) {
@@ -33,11 +40,20 @@ void BackgroundLayer::setInitialPosition(const Vector2& pos, const Vector2& scl)
 	whole->setScale(scale);
 	whole->setPosition(pos);
 
-	projectedHitArea = make_unique<HitArea>(whole->getHitArea()->position, whole->getHitArea()->size);
-
 	Vector2 position = whole->getPosition();
 	Vector2 textPos(position.x + whole->getWidth() * 3 / 4, position.y + whole->getHeight() * 3 / 4);
 	healthLabel.reset(guiFactory->createTextLabel(textPos, to_wstring(health)));
+	healthLabel->setTint(Color(0, 0, 0, 1));
+
+	projectedHitArea = make_unique<HitArea>(whole->getHitArea()->position, whole->getHitArea()->size);
+	updateProjectedHitArea();
+
+	const HitArea* hitArea = whole->getHitArea();
+	topLeftCornerPos = hitArea->position;
+	topRightCornerPos = Vector2(hitArea->position.x + hitArea->size.x, hitArea->position.y);
+	bottomLeftCornerPos = Vector2(hitArea->position.x, hitArea->position.y + hitArea->size.y);
+	bottomRightCornerPos = Vector2(hitArea->position.x + hitArea->size.x, hitArea->position.y + hitArea->size.y);
+
 }
 
 
@@ -77,8 +93,9 @@ void BackgroundLayer::takeDamage(int damageTaken) {
 	}
 }
 
-void BackgroundLayer::setLayerDepth(float layerDepth) {
-
+void BackgroundLayer::setLayerDepth(float depth) {
+	whole->setLayerDepth(depth);
+	frameLayerDepth = depth + .1;
 }
 
 void BackgroundLayer::moveBy(const Vector2& pos) {
@@ -94,25 +111,39 @@ void BackgroundLayer::moveBy(const Vector2& pos) {
 
 }
 
-void BackgroundLayer::draw(SpriteBatch* batch, Sprite* frame) {
+//Color frameTint = Color(1, 1, 1, 1);
+void BackgroundLayer::update(double deltaTime/*, shared_ptr<MouseController> mouse*/) {
+
+	updateProjectedHitArea();
+	/*if (projectedHitArea->contains(mouse->getPosition())) {
+		frameTint = Color(1, 0, 1, 1);
+		healthLabel->setTint(Color(1, 0, 1, 1));
+	} else {
+		frameTint = Color(1, 1, 1, 1);
+		healthLabel->setTint(Color(1, 1, 1, 1));
+	}*/
+
+}
+
+void BackgroundLayer::draw(SpriteBatch* batch/*, Sprite* frame*/) {
 
 	if (whole->isAlive) {
 		whole->draw(batch);
 
 		if (!labelHidden) {
 			healthLabel->draw(batch);
-			ID3D11ShaderResourceView* texture = frame->getTexture().Get();
-			RECT frameRect = frame->getRect();
-			Color frameTint = frame->getTint();
-			Vector2 frameOrigin = frame->getOrigin();
-			batch->Draw(texture, topLeftCornerPos, &frameRect,
-				frameTint, 0, frameOrigin, scale, SpriteEffects_None, layerDepth);
-			batch->Draw(texture, topRightCornerPos, &frameRect,
-				frameTint, XM_PI / 2, frameOrigin, scale, SpriteEffects_None, layerDepth);
-			batch->Draw(texture, bottomLeftCornerPos, &frameRect,
-				frameTint, -XM_PI / 2, frameOrigin, scale, SpriteEffects_None, layerDepth);
-			batch->Draw(texture, bottomRightCornerPos, &frameRect,
-				frameTint, XM_PI, frameOrigin, scale, SpriteEffects_None, layerDepth);
+			//ID3D11ShaderResourceView* texture = frame->getTexture().Get();
+			
+			//frame->setPosition(whole->getPosition());
+			//frame->draw(batch);
+			batch->Draw(frameTexture.Get(), topLeftCornerPos, &frameRect,
+				frameTint, 0, frameOrigin, scale, SpriteEffects_None, frameLayerDepth);
+			batch->Draw(frameTexture.Get(), topRightCornerPos, &frameRect,
+				frameTint, XM_PI / 2, frameOrigin, scale, SpriteEffects_None, frameLayerDepth);
+			batch->Draw(frameTexture.Get(), bottomLeftCornerPos, &frameRect,
+				frameTint, -XM_PI / 2, frameOrigin, scale, SpriteEffects_None, frameLayerDepth);
+			batch->Draw(frameTexture.Get(), bottomRightCornerPos, &frameRect,
+				frameTint, XM_PI, frameOrigin, scale, SpriteEffects_None, frameLayerDepth);
 
 		}
 	}
@@ -127,7 +158,13 @@ void BackgroundLayer::updateProjectedHitArea() {
 
 	Vector2 screenCords = getScreenPosition(translationMatrix());
 	projectedHitArea->position = screenCords;
-	projectedHitArea->size = whole->getHitArea()->size;
+	projectedHitArea->size = whole->getHitArea()->size * cameraZoom();
+
+	/*wostringstream wss;
+	wss << "size: " << whole->getHitArea()->size.x << ", " << whole->getHitArea()->size.y << "\n";
+	wss << "pro size: " << projectedHitArea->size.x << ", " << projectedHitArea->size.y << "\n";
+	wss << "pos: " << projectedHitArea->position.x << ", " << projectedHitArea->position.y;
+	healthLabel->setText(wss);*/
 }
 
 const Vector2& BackgroundLayer::getScreenPosition(Matrix viewProjectionMatrix) const {

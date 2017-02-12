@@ -42,6 +42,8 @@ public:
 
 	Matrix translationMatrix();
 	Vector2& worldToScreen(Vector2 worldPosition);
+
+	float getZoom();
 private:
 
 	Vector2 position;

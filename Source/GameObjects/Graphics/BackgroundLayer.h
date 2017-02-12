@@ -10,17 +10,20 @@ public:
 	BackgroundLayer();
 	~BackgroundLayer();
 
-	void load(GraphicsAsset* const graphicsAsset);
+	void load(GraphicsAsset* const graphicsAsset, shared_ptr<Sprite> cornerFrame);
 	void loadPiece(GraphicsAsset* const graphicsAsset);
 	//void setHitArea(const Vector2& position, const Vector2& size);
 
 	void setHealth(int health);
 	void setInitialPosition(const Vector2& position, const Vector2& scale);
 	void takeDamage(int damageTaken);
-
+	
+	/* Image gets layerDepth, frame gets layerDepth + .1 */
 	void setLayerDepth(float layerDepth);
 	void moveBy(const Vector2& position);
-	void draw(SpriteBatch* batch, Sprite* frame);
+
+	void update(double deltaTime/*, shared_ptr<MouseController> mouse*/);
+	void draw(SpriteBatch* batch/*, Sprite* frame*/);
 
 	const HitArea* getHitArea() const;
 
@@ -28,7 +31,9 @@ public:
 	control->setMatrixFunction([&]() -> Matrix { return camera->translationMatrix(); }); */
 	void setMatrixFunction(function<Matrix()> translationMat) {
 		translationMatrix = translationMat;
-		updateProjectedHitArea();
+	}
+	void setCameraZoom(function<float()> zoomFunction) {
+		cameraZoom = zoomFunction;
 	}
 
 	virtual void updateProjectedHitArea();
@@ -38,7 +43,14 @@ public:
 
 private:
 	function<Matrix()> translationMatrix;
+	function<float()> cameraZoom;
 	unique_ptr<HitArea> projectedHitArea;
+
+	ComPtr<ID3D11ShaderResourceView> frameTexture;
+	RECT frameRect;
+	Color frameTint;
+	Vector2 frameOrigin;
+	float frameLayerDepth = .5;
 
 	Vector2 topLeftCornerPos, topRightCornerPos,
 		bottomLeftCornerPos, bottomRightCornerPos;
@@ -51,8 +63,8 @@ private:
 
 	unique_ptr<Sprite> whole;
 	vector<unique_ptr<Sprite> > tatters;
+	//shared_ptr<Sprite> frame;
 
 	Vector2 scale = Vector2(1, 1);
-	float layerDepth;
-
+	
 };

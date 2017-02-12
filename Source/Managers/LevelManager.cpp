@@ -62,6 +62,7 @@ bool LevelManager::loadLevel(ComPtr<ID3D11Device> device, const char_t* levelFil
 
 	playState = LOADING;
 
+	bgManager->clear();
 	if (!bgManager->loadLevel(device, levelFileName))
 		return false;
 
@@ -70,6 +71,7 @@ bool LevelManager::loadLevel(ComPtr<ID3D11Device> device, const char_t* levelFil
 		return false;
 
 	totalPlayTime = 0;
+	gameOverTimer = 0;
 	playerShip->reset();
 
 	playState = STARTING;
@@ -110,7 +112,7 @@ void LevelManager::update(double deltaTime, shared_ptr<MouseController> mouse) {
 			}
 
 
-			if (bgManager->update(deltaTime, playerShip.get()))
+			if (bgManager->update(deltaTime, mouse))
 				playState = PlayState::FINISHED;
 			playerShip->update(deltaTime, mouse);
 			waveManager->update(deltaTime, playerShip.get());
@@ -143,7 +145,7 @@ void LevelManager::update(double deltaTime, shared_ptr<MouseController> mouse) {
 				game->loadMainMenu();
 			break;
 		case GAMEOVER:
-			bgManager->update(deltaTime, playerShip.get());
+			bgManager->update(deltaTime, mouse);
 			waveManager->update(deltaTime, playerShip.get());
 			gameOverTimer += deltaTime;
 			if (gameOverTimer > 5 || keyState.Escape || keyState.Enter)
