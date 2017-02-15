@@ -136,7 +136,7 @@ const float CONSTANT = 150;
 bool Background::startUpdate(double deltaTime) {
 
 	if (introScrollDone)
-		return introScrollDone;
+		return true;
 
 	totalWaypointTime += currentWaypoint->scrollSpeed * deltaTime;
 	if (!waitDone) {

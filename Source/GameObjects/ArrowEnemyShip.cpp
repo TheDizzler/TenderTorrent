@@ -55,23 +55,6 @@ void ArrowEnemyShip::update(double deltaTime, PlayerShip* player, vector<Bullet*
 }
 
 
-//#include <random>
-void ArrowEnemyShip::reset() {
-
-	
-
-	/*mt19937 rng;
-	rng.seed(random_device{}());
-	uniform_int_distribution<mt19937::result_type> rand((int) getWidth(), Globals::WINDOW_WIDTH - getWidth());
-	startPos.x = rand(rng);
-	position = startPos;
-	midPos.x = startPos.x;*/
-	
-	
-	health = maxHealth;
-	timeAlive = 0;
-	isAlive = true;
-}
 
 
 void ArrowEnemyShip::setStart(int xPos) {

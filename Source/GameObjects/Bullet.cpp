@@ -13,6 +13,10 @@ Bullet::Bullet(const Vector2 &position) : AnimatedSprite(position) {
 Bullet::~Bullet() {
 }
 
+void Bullet::setDamage(int newDamage) {
+	damage = newDamage;
+}
+
 void Bullet::update(double deltaTime) {
 
 	float deltaSpeed = deltaTime*bulletSpeed;

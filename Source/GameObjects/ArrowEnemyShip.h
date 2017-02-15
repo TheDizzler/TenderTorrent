@@ -14,7 +14,6 @@ public:
 	virtual void update(double deltaTime, PlayerShip * player, vector<Bullet*>& liveBullets) override;
 
 	void setStart(int xPos);
-	virtual void reset() override;
 private:
 
 	double timeToTravel;

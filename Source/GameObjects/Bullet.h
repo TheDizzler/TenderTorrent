@@ -12,13 +12,15 @@ public:
 	Bullet(const Vector2 &position);
 	~Bullet();
 
+	void setDamage(int newDamage);
+
 	virtual void update(double deltaTime);
 
 	/** Normalized direction vector of projectile. */
 	Vector2 direction = Vector2(0, -1);
 
 
-	int damage = 1;
+	int damage = 5;
 	int bulletSpeed = 400;
 protected:
 

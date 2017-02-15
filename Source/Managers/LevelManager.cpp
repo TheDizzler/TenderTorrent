@@ -100,13 +100,12 @@ void LevelManager::update(double deltaTime, shared_ptr<MouseController> mouse) {
 					}
 				}
 
-				//for (BackgroundLayer* layer : bgManager->bgLayers) {
 				for (const auto& layer : bgManager->bgLayers) {
-					if (bullet->getHitArea()->collision(layer->getHitArea())) {
-						//if (layer->isAlive) {
-						layer->takeDamage(bullet->damage);
-						bullet->isAlive = false;
-					//}
+					if (layer->isAlive()) {
+						if (bullet->getHitArea()->collision(layer->getHitArea())) {
+							layer->takeDamage(bullet->damage);
+							bullet->isAlive = false;
+						}
 					}
 				}
 			}
@@ -134,9 +133,9 @@ void LevelManager::update(double deltaTime, shared_ptr<MouseController> mouse) {
 						delayedPause = false;
 					} else
 						playState = PLAYING;
-				} else
-					guiOverlay->updateWarning(deltaTime);
+				}
 			}
+			guiOverlay->updateWarning(deltaTime);
 			break;
 		case FINISHED:
 			waveManager->update(deltaTime, playerShip.get());
@@ -209,7 +208,8 @@ void LevelManager::draw(SpriteBatch* batch) {
 				guiOverlay->drawPaused(batch);
 				break;
 			case STARTING:
-				guiOverlay->drawWarning(batch);
+				if (bgManager->introScrollDone)
+					guiOverlay->drawWarning(batch);
 				break;
 			case GAMEOVER:
 				guiOverlay->drawGameOver(batch);

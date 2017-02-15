@@ -40,19 +40,6 @@ StarEnemyShip::~StarEnemyShip() {
 }
 
 
-void StarEnemyShip::reset() {
-
-	position = startPos;
-	health = maxHealth;
-	timeAlive = 0;
-	isAlive = true;
-
-	for (auto const& weapon : weaponSystems) {
-		weapon->updatePosition(position);
-		weapon->fired = false;
-	}
-}
-
 
 void StarEnemyShip::update(double deltaTime, PlayerShip* player, vector<Bullet*>& liveBullets) {
 

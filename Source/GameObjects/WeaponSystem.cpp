@@ -27,7 +27,10 @@ void WeaponSystem::fillBulletStore(shared_ptr<Animation> bulletAsset) {
 }
 
 
-void WeaponSystem::setWeaponStats(int nrgCst, float coolTime) {
+void WeaponSystem::setWeaponStats(int damage, int nrgCst, float coolTime) {
+
+	for (Bullet* bullet : bulletStore)
+		bullet->setDamage(damage);
 
 	energyCost = nrgCst;
 	coolDownTime = coolTime;
@@ -47,7 +50,7 @@ void WeaponSystem::draw(SpriteBatch* batch) {
 
 	for (Bullet* bullet : bulletStore) {
 		if (bullet->isAlive)
-			bullet->draw(batch/*, baseBulletSprite.get()*/);
+			bullet->draw(batch);
 	}
 }
 

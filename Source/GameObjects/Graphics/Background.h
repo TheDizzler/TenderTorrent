@@ -31,9 +31,8 @@ public:
 	void draw(SpriteBatch* batch);
 
 	vector<unique_ptr<BackgroundLayer>> bgLayers;
-	//vector<BackgroundLayer*> bgLayers;
 
-	//bool levelFinished = false;
+	bool introScrollDone = false;
 private:
 
 	queue<Waypoint*> waypoints;
@@ -50,7 +49,7 @@ private:
 
 	float scrollSpeed = 15;
 
-	bool introScrollDone = false;
+	
 	bool waitDone = false;
 	double totalWaypointTime = 0;
 };

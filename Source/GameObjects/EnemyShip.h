@@ -43,7 +43,8 @@ public:
 	/** For constructing actual enemies seen on stage. */
 	EnemyShip(const Vector2& position);
 	~EnemyShip();
-	virtual void reset();
+
+	void reset();
 
 	virtual void setExplosion(shared_ptr<Animation> explosion);
 

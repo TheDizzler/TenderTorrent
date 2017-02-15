@@ -4,21 +4,29 @@
 
 GUIOverlay::GUIOverlay() {
 
-	hudBG.reset(guiFactory->createRectangle(Vector2::Zero, Vector2(Globals::WINDOW_WIDTH, 50)));
+	hudBG.reset(guiFactory->createRectangle(Vector2::Zero, Vector2(Globals::WINDOW_WIDTH, 55)));
 	hudBG->setTint(Vector4(1, 0, 1, 1));
 
-	timerLabel.reset(guiFactory->createTextLabel(Vector2(500, 10)));
+	int borderThickness = 4;
+	Vector2 borderpos = hudBG->getPosition();
+	borderpos.y -= borderThickness;
+	Vector2 bordersize = hudBG->getSize();
+	bordersize.y += borderThickness;
+	hudBorder.reset(guiFactory->createRectangleFrame(borderpos, bordersize, borderThickness));
+	
+
+	timerLabel.reset(guiFactory->createTextLabel(Vector2(500, 3)));
 	timerLabel->setTint(Vector4(0, 0, 0, 1));
 	//textLabels.push_back(timerLabel.get());
 
 	//activeControls.push_back(timerLabel.get());
 
-	scoreLabel.reset(guiFactory->createTextLabel(Vector2(10, 10)));
+	scoreLabel.reset(guiFactory->createTextLabel(Vector2(10, 3)));
 	scoreLabel->setTint(Vector4(0, 0, 0, 1));
 	//textLabels.push_back(scoreLabel.get());
 	//activeControls.push_back(scoreLabel.get());
 
-	energyLabel.reset(guiFactory->createTextLabel(Vector2(10, 30)));
+	energyLabel.reset(guiFactory->createTextLabel(Vector2(10, 25)));
 	energyLabel->setTint(Vector4(0, 0, 0, 1));
 	//activeControls.push_back(energyLabel.get());
 
@@ -133,6 +141,7 @@ void GUIOverlay::updatePaused(double deltaTime) {
 void GUIOverlay::draw(SpriteBatch* batch) {
 
 	hudBG->draw(batch);
+	hudBorder->draw(batch);
 	timerLabel->draw(batch);
 	scoreLabel->draw(batch);
 	energyLabel->draw(batch);

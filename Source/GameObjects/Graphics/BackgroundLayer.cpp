@@ -21,7 +21,7 @@ void BackgroundLayer::load(GraphicsAsset* const graphicsAsset, shared_ptr<Sprite
 
 void BackgroundLayer::loadPiece(GraphicsAsset* const graphicsAsset) {
 
-	unique_ptr<Sprite> newTatter = make_unique<Sprite>(whole->getPosition());
+	unique_ptr<Tatter> newTatter = make_unique<Tatter>(whole->getPosition());
 	newTatter->load(graphicsAsset);
 	newTatter->setOrigin(Vector2::Zero);
 
@@ -90,6 +90,9 @@ void BackgroundLayer::takeDamage(int damageTaken) {
 	healthLabel->setText(to_wstring(health));
 	if (health <= 0) {
 		whole->isAlive = false;
+		whole->isExploding = true;
+		//for (const auto& piece : tatters)
+		//	piece->setDirection();
 	}
 }
 
@@ -112,7 +115,7 @@ void BackgroundLayer::moveBy(const Vector2& pos) {
 }
 
 //Color frameTint = Color(1, 1, 1, 1);
-void BackgroundLayer::update(double deltaTime/*, shared_ptr<MouseController> mouse*/) {
+void BackgroundLayer::update(double deltaTime) {
 
 	updateProjectedHitArea();
 	/*if (projectedHitArea->contains(mouse->getPosition())) {
@@ -122,6 +125,14 @@ void BackgroundLayer::update(double deltaTime/*, shared_ptr<MouseController> mou
 		frameTint = Color(1, 1, 1, 1);
 		healthLabel->setTint(Color(1, 1, 1, 1));
 	}*/
+
+	if (whole->isExploding) {
+		timeExploding += deltaTime;
+		if (timeExploding >= EXPLODE_TIME)
+			whole->isExploding = false;
+		for (const auto& piece : tatters)
+			piece->update(deltaTime);
+	}
 
 }
 
@@ -133,7 +144,7 @@ void BackgroundLayer::draw(SpriteBatch* batch/*, Sprite* frame*/) {
 		if (!labelHidden) {
 			healthLabel->draw(batch);
 			//ID3D11ShaderResourceView* texture = frame->getTexture().Get();
-			
+
 			//frame->setPosition(whole->getPosition());
 			//frame->draw(batch);
 			batch->Draw(frameTexture.Get(), topLeftCornerPos, &frameRect,
@@ -146,6 +157,9 @@ void BackgroundLayer::draw(SpriteBatch* batch/*, Sprite* frame*/) {
 				frameTint, XM_PI, frameOrigin, scale, SpriteEffects_None, frameLayerDepth);
 
 		}
+	} else if (whole->isExploding) {
+		for (const auto& piece : tatters)
+			piece->draw(batch);
 	}
 }
 
@@ -180,5 +194,9 @@ unique_ptr<HitArea> BackgroundLayer::getScreenHitArea(Matrix viewProjectionMatri
 	unique_ptr<HitArea> projectedHitArea;
 	projectedHitArea.reset(new HitArea(screenCords, whole->getHitArea()->size));
 	return projectedHitArea;
+}
+
+bool BackgroundLayer::isAlive() {
+	return whole->isAlive;
 }
 

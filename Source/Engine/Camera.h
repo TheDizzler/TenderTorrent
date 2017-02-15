@@ -30,9 +30,6 @@ public:
 
 	void adjustZoom(float amount);
 	void setZoom(float zoomAmount);
-	/** Move the camera in an X and Y amount based on the cameraMovement param.
-	*	If clampToMap is true the camera will try not to pan outside of the
-	*	bounds of the map. */
 	void moveCamera(const Vector2& cameraMovement);
 	void setCameraPosition(const Vector2& newPosition);
 
@@ -57,7 +54,6 @@ private:
 
 
 	void zoomToFitBackground();
-	//void buildingClampedPosition(Vector2& position);
 	Vector2* screenToWorld(Vector2 screenPosition);
 	
 };

@@ -2,17 +2,15 @@
 #pragma once
 
 #include "../PlayerShip.h"
-#include "../../DXTKGui/Controls/TextLabel.h"
+#include "Tatter.h"
 
-
-class BackgroundLayer /*: public Sprite */ {
+class BackgroundLayer {
 public:
 	BackgroundLayer();
 	~BackgroundLayer();
 
 	void load(GraphicsAsset* const graphicsAsset, shared_ptr<Sprite> cornerFrame);
 	void loadPiece(GraphicsAsset* const graphicsAsset);
-	//void setHitArea(const Vector2& position, const Vector2& size);
 
 	void setHealth(int health);
 	void setInitialPosition(const Vector2& position, const Vector2& scale);
@@ -22,8 +20,8 @@ public:
 	void setLayerDepth(float layerDepth);
 	void moveBy(const Vector2& position);
 
-	void update(double deltaTime/*, shared_ptr<MouseController> mouse*/);
-	void draw(SpriteBatch* batch/*, Sprite* frame*/);
+	void update(double deltaTime);
+	void draw(SpriteBatch* batch);
 
 	const HitArea* getHitArea() const;
 
@@ -41,6 +39,8 @@ public:
 	virtual const Vector2& getScreenPosition(Matrix viewProjectionMatrix) const;
 	virtual unique_ptr<HitArea> getScreenHitArea(Matrix viewProjectionMatrix) const;
 
+
+	bool isAlive();
 private:
 	function<Matrix()> translationMatrix;
 	function<float()> cameraZoom;
@@ -62,9 +62,11 @@ private:
 	bool labelHidden = true;
 
 	unique_ptr<Sprite> whole;
-	vector<unique_ptr<Sprite> > tatters;
-	//shared_ptr<Sprite> frame;
+	vector<unique_ptr<Tatter> > tatters;
 
 	Vector2 scale = Vector2(1, 1);
+
+	double timeExploding = 0;
+	const float EXPLODE_TIME = 1.5;
 	
 };

@@ -234,6 +234,9 @@
     <ClCompile Include="Source\Engine\Camera.cpp">
       <Filter>Source Files\Engine</Filter>
     </ClCompile>
+    <ClCompile Include="Source\GameObjects\Graphics\Tatter.cpp">
+      <Filter>Source Files\Backgrounds</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\globals.h">
@@ -403,6 +406,9 @@
     </ClInclude>
     <ClInclude Include="Source\Engine\Camera.h">
       <Filter>Header Files\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameObjects\Graphics\Tatter.h">
+      <Filter>Header Files\Backgrounds</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -62,9 +62,6 @@ void ArrowEnemyWave::launchNewWave() {
 	rng.seed(random_device{}());
 	uniform_int_distribution<mt19937::result_type> rand(shipWidth, Globals::WINDOW_WIDTH - shipWidth);
 	startX = rand(rng);
-	/*startPos.x = rand(rng);
-	position = startPos;
-	midPos.x = startPos.x;*/
 
 	launchNextMiniWave();
 }

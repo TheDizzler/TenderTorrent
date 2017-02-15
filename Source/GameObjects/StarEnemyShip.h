@@ -10,8 +10,6 @@ public:
 	StarEnemyShip(xml_node mirrorNode);
 	~StarEnemyShip();
 
-	virtual void reset() override;
-
 	virtual void update(double deltaTime, PlayerShip* player, vector<Bullet*>& liveBullets) override;
 
 

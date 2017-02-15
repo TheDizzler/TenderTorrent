@@ -35,6 +35,7 @@ public:
 private:
 
 	unique_ptr<RectangleSprite> hudBG;
+	unique_ptr<RectangleFrame> hudBorder;
 	//vector<GUIControl* > activeControls;
 
 	//inline void displayWarning(double deltaTime);
