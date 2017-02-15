@@ -50,8 +50,8 @@ void ArrowEnemyShip::update(double deltaTime, PlayerShip* player, vector<Bullet*
 				liveBullets.push_back(bullet);
 			}
 		}
-
 	}
+	EnemyShip::update(deltaTime);
 }
 
 

@@ -9,10 +9,8 @@
 class RearAttackShip : public EnemyShip {
 public:
 
-	RearAttackShip();
 	RearAttackShip(xml_node shipNode);
 	~RearAttackShip();
-
 
 	virtual void update(double deltaTime, PlayerShip* player, vector<Bullet*>& liveBullets) override;
 

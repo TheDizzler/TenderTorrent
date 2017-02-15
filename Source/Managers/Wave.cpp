@@ -42,6 +42,16 @@ void Wave::update(double deltaTime, PlayerShip* player) {
 	for (EnemyShip* enemy : shipStore) {
 		if (enemy->isAlive) {
 			enemy->update(deltaTime, player, liveBullets);
+			// check for collision with player
+			if (player->getHitArea()->collision(enemy->getHitArea())) {
+				int enemyHP = enemy->getHealth();
+				int playerHP = player->getHealth();
+				enemy->takeDamage(playerHP);
+				player->takeDamage(enemyHP);
+			}
+		} else if (enemy->isExploding) {
+			enemy->explodeUpdate(deltaTime);
+
 		}
 	}
 
@@ -53,6 +63,8 @@ void Wave::draw(SpriteBatch * batch) {
 	for (EnemyShip* enemy : shipStore) {
 		if (enemy->isAlive)
 			enemy->draw(batch);
+		else if (enemy->isExploding)
+			enemy->drawExplosion(batch);
 	}
 
 	for (Bullet* bullet : liveBullets)

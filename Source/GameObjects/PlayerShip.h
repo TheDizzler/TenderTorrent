@@ -34,6 +34,7 @@ public:
 	void update(double deltaTime, shared_ptr<MouseController> mouse);
 	virtual void draw(SpriteBatch* batch);
 
+	int getHealth();
 	void takeDamage(int damageTaken);
 
 	int startMaxEnergy = 520;

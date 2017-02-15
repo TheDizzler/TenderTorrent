@@ -75,34 +75,35 @@ bool Background::loadLevel(ComPtr<ID3D11Device> device, const char_t* xmlFile) {
 	xml_node introWP = waypointsNode.child("intro");
 
 	// set intro scroll
-	lastWaypoint = new Waypoint(
-		Vector2(introWP.attribute("x").as_int(), introWP.attribute("y").as_int()), 0);
+	Vector2 currentWPVector = Vector2(introWP.attribute("x").as_int(), introWP.attribute("y").as_int());
+	constrainToBackground(currentWPVector);
+	lastWaypoint = new Waypoint(currentWPVector, 0);
 
 	// set initial position of level
 	xml_node startWP = waypointsNode.child("start");
 	if (startWP.attribute("center").as_bool() == true) {
-		//position.x += width*scale.x / 2; 
-		//position.y -= height*scale.y / 2;
+		currentWPVector = Vector2(baseBG->getWidth() / 2, baseBG->getHeight());
+		constrainToBackground(currentWPVector);
 		currentWaypoint = new Waypoint(
-			Vector2(baseBG->getWidth() / 2, baseBG->getHeight()), startWP.attribute("speed").as_float());
+			currentWPVector, startWP.attribute("speed").as_float());
 	} else {
-		currentWaypoint = new Waypoint(
-			Vector2(startWP.attribute("x").as_int(), startWP.attribute("y").as_int()),
-			startWP.attribute("speed").as_float());
+		currentWPVector = Vector2(startWP.attribute("x").as_int(), startWP.attribute("y").as_int());
+		constrainToBackground(currentWPVector);
+		currentWaypoint = new Waypoint(currentWPVector,	startWP.attribute("speed").as_float());
 	}
 
 	for (xml_node waypoint : waypointsNode.children("waypoint")) {
-		waypoints.push(new Waypoint(
-			Vector2(waypoint.attribute("x").as_int(), waypoint.attribute("y").as_int()),
-			waypoint.attribute("speed").as_float()));
+		currentWPVector = Vector2(waypoint.attribute("x").as_int(), waypoint.attribute("y").as_int());
+		constrainToBackground(currentWPVector);
+		waypoints.push(new Waypoint(currentWPVector, waypoint.attribute("speed").as_float()));
 
 	}
 
 	// last waypoint
 	xml_node endWP = waypointsNode.child("end");
-	waypoints.push(new Waypoint(
-		Vector2(endWP.attribute("x").as_int(), endWP.attribute("y").as_int()),
-		endWP.attribute("speed").as_float()));
+	currentWPVector = Vector2(endWP.attribute("x").as_int(), endWP.attribute("y").as_int());
+	constrainToBackground(currentWPVector);
+	waypoints.push(new Waypoint(currentWPVector, endWP.attribute("speed").as_float()));
 
 
 	cornerFrame.reset(new Sprite());
@@ -131,7 +132,7 @@ const Vector2& Background::getStartPosition() {
 	return lastWaypoint->dest;
 }
 
-float CONSTANT = 150;
+const float CONSTANT = 150;
 bool Background::startUpdate(double deltaTime) {
 
 	if (introScrollDone)
@@ -292,5 +293,17 @@ bool Background::loadLevel(ComPtr<ID3D11Device> device, xml_node levelRoot) {
 	}*/
 
 	return true;
+}
+
+void Background::constrainToBackground(Vector2& waypoint) {
+
+	if (waypoint.x < camera->viewportWidth / 2)
+		waypoint.x = camera->viewportWidth / 2;
+	if (waypoint.x > getWidth() - camera->viewportWidth / 2)
+		waypoint.x = getWidth() - camera->viewportWidth / 2;
+	if (waypoint.y < camera->viewportHeight / 2)
+		waypoint.y = camera->viewportHeight / 2;
+	if (waypoint.y > getHeight() - camera->viewportHeight / 2)
+		waypoint.y = getHeight() - camera->viewportHeight / 2;
 }
 

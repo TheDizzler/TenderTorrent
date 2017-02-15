@@ -39,8 +39,28 @@
 		<sprite name="PlayerShip Hull" file="HeroShip.dds"/>
 		<sprite name="PlayerShip Turret" file="Turret(24x24).dds"/>
 
+		<!-- Explosions and kablooies-->
+		<spritesheet file="big fireballs.dds">
+			<animation name="big explosion" timePerFrame=".02">
+				<sprite x="0" y="0" width="32" height="32"/>
+				<sprite x="33" y="0" width="32" height="32"/>
+				<sprite x="67" y="0" width="32" height="32"/>
+				<sprite x="100" y="0" width="32" height="32"/>
+				<sprite x="132" y="0" width="32" height="32"/>
+				<sprite x="166" y="0" width="32" height="32"/>
+				<sprite x="199" y="0" width="32" height="32"/>
+				<sprite x="233" y="0" width="32" height="32"/>
 
-
+				<sprite x="0" y="33" width="32" height="32"/>
+				<sprite x="33" y="33" width="32" height="32"/>
+				<sprite x="67" y="33" width="32" height="32"/>
+				<sprite x="100" y="33" width="32" height="32"/>
+				<sprite x="132" y="33" width="32" height="32"/>
+				<sprite x="166" y="33" width="32" height="32"/>
+				<sprite x="199" y="33" width="32" height="32"/>
+				<sprite x="233" y="33" width="32" height="32"/>
+			</animation>
+		</spritesheet>
 
 		<!-- Miscl stuff -->
 		<sprite name="Corner Frame" file="corner frame b.dds"/>

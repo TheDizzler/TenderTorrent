@@ -26,7 +26,10 @@ void AnimatedSprite::update(double deltaTime) {
 	currentFrameTime += deltaTime;
 	if (currentFrameTime >= animation->timePerFrame) {
 		if (++currentFrameIndex >= animation->animationFrames.size())
-			currentFrameIndex = 0;
+			if (repeats)
+				currentFrameIndex = 0;
+			else
+				isAlive = false;
 		currentFrameTime = 0;
 	}
 }
@@ -124,5 +127,10 @@ const float AnimatedSprite::getLayerDepth() const {
 
 void AnimatedSprite::setLayerDepth(const float depth) {
 	layerDepth = depth;
+}
+
+void AnimatedSprite::reset() {
+	isAlive = true;
+	currentFrameIndex = 0;
 }
 

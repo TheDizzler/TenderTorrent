@@ -123,7 +123,7 @@ void LevelManager::update(double deltaTime, shared_ptr<MouseController> mouse) {
 			}
 
 			if (!playerShip->isAlive) {
-				playState = PlayState::FINISHED;
+				playState = PlayState::GAMEOVER;
 			}
 			break;
 		case STARTING:

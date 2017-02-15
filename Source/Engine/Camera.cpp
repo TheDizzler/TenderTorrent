@@ -112,12 +112,13 @@ RECT* Camera::viewportWorldBoundary() {
 }
 
 
-void Camera::centerOn(Vector2 pos/*, bool showWholeLevel*/) {
+void Camera::centerOn(const Vector2& pos/*, bool showWholeLevel*/) {
 
 	/*if (showWholeLevel) {
 		zoomToFitBackground();
 
 	}*/
+
 	position = pos;
 }
 

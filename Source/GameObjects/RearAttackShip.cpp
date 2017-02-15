@@ -40,23 +40,19 @@ RearAttackShip::RearAttackShip(xml_node mirrorNode) {
 }
 
 
-
-RearAttackShip::RearAttackShip() {
-}
-
-
 RearAttackShip::~RearAttackShip() {
 }
 
 
 
-double timeToClimax = 3.0;
-double timeToFire = 2.5;
+
+const double TIME_TO_CLIMAX = 3.0;
+const double TIME_TO_FIRE = 2.5;
 void RearAttackShip::update(double deltaTime, PlayerShip* player, vector<Bullet*>& liveBullets) {
 
 	timeAlive += deltaTime;
 
-	double percent = timeAlive / timeToClimax;
+	double percent = timeAlive / TIME_TO_CLIMAX;
 	percent = 1 - cos(percent*XM_PIDIV2);
 	double rt = 1 - percent;
 	position = rt*rt*startPos + 2 * rt*percent*controlPoint + percent*percent*climaxPos;
@@ -64,7 +60,7 @@ void RearAttackShip::update(double deltaTime, PlayerShip* player, vector<Bullet*
 
 	for (auto const& weapon : weaponSystems) {
 		weapon->updatePosition(position);
-		if (!weapon->fired && timeAlive >= timeToFire) {
+		if (!weapon->fired && timeAlive >= TIME_TO_FIRE) {
 			weapon->fired = true;
 			Bullet* bullet = weapon->launchBullet(player->getPosition());
 			liveBullets.push_back(bullet);

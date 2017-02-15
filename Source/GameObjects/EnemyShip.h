@@ -45,9 +45,16 @@ public:
 	~EnemyShip();
 	virtual void reset();
 
+	virtual void setExplosion(shared_ptr<Animation> explosion);
+
+
 	virtual void update(double deltaTime, PlayerShip* player, vector<Bullet*>& liveBullets) = 0;
 	virtual void update(double deltaTime);
+	virtual void explodeUpdate(double deltaTime);
 
+	virtual void drawExplosion(SpriteBatch* batch);
+
+	int getHealth();
 	void takeDamage(int damageTaken);
 
 	/** Points awarded for killing. */
@@ -57,6 +64,7 @@ public:
 
 protected:
 
+	shared_ptr<AnimatedSprite> explosion;
 
 	int maxHealth = 10;
 	int health = 10;

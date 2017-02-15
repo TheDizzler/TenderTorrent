@@ -73,6 +73,7 @@ public:
 	ComPtr<ID3D11ShaderResourceView> getTexture();
 
 	bool isAlive = true;
+	bool isExploding = false;
 
 
 protected:

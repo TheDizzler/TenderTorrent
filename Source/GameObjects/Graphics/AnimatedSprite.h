@@ -39,6 +39,8 @@ public:
 	virtual void setAlpha(const float alpha) override;
 	virtual void setLayerDepth(const float depth) override;
 
+	void reset();
+	bool repeats = true;
 	bool isAlive = true;
 	
 protected:

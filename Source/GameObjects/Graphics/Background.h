@@ -46,6 +46,8 @@ private:
 
 	bool loadLevel(ComPtr<ID3D11Device> device, xml_node levelRoot);
 
+	void constrainToBackground(Vector2& waypoint);
+
 	float scrollSpeed = 15;
 
 	bool introScrollDone = false;

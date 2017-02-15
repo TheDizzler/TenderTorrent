@@ -38,7 +38,7 @@ public:
 
 	RECT* viewportWorldBoundary();
 
-	void centerOn(Vector2 pos);
+	void centerOn(const Vector2& pos);
 
 	Matrix translationMatrix();
 	Vector2& worldToScreen(Vector2 worldPosition);

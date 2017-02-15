@@ -189,6 +189,10 @@ void PlayerShip::draw(SpriteBatch * batch) {
 	leftTurret->draw(batch);
 }
 
+int PlayerShip::getHealth() {
+	return maxEnergy;
+}
+
 void PlayerShip::takeDamage(int damageTaken) {
 
 	maxEnergy -= damageTaken;

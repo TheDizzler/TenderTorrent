@@ -1,8 +1,10 @@
 #include "EnemyShip.h"
 
+#include "../Engine/GameEngine.h"
 EnemyShip::EnemyShip() : Sprite(SimpleMath::Vector2(0, 0)) {
 
 	isAlive = false;
+	setExplosion(gfxAssets->getAnimation("big explosion"));
 }
 
 EnemyShip::EnemyShip(const Vector2& position) : Sprite(position) {
@@ -21,6 +23,15 @@ void EnemyShip::reset() {
 	health = maxHealth;
 	timeAlive = 0;
 	isAlive = true;
+	setTint(Vector4(1, 1, 1, 1));
+	explosion->reset();
+}
+
+void EnemyShip::setExplosion(shared_ptr<Animation> explos) {
+	explosion.reset(new AnimatedSprite(position));
+	explosion->load(explos);
+	explosion->repeats = false;
+
 }
 
 
@@ -28,14 +39,35 @@ void EnemyShip::update(double deltaTime) {
 	Sprite::update(deltaTime);
 }
 
+void EnemyShip::explodeUpdate(double deltaTime) {
 
-void EnemyShip::takeDamage(int damageTaken) {
-	health -= damageTaken;
-	isAlive = health > 0;
+	explosion->update(deltaTime);
+	isExploding = explosion->isAlive;
+	Color newTint = getTint();
+	setTint(Color::Lerp(newTint, Vector4(0, 0, 0, 0), 20*deltaTime));
+}
+
+void EnemyShip::drawExplosion(SpriteBatch* batch) {
+	Sprite::draw(batch);
+	explosion->draw(batch);
 }
 
 
-#include "../Engine/GameEngine.h"
+int EnemyShip::getHealth() {
+	return health;
+}
+
+void EnemyShip::takeDamage(int damageTaken) {
+	health -= damageTaken;
+	if (health < 0) {
+		isAlive = false;
+		isExploding = true;
+		explosion->setPosition(position);
+	}
+}
+
+
+
 EnemyShip::EnemyWeaponSystem::EnemyWeaponSystem(xml_node weaponPointNode, xml_node weaponSystemsNode, bool mirrored) {
 
 	const char_t* weaponTypeName = weaponPointNode.attribute("type").as_string();
@@ -43,7 +75,7 @@ EnemyShip::EnemyWeaponSystem::EnemyWeaponSystem(xml_node weaponPointNode, xml_no
 	int damage = weaponTypeNode.child("damage").text().as_int();
 	int bulletSpeed = weaponTypeNode.child("bulletSpeed").text().as_int();
 	const char_t* bulletName = weaponTypeNode.child("sprite").text().as_string();
-	
+
 	shared_ptr<Animation> bulletAsset;
 	bulletAsset = gfxAssets->getAnimation(bulletName);
 	if (bulletAsset == NULL) {
