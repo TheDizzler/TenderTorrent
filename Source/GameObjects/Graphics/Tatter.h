@@ -12,5 +12,7 @@ public:
 private:
 
 	Vector2 direction;
-	int speed = 10;
+	int speed;
+	double timeAlive = 0;
+	double timeSinceLastFlashSwitch = 0;
 };

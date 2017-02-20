@@ -89,7 +89,7 @@ bool Background::loadLevel(ComPtr<ID3D11Device> device, const char_t* xmlFile) {
 	} else {
 		currentWPVector = Vector2(startWP.attribute("x").as_int(), startWP.attribute("y").as_int());
 		constrainToBackground(currentWPVector);
-		currentWaypoint = new Waypoint(currentWPVector,	startWP.attribute("speed").as_float());
+		currentWaypoint = new Waypoint(currentWPVector, startWP.attribute("speed").as_float());
 	}
 
 	for (xml_node waypoint : waypointsNode.children("waypoint")) {
@@ -195,6 +195,16 @@ void Background::draw(SpriteBatch * batch) {
 		layer->draw(batch);
 }
 
+vector<unique_ptr<ClothLayer>> Background::getClothes() {
+
+	vector<unique_ptr<ClothLayer>> bgVec;
+	for (const auto& bg : bgLayers) {
+		bg->getLayers(bgVec);
+
+	}
+	return bgVec;
+}
+
 
 
 bool Background::loadLevel(ComPtr<ID3D11Device> device, xml_node levelRoot) {
@@ -212,50 +222,145 @@ bool Background::loadLevel(ComPtr<ID3D11Device> device, xml_node levelRoot) {
 		return false;
 	}
 
-	for (xml_node bgLayerNode = levelRoot.child("backgroundLayer");
-		bgLayerNode; bgLayerNode = bgLayerNode.next_sibling("backgroundLayer")) {
+	//for (xml_node bgLayerNode = levelRoot.child("backgroundLayer");
+	//	bgLayerNode; bgLayerNode = bgLayerNode.next_sibling("backgroundLayer")) {
 
-		xml_node clothNode = bgLayerNode.child("cloth");
-		xml_node posNode = clothNode.child("position");
-		// pos relative to level
-		Vector2 worldPosition = Vector2(posNode.attribute("x").as_int(), posNode.attribute("y").as_int());
-		// pos in sprite sheet
-		Vector2 position = Vector2(clothNode.attribute("x").as_int(), clothNode.attribute("y").as_int());
-		xml_node sizeNode = clothNode.child("size");
-		Vector2 size = Vector2(sizeNode.attribute("x").as_int(), sizeNode.attribute("y").as_int());
+	//	for (xml_node clothNode = bgLayerNode.child("cloth"); clothNode; clothNode = clothNode.next_sibling("cloth")) {
+	//		xml_node posNode = clothNode.child("position");
+	//		// pos relative to level
+	//		Vector2 worldPosition = Vector2(posNode.attribute("x").as_int(), posNode.attribute("y").as_int());
+	//		// pos in sprite sheet
+	//		Vector2 position = Vector2(clothNode.attribute("x").as_int(), clothNode.attribute("y").as_int());
+	//		xml_node sizeNode = clothNode.child("size");
+	//		Vector2 size = Vector2(sizeNode.attribute("x").as_int(), sizeNode.attribute("y").as_int());
 
-		unique_ptr<GraphicsAsset> spriteAsset = make_unique<GraphicsAsset>();
-		spriteAsset->loadAsPartOfSheet(masterAsset->getTexture(), position, size, Vector2::Zero);
-
-
-		unique_ptr<BackgroundLayer> bgLayer = make_unique<BackgroundLayer>();
-		bgLayer->load(spriteAsset.get(), cornerFrame);
-		//bgLayer->setLayerDepth(bgLayerNode.attribute("layer").as_float());
-		bgLayer->setHealth(bgLayerNode.attribute("health").as_int());
-		bgLayerAssets.push_back(move(spriteAsset));
-		bgLayer->setMatrixFunction([&]() -> Matrix {return camera->translationMatrix(); });
-		bgLayer->setCameraZoom([&]() -> float { return camera->getZoom(); });
-		bgLayer->setInitialPosition(worldPosition, baseBG->getScale());
+	//		unique_ptr<GraphicsAsset> spriteAsset = make_unique<GraphicsAsset>();
+	//		spriteAsset->loadAsPartOfSheet(masterAsset->getTexture(), position, size, Vector2::Zero);
 
 
+	//		unique_ptr<ClothLayer> bgLayer = make_unique<ClothLayer>();
+	//		bgLayer->load(spriteAsset.get(), cornerFrame);
+	//		//bgLayer->setLayerDepth(bgLayerNode.attribute("layer").as_float());
+	//		bgLayer->setHealth(clothNode.attribute("health").as_int());
+	//		bgLayerAssets.push_back(move(spriteAsset));
+	//		bgLayer->setMatrixFunction([&]() -> Matrix {return camera->translationMatrix(); });
+	//		bgLayer->setCameraZoom([&]() -> float { return camera->getZoom(); });
+	//		bgLayer->setInitialPosition(worldPosition, baseBG->getScale());
 
 
-		// parse all single sprites from spritesheet
-		for (xml_node pieceNode = bgLayerNode.child("piece"); pieceNode;
-			pieceNode = pieceNode.next_sibling("piece")) {
+	//		// parse all single sprites from spritesheet
+	//		for (xml_node pieceNode = clothNode.child("tatter"); pieceNode;
+	//			pieceNode = pieceNode.next_sibling("tatter")) {
 
-			position = Vector2(pieceNode.attribute("x").as_int(), pieceNode.attribute("y").as_int());
+	//			position = Vector2(pieceNode.attribute("x").as_int(), pieceNode.attribute("y").as_int());
 
-			unique_ptr<GraphicsAsset> pieceAsset = make_unique<GraphicsAsset>();
-			pieceAsset->loadAsPartOfSheet(masterAsset->getTexture(), position, size, Vector2::Zero);
+	//			unique_ptr<GraphicsAsset> pieceAsset = make_unique<GraphicsAsset>();
+	//			pieceAsset->loadAsPartOfSheet(masterAsset->getTexture(), position, size, Vector2::Zero);
 
-			bgLayer->loadPiece(pieceAsset.get());
-			bgLayerAssets.push_back(move(pieceAsset));
+	//			bgLayer->loadPiece(pieceAsset.get());
+	//			bgLayerAssets.push_back(move(pieceAsset));
+	//		}
+	//		bgLayers.push_back(move(bgLayer));
+	//	}
+	//}
+
+	for (xml_node compoundLayerNode = levelRoot.child("compoundLayer"); compoundLayerNode;
+		compoundLayerNode = compoundLayerNode.next_sibling("compoundLayer")) {
+
+		unique_ptr<BackgroundLayer> compoundLayer = make_unique<BackgroundLayer>();
+
+
+		// parse top layers
+		for (xml_node clothNode = compoundLayerNode.child("cloth"); clothNode;
+			clothNode = clothNode.next_sibling("cloth")) {
+
+			xml_node posNode = clothNode.child("position");
+			// pos relative to level
+			Vector2 worldPosition = Vector2(posNode.attribute("x").as_int(), posNode.attribute("y").as_int());
+			// pos in sprite sheet
+			Vector2 position = Vector2(clothNode.attribute("x").as_int(), clothNode.attribute("y").as_int());
+			xml_node sizeNode = clothNode.child("size");
+			Vector2 size = Vector2(sizeNode.attribute("x").as_int(), sizeNode.attribute("y").as_int());
+
+			unique_ptr<GraphicsAsset> spriteAsset = make_unique<GraphicsAsset>();
+			spriteAsset->loadAsPartOfSheet(masterAsset->getTexture(), position, size, Vector2::Zero);
+
+
+			unique_ptr<ClothLayer> bgLayer = make_unique<ClothLayer>();
+			bgLayer->load(spriteAsset.get(), cornerFrame);
+			//bgLayer->setLayerDepth(bgLayerNode.attribute("layer").as_float());
+			bgLayer->setHealth(clothNode.attribute("health").as_int());
+			bgLayerAssets.push_back(move(spriteAsset));
+			bgLayer->setMatrixFunction([&]() -> Matrix {return camera->translationMatrix(); });
+			bgLayer->setCameraZoom([&]() -> float { return camera->getZoom(); });
+			bgLayer->setInitialPosition(worldPosition, baseBG->getScale());
+
+
+			// parse all single sprites from spritesheet
+			for (xml_node pieceNode = clothNode.child("tatter"); pieceNode;
+				pieceNode = pieceNode.next_sibling("tatter")) {
+
+				position = Vector2(pieceNode.attribute("x").as_int(), pieceNode.attribute("y").as_int());
+
+				unique_ptr<GraphicsAsset> pieceAsset = make_unique<GraphicsAsset>();
+				pieceAsset->loadAsPartOfSheet(masterAsset->getTexture(), position, size, Vector2::Zero);
+
+				bgLayer->loadPiece(pieceAsset.get());
+				bgLayerAssets.push_back(move(pieceAsset));
+			}
+
+			compoundLayer->addTopLayer(move(bgLayer));
+
 		}
-		bgLayers.push_back(move(bgLayer));
+
+
+
+		// parse bottom layers
+		xml_node subLayerNode = compoundLayerNode.child("subLayer");
+
+		for (xml_node subClothNode = subLayerNode.child("cloth");
+			subClothNode; subClothNode = subLayerNode.next_sibling("cloth")) {
+
+			xml_node posNode = subClothNode.child("position");
+			// pos relative to level
+			Vector2 worldPosition = Vector2(posNode.attribute("x").as_int(), posNode.attribute("y").as_int());
+			// pos in sprite sheet
+			Vector2 position = Vector2(subClothNode.attribute("x").as_int(), subClothNode.attribute("y").as_int());
+			xml_node sizeNode = subClothNode.child("size");
+			Vector2 size = Vector2(sizeNode.attribute("x").as_int(), sizeNode.attribute("y").as_int());
+
+			unique_ptr<GraphicsAsset> spriteAsset = make_unique<GraphicsAsset>();
+			spriteAsset->loadAsPartOfSheet(masterAsset->getTexture(), position, size, Vector2::Zero);
+
+
+			unique_ptr<ClothLayer> bgLayer = make_unique<ClothLayer>();
+			bgLayer->load(spriteAsset.get(), cornerFrame);
+			//bgLayer->setLayerDepth(bgLayerNode.attribute("layer").as_float());
+			bgLayer->setHealth(subClothNode.attribute("health").as_int());
+			bgLayerAssets.push_back(move(spriteAsset));
+			bgLayer->setMatrixFunction([&]() -> Matrix {return camera->translationMatrix(); });
+			bgLayer->setCameraZoom([&]() -> float { return camera->getZoom(); });
+			bgLayer->setInitialPosition(worldPosition, baseBG->getScale());
+
+
+			// parse all single sprites from spritesheet
+			for (xml_node pieceNode = subClothNode.child("tatter"); pieceNode;
+				pieceNode = pieceNode.next_sibling("tatter")) {
+
+				position = Vector2(pieceNode.attribute("x").as_int(), pieceNode.attribute("y").as_int());
+
+				unique_ptr<GraphicsAsset> pieceAsset = make_unique<GraphicsAsset>();
+				pieceAsset->loadAsPartOfSheet(masterAsset->getTexture(), position, size, Vector2::Zero);
+
+				bgLayer->loadPiece(pieceAsset.get());
+				bgLayerAssets.push_back(move(pieceAsset));
+			}
+
+			compoundLayer->addBottomLayer(move(bgLayer));
+		}
+
+		bgLayers.push_back(move(compoundLayer));
 	}
-
-
 	/*for each (xml_node layerNode in levelRoot.children("backgroundLayer")) {
 
 		BackgroundLayer* bgLayer = new BackgroundLayer();

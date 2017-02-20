@@ -18,95 +18,138 @@
 	<backgroundSpriteSheet>mako spritesheet.dds</backgroundSpriteSheet>
 
 
-	<backgroundLayer set="Left Strap" health="200" layer="1">
-		<cloth x="2" y="1">
+	<backgroundLayer set="Left Strap" layer="1">
+		<cloth x="2" y="1" health="200" >
 			<position x="118" y="347"/>
 			<size x="120" y="97"/>
+
+			<tatter x="123" y="1"/>
+			<tatter x="244" y="1"/>
+			<tatter x="365" y="1"/>
+			<tatter x="486" y="1"/>
+			<tatter x="607" y="1"/>
 		</cloth>
-		<piece x="123" y="1"/>
-		<piece x="244" y="1"/>
-		<piece x="365" y="1"/>
-		<piece x="486" y="1"/>
-		<piece x="607" y="1"/>
+		
 	</backgroundLayer>
 
-	<backgroundLayer set="Left Cup" health="200" layer="1">
-		<cloth x="1" y="99">
+	<backgroundLayer set="Left Cup" layer="1">
+		<cloth x="1" y="99" health="200">
 			<position x="31" y="450"/>
 			<size x="84" y="88"/>
+
+			<tatter x="86" y="99"/>
+			<tatter x="171" y="99"/>
+			<tatter x="256" y="99"/>
+			<tatter x="341" y="99"/>
+			<tatter x="426" y="99"/>
+			<tatter x="511" y="99"/>
+			<tatter x="596" y="99"/>
+			<tatter x="681" y="99"/>
 		</cloth>
-		<piece x="86" y="99"/>
-		<piece x="171" y="99"/>
-		<piece x="256" y="99"/>
-		<piece x="341" y="99"/>
-		<piece x="426" y="99"/>
-		<piece x="511" y="99"/>
-		<piece x="596" y="99"/>
-		<piece x="681" y="99"/>
+		
 	</backgroundLayer>
 
 	<backgroundLayer set="Right Strap" health="200" layer="1">
 		<cloth x="1" y="188">
 			<position x="305" y="360"/>
 			<size x="129" y="241"/>
+
+			<tatter x="131" y="188" />
+			<tatter x="261" y="188" />
+			<tatter x="391" y="188" />
+			<tatter x="521" y="188" />
+			<tatter x="651" y="188" />
 		</cloth>
-		<piece x="131" y="188" />
-		<piece x="261" y="188" />
-		<piece x="391" y="188" />
-		<piece x="521" y="188" />
-		<piece x="651" y="188" />
+		
 	</backgroundLayer>
 
 	<backgroundLayer set="Right Cup" health="200" layer="1">
 		<cloth x="1" y="430">
 			<position x="214" y="610"/>
 			<size x="92" y="114"/>
+
+			<tatter x="94" y="430" />
+			<tatter x="187" y="430" />
+			<tatter x="280" y="430" />
+			<tatter x="373" y="430" />
+			<tatter x="466" y="430" />
+			<tatter x="559" y="430" />
+			<tatter x="652" y="430" />
 		</cloth>
-		<piece x="94" y="430" />
-		<piece x="187" y="430" />
-		<piece x="280" y="430" />
-		<piece x="373" y="430" />
-		<piece x="466" y="430" />
-		<piece x="559" y="430" />
-		<piece x="652" y="430" />
+		
 	</backgroundLayer>
 
 	<backgroundLayer set="Middle Strap" health="200" layer="1">
 		<cloth x="1" y="545">
 			<position x="88" y="535"/>
 			<size x="128" y="135"/>
-		</cloth>
 
+			<tatter x="130" y="545" />
+			<tatter x="259" y="545" />
+			<tatter x="388" y="545" />
+			<tatter x="517" y="545" />
+			<tatter x="646" y="545" />
+		</cloth>
+		
 	</backgroundLayer>
 
 	<backgroundLayer set="Lower Right Strap" health="200" layer="1">
 		<cloth x="1" y="681" >
 			<position x="299" y="714"/>
 			<size x="144" y="36"/>
-		</cloth>
 
+			<tatter x="146" y="681" />
+			<tatter x="291" y="681" />
+			<tatter x="436" y="681" />
+			<tatter x="581" y="681" />
+		</cloth>
+		
 	</backgroundLayer>
 
 	<backgroundLayer set="Left Ring" health="200" layer="1">
 		<cloth x="1" y="718" >
 			<position x="103" y="440"/>
 			<size x="22" y="21"/>
+
+			<tatter x="24" y="718" />
+			<tatter x="47" y="718" />
+			<tatter x="70" y="718" />
 		</cloth>
+		
 	</backgroundLayer>
 
 	<backgroundLayer set="Right Ring" health="200" layer="1">
 		<cloth x="1" y="740" >
 			<position x="291" y="596"/>
 			<size x="22" y="22"/>
+
+			<tatter x="24" y="740" />
+			<tatter x="47" y="740" />
 		</cloth>
+
 	</backgroundLayer>
 
-	<backgroundLayer set="Bikini Bottom" health="500" layer="1">
-		<cloth x="130" y="545" >
-			<position x="154" y="840"/>
-			<size x="304" y="131"/>
+	<compoundLayer set="Bikini Bottom" layer="1">
+		<cloth x="1" y="895" part="Left Bottom Ring" health="150">
+			<position x="202" y="912" />
+			<size x="19" y="21" />
 		</cloth>
-	</backgroundLayer>
+
+		<cloth x="1" y="917" part="Right Bottom Ring" health="150">
+			<position x="289" y="916" />
+			<size x="22" y="19" />
+		</cloth>
+
+
+		<subLayer>
+
+			<cloth x="1" y="763" health="200">
+				<position x="154" y="840"/>
+				<size x="304" y="131"/>
+			</cloth>
+
+		</subLayer>
+	</compoundLayer>
 	<!--backgroundLayer layer="1">
 		mako01a.dds
 		<position x="118" y="347"/>

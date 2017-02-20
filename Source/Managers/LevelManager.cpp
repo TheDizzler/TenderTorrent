@@ -100,7 +100,8 @@ void LevelManager::update(double deltaTime, shared_ptr<MouseController> mouse) {
 					}
 				}
 
-				for (const auto& layer : bgManager->bgLayers) {
+				//for (const auto& layer : bgManager->bgLayers) {
+				for (const auto& layer : bgManager->getClothes()) {
 					if (layer->isAlive()) {
 						if (bullet->getHitArea()->collision(layer->getHitArea())) {
 							layer->takeDamage(bullet->damage);

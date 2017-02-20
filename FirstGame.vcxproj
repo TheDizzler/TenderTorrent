@@ -105,6 +105,8 @@
     <ClCompile Include="Source\GameObjects\Graphics\AnimatedSprite.cpp" />
     <ClCompile Include="Source\GameObjects\Graphics\Background.cpp" />
     <ClCompile Include="Source\GameObjects\Graphics\BackgroundLayer.cpp" />
+    <ClCompile Include="Source\GameObjects\Graphics\ClothLayer.cpp" />
+    <ClCompile Include="Source\GameObjects\Graphics\CompoundLayer.cpp" />
     <ClCompile Include="Source\GameObjects\Graphics\Tatter.cpp" />
     <ClCompile Include="Source\GameObjects\LaserBolt.cpp" />
     <ClCompile Include="Source\GameObjects\LaserSystem.cpp" />
@@ -168,6 +170,8 @@
     <ClInclude Include="Source\GameObjects\Graphics\AnimatedSprite.h" />
     <ClInclude Include="Source\GameObjects\Graphics\Background.h" />
     <ClInclude Include="Source\GameObjects\Graphics\BackgroundLayer.h" />
+    <ClInclude Include="Source\GameObjects\Graphics\ClothLayer.h" />
+    <ClInclude Include="Source\GameObjects\Graphics\CompoundLayer.h" />
     <ClInclude Include="Source\GameObjects\Graphics\Tatter.h" />
     <ClInclude Include="Source\GameObjects\LaserBolt.h" />
     <ClInclude Include="Source\GameObjects\LaserSystem.h" />

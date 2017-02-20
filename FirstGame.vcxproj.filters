@@ -126,9 +126,6 @@
     <ClCompile Include="Source\GameObjects\StarEnemyShip.cpp">
       <Filter>Source Files\EnemyShips</Filter>
     </ClCompile>
-    <ClCompile Include="Source\GameObjects\Graphics\BackgroundLayer.cpp">
-      <Filter>Source Files\Backgrounds</Filter>
-    </ClCompile>
     <ClCompile Include="Source\GameObjects\Graphics\Background.cpp">
       <Filter>Source Files\Backgrounds</Filter>
     </ClCompile>
@@ -237,6 +234,15 @@
     <ClCompile Include="Source\GameObjects\Graphics\Tatter.cpp">
       <Filter>Source Files\Backgrounds</Filter>
     </ClCompile>
+    <ClCompile Include="Source\GameObjects\Graphics\CompoundLayer.cpp">
+      <Filter>Source Files\Backgrounds</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameObjects\Graphics\ClothLayer.cpp">
+      <Filter>Source Files\Backgrounds</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameObjects\Graphics\BackgroundLayer.cpp">
+      <Filter>Source Files\Backgrounds</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\globals.h">
@@ -286,9 +292,6 @@
     </ClInclude>
     <ClInclude Include="Source\GameObjects\StarEnemyShip.h">
       <Filter>Header Files\EnemyShips</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\GameObjects\Graphics\BackgroundLayer.h">
-      <Filter>Header Files\Backgrounds</Filter>
     </ClInclude>
     <ClInclude Include="Source\GameObjects\Graphics\Background.h">
       <Filter>Header Files\Backgrounds</Filter>
@@ -408,6 +411,15 @@
       <Filter>Header Files\Engine</Filter>
     </ClInclude>
     <ClInclude Include="Source\GameObjects\Graphics\Tatter.h">
+      <Filter>Header Files\Backgrounds</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameObjects\Graphics\CompoundLayer.h">
+      <Filter>Header Files\Backgrounds</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameObjects\Graphics\ClothLayer.h">
+      <Filter>Header Files\Backgrounds</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameObjects\Graphics\BackgroundLayer.h">
       <Filter>Header Files\Backgrounds</Filter>
     </ClInclude>
   </ItemGroup>

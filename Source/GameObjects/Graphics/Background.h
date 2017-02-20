@@ -30,7 +30,8 @@ public:
 	bool update(double deltaTime, shared_ptr<MouseController> mouse);
 	void draw(SpriteBatch* batch);
 
-	vector<unique_ptr<BackgroundLayer>> bgLayers;
+	vector<unique_ptr<ClothLayer>> getClothes();
+	
 
 	bool introScrollDone = false;
 private:
@@ -42,6 +43,7 @@ private:
 	unique_ptr<Sprite> baseBG;
 	shared_ptr<Sprite> cornerFrame;
 	vector<unique_ptr<GraphicsAsset> > bgLayerAssets;
+	vector<unique_ptr<BackgroundLayer>> bgLayers;
 
 	bool loadLevel(ComPtr<ID3D11Device> device, xml_node levelRoot);
 
