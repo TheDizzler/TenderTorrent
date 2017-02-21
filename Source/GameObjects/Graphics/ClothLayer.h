@@ -1,7 +1,7 @@
 #include "../../pch.h"
 #pragma once
 
-#include "../PlayerShip.h"
+//#include "../PlayerShip.h"
 #include "Tatter.h"
 
 class ClothLayer {

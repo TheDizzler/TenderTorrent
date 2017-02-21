@@ -30,7 +30,7 @@ public:
 	bool update(double deltaTime, shared_ptr<MouseController> mouse);
 	void draw(SpriteBatch* batch);
 
-	vector<unique_ptr<ClothLayer>> getClothes();
+	vector</*unique_ptr<ClothLayer>*/ClothLayer*> getClothes();
 	
 
 	bool introScrollDone = false;

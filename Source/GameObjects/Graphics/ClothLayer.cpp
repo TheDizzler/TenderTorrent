@@ -114,7 +114,7 @@ void ClothLayer::moveBy(const Vector2& pos) {
 
 }
 
-//Color frameTint = Color(1, 1, 1, 1);
+
 void ClothLayer::update(double deltaTime) {
 
 	updateProjectedHitArea();

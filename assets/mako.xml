@@ -129,7 +129,7 @@
 
 	</backgroundLayer>
 
-	<compoundLayer set="Bikini Bottom" layer="1">
+	<backgroundLayer set="Bikini Bottom" layer="1">
 		<cloth x="1" y="895" part="Left Bottom Ring" health="150">
 			<position x="202" y="912" />
 			<size x="19" y="21" />
@@ -149,7 +149,7 @@
 			</cloth>
 
 		</subLayer>
-	</compoundLayer>
+	</backgroundLayer>
 	<!--backgroundLayer layer="1">
 		mako01a.dds
 		<position x="118" y="347"/>

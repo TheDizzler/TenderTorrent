@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root game="TenderTorrent" xml="AssetManifest" dir="assets/">
+
+	<ship name="Tenta-Owl">
+		<health>5000</health>
+
+
+		<sprite>
+			Tenta-Owl
+			<part name="body" x="0" y="0" width="146" height="195" />
+
+			<mount to="body" x="24" y="27" >
+				<part name="eyes yellow" x="0" y="202" width="98" height="42" />
+				<part name="eyes red" x="102" y="202" width="98" height="42" />
+				<part name="eyes orange" x="204" y="202" width="98" height="42" />
+			</mount>
+
+			<mount name="beak" to="body" x="50" y="83" >
+				<animation  timePerFrame=".4" >
+					<part x="0" y="247" width="46" height="47" />
+					<part x="47" y="247" width="46" height="47" />
+					<part x="94" y="247" width="46" height="47" />
+					<part x="141" y="247" width="46" height="47" />
+					<part x="188" y="247" width="46" height="47" />
+					<part x="235" y="247" width="46" height="47" />
+					<part x="282" y="247" width="46" height="47" />
+					<part x="329" y="247" width="46" height="47" />
+					<part x="376" y="247" width="46" height="47" />
+					<part x="423" y="247" width="46" height="47" />
+					<part x="470" y="247" width="46" height="47" />
+					<part x="517" y="247" width="46" height="47" />
+					<part x="564" y="247" width="46" height="47" />
+				</animation>
+			</mount>
+
+			<mount name="left leg" to="body" x="42" y="189">
+				<part x="0" y="300" width="63" height="46" >
+					<origin x="31" y="300" />
+				</part>
+			</mount>
+			<mount name="right leg" to="body" x="105" y="189">
+				<part x="0" y="300" width="63" height="46" >
+					<origin x="31" y="300" />
+				</part>
+			</mount>
+		</sprite>
+
+
+
+
+	</ship>
+
+
+</root>

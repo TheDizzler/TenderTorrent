@@ -195,9 +195,10 @@ void Background::draw(SpriteBatch * batch) {
 		layer->draw(batch);
 }
 
-vector<unique_ptr<ClothLayer>> Background::getClothes() {
+vector</*unique_ptr<ClothLayer>*/ClothLayer*> Background::getClothes() {
 
-	vector<unique_ptr<ClothLayer>> bgVec;
+	//vector<unique_ptr<ClothLayer>> bgVec;
+	vector<ClothLayer*> bgVec;
 	for (const auto& bg : bgLayers) {
 		bg->getLayers(bgVec);
 
@@ -264,8 +265,8 @@ bool Background::loadLevel(ComPtr<ID3D11Device> device, xml_node levelRoot) {
 	//	}
 	//}
 
-	for (xml_node compoundLayerNode = levelRoot.child("compoundLayer"); compoundLayerNode;
-		compoundLayerNode = compoundLayerNode.next_sibling("compoundLayer")) {
+	for (xml_node compoundLayerNode = levelRoot.child("backgroundLayer"); compoundLayerNode;
+		compoundLayerNode = compoundLayerNode.next_sibling("backgroundLayer")) {
 
 		unique_ptr<BackgroundLayer> compoundLayer = make_unique<BackgroundLayer>();
 
