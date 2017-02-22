@@ -19,8 +19,7 @@ public:
 	PlayerShip(const Vector2& position);
 	~PlayerShip();
 
-	void reset(/*const Vector2& levelStart*/);
-	//void clear();
+	void reset();
 
 	/*
 		TODO?
@@ -32,12 +31,17 @@ public:
 		Return true when ship has moved into position. */
 	bool startUpdate(double deltaTime, shared_ptr<MouseController> mouse);
 	void update(double deltaTime, shared_ptr<MouseController> mouse);
-	virtual void draw(SpriteBatch* batch);
+	virtual void draw(SpriteBatch* batch) override;
+
+	void finishedUpdate(double deltaTime);
+
+	void deathUpdate(double deltaTime);
+	void deathDraw(SpriteBatch* batch);
 
 	int getHealth();
 	void takeDamage(int damageTaken);
 
-	int startMaxEnergy = 520;
+	int startMaxEnergy = 1020;
 	int maxEnergy = startMaxEnergy;
 	int energy = maxEnergy;
 
@@ -64,6 +68,12 @@ protected:
 	float speed = 200.0f;
 	float firingSpeed = 150;
 
+	/* direction travelling while killed, for eye candy. */
+	Vector2 deathVector;
+	double totalDeathTime = 0;
+	double timeSinceLastExplosion = 0;
+
+	vector<unique_ptr<AnimatedSprite> > explosions;
 
 private:
 	bool lastStateVKLButtonDown;

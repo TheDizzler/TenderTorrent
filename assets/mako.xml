@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<level name="mako" scale="1.5" numLayers="9" dir="assets/bg/">
+<level name="mako" scale="1.7" numLayers="9" dir="assets/bg/">
 
 
 
 	<waypoints>
 		<intro x="357" y="0" />
 		<start center="false" x="400" y="1400" speed="60"/>
-		<waypoint x="615" y="851" speed="7"/>
+		<!--<waypoint x="615" y="851" speed="7"/>
 		<waypoint x="162" y="1203" speed="10" />
 		<waypoint x="162" y="741" speed="15" />
-		<waypoint x="0" y="350" speed="15" />
+		<waypoint x="0" y="350" speed="15" />-->
 		<end x="395" y="0" speed="5" />
 	</waypoints>
 
@@ -49,8 +49,8 @@
 		
 	</backgroundLayer>
 
-	<backgroundLayer set="Right Strap" health="200" layer="1">
-		<cloth x="1" y="188">
+	<backgroundLayer set="Right Strap" layer="1">
+		<cloth x="1" y="188" health="200">
 			<position x="305" y="360"/>
 			<size x="129" y="241"/>
 
@@ -63,8 +63,8 @@
 		
 	</backgroundLayer>
 
-	<backgroundLayer set="Right Cup" health="200" layer="1">
-		<cloth x="1" y="430">
+	<backgroundLayer set="Right Cup" layer="1">
+		<cloth x="1" y="430" health="200">
 			<position x="214" y="610"/>
 			<size x="92" y="114"/>
 
@@ -79,8 +79,8 @@
 		
 	</backgroundLayer>
 
-	<backgroundLayer set="Middle Strap" health="200" layer="1">
-		<cloth x="1" y="545">
+	<backgroundLayer set="Middle Strap" layer="1">
+		<cloth x="1" y="545" health="200">
 			<position x="88" y="535"/>
 			<size x="128" y="135"/>
 
@@ -93,8 +93,8 @@
 		
 	</backgroundLayer>
 
-	<backgroundLayer set="Lower Right Strap" health="200" layer="1">
-		<cloth x="1" y="681" >
+	<backgroundLayer set="Lower Right Strap" layer="1">
+		<cloth x="1" y="681" health="200" >
 			<position x="299" y="714"/>
 			<size x="144" y="36"/>
 
@@ -106,8 +106,8 @@
 		
 	</backgroundLayer>
 
-	<backgroundLayer set="Left Ring" health="200" layer="1">
-		<cloth x="1" y="718" >
+	<backgroundLayer set="Left Ring" layer="1">
+		<cloth x="1" y="718" health="200" >
 			<position x="103" y="440"/>
 			<size x="22" y="21"/>
 
@@ -118,8 +118,8 @@
 		
 	</backgroundLayer>
 
-	<backgroundLayer set="Right Ring" health="200" layer="1">
-		<cloth x="1" y="740" >
+	<backgroundLayer set="Right Ring" layer="1">
+		<cloth x="1" y="740" health="200" >
 			<position x="291" y="596"/>
 			<size x="22" y="22"/>
 
@@ -133,11 +133,21 @@
 		<cloth x="1" y="895" part="Left Bottom Ring" health="150">
 			<position x="202" y="912" />
 			<size x="19" y="21" />
+
+			<tatter x="21" y="895" />
+			<tatter x="41" y="895" />
+			<tatter x="61" y="895" />
+			<tatter x="81" y="895" />
 		</cloth>
 
 		<cloth x="1" y="917" part="Right Bottom Ring" health="150">
 			<position x="289" y="916" />
 			<size x="22" y="19" />
+
+			<tatter x="24" y="917" />
+			<tatter x="47" y="917" />
+			<tatter x="70" y="917" />
+			<tatter x="93" y="917" />
 		</cloth>
 
 

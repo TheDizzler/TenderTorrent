@@ -12,15 +12,16 @@ public:
 
 	virtual Bullet* fire();
 
-	void update(double deltaTime, Vector2 positionUpdate, const Vector2& mousePosition);
+	void setTurretRotation(const Vector2& targetDirection);
+	void update(double deltaTime, Vector2 positionUpdate);
 	virtual void draw(SpriteBatch* batch);
 
+	virtual void setTint(const XMFLOAT4 newTint) override;
+	virtual void setScale(const Vector2& newScale);
 
-protected:
-	//virtual void fillBulletStore(/*GraphicsAsset**/ shared_ptr<Animation> bulletAsset);
 
 private:
 
 	Vector2 turretDirection;
-	std::unique_ptr<Sprite> turretSprite;
+	unique_ptr<Sprite> turretSprite;
 };

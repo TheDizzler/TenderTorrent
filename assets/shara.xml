@@ -2,13 +2,134 @@
 <level name="shara" scale="1.5" numLayers="2" dir="assets/bg/">
 
 	<waypoints>
-		<start center="true" x="69" y="99"/>
-		<waypoint x="" y=""/>
-		<end x="" y="" />
+		<intro x="357" y="0" />
+		<start center="false" x="400" y="1400" speed="20"/>
+		<!--<waypoint x="615" y="851" speed="7"/>
+		<waypoint x="162" y="1203" speed="10" />
+		<waypoint x="162" y="741" speed="15" />
+		<waypoint x="0" y="350" speed="15" />-->
+		<end x="395" y="0" speed="5" />
 	</waypoints>
 
+	<!-- Background data -->
 	<base layer="0">shara00.dds</base>
-	<backgroundLayer layer="1">
+	<backgroundSpriteSheet>shara spritesheet.dds</backgroundSpriteSheet>
+
+	<backgroundLayer set="Bikini Bottom" layer="1">
+		<cloth x="0" y="380" part="shara01a" health="400">
+			<position x="303" y="619" />
+			<size x="214" y="220" />
+		</cloth>
+	</backgroundLayer>
+
+
+
+	<backgroundLayer set="Bikini Top Left" layer="1">
+		<cloth x="0" y="0" part="shell 01c" health="100" >
+			<position x="287" y="364" />
+			<size x="26" y="30 "/>
+
+			<tatter x="28" y="0">
+				<size x="30" y="19" />
+			</tatter>
+		</cloth>
+
+		<cloth x="0" y="33" part="shell 01d" health="100">
+			<position x="262" y="370" />
+			<size x="24" y="32" />
+
+			<tatter x="27" y="34">
+				<size x="26" y="30" />
+			</tatter>
+		</cloth>
+
+		<cloth x="130" y="43" part="shell 01e" health="100">
+			<position x="233" y="384" />
+			<size x="22" y="32" />
+
+			<tatter x="155" y="46">
+				<size x="27" y="27" />
+			</tatter>
+		</cloth>
+
+		<cloth x="0" y="67" part="shell 01f" health="100">
+			<position x="210" y="397" />
+			<size x="28" y="23" />
+
+			<tatter x="30" y="67">
+				<size x="15" y="35" />
+			</tatter>
+		</cloth>
+
+
+		<subLayer>
+			<cloth x="0" y="105" part="left bra cup 01g" health="100">
+				<position x="234" y="338" />
+				<size x="79" y="60" />
+
+				<tatter x="80" y="105"/>
+				<tatter x="106" y="105"/>
+				<tatter x="240" y="105"/>
+				<tatter x="320" y="105"/>
+			</cloth>
+
+			<cloth x="0" y="168" part="left strap 01h" health="100">
+				<position x="304" y="351"/>
+				<size x="63" y="15" />
+
+				<!--tatter x="" y=""/-->
+			</cloth>
+		</subLayer>
+	</backgroundLayer>
+
+
+
+	<backgroundLayer set="Bikini Top Right" layer="1">
+
+		<cloth x="65" y="0" part="shell 01i" health="100">
+			<position x="396" y="340" />
+			<size x="24" y="44" />
+
+			<tatter x="95" y="1">
+				<size x="36" y="42" />
+			</tatter>
+		</cloth>
+
+		<cloth x="57" y="47" part="shell 01j" health="100">
+			<position x="427" y="338" />
+			<size x="32" y="42" />
+
+			<tatter x="92" y="47">
+				<size x="32" y="37" />
+			</tatter>
+		</cloth>
+
+		<cloth x="135" y="0" part="shell 01k" health="100">
+			<position x="463" y="340" />
+			<size x="34" y="38" />
+
+			<tatter x="173" y="0">
+				<size x="35" y="31" />
+			</tatter>
+		</cloth>
+
+		<subLayer>
+			<cloth x="0" y="187" part="right bra 01l" health="100">
+				<position x="389" y="304" />
+				<size x="90" y="44" />
+
+				<!--tatter x="" y=""/-->
+			</cloth>
+
+			<cloth x="0" y="234" part="right strap 01m" health="100">
+				<position x="477" y="339" />
+				<size x="61" y="140" />
+
+				<!--tatter x="" y=""/-->
+			</cloth>
+		</subLayer>
+	</backgroundLayer>
+	<!--backgroundLayer layer="1">
 		shara01a.dds
 		<position x="303" y="619"/>
 		<size x="214" y="220"/>
@@ -17,6 +138,6 @@
 		shara01b.dds
 		<position x="208" y="304"/>
 		<size x="331" y="183"/>
-	</backgroundLayer>
+	</backgroundLayer-->
 
 </level>

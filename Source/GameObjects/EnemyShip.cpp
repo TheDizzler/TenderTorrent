@@ -43,8 +43,8 @@ void EnemyShip::explodeUpdate(double deltaTime) {
 
 	explosion->update(deltaTime);
 	isExploding = explosion->isAlive;
-	Color newTint = getTint();
-	setTint(Color::Lerp(newTint, Vector4(0, 0, 0, 0), 20*deltaTime));
+	//Color newTint = getTint();
+	setTint(Color::Lerp(getTint(), Vector4(0, 0, 0, 0), 20*deltaTime));
 }
 
 void EnemyShip::drawExplosion(SpriteBatch* batch) {

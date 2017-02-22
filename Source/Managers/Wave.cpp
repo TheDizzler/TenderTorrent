@@ -22,6 +22,12 @@ void Wave::clear() {
 	liveBullets.clear();
 }
 
+void Wave::clearEnemies() {
+	for (EnemyShip* enemy : shipStore)
+		if (enemy->isAlive)
+			enemy->takeDamage(1000);
+}
+
 
 #include <algorithm>
 void Wave::update(double deltaTime, PlayerShip* player) {
@@ -70,6 +76,17 @@ void Wave::draw(SpriteBatch * batch) {
 	for (Bullet* bullet : liveBullets)
 		bullet->draw(batch);
 
+}
+
+void Wave::finishedUpdate(double deltaTime) {
+
+	liveBullets.erase(remove_if(liveBullets.begin(), liveBullets.end(),
+		[](const Bullet* bullet) { return !bullet->isAlive; }), liveBullets.end());
+
+
+	for (EnemyShip* enemy : shipStore) {
+		enemy->explodeUpdate(deltaTime);
+	}
 }
 
 

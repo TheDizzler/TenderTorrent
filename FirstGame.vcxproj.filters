@@ -234,9 +234,6 @@
     <ClCompile Include="Source\GameObjects\Graphics\Tatter.cpp">
       <Filter>Source Files\Backgrounds</Filter>
     </ClCompile>
-    <ClCompile Include="Source\GameObjects\Graphics\CompoundLayer.cpp">
-      <Filter>Source Files\Backgrounds</Filter>
-    </ClCompile>
     <ClCompile Include="Source\GameObjects\Graphics\ClothLayer.cpp">
       <Filter>Source Files\Backgrounds</Filter>
     </ClCompile>
@@ -411,9 +408,6 @@
       <Filter>Header Files\Engine</Filter>
     </ClInclude>
     <ClInclude Include="Source\GameObjects\Graphics\Tatter.h">
-      <Filter>Header Files\Backgrounds</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\GameObjects\Graphics\CompoundLayer.h">
       <Filter>Header Files\Backgrounds</Filter>
     </ClInclude>
     <ClInclude Include="Source\GameObjects\Graphics\ClothLayer.h">

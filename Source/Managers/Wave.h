@@ -14,11 +14,14 @@ public:
 	void clear();
 	virtual void launchNewWave() = 0;
 
+	void clearEnemies();
+
 	/** Updates ships only (not bullets). Removes dead enemy bullets. */
 	virtual void update(double deltaTime, PlayerShip* player);
 	/** Draws both ships and enemy bullets. */
 	void draw(SpriteBatch* batch);
 
+	virtual void finishedUpdate(double deltaTime);
 
 	vector<Bullet*> liveBullets;
 	vector<EnemyShip*> shipStore;

@@ -36,20 +36,34 @@ Bullet* Turret::fire() {
 //}
 
 
-void Turret::update(double deltaTime, Vector2 positionUpdate, const Vector2& mousePosition) {
+void Turret::setTurretRotation(const Vector2 & targetDirection) {
+	turretSprite->setRotation(atan2(targetDirection.y, targetDirection.x) + XM_PIDIV2);
+	turretDirection = Vector2(targetDirection.x, targetDirection.y);
+	turretDirection.Normalize();
+}
+
+void Turret::update(double deltaTime, Vector2 positionUpdate) {
 
 	WeaponSystem::update(deltaTime, positionUpdate);
 	turretSprite->setPosition(weaponLocation);
 
-	int y = mousePosition.y - weaponLocation.y;
+	/*int y = mousePosition.y - weaponLocation.y;
 	int x = mousePosition.x - weaponLocation.x;
 	turretDirection = Vector2(x, y);
 	turretDirection.Normalize();
-	turretSprite->setRotation(atan2(y, x) + XM_PIDIV2);
+	turretSprite->setRotation(atan2(targetDirection.y, targetDirection.x) + XM_PIDIV2);*/
 }
 
 void Turret::draw(SpriteBatch * batch) {
 
 	turretSprite->draw(batch);
 	WeaponSystem::draw(batch);
+}
+
+void Turret::setTint(const XMFLOAT4 newTint) {
+	turretSprite->setTint(newTint);
+}
+
+void Turret::setScale(const Vector2& newScale) {
+	turretSprite->setScale(newScale);
 }

@@ -100,7 +100,6 @@ void LevelManager::update(double deltaTime, shared_ptr<MouseController> mouse) {
 					}
 				}
 
-				//for (const auto& layer : bgManager->bgLayers) {
 				for (ClothLayer* layer : bgManager->getClothes()) {
 					if (layer->isAlive()) {
 						if (bullet->getHitArea()->collision(layer->getHitArea())) {
@@ -112,8 +111,10 @@ void LevelManager::update(double deltaTime, shared_ptr<MouseController> mouse) {
 			}
 
 
-			if (bgManager->update(deltaTime, mouse))
+			if (bgManager->update(deltaTime, mouse)) {
 				playState = PlayState::FINISHED;
+				waveManager->clearEnemies();
+			}
 			playerShip->update(deltaTime, mouse);
 			waveManager->update(deltaTime, playerShip.get());
 
@@ -139,16 +140,23 @@ void LevelManager::update(double deltaTime, shared_ptr<MouseController> mouse) {
 			guiOverlay->updateWarning(deltaTime);
 			break;
 		case FINISHED:
-			waveManager->update(deltaTime, playerShip.get());
+			for (Bullet* bullet : playerShip->liveBullets)
+				bullet->update(deltaTime);
+			waveManager->finishedUpdate(deltaTime);
+			playerShip->finishedUpdate(deltaTime);
+
 			gameOverTimer += deltaTime;
-			if (gameOverTimer > 5 || keyState.Escape || keyState.Enter)
+			if (gameOverTimer > 15 || keyState.Escape || keyState.Enter)
 				game->loadMainMenu();
 			break;
 		case GAMEOVER:
-			bgManager->update(deltaTime, mouse);
+			for (Bullet* bullet : playerShip->liveBullets)
+				bullet->update(deltaTime);
+			//bgManager->update(deltaTime, mouse);
+			playerShip->deathUpdate(deltaTime);
 			waveManager->update(deltaTime, playerShip.get());
 			gameOverTimer += deltaTime;
-			if (gameOverTimer > 5 || keyState.Escape || keyState.Enter)
+			if (gameOverTimer > 15 || keyState.Escape || keyState.Enter)
 				game->loadMainMenu();
 			break;
 		case PAUSED:
@@ -199,23 +207,30 @@ void LevelManager::draw(SpriteBatch* batch) {
 	batch->Begin(SpriteSortMode_Deferred);
 	{
 
-		playerShip->draw(batch);
+
 		waveManager->draw(batch);
 
-		guiOverlay->draw(batch);
+
 
 		switch (playState) {
 			case PAUSED:
+				playerShip->draw(batch);
 				guiOverlay->drawPaused(batch);
 				break;
 			case STARTING:
+				playerShip->draw(batch);
 				if (bgManager->introScrollDone)
 					guiOverlay->drawWarning(batch);
 				break;
 			case GAMEOVER:
+				playerShip->deathDraw(batch);
 				guiOverlay->drawGameOver(batch);
 				break;
+			default:
+				playerShip->draw(batch);
 		}
+
+		guiOverlay->draw(batch);
 	}
 	batch->End();
 }

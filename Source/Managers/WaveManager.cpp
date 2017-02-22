@@ -47,6 +47,14 @@ void WaveManager::clear() {
 	waves.clear();
 }
 
+void WaveManager::clearEnemies() {
+	for each (Wave* wave in waves) {
+		wave->clearEnemies();
+		for (Bullet* bullet : wave->liveBullets)
+			bullet->isAlive = false;
+	}
+}
+
 
 
 void WaveManager::update(double deltaTime, PlayerShip* player) {
@@ -71,4 +79,9 @@ void WaveManager::draw(SpriteBatch * batch) {
 	for (Wave* wave : waves)
 		wave->draw(batch);
 
+}
+
+void WaveManager::finishedUpdate(double deltaTime) {
+	for (Wave* wave : waves)
+		wave->finishedUpdate(deltaTime);
 }

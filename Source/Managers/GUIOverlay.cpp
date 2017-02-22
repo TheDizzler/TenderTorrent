@@ -13,7 +13,7 @@ GUIOverlay::GUIOverlay() {
 	Vector2 bordersize = hudBG->getSize();
 	bordersize.y += borderThickness;
 	hudBorder.reset(guiFactory->createRectangleFrame(borderpos, bordersize, borderThickness));
-	
+
 
 	timerLabel.reset(guiFactory->createTextLabel(Vector2(500, 3)));
 	timerLabel->setTint(Vector4(0, 0, 0, 1));
@@ -84,11 +84,13 @@ GUIOverlay::~GUIOverlay() {
 }
 
 const Vector2& GUIOverlay::getPlayArea() {
-	return hudBG->getSize();
+	return Vector2(Globals::WINDOW_WIDTH, Globals::WINDOW_HEIGHT - hudBG->getHeight());
 }
 
 const Vector2& GUIOverlay::getPlayPosition() {
-	return hudBG->getPosition();
+	Vector2 pos = hudBG->getPosition();
+	pos.y += hudBG->getHeight();
+	return pos;
 }
 
 

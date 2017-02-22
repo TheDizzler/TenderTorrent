@@ -19,12 +19,16 @@ public:
 	virtual void setWeaponStats(int damage, int energyCost, float coolDownTime);
 
 
-
 	void update(double deltaTime, Vector2 positionUpdate);
 	virtual void draw(SpriteBatch* batch);
 
 	bool ready();
 	virtual Bullet* fire();
+
+	const Vector2& getPosition() const;
+
+	/* Does nothing. */
+	virtual void setTint(const XMFLOAT4 newTint);
 
 	int energyCost = 2;
 

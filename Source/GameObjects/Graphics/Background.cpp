@@ -13,8 +13,6 @@ Background::~Background() {
 
 void Background::clear() {
 
-	/*for each (BackgroundLayer* bgLayer in bgLayers)
-		delete bgLayer;*/
 	bgLayers.clear();
 
 	bgLayerAssets.clear();
@@ -67,7 +65,7 @@ bool Background::loadLevel(ComPtr<ID3D11Device> device, const char_t* xmlFile) {
 	bgLayerAssets.push_back(move(bgLayerAsset));
 
 
-	float scaleFactor = levelRoot.attribute("scale").as_float(); // change this camera zoom?
+	float scaleFactor = levelRoot.attribute("scale").as_float();
 	//baseBG->setScale(Vector2(scaleFactor, scaleFactor));
 	camera->setZoom(scaleFactor);
 
@@ -108,12 +106,9 @@ bool Background::loadLevel(ComPtr<ID3D11Device> device, const char_t* xmlFile) {
 
 	cornerFrame.reset(new Sprite());
 	cornerFrame->load(gfxAssets->getAsset("Corner Frame"));
-	//cornerFrame->setPosition(Vector2(500, 500));
 
 	camera->setLevel(this);
 	camera->centerOn(lastWaypoint->dest);
-	//currentWaypoint = waypoints.front();
-	//waypoints.pop();
 
 	return loadLevel(device, levelRoot);
 }
@@ -195,9 +190,8 @@ void Background::draw(SpriteBatch * batch) {
 		layer->draw(batch);
 }
 
-vector</*unique_ptr<ClothLayer>*/ClothLayer*> Background::getClothes() {
+vector<ClothLayer*> Background::getClothes() {
 
-	//vector<unique_ptr<ClothLayer>> bgVec;
 	vector<ClothLayer*> bgVec;
 	for (const auto& bg : bgLayers) {
 		bg->getLayers(bgVec);
@@ -223,47 +217,6 @@ bool Background::loadLevel(ComPtr<ID3D11Device> device, xml_node levelRoot) {
 		return false;
 	}
 
-	//for (xml_node bgLayerNode = levelRoot.child("backgroundLayer");
-	//	bgLayerNode; bgLayerNode = bgLayerNode.next_sibling("backgroundLayer")) {
-
-	//	for (xml_node clothNode = bgLayerNode.child("cloth"); clothNode; clothNode = clothNode.next_sibling("cloth")) {
-	//		xml_node posNode = clothNode.child("position");
-	//		// pos relative to level
-	//		Vector2 worldPosition = Vector2(posNode.attribute("x").as_int(), posNode.attribute("y").as_int());
-	//		// pos in sprite sheet
-	//		Vector2 position = Vector2(clothNode.attribute("x").as_int(), clothNode.attribute("y").as_int());
-	//		xml_node sizeNode = clothNode.child("size");
-	//		Vector2 size = Vector2(sizeNode.attribute("x").as_int(), sizeNode.attribute("y").as_int());
-
-	//		unique_ptr<GraphicsAsset> spriteAsset = make_unique<GraphicsAsset>();
-	//		spriteAsset->loadAsPartOfSheet(masterAsset->getTexture(), position, size, Vector2::Zero);
-
-
-	//		unique_ptr<ClothLayer> bgLayer = make_unique<ClothLayer>();
-	//		bgLayer->load(spriteAsset.get(), cornerFrame);
-	//		//bgLayer->setLayerDepth(bgLayerNode.attribute("layer").as_float());
-	//		bgLayer->setHealth(clothNode.attribute("health").as_int());
-	//		bgLayerAssets.push_back(move(spriteAsset));
-	//		bgLayer->setMatrixFunction([&]() -> Matrix {return camera->translationMatrix(); });
-	//		bgLayer->setCameraZoom([&]() -> float { return camera->getZoom(); });
-	//		bgLayer->setInitialPosition(worldPosition, baseBG->getScale());
-
-
-	//		// parse all single sprites from spritesheet
-	//		for (xml_node pieceNode = clothNode.child("tatter"); pieceNode;
-	//			pieceNode = pieceNode.next_sibling("tatter")) {
-
-	//			position = Vector2(pieceNode.attribute("x").as_int(), pieceNode.attribute("y").as_int());
-
-	//			unique_ptr<GraphicsAsset> pieceAsset = make_unique<GraphicsAsset>();
-	//			pieceAsset->loadAsPartOfSheet(masterAsset->getTexture(), position, size, Vector2::Zero);
-
-	//			bgLayer->loadPiece(pieceAsset.get());
-	//			bgLayerAssets.push_back(move(pieceAsset));
-	//		}
-	//		bgLayers.push_back(move(bgLayer));
-	//	}
-	//}
 
 	for (xml_node compoundLayerNode = levelRoot.child("backgroundLayer"); compoundLayerNode;
 		compoundLayerNode = compoundLayerNode.next_sibling("backgroundLayer")) {
@@ -317,99 +270,69 @@ bool Background::loadLevel(ComPtr<ID3D11Device> device, xml_node levelRoot) {
 
 
 		// parse bottom layers
-		xml_node subLayerNode = compoundLayerNode.child("subLayer");
+		for (xml_node subLayerNode = compoundLayerNode.child("subLayer"); subLayerNode;
+			subLayerNode = subLayerNode.next_sibling("subLayer")) {
 
-		for (xml_node subClothNode = subLayerNode.child("cloth");
-			subClothNode; subClothNode = subLayerNode.next_sibling("cloth")) {
+			for (xml_node subClothNode = subLayerNode.child("cloth");
+				subClothNode; subClothNode = subClothNode.next_sibling("cloth")) {
 
-			xml_node posNode = subClothNode.child("position");
-			// pos relative to level
-			Vector2 worldPosition = Vector2(posNode.attribute("x").as_int(), posNode.attribute("y").as_int());
-			// pos in sprite sheet
-			Vector2 position = Vector2(subClothNode.attribute("x").as_int(), subClothNode.attribute("y").as_int());
-			xml_node sizeNode = subClothNode.child("size");
-			Vector2 size = Vector2(sizeNode.attribute("x").as_int(), sizeNode.attribute("y").as_int());
+				xml_node posNode = subClothNode.child("position");
+				// pos relative to level
+				Vector2 worldPosition = Vector2(posNode.attribute("x").as_int(), posNode.attribute("y").as_int());
+				// pos in sprite sheet
+				Vector2 position = Vector2(subClothNode.attribute("x").as_int(), subClothNode.attribute("y").as_int());
+				xml_node sizeNode = subClothNode.child("size");
+				Vector2 size = Vector2(sizeNode.attribute("x").as_int(), sizeNode.attribute("y").as_int());
 
-			unique_ptr<GraphicsAsset> spriteAsset = make_unique<GraphicsAsset>();
-			spriteAsset->loadAsPartOfSheet(masterAsset->getTexture(), position, size, Vector2::Zero);
-
-
-			unique_ptr<ClothLayer> bgLayer = make_unique<ClothLayer>();
-			bgLayer->load(spriteAsset.get(), cornerFrame);
-			//bgLayer->setLayerDepth(bgLayerNode.attribute("layer").as_float());
-			bgLayer->setHealth(subClothNode.attribute("health").as_int());
-			bgLayerAssets.push_back(move(spriteAsset));
-			bgLayer->setMatrixFunction([&]() -> Matrix {return camera->translationMatrix(); });
-			bgLayer->setCameraZoom([&]() -> float { return camera->getZoom(); });
-			bgLayer->setInitialPosition(worldPosition, baseBG->getScale());
+				unique_ptr<GraphicsAsset> spriteAsset = make_unique<GraphicsAsset>();
+				spriteAsset->loadAsPartOfSheet(masterAsset->getTexture(), position, size, Vector2::Zero);
 
 
-			// parse all single sprites from spritesheet
-			for (xml_node pieceNode = subClothNode.child("tatter"); pieceNode;
-				pieceNode = pieceNode.next_sibling("tatter")) {
+				unique_ptr<ClothLayer> bgLayer = make_unique<ClothLayer>();
+				bgLayer->load(spriteAsset.get(), cornerFrame);
+				//bgLayer->setLayerDepth(bgLayerNode.attribute("layer").as_float());
+				bgLayer->setHealth(subClothNode.attribute("health").as_int());
+				bgLayerAssets.push_back(move(spriteAsset));
+				bgLayer->setMatrixFunction([&]() -> Matrix {return camera->translationMatrix(); });
+				bgLayer->setCameraZoom([&]() -> float { return camera->getZoom(); });
+				bgLayer->setInitialPosition(worldPosition, baseBG->getScale());
 
-				position = Vector2(pieceNode.attribute("x").as_int(), pieceNode.attribute("y").as_int());
 
-				unique_ptr<GraphicsAsset> pieceAsset = make_unique<GraphicsAsset>();
-				pieceAsset->loadAsPartOfSheet(masterAsset->getTexture(), position, size, Vector2::Zero);
+				// parse all single sprites from spritesheet
+				for (xml_node pieceNode = subClothNode.child("tatter"); pieceNode;
+					pieceNode = pieceNode.next_sibling("tatter")) {
 
-				bgLayer->loadPiece(pieceAsset.get());
-				bgLayerAssets.push_back(move(pieceAsset));
+					position = Vector2(pieceNode.attribute("x").as_int(), pieceNode.attribute("y").as_int());
+
+					xml_node sizeNode = pieceNode.child("size");
+					if (sizeNode)
+						size = Vector2(sizeNode.attribute("x").as_int(), sizeNode.attribute("y").as_int());
+					unique_ptr<GraphicsAsset> pieceAsset = make_unique<GraphicsAsset>();
+					pieceAsset->loadAsPartOfSheet(masterAsset->getTexture(), position, size, Vector2::Zero);
+
+					bgLayer->loadPiece(pieceAsset.get());
+					bgLayerAssets.push_back(move(pieceAsset));
+				}
+
+				compoundLayer->addBottomLayer(move(bgLayer));
 			}
-
-			compoundLayer->addBottomLayer(move(bgLayer));
 		}
 
 		bgLayers.push_back(move(compoundLayer));
 	}
-	/*for each (xml_node layerNode in levelRoot.children("backgroundLayer")) {
-
-		BackgroundLayer* bgLayer = new BackgroundLayer();
-		string file = layerNode.text().as_string();
-		StringHelper::trim(file);
-		string filepath = dir + file;
-
-
-		unique_ptr<GraphicsAsset> layerAsset;
-		layerAsset.reset(new GraphicsAsset());
-		if (!layerAsset->load(device, StringHelper::convertCharStarToWCharT(filepath.c_str()))) {
-			wstringstream wss;
-			wss << "Unable to background image " << filepath.c_str();
-			GameEngine::showErrorDialog(wss.str(), L"Fatal Error");
-			return false;
-		}
-
-
-		bgLayer->load(layerAsset.get());
-		bgLayer->setOrigin(Vector2::Zero);
-		bgLayer->setInitialPosition(baseBG->getPosition(), baseBG->getScale());
-		bgLayer->setMatrixFunction([&]() -> Matrix {return camera->translationMatrix(); });
-		bgLayerAssets.push_back(move(layerAsset));
-
-		Vector2 pos = Vector2(layerNode.child("position").attribute("x").as_int(),
-			layerNode.child("position").attribute("y").as_int());
-
-		Vector2 size = Vector2(layerNode.child("size").attribute("x").as_int(),
-			layerNode.child("size").attribute("y").as_int());
-
-
-		bgLayer->setHitArea(pos, size);
-		bgLayers.push_back(bgLayer);
-
-	}*/
 
 	return true;
 }
 
 void Background::constrainToBackground(Vector2& waypoint) {
 
-	if (waypoint.x < camera->viewportWidth / 2)
+	/*if (waypoint.x < camera->viewportWidth / 2)
 		waypoint.x = camera->viewportWidth / 2;
 	if (waypoint.x > getWidth() - camera->viewportWidth / 2)
 		waypoint.x = getWidth() - camera->viewportWidth / 2;
 	if (waypoint.y < camera->viewportHeight / 2)
 		waypoint.y = camera->viewportHeight / 2;
 	if (waypoint.y > getHeight() - camera->viewportHeight / 2)
-		waypoint.y = getHeight() - camera->viewportHeight / 2;
+		waypoint.y = getHeight() - camera->viewportHeight / 2;*/
 }
 

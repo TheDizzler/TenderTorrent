@@ -79,3 +79,10 @@ Bullet* WeaponSystem::fire() {
 
 	return bullet;
 }
+
+const Vector2& WeaponSystem::getPosition() const {
+	return weaponLocation;
+}
+
+void WeaponSystem::setTint(const XMFLOAT4 colr) {
+}

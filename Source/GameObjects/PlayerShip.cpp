@@ -15,15 +15,17 @@ PlayerShip::PlayerShip(const Vector2& pos) : Sprite(pos) {
 
 	rightTurret.reset(new Turret(Vector2(12, -8)));
 	leftTurret.reset(new Turret(Vector2(-13, -8)));
+
 }
 
 
 PlayerShip::~PlayerShip() {
 
 	liveBullets.clear();
+	explosions.clear();
 }
 
-void PlayerShip::reset(/*const Vector2& levelStart*/) {
+void PlayerShip::reset() {
 
 	for each (Bullet* bullet in liveBullets)
 		bullet->isAlive = false;
@@ -33,25 +35,16 @@ void PlayerShip::reset(/*const Vector2& levelStart*/) {
 	maxEnergy = startMaxEnergy;
 	energy = startMaxEnergy;
 	position = PLAYER_START_POSITION;
-	/*position = levelStart;
-	position.y += Globals::WINDOW_HEIGHT / 2;*/
 
 	rightWeaponSlot->update(0, position);
 	leftWeaponSlot->update(0, position);
 	centerWeaponSlot->update(0, position);
-	rightTurret->update(0, position, Vector2::Zero);
-	leftTurret->update(0, position, Vector2::Zero);
+	rightTurret->update(0, position);
+	leftTurret->update(0, position);
 
+	setTint(Vector4(1, 1, 1, 1));
+	totalDeathTime = 0;
 }
-
-//void PlayerShip::clear() {
-//
-//	for each (Bullet* bullet in liveBullets)
-//		bullet->isAlive = false;
-//	liveBullets.clear();
-//
-//	position = startPosition;
-//}
 
 
 
@@ -72,8 +65,8 @@ bool PlayerShip::loadBullet(GFXAssetManager* gfxAsset) {
 bool PlayerShip::startUpdate(double deltaTime, shared_ptr<MouseController> mouse) {
 
 	position.y -= firingSpeed * deltaTime;
-	rightTurret->update(deltaTime, position, mouse->getPosition());
-	leftTurret->update(deltaTime, position, mouse->getPosition());
+	rightTurret->update(deltaTime, position);
+	leftTurret->update(deltaTime, position);
 	return position.y < Globals::WINDOW_HEIGHT - 3 * height;
 }
 
@@ -92,11 +85,9 @@ void PlayerShip::update(double deltaTime, shared_ptr<MouseController> mouse) {
 
 	auto keyState = Keyboard::Get().GetState();
 
-	//if (keys->keyDown[KeyboardController::LEFT])
 	if (keyState.A)
 		position.x -= currentSpeed * deltaTime;
 
-	//if (keys->keyDown[KeyboardController::RIGHT])
 	if (keyState.D)
 		position.x += currentSpeed * deltaTime;
 
@@ -106,12 +97,9 @@ void PlayerShip::update(double deltaTime, shared_ptr<MouseController> mouse) {
 		position.x = Globals::WINDOW_WIDTH - width / 2;
 
 
-
-	//if (keys->keyDown[KeyboardController::UP])
 	if (keyState.W)
 		position.y -= currentSpeed * deltaTime;
 	if (keyState.S)
-	//if (keys->keyDown[KeyboardController::DOWN])
 		position.y += currentSpeed * deltaTime;
 
 	if (position.y < 0 + height / 2)
@@ -126,8 +114,16 @@ void PlayerShip::update(double deltaTime, shared_ptr<MouseController> mouse) {
 	leftWeaponSlot->update(deltaTime, position);
 	centerWeaponSlot->update(deltaTime, position);
 
-	rightTurret->update(deltaTime, position, mouse->getPosition());
-	leftTurret->update(deltaTime, position, mouse->getPosition());
+	rightTurret->update(deltaTime, position);
+	leftTurret->update(deltaTime, position);
+	Vector2 turretsLocationMidPoint = (rightTurret->getPosition() + leftTurret->getPosition()) / 2;
+	int y = mouse->getPosition().y - turretsLocationMidPoint.y;
+	int x = mouse->getPosition().x - turretsLocationMidPoint.x;
+	Vector2 targetDirection = Vector2(x, y);
+	targetDirection.Normalize();
+
+	rightTurret->setTurretRotation(targetDirection);
+	leftTurret->setTurretRotation(targetDirection);
 
 	liveBullets.erase(remove_if(liveBullets.begin(), liveBullets.end(),
 		[](const Bullet* bullet) { return !bullet->isAlive; }), liveBullets.end());
@@ -173,9 +169,8 @@ void PlayerShip::update(double deltaTime, shared_ptr<MouseController> mouse) {
 
 		timeSinceRecharge = 0;
 	}
-
-	//lastStateVKLButtonDown = mouse->leftButtonDown();
 }
+
 
 void PlayerShip::draw(SpriteBatch * batch) {
 
@@ -187,6 +182,79 @@ void PlayerShip::draw(SpriteBatch * batch) {
 
 	rightTurret->draw(batch);
 	leftTurret->draw(batch);
+
+}
+
+void PlayerShip::finishedUpdate(double deltaTime) {
+
+// move to center of screen
+//position += Vector2::Lerp( levelEndPosition, centerPosition,  
+}
+
+
+#include "../Managers/GameManager.h"
+#include <random>
+const double TIME_TO_DIE = 5.0;
+const double EXPLOSION_STAGGER_TIME = .2;
+void PlayerShip::deathUpdate(double deltaTime) {
+
+	Vector2 movement = deathVector * deltaTime;
+	position += movement;
+	rightTurret->update(deltaTime, position);
+	leftTurret->update(deltaTime, position);
+
+	Color newTint = Color::Lerp(Vector4(1, 1, 1, 1), Vector4(0, 0, 0, 0), totalDeathTime / TIME_TO_DIE);
+	setTint(newTint);
+	rightTurret->setTint(newTint);
+	leftTurret->setTint(newTint);
+
+	Vector2 newSize = Vector2::Lerp(Vector2(1, 1), Vector2(0, 0), totalDeathTime / TIME_TO_DIE);
+	setScale(newSize);
+	rightTurret->setScale(newSize);
+	leftTurret->setScale(newSize);
+
+	totalDeathTime += deltaTime;
+	timeSinceLastExplosion -= deltaTime;
+	if (timeSinceLastExplosion <= 0) {
+		mt19937 rng;
+		rng.seed(random_device{}());
+		uniform_int_distribution<mt19937::result_type> randx((int) 0, getWidth());
+		uniform_int_distribution<mt19937::result_type> randy((int) 0, getHeight());
+		Vector2 offset(randx(rng) - getOrigin().x, randy(rng) - getOrigin().y);
+
+		unique_ptr<AnimatedSprite> newExplosion = make_unique<AnimatedSprite>(getPosition() + offset);
+		newExplosion->load(gfxAssets->getAnimation("big explosion"));
+		newExplosion->repeats = false;
+		explosions.push_back(move(newExplosion));
+
+		timeSinceLastExplosion = EXPLOSION_STAGGER_TIME;
+	}
+
+	for (const auto& explosion : explosions) {
+		if (explosion->isAlive) {
+			explosion->moveBy(movement);
+			explosion->update(deltaTime);
+		}
+	}
+
+
+}
+
+
+void PlayerShip::deathDraw(SpriteBatch* batch) {
+
+
+	for (WeaponSystem* weaponSlot : weaponSlots)
+		weaponSlot->draw(batch);
+
+	Sprite::draw(batch);
+
+	rightTurret->draw(batch);
+	leftTurret->draw(batch);
+
+	for (const auto& explosion : explosions)
+		if (explosion->isAlive)
+			explosion->draw(batch);
 }
 
 int PlayerShip::getHealth() {
@@ -200,6 +268,21 @@ void PlayerShip::takeDamage(int damageTaken) {
 		energy = maxEnergy;
 	if (energy <= 0) {
 		energy = 0;
+		if (!isAlive)
+			return;
 		isAlive = false;
+		// capture direction moving
+		auto keyState = Keyboard::Get().GetState();
+		deathVector = Vector2::Zero;
+		if (keyState.A)
+			deathVector.x = -1;
+		else if (keyState.D)
+			deathVector.x = 1;
+		if (keyState.W)
+			deathVector.y = -1;
+		else if (keyState.S)
+			deathVector.y = 1;
+		deathVector.Normalize();
+		deathVector *= firingSpeed;
 	}
 }

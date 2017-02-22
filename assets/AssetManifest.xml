@@ -22,10 +22,16 @@
 				<sprite x="44" y="24" width="10" height="34" />
 				<sprite x="55" y="24" width="10" height="34" />
 			</animation>
+			<animation name="Cross Bullet" timePerFrame=".1">
+				<sprite x="0" y="62" width="12" height="12" />
+				<sprite x="13" y="62" width="12" height="12" />
+				<sprite x="26" y="62" width="12" height="12" />
+				<sprite x="39" y="62" width="12" height="12" />
+			</animation>
 		</spritesheet>
 
 		<!--sprite name="Enemy Bullet A" file="bullet yellow.dds"/-->
-		<sprite name="Cross Bullet" file="cross bullet.dds"/>
+		<!--<sprite name="Cross Bullet" file="cross bullet.dds"/>-->
 		<!--sprite name="Laserbolt" file="laserbolt(24x24).dds"/-->
 		<sprite name="Sun Bullet" file="sunball.dds"/>
 
