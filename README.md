@@ -11,6 +11,8 @@ GUI made with DirectXTKGui https://github.com/TheDizzler/DXTKGui
 >- PugiXML (http://pugixml.org/)
 
 
+10-07-17	update screw up
+
 # Todo now:
 >- ~~level scroll patterns~~
 >- ~~level end state :O~~
