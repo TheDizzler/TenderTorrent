@@ -1,15 +1,16 @@
 #include "TransitionEffects.h"
+#include "../Controls/Dialog.h"
 
 
-TransitionEffects::GrowTransition::GrowTransition(const Vector2& strt,
-	const Vector2& end, float speed) {
+TransitionEffects::GrowTransition::GrowTransition(IElement2D* cntrl, const Vector2& strt,
+	const Vector2& end, float speed) : TransitionEffect(cntrl) {
 
 	startScale = strt;
 	endScale = end;
 	transitionSpeed = speed;
 }
 
-bool TransitionEffects::GrowTransition::run(double deltaTime, IElement2D* control) {
+bool TransitionEffects::GrowTransition::run(double deltaTime) {
 
 	Vector2 newscale = Vector2::Lerp(control->getScale(), endScale,
 		deltaTime*transitionSpeed);
@@ -26,19 +27,19 @@ bool TransitionEffects::GrowTransition::run(double deltaTime, IElement2D* contro
 	return false;
 }
 
-void TransitionEffects::GrowTransition::reset(IElement2D* control) {
+void TransitionEffects::GrowTransition::reset() {
 	control->setScale(startScale);
 }
 
 
 
 
-TransitionEffects::ShrinkTransition::ShrinkTransition(
+TransitionEffects::ShrinkTransition::ShrinkTransition(IElement2D* cntrl,
 	const Vector2& startScale, const Vector2& endScale, float speed)
-	: GrowTransition(startScale, endScale, speed) {
+	: GrowTransition(cntrl, startScale, endScale, speed) {
 }
 
-bool TransitionEffects::ShrinkTransition::run(double deltaTime, IElement2D* control) {
+bool TransitionEffects::ShrinkTransition::run(double deltaTime) {
 
 	Vector2 newscale = Vector2::Lerp(control->getScale(), endScale,
 		deltaTime*transitionSpeed);
@@ -57,16 +58,15 @@ bool TransitionEffects::ShrinkTransition::run(double deltaTime, IElement2D* cont
 
 
 
-TransitionEffects::SlideTransition::SlideTransition(const Vector2& startPos,
-	const Vector2& endPos, float speed) {
+TransitionEffects::SlideTransition::SlideTransition(IElement2D* cntrl,
+	const Vector2& startPos, const Vector2& endPos, float speed) : TransitionEffect(cntrl) {
 
 	startPosition = startPos;
 	endPosition = endPos;
 	transitionSpeed = speed;
 }
 
-bool TransitionEffects::SlideTransition::run(double deltaTime,
-	IElement2D* control) {
+bool TransitionEffects::SlideTransition::run(double deltaTime) {
 
 	Vector2 newpos = Vector2::Lerp(
 		control->getPosition(), endPosition, deltaTime*transitionSpeed);
@@ -81,15 +81,16 @@ bool TransitionEffects::SlideTransition::run(double deltaTime,
 	return false;
 }
 
-void TransitionEffects::SlideTransition::reset(IElement2D* control) {
+void TransitionEffects::SlideTransition::reset() {
 	control->setPosition(startPosition);
 }
 
 
 
 TransitionEffects::SlideAndGrowTransition::SlideAndGrowTransition(
-	const Vector2& startPos, const Vector2& endPos,
-	const Vector2& startScl, const Vector2& endScl, float speed) {
+	IElement2D* cntrl, const Vector2& startPos, const Vector2& endPos,
+	const Vector2& startScl, const Vector2& endScl, float speed)
+	: TransitionEffect(cntrl) {
 
 	startPosition = startPos;
 	endPosition = endPos;
@@ -99,7 +100,7 @@ TransitionEffects::SlideAndGrowTransition::SlideAndGrowTransition(
 }
 
 int waitingCount = 0;
-bool TransitionEffects::SlideAndGrowTransition::run(double deltaTime, IElement2D* control) {
+bool TransitionEffects::SlideAndGrowTransition::run(double deltaTime) {
 
 	Vector2 newpos = Vector2::Lerp(
 		control->getPosition(), endPosition, deltaTime * transitionSpeed);
@@ -125,7 +126,7 @@ bool TransitionEffects::SlideAndGrowTransition::run(double deltaTime, IElement2D
 	return positioningDone && scalingDone;
 }
 
-void TransitionEffects::SlideAndGrowTransition::reset(IElement2D* control) {
+void TransitionEffects::SlideAndGrowTransition::reset() {
 
 	control->setPosition(startPosition);
 	control->setScale(startScale);
@@ -136,11 +137,11 @@ void TransitionEffects::SlideAndGrowTransition::reset(IElement2D* control) {
 }
 
 
-#include "../Controls/Dialog.h"
 TransitionEffects::TrueGrowTransition::TrueGrowTransition(
-	Dialog* containerControl, const Vector2& startScl,
-	const Vector2& endScl, float speed) {
+	Dialog* cntrl, const Vector2& startScl,
+	const Vector2& endScl, float speed) : TransitionEffect(cntrl) {
 
+	containerControl = cntrl;
 	startScale = startScl;
 	endScale = endScl;
 	transitionSpeed = speed;
@@ -151,8 +152,13 @@ TransitionEffects::TrueGrowTransition::TrueGrowTransition(
 	}
 }
 
+TransitionEffects::TrueGrowTransition::~TrueGrowTransition() {
+	elements.clear();
+	endPositions.clear();
+}
+
 int waitCount = 0;
-bool TransitionEffects::TrueGrowTransition::run(double deltaTime, IElement2D* container) {
+bool TransitionEffects::TrueGrowTransition::run(double deltaTime) {
 
 
 	bool allControlsDone = true;
@@ -173,21 +179,21 @@ bool TransitionEffects::TrueGrowTransition::run(double deltaTime, IElement2D* co
 	}
 
 
-	Vector2 newscale = Vector2::Lerp(container->getScale(), endScale,
+	Vector2 newscale = Vector2::Lerp(containerControl->getScale(), endScale,
 		deltaTime*transitionSpeed);
 
 
 	Vector2 diffScale = endScale - newscale;
 	if (diffScale.x <= .01 && diffScale.y <= .01) {
-		container->setScale(endScale);
+		containerControl->setScale(endScale);
 		containerDone = true;
 	} else
-		container->setScale(newscale);
+		containerControl->setScale(newscale);
 
 	return containerDone && allControlsDone;
 }
 
-void TransitionEffects::TrueGrowTransition::reset(IElement2D* containerControl) {
+void TransitionEffects::TrueGrowTransition::reset() {
 
 	// finish up transition
 	int i = 0;
@@ -217,20 +223,32 @@ void TransitionEffects::TrueGrowTransition::reset(IElement2D* containerControl) 
 
 /******* TexturedTransitions ******/
 TransitionEffects::TexturedTransition::TexturedTransition(
-	GUIControl* control, float speed) {
+	IElement2D* cntrl, float speed) : TransitionEffect(cntrl) {
 
 
-	gfxAsset.reset(control->createTexture());
+
+	transitionSpeed = speed;
+}
+
+TransitionEffects::TexturedTransition::~TexturedTransition() {
+}
+
+
+void TransitionEffects::TexturedTransition::initializeEffect(Texturizable* cntrl) {
+
+	TransitionEffect::initializeEffect(cntrl);
+
+
+	gfxAsset = move(cntrl->texturize());
 	texture = gfxAsset->getTexture();
+	position = control->getPosition();
+
 	viewRect.left = 0;
 	viewRect.top = 0;
 	viewRect.right = gfxAsset->getWidth();
 	viewRect.bottom = gfxAsset->getHeight();
 
 	origin = Vector2(gfxAsset->getWidth() / 2, gfxAsset->getHeight() / 2);
-	position = control->getPosition();
-
-	transitionSpeed = speed;
 }
 
 
@@ -246,17 +264,31 @@ bool TransitionEffects::TexturedTransition::draw(SpriteBatch* batch) {
 
 
 /******* */
-TransitionEffects::BlindsTransition::BlindsTransition(
-	GUIControl* control, float time, bool vertical, bool horizontal)
-	: TexturedTransition(control, time) {
+TransitionEffects::BlindsTransition::BlindsTransition(IElement2D* cntrl,
+	float time, bool vertical, bool horizontal)
+	: TexturedTransition(cntrl, time) {
 
-	endScale = control->getScale();
+
 	if (vertical) {
 		startScale.x = 0;
 	}
 	if (horizontal) {
 		startScale.y = 0;
 	}
+
+
+}
+
+TransitionEffects::BlindsTransition::~BlindsTransition() {
+
+	vector<vector<RECT>> empty;
+	swap(empty, squareRects);
+}
+
+void TransitionEffects::BlindsTransition::initializeEffect(Texturizable* cntrl) {
+	TexturedTransition::initializeEffect(cntrl);
+
+	endScale = control->getScale();
 
 	int row = ceil((float) gfxAsset->getWidth() / squareSize);
 	int col = ceil((float) gfxAsset->getHeight() / squareSize);
@@ -282,7 +314,7 @@ TransitionEffects::BlindsTransition::BlindsTransition(
 	}
 }
 
-bool TransitionEffects::BlindsTransition::run(double deltaTime, IElement2D* control) {
+bool TransitionEffects::BlindsTransition::run(double deltaTime) {
 
 	scale = Vector2::Lerp(startScale, endScale, timer / transitionSpeed);
 	timer += deltaTime;
@@ -306,19 +338,24 @@ bool TransitionEffects::BlindsTransition::draw(SpriteBatch* batch) {
 	return true;
 }
 
-void TransitionEffects::BlindsTransition::reset(IElement2D* control) {
+void TransitionEffects::BlindsTransition::reset() {
 
 	position = control->getPosition();
 	timer = 0;
 }
-/******* */
+/******* END BlindsTransition  *******/
 
 
 
-/******* */
-TransitionEffects::SpinGrowTransition::SpinGrowTransition(
-	GUIControl* control, float transitionTime)
-	: TexturedTransition(control, transitionTime) {
+/******* START SpinGrowTransition *******/
+TransitionEffects::SpinGrowTransition::SpinGrowTransition(IElement2D* cntrl,
+	float transitionTime) : TexturedTransition(cntrl, transitionTime) {
+
+
+}
+
+void TransitionEffects::SpinGrowTransition::initializeEffect(Texturizable* cntrl) {
+	TexturedTransition::initializeEffect(cntrl);
 
 	origin = Vector2(gfxAsset->getWidth() / 2, gfxAsset->getHeight() / 2);
 	position.x += gfxAsset->getWidth() / 2;
@@ -330,7 +367,7 @@ TransitionEffects::SpinGrowTransition::SpinGrowTransition(
 }
 
 
-bool TransitionEffects::SpinGrowTransition::run(double deltaTime, IElement2D* control) {
+bool TransitionEffects::SpinGrowTransition::run(double deltaTime) {
 
 	timer += deltaTime;
 	scale = Vector2::Lerp(startScale, endScale, timer / transitionSpeed);
@@ -342,7 +379,7 @@ bool TransitionEffects::SpinGrowTransition::run(double deltaTime, IElement2D* co
 
 }
 
-void TransitionEffects::SpinGrowTransition::reset(IElement2D* control) {
+void TransitionEffects::SpinGrowTransition::reset() {
 
 	scaleDone = false;
 	rotationDone = false;
@@ -357,11 +394,18 @@ void TransitionEffects::SpinGrowTransition::reset(IElement2D* control) {
 
 
 
-TransitionEffects::SplitTransition::SplitTransition(
-	GUIControl* control, int sWidth, float speed) : TexturedTransition(control, speed) {
+TransitionEffects::SplitTransition::SplitTransition(IElement2D* cntrl,
+	int sWidth, float speed) : TexturedTransition(cntrl, speed) {
 
 	screenWidth = sWidth;
+}
 
+
+TransitionEffects::SplitTransition::~SplitTransition() {
+}
+
+void TransitionEffects::SplitTransition::initializeEffect(Texturizable* cntrl) {
+	TexturedTransition::initializeEffect(cntrl);
 
 	viewRect.right = gfxAsset->getWidth() / 2;
 
@@ -378,7 +422,7 @@ TransitionEffects::SplitTransition::SplitTransition(
 	origin = Vector2::Zero;
 }
 
-bool TransitionEffects::SplitTransition::run(double deltaTime, IElement2D* control) {
+bool TransitionEffects::SplitTransition::run(double deltaTime) {
 
 	double change = deltaTime *transitionSpeed * 10;
 	position.x += change;
@@ -388,7 +432,7 @@ bool TransitionEffects::SplitTransition::run(double deltaTime, IElement2D* contr
 	return false;
 }
 
-void TransitionEffects::SplitTransition::reset(IElement2D* control) {
+void TransitionEffects::SplitTransition::reset() {
 
 	position.y = control->getPosition().y;
 	positionRight.y = control->getPosition().y;
@@ -415,3 +459,6 @@ bool TransitionEffects::SplitTransition::draw(SpriteBatch* batch) {
 	return true;
 }
 
+TransitionEffects::TransitionEffect::~TransitionEffect() {
+	control = NULL;
+}

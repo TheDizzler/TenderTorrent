@@ -1,4 +1,6 @@
+#include "../../pch.h"
 #include "ClothLayer.h"
+#include "../../Managers/GameManager.h"
 
 ClothLayer::ClothLayer() {
 }
@@ -7,9 +9,10 @@ ClothLayer::~ClothLayer() {
 }
 
 void ClothLayer::load(GraphicsAsset* const graphicsAsset, shared_ptr<Sprite> cornerFrame) {
-	whole = make_unique<Sprite>();
-	whole->load(graphicsAsset);
-	whole->setOrigin(Vector2::Zero);
+
+	//wholeCloth = make_unique<GameObject>();
+	wholeCloth.load(graphicsAsset);
+	wholeCloth.setOrigin(Vector2::Zero);
 
 	//frame = cornerFrame;
 	frameTexture = cornerFrame->getTexture();
@@ -21,11 +24,17 @@ void ClothLayer::load(GraphicsAsset* const graphicsAsset, shared_ptr<Sprite> cor
 
 void ClothLayer::loadPiece(GraphicsAsset* const graphicsAsset) {
 
-	unique_ptr<Tatter> newTatter = make_unique<Tatter>(whole->getPosition());
+	unique_ptr<Tatter> newTatter = make_unique<Tatter>(wholeCloth.getPosition());
 	newTatter->load(graphicsAsset);
 	newTatter->setOrigin(Vector2::Zero);
 
 	tatters.push_back(move(newTatter));
+}
+
+void ClothLayer::reloadGraphicsAssets() {
+	wholeCloth.reloadGraphicsAsset(guiFactory.get());
+
+	healthLabel->reloadGraphicsAsset();
 }
 
 void ClothLayer::setHealth(int hlth) {
@@ -33,26 +42,29 @@ void ClothLayer::setHealth(int hlth) {
 	health = hlth;
 }
 
-#include "../../Managers/GameManager.h"
 void ClothLayer::setInitialPosition(const Vector2& pos, const Vector2& scl) {
 
 	scale = scl;
-	whole->setScale(scale);
-	whole->setPosition(pos);
+	wholeCloth.setScale(scale);
+	wholeCloth.setPosition(pos);
 
-	Vector2 position = whole->getPosition();
-	Vector2 textPos(position.x + whole->getWidth() * 3 / 4, position.y + whole->getHeight() * 3 / 4);
+	Vector2 position = wholeCloth.getPosition();
+	Vector2 textPos(position.x + wholeCloth.getWidth() * 3 / 4,
+		position.y + wholeCloth.getHeight() * 3 / 4);
 	healthLabel.reset(guiFactory->createTextLabel(textPos, to_wstring(health)));
 	healthLabel->setTint(Color(0, 0, 0, 1));
 
-	projectedHitArea = make_unique<HitArea>(whole->getHitArea()->position, whole->getHitArea()->size);
+	projectedHitArea = make_unique<HitArea>(wholeCloth.getHitArea()->position,
+		wholeCloth.getHitArea()->size);
 	updateProjectedHitArea();
 
-	const HitArea* hitArea = whole->getHitArea();
+	const HitArea* hitArea = wholeCloth.getHitArea();
 	topLeftCornerPos = hitArea->position;
 	topRightCornerPos = Vector2(hitArea->position.x + hitArea->size.x, hitArea->position.y);
-	bottomLeftCornerPos = Vector2(hitArea->position.x, hitArea->position.y + hitArea->size.y);
-	bottomRightCornerPos = Vector2(hitArea->position.x + hitArea->size.x, hitArea->position.y + hitArea->size.y);
+	bottomLeftCornerPos = Vector2(hitArea->position.x,
+		hitArea->position.y + hitArea->size.y);
+	bottomRightCornerPos = Vector2(hitArea->position.x + hitArea->size.x,
+		hitArea->position.y + hitArea->size.y);
 
 }
 
@@ -89,21 +101,21 @@ void ClothLayer::takeDamage(int damageTaken) {
 	labelHidden = false;
 	healthLabel->setText(to_wstring(health));
 	if (health <= 0) {
-		whole->isAlive = false;
-		whole->isExploding = true;
+		wholeCloth.isAlive = false;
+		wholeCloth.isExploding = true;
 		//for (const auto& piece : tatters)
 		//	piece->setDirection();
 	}
 }
 
 void ClothLayer::setLayerDepth(float depth) {
-	whole->setLayerDepth(depth);
+	wholeCloth.setLayerDepth(depth);
 	frameLayerDepth = depth + .1;
 }
 
 void ClothLayer::moveBy(const Vector2& pos) {
 
-	whole->moveBy(pos);
+	wholeCloth.moveBy(pos);
 	//hitArea->position += pos;
 	updateProjectedHitArea();
 	healthLabel->moveBy(pos);
@@ -126,10 +138,10 @@ void ClothLayer::update(double deltaTime) {
 		healthLabel->setTint(Color(1, 1, 1, 1));
 	}*/
 
-	if (whole->isExploding) {
+	if (wholeCloth.isExploding) {
 		timeExploding += deltaTime;
 		if (timeExploding >= EXPLODE_TIME)
-			whole->isExploding = false;
+			wholeCloth.isExploding = false;
 		for (const auto& piece : tatters)
 			piece->update(deltaTime);
 	}
@@ -138,14 +150,14 @@ void ClothLayer::update(double deltaTime) {
 
 void ClothLayer::draw(SpriteBatch* batch/*, Sprite* frame*/) {
 
-	if (whole->isAlive) {
-		whole->draw(batch);
+	if (wholeCloth.isAlive) {
+		wholeCloth.draw(batch);
 
 		if (!labelHidden) {
 			healthLabel->draw(batch);
 			//ID3D11ShaderResourceView* texture = frame->getTexture().Get();
 
-			//frame->setPosition(whole->getPosition());
+			//frame->setPosition(wholeCloth->getPosition());
 			//frame->draw(batch);
 			batch->Draw(frameTexture.Get(), topLeftCornerPos, &frameRect,
 				frameTint, 0, frameOrigin, scale, SpriteEffects_None, frameLayerDepth);
@@ -157,7 +169,7 @@ void ClothLayer::draw(SpriteBatch* batch/*, Sprite* frame*/) {
 				frameTint, XM_PI, frameOrigin, scale, SpriteEffects_None, frameLayerDepth);
 
 		}
-	} else if (whole->isExploding) {
+	} else if (wholeCloth.isExploding) {
 		for (const auto& piece : tatters)
 			piece->draw(batch);
 	}
@@ -172,10 +184,10 @@ void ClothLayer::updateProjectedHitArea() {
 
 	Vector2 screenCords = getScreenPosition(translationMatrix());
 	projectedHitArea->position = screenCords;
-	projectedHitArea->size = whole->getHitArea()->size * cameraZoom();
+	projectedHitArea->size = wholeCloth.getHitArea()->size * cameraZoom();
 
 	/*wostringstream wss;
-	wss << "size: " << whole->getHitArea()->size.x << ", " << whole->getHitArea()->size.y << "\n";
+	wss << "size: " << wholeCloth->getHitArea()->size.x << ", " << wholeCloth->getHitArea()->size.y << "\n";
 	wss << "pro size: " << projectedHitArea->size.x << ", " << projectedHitArea->size.y << "\n";
 	wss << "pos: " << projectedHitArea->position.x << ", " << projectedHitArea->position.y;
 	healthLabel->setText(wss);*/
@@ -183,7 +195,7 @@ void ClothLayer::updateProjectedHitArea() {
 
 const Vector2& ClothLayer::getScreenPosition(Matrix viewProjectionMatrix) const {
 
-	Vector2 screenCords = XMVector2Transform(whole->getHitArea()->position, viewProjectionMatrix);
+	Vector2 screenCords = XMVector2Transform(wholeCloth.getHitArea()->position, viewProjectionMatrix);
 	return screenCords;
 
 }
@@ -192,11 +204,11 @@ unique_ptr<HitArea> ClothLayer::getScreenHitArea(Matrix viewProjectionMatrix) co
 
 	Vector2 screenCords = getScreenPosition(viewProjectionMatrix);
 	unique_ptr<HitArea> projectedHitArea;
-	projectedHitArea.reset(new HitArea(screenCords, whole->getHitArea()->size));
+	projectedHitArea.reset(new HitArea(screenCords, wholeCloth.getHitArea()->size));
 	return projectedHitArea;
 }
 
 bool ClothLayer::isAlive() {
-	return whole->isAlive;
+	return wholeCloth.isAlive;
 }
 

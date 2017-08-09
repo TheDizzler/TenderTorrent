@@ -1,6 +1,7 @@
+#include "../../pch.h"
 #include "Tatter.h"
-
 #include <random>
+
 Tatter::Tatter(const Vector2& pos) : Sprite(pos) {
 
 	mt19937 rng;

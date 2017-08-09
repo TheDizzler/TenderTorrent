@@ -1,12 +1,13 @@
 #include "Sprite.h"
-
+#include "../GUIFactory.h"
+#include <sstream>
 
 Sprite::Sprite() {
 
 	rotation = 0.0f;
 	scale = Vector2(1, 1);
 	tint = DirectX::Colors::White;
-	layerDepth = 0.0f;
+	layerDepth = 0.1f;
 
 	width = 0;
 	height = 0;
@@ -18,29 +19,37 @@ Sprite::Sprite(const Vector2& pos) {
 	rotation = 0.0f;
 	scale = Vector2(1, 1);
 	tint = DirectX::Colors::White;
-	layerDepth = 0.0f;
+	layerDepth = 0.1f;
 	width = 0;
 	height = 0;
 
 }
 
+
 Sprite::~Sprite() {
-	texture.Reset();
+	//int numRefRemaining = texture.Reset();
+	//stringstream ss;
+	//ss << assetName << ": " << numRefRemaining;
+	//if (numRefRemaining == 0)
+	//	ss << "!!!!!!!";
+	//ss << endl;
+	///*char buffer[255];
+	//sprintf(buffer, ss.str().c_str());*/
+
+	//OutputDebugStringA(ss.str().c_str());
 }
 
+/* GraphicsAsset is not stored in Sprite. */
 void Sprite::load(GraphicsAsset* const graphicsAsset) {
 
-	texture.Reset();
+	assetName = graphicsAsset->assetName;
 	texture = graphicsAsset->getTexture();
 	width = graphicsAsset->getWidth();
 	height = graphicsAsset->getHeight();
-	Vector2 sheetLoc = graphicsAsset->getPosition();
 
-	origin = Vector2(width / 2.0f, height / 2.0f);
-	sourceRect.left = sheetLoc.x;
-	sourceRect.top = sheetLoc.y;
-	sourceRect.bottom = sheetLoc.y + height;
-	sourceRect.right = sheetLoc.x + width;
+	origin = graphicsAsset->getOrigin();
+
+	sourceRect = graphicsAsset->getSourceRect();
 
 	hitArea.reset(new HitArea(
 		Vector2(position.x - origin.x, position.y - origin.y),
@@ -48,18 +57,15 @@ void Sprite::load(GraphicsAsset* const graphicsAsset) {
 }
 
 
-void Sprite::update(double deltaTime) {
-
-	hitArea->position = Vector2(position.x - origin.x, position.y - origin.y);
-
+void Sprite::reloadGraphicsAsset(GUIFactory* guiFactory) {
+	load(guiFactory->getAsset(assetName.c_str()));
 }
 
 
+
 void Sprite::draw(SpriteBatch* batch) {
-
 	batch->Draw(texture.Get(), position, &sourceRect, tint, rotation,
-		origin, scale, SpriteEffects_None, layerDepth);
-
+		origin, scale, spriteEffect, layerDepth);
 }
 
 
@@ -104,11 +110,11 @@ const float Sprite::getLayerDepth() const {
 }
 
 const int Sprite::getWidth() const {
-	return width * scale.x;
+	return width;
 }
 
 const int Sprite::getHeight() const {
-	return height * scale.y;
+	return height;
 }
 
 
@@ -148,12 +154,8 @@ void Sprite::setPosition(const Vector2& pos) {
 	position = pos;
 	hitArea->position = Vector2(position.x - origin.x*scale.x,
 		position.y - origin.y*scale.y);
-	hitArea->size = Vector2(width*scale.x, height*scale.y);
 }
 
-void Sprite::moveBy(const Vector2& moveVector) {
-	setPosition(position + moveVector);
-}
 
 void Sprite::setOrigin(const Vector2& orgn) {
 	origin = orgn;
@@ -175,12 +177,28 @@ void Sprite::setTint(const XMFLOAT4 colr) {
 	tint = colr;
 }
 
+void Sprite::setTint(const Color& color) {
+	tint = color;
+}
+
+void Sprite::setTint(const XMVECTORF32 color) {
+	tint = color;
+}
+
 void Sprite::setAlpha(const float alpha) {
 	tint.w = alpha;
 }
 
-void Sprite::setLayerDepth(const float depth) {
+void Sprite::setLayerDepth(const float depth, bool frontToBack) {
 	layerDepth = depth;
+}
+
+void Sprite::moveBy(const Vector2& moveVector) {
+	setPosition(position + moveVector);
+}
+
+void Sprite::rotateBy(float rotateAmount) {
+	rotation += rotateAmount;
 }
 
 

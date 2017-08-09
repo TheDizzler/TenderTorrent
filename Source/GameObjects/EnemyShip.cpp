@@ -1,13 +1,14 @@
+#include "../pch.h"
 #include "EnemyShip.h"
-
 #include "../Engine/GameEngine.h"
-EnemyShip::EnemyShip() : Sprite(SimpleMath::Vector2(0, 0)) {
+
+EnemyShip::EnemyShip() : GameObject(SimpleMath::Vector2(0, 0)) {
 
 	isAlive = false;
 	setExplosion(gfxAssets->getAnimation("big explosion"));
 }
 
-EnemyShip::EnemyShip(const Vector2& position) : Sprite(position) {
+EnemyShip::EnemyShip(const Vector2& position) : GameObject(position) {
 
 	isAlive = false;
 }
@@ -36,7 +37,7 @@ void EnemyShip::setExplosion(shared_ptr<Animation> explos) {
 
 
 void EnemyShip::update(double deltaTime) {
-	Sprite::update(deltaTime);
+	//Sprite::update(deltaTime);
 }
 
 void EnemyShip::explodeUpdate(double deltaTime) {
@@ -136,7 +137,7 @@ EnemyBullet* EnemyShip::EnemyWeaponSystem::launchBullet(Vector2 target) {
 	return bullet;
 }
 
-EnemyBullet * EnemyShip::EnemyWeaponSystem::launchBullet() {
+EnemyBullet* EnemyShip::EnemyWeaponSystem::launchBullet() {
 
 	EnemyBullet* bullet = bulletStore[nextBulletInStore++];
 	bullet->setPosition(systemLocation);

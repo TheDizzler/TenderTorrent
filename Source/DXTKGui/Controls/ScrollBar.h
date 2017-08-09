@@ -7,14 +7,13 @@ class Scrubber : public RectangleSprite {
 public:
 	/* If using an image file instead of a pixel, set staticImage to true. */
 	Scrubber(GraphicsAsset* const graphicsAsset, bool assetIsPixel = true);
-	~Scrubber();
+	virtual ~Scrubber();
 
-	/*void setDimensions(const Vector2& startPosition,
-		const Vector2& size, const int scrollBarHeight);*/
+	
 	void setDimensions(const Sprite* scrollBarTrack,
 		double percentShowing, double maxPercent);
 
-	virtual void update(double deltaTime, shared_ptr<MouseController> mouse);
+	virtual bool update(double deltaTime, MouseController* mouse);
 
 	virtual void setPosition(const Vector2& position) override;
 	virtual void moveBy(const Vector2& moveVector) override;
@@ -28,17 +27,15 @@ public:
 	bool pressed();
 
 
-	Color normalColor = Color((Vector3(1, 1, 0)));
-	Color hoverColor = Color((Vector3(.5, .75, 1)));;
-	Color selectedColor = Color((Vector3(0, .5, 1)));;
+	Color normalColor = Color(1, 1, 1);
+	Color hoverColor = Color(.5, .75, 1);
+	Color selectedColor = Color(0, .5, 1);
 
 	double percentAt = 0;
 
 private:
-	bool assetIsPixel;
-	Vector2 minPosition;
-	Vector2 maxPosition;
-
+	int minPosition = 0;
+	int maxPosition = 0;
 
 	int scrollBarHeight;
 	double scrubberPercentAt = 0;
@@ -69,11 +66,13 @@ struct ScrollBarDesc {
 
 
 
-/** Do not use this classes HitArea - it is NULL. */
+/** A vertical scrollbar for scrolling contents of a window.
+	NOTE: Do not use this classes HitArea - it is NULL. */
 class ScrollBar : public GUIControl {
 public:
-	ScrollBar(const Vector2& position);
-	~ScrollBar();
+	ScrollBar(GUIFactory* factory, shared_ptr<MouseController> mouseController,
+		const Vector2& position);
+	virtual ~ScrollBar();
 
 	/* scrollBarButtons[0] = Up Button
 		scrollBarButtons[1] = Down Button */
@@ -81,14 +80,16 @@ public:
 		ImageButton* scrollBarButtons[2] = NULL, unique_ptr<Sprite> scrollBarTrack = NULL,
 		GraphicsAsset* scrubber = NULL);
 
+	virtual void reloadGraphicsAsset() override;
+
 	void setScrollBar(int totalItems, int itemHeight, int maxDisplayItems);
 
-	void update(double deltaTime) override;
-	void draw(SpriteBatch* batch) override;
+	virtual bool update(double deltaTime) override;
+	virtual void draw(SpriteBatch* batch) override;
 
 	void setScrollPositionByPercent(double newPositionPercentage);
-	virtual void setPosition(const Vector2& newPosition) override;
 	virtual void moveBy(const Vector2& moveVector) override;
+	virtual void setPosition(const Vector2& newPosition) override;
 
 	void setBarHeight(int barHeight);
 	/** Call this from parent control on mouse scroll. */
@@ -101,6 +102,7 @@ public:
 
 	double percentScroll = 0;
 
+	virtual void setLayerDepth(const float depth, bool frontToBack = true) override;
 	virtual void setScale(const Vector2& newScale) override;
 	/* Unused in ScrollBar. */
 	virtual void setFont(const pugi::char_t * font = "Default Font") override;
@@ -109,18 +111,28 @@ public:
 	/* Unused in ScrollBar. */
 	virtual const Vector2& XM_CALLCONV measureString() const override;
 
-
 	virtual bool clicked() override;
 	virtual bool pressed() override;
 	virtual bool hovering() override;
 
-private:
+	/** Not used in Scrollbar. */
+	virtual void onClick() override {
+	};
+	/** Not used in Scrollbar. */
+	virtual void onPress() override {
+	};
+	/** Not used in Scrollbar. */
+	virtual void onHover() override {
+	};
+	/** Not used in Scrollbar. */
+	virtual void resetState() override {};
 
-	/* Position of entire scrollbar area. */
-	//Vector2 position;
+private:
 
 	unique_ptr<Sprite> scrollBarTrack;
 	unique_ptr<Scrubber> scrubber;
+	unique_ptr<ImageButton> scrollBarUpButton;
+	unique_ptr<ImageButton> scrollBarDownButton;
 
 	int barHeight;
 
@@ -128,9 +140,6 @@ private:
 	double percentForOneItem;
 	/* Percentage of scubber movement is equivalent to item. */
 	double scrubberPercentForOneItem;
-
-	unique_ptr<ImageButton> scrollBarUpButton;
-	unique_ptr<ImageButton> scrollBarDownButton;
 
 	double firstClickTimer = 0; // time since button clicked
 	double autoScrollStartDelay = .25; // time in seconds before scrollbar starts scrolling

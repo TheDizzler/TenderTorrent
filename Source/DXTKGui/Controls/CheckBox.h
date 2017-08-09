@@ -6,11 +6,14 @@
 class CheckBox : public GUIControl {
 public:
 
-	CheckBox(unique_ptr<Sprite> uncheckedSprite,
-		unique_ptr<Sprite> checkedSprite, unique_ptr<FontSet> font);
-	~CheckBox();
+	CheckBox(GUIFactory* factory, shared_ptr<MouseController> mouseController,
+		unique_ptr<Sprite> uncheckedSprite, unique_ptr<Sprite> checkedSprite,
+		const pugi::char_t* font);
+	virtual ~CheckBox();
 
-	virtual void update(double deltaTime) override;
+	virtual void reloadGraphicsAsset() override;
+
+	virtual bool update(double deltaTime) override;
 	virtual void draw(SpriteBatch* batch) override;
 
 	/* Should probably changed the way this works. */
@@ -38,37 +41,58 @@ public:
 
 	void setChecked(bool checked);
 
-	class OnClickListener {
+	class ActionListener {
 	public:
-	/** checkbox: The CheckBox this OnClickListener is attached to.
+	/** checkbox: The CheckBox this ActionListener is attached to.
 		isChecked: whether box is checked or no*/
 		virtual void onClick(CheckBox* checkbox, bool isChecked) = 0;
+		virtual void onHover(CheckBox* checkbox, bool isChecked) = 0;
 	};
 
-	typedef void (OnClickListener::*OnClickFunction) (CheckBox*, bool);
 
-	void setOnClickListener(OnClickListener* iOnC) {
-		if (onClickListener != NULL)
-			delete onClickListener;
-		onClickFunction = &OnClickListener::onClick;
-		onClickListener = iOnC;
+
+	void setActionListener(ActionListener* iOnC) {
+		if (actionListener != NULL)
+			delete actionListener;
+		onClickFunction = &ActionListener::onClick;
+		onHoverFunction = &ActionListener::onHover;
+		actionListener = iOnC;
 	}
 
-	void onClick() {
-		if (onClickListener != NULL) 
-			(onClickListener->*onClickFunction)(this, isClicked);
+	virtual void onClick() override {
+		if (actionListener != NULL)
+			(actionListener->*onClickFunction)(this, isClicked);
 
 		if (isClicked)
 			texture = checkedSprite->getTexture().Get();
 		else
 			texture = uncheckedSprite->getTexture().Get();
+		refreshed = true;
+	}
+
+	/** Not used in CheckBox. */
+	virtual void onPress() override {
+	}
+
+	virtual void onHover() override {
+		if (actionListener != NULL) {
+			(actionListener->*onHoverFunction)(this, isClicked);
+		}
+		label->setTint(hoverColorText);
+		tint = hoverColor; // this won't do anything if the checkbox is black :/
+	}
+	virtual void resetState() override {
+		label->setTint(normalColorText);
+		tint = normalColor;
 	}
 
 private:
-
+	typedef void (ActionListener::*OnClickFunction) (CheckBox*, bool);
+	ActionListener* actionListener = NULL;
 	OnClickFunction onClickFunction;
-	OnClickListener* onClickListener = NULL;
-	
+	OnClickFunction onPressFunction;
+	OnClickFunction onHoverFunction;
+
 	ID3D11ShaderResourceView* texture;
 	/** Helper function to center text in check sprite. */
 	void centerText();
@@ -78,6 +102,6 @@ private:
 
 	unique_ptr<Sprite> uncheckedSprite;
 	unique_ptr<Sprite> checkedSprite;
-	/* The sprite used in draw(). */
-	//Sprite* drawSprite;
+
+	bool refreshed = false;
 };

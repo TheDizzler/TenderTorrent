@@ -13,6 +13,11 @@ void GUIControl::setPosition(const Vector2& pos) {
 }
 
 
+GUIControl::~GUIControl() {
+	mouse.reset();
+
+}
+
 const wchar_t* GUIControl::getText() {
 	return L"";
 }
@@ -49,7 +54,6 @@ bool GUIControl::contains(const Vector2& point) {
 	return hitArea->contains(point);
 }
 
-#include "GUIFactory.h"
 const float GUIControl::getLayerDepth() const {
 	return layerDepth;
 }
@@ -68,7 +72,7 @@ void GUIControl::updateProjectedHitArea() {
 
 const Vector2& GUIControl::getScreenPosition(Matrix viewProjectionMatrix) const {
 
-	Vector2 screenCords = XMVector2Transform(position, viewProjectionMatrix);
+	Vector2 screenCords = XMVector2Transform(hitArea->position, viewProjectionMatrix);
 	return screenCords;
 
 }
@@ -79,12 +83,6 @@ unique_ptr<HitArea> GUIControl::getScreenHitArea(Matrix viewProjectionMatrix) co
 	unique_ptr<HitArea> projectedHitArea;
 	projectedHitArea.reset(new HitArea(screenCords, hitArea->size*scale));
 	return projectedHitArea;
-}
-
-
-GraphicsAsset* GUIControl::createTexture() {
-	return guiFactory->createTextureFromIElement2D(this);
-
 }
 
 void GUIControl::setOrigin(const Vector2 & org) {
@@ -99,11 +97,23 @@ void GUIControl::setTint(const XMFLOAT4 color) {
 	tint = color;
 }
 
+void GUIControl::setTint(const Color & color) {
+	tint = color;
+}
+
+void GUIControl::setTint(const XMVECTORF32 color) {
+	tint = color;
+}
+
 void GUIControl::setAlpha(const float alpha) {
 	tint.w = alpha;
 }
 
-void GUIControl::setLayerDepth(const float depth) {
+void GUIControl::setLayerDepth(const float depth, bool frontToBack) {
 	layerDepth = depth;
+}
+
+void GUIControl::setHitArea(HitArea* newHitArea) {
+	hitArea.reset(newHitArea);
 }
 

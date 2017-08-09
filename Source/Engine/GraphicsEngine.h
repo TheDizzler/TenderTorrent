@@ -1,21 +1,32 @@
-#include "../pch.h"
 #pragma once
 
-#include "../globals.h"
+#pragma comment (lib, "D3D11.lib")
+#pragma comment (lib, "DXGI.lib")
 
+#include <d3d11_1.h>
+#include <dxgi1_2.h>
+#include <wrl.h>
+#include <vector>
+
+#include <SpriteBatch.h>
+#include <CommonStates.h>
+
+#include "../globals.h"
 #include "Camera.h"
 
-extern shared_ptr<Camera> camera;
+using namespace std;
+using namespace DirectX;
+using namespace Microsoft::WRL;
 
+extern unique_ptr<Camera> camera;
 
 class GraphicsEngine {
 public:
-	GraphicsEngine();
-	~GraphicsEngine();
+	virtual ~GraphicsEngine();
 
 	bool initD3D(HWND hwnd);
 
-	virtual void render(double time) = 0;
+	virtual void render() = 0;
 
 	vector<ComPtr<IDXGIAdapter> > getAdapterList();
 	vector<ComPtr<IDXGIOutput> > getDisplayList();
@@ -39,10 +50,11 @@ public:
 	/** Used for creating textures from an area on screen */
 	ComPtr<IDXGISwapChain> getSwapChain();
 	SpriteBatch* getSpriteBatch();
+
 protected:
 	HWND hwnd;
 	unique_ptr<SpriteBatch> batch;
-	//SpriteBatch* batch;
+
 	/* Adapter currently being used. */
 	ComPtr<IDXGIAdapter> selectedAdapter;
 	/* Monitor being used. */
@@ -72,8 +84,8 @@ protected:
 
 	//D3D_DRIVER_TYPE driverType;
 	D3D_FEATURE_LEVEL featureLevel;
-	//D3D11_VIEWPORT viewport;
-	Viewport viewport;
+	D3D11_VIEWPORT d3dViewport;
+	//Viewport viewport;
 
 	/* List of all gfx cards on this machine. */
 	vector<ComPtr<IDXGIAdapter> > adapters;

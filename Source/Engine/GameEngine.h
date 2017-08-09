@@ -1,4 +1,3 @@
-#include "../pch.h"
 #pragma once
 
 
@@ -15,73 +14,93 @@
 class GameEngine : public GraphicsEngine, public Input {
 public:
 
-	GameEngine();
-	~GameEngine();
+	virtual ~GameEngine();
 
 	bool initEngine(HWND hwnd, HINSTANCE hInstance);
-	void constructErrorDialogs();
 	void onAudioDeviceChange();
 
+	void reloadGraphicsAssets();
 
-	void run(double time, int fps);
-	virtual void render(double time);
+	void run(double time);
 
 	void suspend();
 	void resume();
 	void exit();
 
+	virtual void controllerRemoved(ControllerSocketNumber controllerSocket,
+		PlayerSlotNumber slotNumber) override;
+	virtual void newController(shared_ptr<Joystick> newStick) override;
+
 	static inline bool reportError(HRESULT hr,
 		wstring failMessage = L"This is SRS Error",
-		wstring failTitle = L"Fatal Error", bool dontUseGUI = false) {
+		wstring failTitle = L"Fatal Error",
+		bool showMessageBox = false, bool dontUseGUI = false) {
 
 		if (FAILED(hr)) {
 
 			_com_error err(hr);
 			wostringstream wss;
 			wss << failMessage;
-			wss << "\nHRESULT: " << err.ErrorMessage();
+			wss << "\nHRESULT: " << err.ErrorMessage() << endl;
 			if (GUIFactory::initialized && !dontUseGUI)
 				GameEngine::showWarningDialog(wss.str(), failTitle);
-			else if (!Globals::FULL_SCREEN)
+			else if (!Globals::FULL_SCREEN && showMessageBox)
 				MessageBox(NULL, wss.str().c_str(), failTitle.c_str(), MB_OK | MB_ICONERROR);
-			else
-				OutputDebugString(wss.str().c_str());
+
+			failTitle += L" >> " + failMessage + L"\n\tHRESULT: " + err.ErrorMessage() + L"\n";
+			OutputDebugString(failTitle.c_str()); // always output debug just in case
 			return true;
 		}
 
 		return false;
 	}
 
+	static void errorMessage(wstring message, wstring title = L"Fatal Error",
+		bool showMessageBox = false) {
+
+		message += L"\n";
+		if (!Globals::FULL_SCREEN && showMessageBox)
+			MessageBox(NULL, message.c_str(), title.c_str(), MB_OK | MB_ICONERROR);
+
+		title += L" >> " + message;
+		OutputDebugString(title.c_str()); // always output debug just in case
+	}
+
 	static void showErrorDialog(wstring message, wstring title) {
-		errorDialog->open();
-		errorDialog->setTitle(title);
-		errorDialog->setText(message);
-		showDialog = errorDialog.get();
+		GameManager::showErrorDialog(message, title);
 	}
 
 	static void showWarningDialog(wstring message, wstring title) {
-		warningDialog->open();
-		warningDialog->setTitle(title);
-		warningDialog->setText(message);
-		warningDialog->setTextTint(Color(1, 0, 0, 1));
-		showDialog = warningDialog.get();
+		GameManager::showWarningDialog(message, title);
 	}
 private:
 
 	unique_ptr<AudioEngine> audioEngine;
-	std::unique_ptr<GameManager> game;
+	GameManager game;
 
 	void update(double time);
-
-	bool initStage();
+	virtual void render() override;
 
 	HWND hwnd;
 	bool retryAudio;
 
-	/* Critical error dialog. Exits game when dismissed. */
-	static unique_ptr<Dialog> errorDialog;
-	/* Minor error dialog. Choice between exit game and continue. */
-	static unique_ptr<Dialog> warningDialog;
-	static Dialog* showDialog;
+
 };
 
+
+class QuitButtonListener : public Button::ActionListener {
+public:
+	QuitButtonListener(GameManager* man) : mananger(man) {
+	}
+	virtual void onClick(Button * button) override {
+		mananger->exit();
+	}
+	virtual void onPress(Button* button) override {
+	}
+	virtual void onHover(Button* button) override {
+	};
+	virtual void resetState(Button* button) override {
+	};
+
+	GameManager* mananger;
+};

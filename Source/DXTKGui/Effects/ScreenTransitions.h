@@ -1,14 +1,15 @@
 #pragma once
 
-#include "../Controls/GUIFactory.h"
+#include "../GUIFactory.h"
 
 class Screen;
 namespace ScreenTransitions {
 
 	class ScreenTransition {
 	public:
-		virtual void setTransitionBetween(GraphicsAsset* oldScreenAsset,
-			GraphicsAsset* newScreenAsset, float transitionTime);
+		virtual void setTransitionBetween(unique_ptr<GraphicsAsset> oldScreenAsset,
+			unique_ptr<GraphicsAsset> newScreenAsset, float transitionTime);
+		virtual ~ScreenTransition();
 
 		/* Returns true when transition effect is finished. */
 		virtual bool run(double deltaTime) = 0;
@@ -28,30 +29,38 @@ namespace ScreenTransitions {
 		/* SourceRect for whole screen. */
 		RECT screenRect;
 	};
-	/** Return true when transition complete. */
-	/*typedef bool (ScreenTransition::*RunScreen) (double, Screen*);
-	typedef void (ScreenTransition::*DrawScreen) (SpriteBatch*);
-	typedef void (ScreenTransition::*ResetScreen) (Screen*);*/
 
 
 	class ScreenTransitionManager {
 	public:
-		ScreenTransitionManager(GUIFactory* guiFactory,
-			const char_t* bgName = "Default Transition BG");
-		~ScreenTransitionManager();
+
+		ScreenTransitionManager();
+		/*ScreenTransitionManager(GUIFactory* guiFactory,
+			const char_t* bgName = "Default Transition BG");*/
+		//ScreenTransitionManager& ScreenTransitionManager::operator=(ScreenTransitionManager&);
+		virtual ~ScreenTransitionManager();
+
+		void initialize(GUIFactory* guiFactory,
+			const char_t* bgName = "Default Transition BG", bool resizeBGToFit = true);
+		void setBGImage(const char_t* bgName, bool resizeBGToFit = true);
+		void reloadGraphicsAssets();
 
 		void setTransition(ScreenTransition* effect);
 		void transitionBetween(Screen* oldScreen, Screen* newScreen,
-			float transitionTime = .5);
+			float transitionTime = .5, bool autoBatchDraw = true);
 
 		/** Return true when transition complete. */
 		bool runTransition(double deltaTime);
 		void drawTransition(SpriteBatch* batch);
+
+		Screen* newScreen = NULL;
 	private:
 		ScreenTransition* transition = NULL;
 		unique_ptr<Sprite> bg;
 
 		GUIFactory* guiFactory;
+
+		bool resizeBGToFit;
 	};
 
 
@@ -65,8 +74,6 @@ namespace ScreenTransitions {
 		virtual void reset() override;
 
 	private:
-		//SpriteEffects currentOrientation;
-		//SpriteEffects startOrientation;
 
 		Vector2 position = Vector2::Zero;
 		Vector2 origin = Vector2::Zero;
@@ -82,10 +89,10 @@ namespace ScreenTransitions {
 
 	class SquareFlipScreenTransition : public ScreenTransition {
 	public:
-		~SquareFlipScreenTransition();
+		virtual ~SquareFlipScreenTransition();
 
-		virtual void setTransitionBetween(GraphicsAsset* oldScreenAsset,
-			GraphicsAsset* newScreenAsset, float transitionTime) override;
+		virtual void setTransitionBetween(unique_ptr<GraphicsAsset> oldScreenAsset,
+			unique_ptr<GraphicsAsset> newScreenAsset, float transitionTime) override;
 
 		virtual bool run(double deltaTime) override;
 		virtual void draw(SpriteBatch* batch) override;
@@ -117,9 +124,10 @@ namespace ScreenTransitions {
 
 	class LineWipeScreenTransition : public ScreenTransition {
 	public:
-		~LineWipeScreenTransition();
-		virtual void setTransitionBetween(GraphicsAsset* oldScreenAsset,
-			GraphicsAsset* newScreenAsset, float transitionTime) override;
+		LineWipeScreenTransition(bool wipeToLeftFirst = true);
+		virtual ~LineWipeScreenTransition();
+		virtual void setTransitionBetween(unique_ptr<GraphicsAsset> oldScreenAsset,
+			unique_ptr<GraphicsAsset> newScreenAsset, float transitionTime) override;
 		virtual bool run(double deltaTime) override;
 		virtual void draw(SpriteBatch * batch) override;
 		virtual void reset() override;
@@ -135,6 +143,7 @@ namespace ScreenTransitions {
 		double delay;
 		vector<Line*> lines;
 
+		bool wipeToLeft;
 		Vector2 position = Vector2::Zero;
 		Vector2 origin = Vector2::Zero;
 		Vector2 scale = Vector2(1, 1);

@@ -9,23 +9,29 @@
 
 
 class LevelManager;
-class ContinueButtonListener: public Button::OnClickListener {
+class ContinueButtonListener: public Button::ActionListener {
 public:
 	ContinueButtonListener(LevelManager* lvlMan) : lvlManager(lvlMan){}
 
 	virtual void onClick(Button * button) override;
+	virtual void onPress(Button* button) override;
+	virtual void onHover(Button* button) override;
+	virtual void resetState(Button* button) override;
 private:
 	LevelManager* lvlManager;
 
 };
 
 
-class ExitButtonListener : public Button::OnClickListener {
+class ExitButtonListener : public Button::ActionListener {
 public:
 	ExitButtonListener(LevelManager* level) : lvlManager(level) {
 	}
 
 	virtual void onClick(Button* button) override;
+	virtual void onPress(Button* button) override;
+	virtual void onHover(Button* button) override;
+	virtual void resetState(Button* button) override;
 private:
 	LevelManager* lvlManager;
 
@@ -43,22 +49,25 @@ public:
 
 
 	LevelManager();
-	~LevelManager();
+	virtual ~LevelManager();
 
 	virtual void setGameManager(GameManager* game);
 
 	virtual bool initialize(ComPtr<ID3D11Device> device, shared_ptr<MouseController> mouse);
-
+	void reloadGraphicsAssets();
 
 	bool loadLevel(ComPtr<ID3D11Device> device, const char_t* levelFileName);
 
 
-	virtual void update(double deltaTime, shared_ptr<MouseController> mouse);
+	virtual void update(double deltaTime);
 	virtual void draw(SpriteBatch* batch) override;
-	virtual void safedraw(SpriteBatch* batch) override;
+	//virtual void safedraw(SpriteBatch* batch) override;
 
 	virtual void pause() override;
 
+	virtual void controllerRemoved(ControllerSocketNumber controllerSlot,
+		PlayerSlotNumber slotNumber) override;
+	virtual void newController(shared_ptr<Joystick> newStick) override;
 
 private:
 
@@ -68,8 +77,8 @@ private:
 
 	GameManager* game;
 
-	unique_ptr<Background> bgManager;
-	unique_ptr<WaveManager> waveManager;
+	Background bgManager;
+	WaveManager waveManager;
 
 	unique_ptr<GUIOverlay> guiOverlay;
 
@@ -91,7 +100,7 @@ private:
 
 	bool isPaused;
 	bool delayedPause = false;
-	bool pauseDownLast = false;
+	//bool pauseDownLast = false;
 	//double pauseDelay = 0;
 
 	void resume();

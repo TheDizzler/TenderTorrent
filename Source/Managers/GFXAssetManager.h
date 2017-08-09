@@ -1,20 +1,6 @@
-#include "../pch.h"
 #pragma once
-
-
-class AssetSet {
-public:
-	AssetSet(const char_t* setName);
-
-	void addAsset(string assetName, unique_ptr<GraphicsAsset> asset);
-	GraphicsAsset* const getAsset(const char_t* assetName);
-private:
-
-	const char_t* setName;
-	map<string, unique_ptr<GraphicsAsset> > assetMap;
-};
-
-
+#include <map>
+#include "../DXTKGui/BaseGraphics/GraphicsAsset.h"
 
 class GFXAssetManager {
 public:

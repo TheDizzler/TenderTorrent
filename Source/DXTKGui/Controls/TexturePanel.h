@@ -6,17 +6,21 @@
 class TexturePanel : public GUIControl {
 public:
 
-	TexturePanel(GraphicsAsset* pixelAsset, ScrollBar* scrllbr);
-	~TexturePanel();
+	TexturePanel(GUIFactory* factory, shared_ptr<MouseController> mouseController,
+		ScrollBar* scrllbr);
+	virtual ~TexturePanel();
 
+	
 
 	void setScrollBar(ScrollBarDesc& scrollBarDesc);
 	void alwaysShowScrollBar(bool alwaysShow);
 
-	void setTexture(GraphicsAsset* gfxAsset);
-	
+	/** Do nothing. */
+	void setTexture(unique_ptr<GraphicsAsset> gfxAsset);
 
-	virtual void update(double deltaTime) override;
+	virtual void reloadGraphicsAsset() override;
+
+	virtual bool update(double deltaTime) override;
 	virtual void draw(SpriteBatch* batch) override;
 
 	void setDimensions(const Vector2& position, const Vector2& size);
@@ -25,6 +29,7 @@ public:
 		area. */
 	void setTexturePosition(const Vector2& position);
 
+	virtual void setLayerDepth(const float depth, bool frontToBack = true) override;
 	virtual void setScale(const Vector2& newScale) override;
 	/* Font is not set here. The object that creates the texture sets the font. */
 	virtual void setFont(const pugi::char_t* font = "Default Font") override;
@@ -39,9 +44,23 @@ public:
 	virtual const int getHeight() const override;
 	const Vector2& getScrollBarSize() const;
 
+	bool scrollBarVisible() const;
+
 	virtual bool clicked() override;
 	virtual bool pressed() override;
 	virtual bool hovering() override;
+
+	/** Not used in TexturePanel. */
+	virtual void onClick() override {
+	};
+	/** Not used in TexturePanel. */
+	virtual void onPress() override {
+	};
+	/** Not used in TexturePanel. */
+	virtual void onHover() override {
+	};
+	/** Not used in TexturePanel. */
+	virtual void resetState() override {};
 
 	int scrollSpeed = 10;
 private:
@@ -55,4 +74,5 @@ private:
 	unique_ptr<ScrollBar> verticalScrollBar;
 	bool alwaysDisplayScrollBar = false;
 	bool showScrollBar = false;
+	bool neverShowScrollBar = false;
 };

@@ -3,22 +3,29 @@
 #include "ListBox.h"
 
 
-class ComboBox : public GUIControl {
+class ComboBox : public GUIControl, public Texturizable {
 public:
-	ComboBox(const Vector2& position, const int width,
+	ComboBox(GUIFactory* factory, shared_ptr<MouseController> mouseController,
+		const Vector2& position, const int width,
 		size_t itemHeight = 32, const int maxItemsShown = 7);
-	~ComboBox();
+	virtual ~ComboBox();
 
-	bool initialize(shared_ptr<FontSet> font, GraphicsAsset* pixelAsset,
-		ListBox* listbox, const pugi::char_t* buttonAsset = "Combo Button Closed",
-		bool enumerateList = false);
+	bool initialize(shared_ptr<FontSet> font, ListBox* listbox,
+		const pugi::char_t* buttonAsset = "Combo Button Closed",
+		bool enumerateList = false, const int frameThickness = 2);
+
+	virtual void reloadGraphicsAsset() override;
 
 	void setScrollBar(ScrollBarDesc& scrollBarDesc);
 	void alwaysShowScrollBar(bool alwaysShow);
 
-	virtual void update(double deltaTime) override;
+	virtual bool update(double deltaTime) override;
 	virtual void draw(SpriteBatch* batch) override;
 
+	virtual unique_ptr<GraphicsAsset> texturize() override;
+	virtual void textureDraw(SpriteBatch* batch, ComPtr<ID3D11Device> device = NULL) override;
+	virtual void setPosition(const Vector2& position) override;
+	virtual void moveBy(const Vector2& moveVector) override;
 	virtual void setFont(const pugi::char_t * font = "Default Font") override;
 
 	void setSelected(size_t newIndex);
@@ -35,6 +42,8 @@ public:
 	virtual const int getWidth() const override;
 	virtual const int getHeight() const override;
 
+	virtual void setLayerDepth(const float depth, bool frontToBack = true) override;
+
 	virtual bool clicked() override;
 	virtual bool pressed() override;
 	virtual bool hovering() override;
@@ -44,86 +53,118 @@ public:
 	void clear();
 
 
-	void open();
-	void close();
+	void show();
+	void hide();
 	bool isOpen = false;
 
-	class OnClickListener {
+	class ActionListener {
 	public:
-		/** combobox: The ComboBox this OnClickListener is attached to.
+		/** combobox: The ComboBox this ActionListener is attached to.
 		selectedItemIndex: index of item in ListBox.*/
-		virtual void onClick(ComboBox* combobox, int selectedItemIndex) = 0;
+		virtual void onClick(ComboBox* combobox, UINT selectedItemIndex) = 0;
+		virtual void onHover(ComboBox* listbox, short hoveredItemIndex) = 0;
 	};
 
-	typedef void (OnClickListener::*OnClickFunction) (ComboBox*, int);
+	typedef void (ActionListener::*OnClickFunction) (ComboBox*, UINT);
+	typedef void (ActionListener::*OnHoverFunction) (ComboBox*, short);
 
-
-	void setOnClickListener(OnClickListener* iOnC) {
-		if (onClickListener != NULL)
-			delete onClickListener;
-		onClickFunction = &OnClickListener::onClick;
-		onClickListener = iOnC;
+	void setActionListener(ActionListener* iOnC) {
+		if (actionListener != NULL)
+			delete actionListener;
+		onClickFunction = &ActionListener::onClick;
+		onHoverFunction = &ActionListener::onHover;
+		actionListener = iOnC;
 	}
 
-	void onClick() {
-		if (onClickListener != NULL)
-			(onClickListener->*onClickFunction)(this, listBox->getSelectedIndex());
+	/** Called when ListBox item selected (unless overriden) */
+	virtual void onClick() override {
+		if (actionListener != NULL)
+			(actionListener->*onClickFunction)(this, listBox->getSelectedIndex());
 		selectedLabel->setText(listBox->getSelected()->toString());
+		//comboListButton->onClick();
 	}
 
+	/** Not used in Combobox. */
+	virtual void onPress() override {
+	}
+
+	/** Note: To activate the onHover, it should be called from ListBox onHover. */
+	virtual void onHover() override {
+		if (actionListener != NULL)
+			(actionListener->*onHoverFunction)(this, listBox->getHoveredIndex());
+	}
+
+	virtual void resetState() override {
+		
+	}
 
 private:
+	bool refreshTexture = true;
+	unique_ptr<TexturePanel> texturePanel;
+
 	unique_ptr<ListBox> listBox;
 
 	unique_ptr<RectangleFrame> frame;
 	unique_ptr<ImageButton> comboListButton;
 
 	unique_ptr<TextLabel> selectedLabel;
-	//Vector2 selectedDisplayPosition;
+	unique_ptr<RectangleSprite> selectedBackgroundSprite;
 
 	/* width of combobox */
 	int width;
+	int height;
 
 	size_t textMarginX = 10;
 	size_t textMarginY = 5;
 
 	size_t maxDisplayItems = 7;
 
+	int frameThickness = 2;
+
 	void resizeBox();
 
+	ActionListener* actionListener = NULL;
 	OnClickFunction onClickFunction;
-	OnClickListener* onClickListener = NULL;
+	OnHoverFunction onHoverFunction;
+	
 
-	class ListBoxListener : public ListBox::OnClickListener {
+	class ListBoxListener : public ListBox::ActionListener {
 	public:
 		ListBoxListener(ComboBox* combo) : comboBox(combo) {
 		}
 
 	private:
 		ComboBox* comboBox;
-		virtual void onClick(ListBox * listbox, int selectedItemIndex) override;
+		virtual void onClick(ListBox* listbox, UINT selectedItemIndex) override;
+		virtual void onHover(ListBox* listbox, short hoveredItemIndex) override;
 	};
 
-	class ShowListBoxListener : public Button::OnClickListener {
+	class ShowListBoxListener : public Button::ActionListener {
 	public:
 		ShowListBoxListener(ComboBox* combo) : comboBox(combo) {
 		};
 		virtual void onClick(Button* button) override;
+		virtual void onPress(Button* button) override;
+		virtual void onHover(Button* button) override;
+		virtual void resetState(Button* button) override;
 	private:
 		ComboBox* comboBox;
 	};
 
-	class SelectedOnClick : public TextLabel::OnClickListener {
+	class SelectedOnClick : public TextLabel::ActionListener {
 	public:
 		SelectedOnClick(ComboBox* combobox) : comboBox(combobox) {
 		}
 
 		virtual void onClick(TextLabel* button) override {
-			comboBox->open();
+			comboBox->show();
 		}
+		virtual void onPress(TextLabel* button) override{}
+		virtual void onHover(TextLabel* button) override{}
 	private:
 		ComboBox* comboBox;
 	};
+
 };
 
 

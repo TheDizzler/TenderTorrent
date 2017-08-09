@@ -11,11 +11,12 @@ using namespace std;
 class WaveManager {
 public:
 	WaveManager();
-	~WaveManager();
+	virtual ~WaveManager();
 
 	bool initialize(GFXAssetManager* gfxAssets);
-	void clear();
+	void reloadGraphicsAssets();
 
+	void clear();
 	void clearEnemies();
 
 	void update(double deltaTime, PlayerShip* player);

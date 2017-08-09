@@ -6,7 +6,7 @@
 class Turret : public WeaponSystem {
 public:
 	Turret(Vector2 locationOffset);
-	~Turret();
+	virtual ~Turret();
 
 	virtual void loadTurretTexture(GraphicsAsset* turretAsset);
 

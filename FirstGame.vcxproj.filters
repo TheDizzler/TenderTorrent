@@ -13,29 +13,11 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Header Files\PlayerShip">
-      <UniqueIdentifier>{66250581-e45b-4dc9-bd5c-5ed25df87360}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\PlayerShip">
-      <UniqueIdentifier>{5e7fd692-c8d2-4fa9-a733-58dd3c8e3fb6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\EnemyShips">
-      <UniqueIdentifier>{4fa3bf2b-5c81-4088-8154-f514baf0d542}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\EnemyShips">
-      <UniqueIdentifier>{c69c133a-2bbe-4d68-ab65-4e65bc09c97c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Engine">
       <UniqueIdentifier>{20c8a84b-cee4-4cfc-be3f-3b418c1ac444}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\Engine">
       <UniqueIdentifier>{7e6093ea-bc2b-41a2-a23a-5cf98d7e3e25}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Backgrounds">
-      <UniqueIdentifier>{e2a00f17-06f3-4a25-aabb-beac1787c4ff}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Backgrounds">
-      <UniqueIdentifier>{5fe34bbf-a561-430c-8aa6-4bc6fbff7eaf}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\MenuItems">
       <UniqueIdentifier>{472b628f-7c46-4a28-9503-08c27fd2e478}</UniqueIdentifier>
@@ -79,28 +61,52 @@
     <Filter Include="Source Files\levels">
       <UniqueIdentifier>{5223c0f6-3102-49bf-b315-1ff05947e5c0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\GameObjects">
+      <UniqueIdentifier>{f2b8d4d6-3344-4ee0-9371-f28702218d73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GameObjects\EnemyShips">
+      <UniqueIdentifier>{4fa3bf2b-5c81-4088-8154-f514baf0d542}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GameObjects\PlayerShip">
+      <UniqueIdentifier>{66250581-e45b-4dc9-bd5c-5ed25df87360}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GameObjects">
+      <UniqueIdentifier>{05a913fc-fe5b-4f42-8a2d-38ee53229a81}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GameObjects\EnemyShips">
+      <UniqueIdentifier>{c69c133a-2bbe-4d68-ab65-4e65bc09c97c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GameObjects\PlayerShip">
+      <UniqueIdentifier>{5e7fd692-c8d2-4fa9-a733-58dd3c8e3fb6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GameObjects\Backgrounds">
+      <UniqueIdentifier>{5fe34bbf-a561-430c-8aa6-4bc6fbff7eaf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GameObjects\Backgrounds">
+      <UniqueIdentifier>{e2a00f17-06f3-4a25-aabb-beac1787c4ff}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\GameObjects\Bullet.cpp">
-      <Filter>Source Files\PlayerShip</Filter>
+      <Filter>Source Files\GameObjects\PlayerShip</Filter>
     </ClCompile>
     <ClCompile Include="Source\GameObjects\WeaponSystem.cpp">
-      <Filter>Source Files\PlayerShip</Filter>
+      <Filter>Source Files\GameObjects\PlayerShip</Filter>
     </ClCompile>
     <ClCompile Include="Source\GameObjects\PlayerShip.cpp">
-      <Filter>Source Files\PlayerShip</Filter>
+      <Filter>Source Files\GameObjects\PlayerShip</Filter>
     </ClCompile>
     <ClCompile Include="Source\GameObjects\LaserSystem.cpp">
-      <Filter>Source Files\PlayerShip</Filter>
+      <Filter>Source Files\GameObjects\PlayerShip</Filter>
     </ClCompile>
     <ClCompile Include="Source\GameObjects\LaserBolt.cpp">
-      <Filter>Source Files\PlayerShip</Filter>
+      <Filter>Source Files\GameObjects\PlayerShip</Filter>
     </ClCompile>
     <ClCompile Include="Source\GameObjects\EnemyShip.cpp">
-      <Filter>Source Files\EnemyShips</Filter>
+      <Filter>Source Files\GameObjects\EnemyShips</Filter>
     </ClCompile>
     <ClCompile Include="Source\GameObjects\EnemyBullet.cpp">
-      <Filter>Source Files\EnemyShips</Filter>
+      <Filter>Source Files\GameObjects\EnemyShips</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\GameEngine.cpp">
       <Filter>Source Files\Engine</Filter>
@@ -115,28 +121,28 @@
       <Filter>Source Files\Engine</Filter>
     </ClCompile>
     <ClCompile Include="Source\GameObjects\RearAttackShip.cpp">
-      <Filter>Source Files\EnemyShips</Filter>
+      <Filter>Source Files\GameObjects\EnemyShips</Filter>
     </ClCompile>
     <ClCompile Include="Source\GameObjects\Turret.cpp">
-      <Filter>Source Files\PlayerShip</Filter>
+      <Filter>Source Files\GameObjects\PlayerShip</Filter>
     </ClCompile>
     <ClCompile Include="Source\GameObjects\SunBullet.cpp">
-      <Filter>Source Files\PlayerShip</Filter>
+      <Filter>Source Files\GameObjects\PlayerShip</Filter>
     </ClCompile>
     <ClCompile Include="Source\GameObjects\StarEnemyShip.cpp">
-      <Filter>Source Files\EnemyShips</Filter>
+      <Filter>Source Files\GameObjects\EnemyShips</Filter>
     </ClCompile>
     <ClCompile Include="Source\GameObjects\Graphics\Background.cpp">
-      <Filter>Source Files\Backgrounds</Filter>
+      <Filter>Source Files\GameObjects\Backgrounds</Filter>
     </ClCompile>
     <ClCompile Include="Source\Managers\RearAttackWave.cpp">
-      <Filter>Source Files\EnemyShips</Filter>
+      <Filter>Source Files\GameObjects\EnemyShips</Filter>
     </ClCompile>
     <ClCompile Include="Source\Managers\StarEnemyShipWave.cpp">
-      <Filter>Source Files\EnemyShips</Filter>
+      <Filter>Source Files\GameObjects\EnemyShips</Filter>
     </ClCompile>
     <ClCompile Include="Source\Managers\Wave.cpp">
-      <Filter>Source Files\EnemyShips</Filter>
+      <Filter>Source Files\GameObjects\EnemyShips</Filter>
     </ClCompile>
     <ClCompile Include="Source\DXTKGui\BaseGraphics\GraphicsAsset.cpp">
       <Filter>Source Files\DXTKGui\BaseClasses</Filter>
@@ -155,9 +161,6 @@
     </ClCompile>
     <ClCompile Include="Source\DXTKGui\BaseGraphics\FontSet.cpp">
       <Filter>Source Files\DXTKGui\BaseClasses</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\DXTKGui\Controls\GUIFactory.cpp">
-      <Filter>Source Files\DXTKGui</Filter>
     </ClCompile>
     <ClCompile Include="Source\DXTKGui\Controls\GUIControl.cpp">
       <Filter>Source Files\DXTKGui\Controls</Filter>
@@ -214,13 +217,10 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\GameObjects\ArrowEnemyShip.cpp">
-      <Filter>Source Files\EnemyShips</Filter>
+      <Filter>Source Files\GameObjects\EnemyShips</Filter>
     </ClCompile>
     <ClCompile Include="Source\Managers\ArrowEnemyWave.cpp">
-      <Filter>Source Files\EnemyShips</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\GameObjects\Graphics\AnimatedSprite.cpp">
-      <Filter>Source Files\Engine</Filter>
+      <Filter>Source Files\GameObjects\EnemyShips</Filter>
     </ClCompile>
     <ClCompile Include="Source\Managers\GUIOverlay.cpp">
       <Filter>Source Files\Managers</Filter>
@@ -232,13 +232,25 @@
       <Filter>Source Files\Engine</Filter>
     </ClCompile>
     <ClCompile Include="Source\GameObjects\Graphics\Tatter.cpp">
-      <Filter>Source Files\Backgrounds</Filter>
+      <Filter>Source Files\GameObjects\Backgrounds</Filter>
     </ClCompile>
     <ClCompile Include="Source\GameObjects\Graphics\ClothLayer.cpp">
-      <Filter>Source Files\Backgrounds</Filter>
+      <Filter>Source Files\GameObjects\Backgrounds</Filter>
     </ClCompile>
     <ClCompile Include="Source\GameObjects\Graphics\BackgroundLayer.cpp">
-      <Filter>Source Files\Backgrounds</Filter>
+      <Filter>Source Files\GameObjects\Backgrounds</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DXTKGui\GUIFactory.cpp">
+      <Filter>Source Files\DXTKGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\PlayerSlot.cpp">
+      <Filter>Source Files\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameObjects\Graphics\GameObject.cpp">
+      <Filter>Source Files\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameObjects\Graphics\AnimatedSprite.cpp">
+      <Filter>Source Files\GameObjects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -246,25 +258,25 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\GameObjects\LaserBolt.h">
-      <Filter>Header Files\PlayerShip</Filter>
+      <Filter>Header Files\GameObjects\PlayerShip</Filter>
     </ClInclude>
     <ClInclude Include="Source\GameObjects\LaserSystem.h">
-      <Filter>Header Files\PlayerShip</Filter>
+      <Filter>Header Files\GameObjects\PlayerShip</Filter>
     </ClInclude>
     <ClInclude Include="Source\GameObjects\PlayerShip.h">
-      <Filter>Header Files\PlayerShip</Filter>
+      <Filter>Header Files\GameObjects\PlayerShip</Filter>
     </ClInclude>
     <ClInclude Include="Source\GameObjects\WeaponSystem.h">
-      <Filter>Header Files\PlayerShip</Filter>
+      <Filter>Header Files\GameObjects\PlayerShip</Filter>
     </ClInclude>
     <ClInclude Include="Source\GameObjects\Bullet.h">
-      <Filter>Header Files\PlayerShip</Filter>
+      <Filter>Header Files\GameObjects\PlayerShip</Filter>
     </ClInclude>
     <ClInclude Include="Source\GameObjects\EnemyShip.h">
-      <Filter>Header Files\EnemyShips</Filter>
+      <Filter>Header Files\GameObjects\EnemyShips</Filter>
     </ClInclude>
     <ClInclude Include="Source\GameObjects\EnemyBullet.h">
-      <Filter>Header Files\EnemyShips</Filter>
+      <Filter>Header Files\GameObjects\EnemyShips</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\GameEngine.h">
       <Filter>Header Files\Engine</Filter>
@@ -276,31 +288,31 @@
       <Filter>Header Files\Engine</Filter>
     </ClInclude>
     <ClInclude Include="Source\GameObjects\RearAttackShip.h">
-      <Filter>Header Files\EnemyShips</Filter>
+      <Filter>Header Files\GameObjects\EnemyShips</Filter>
     </ClInclude>
     <ClInclude Include="Source\GameObjects\Turret.h">
-      <Filter>Header Files\PlayerShip</Filter>
+      <Filter>Header Files\GameObjects\PlayerShip</Filter>
     </ClInclude>
     <ClInclude Include="Source\GameObjects\SunBullet.h">
-      <Filter>Header Files\PlayerShip</Filter>
+      <Filter>Header Files\GameObjects\PlayerShip</Filter>
     </ClInclude>
     <ClInclude Include="Source\assets.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\GameObjects\StarEnemyShip.h">
-      <Filter>Header Files\EnemyShips</Filter>
+      <Filter>Header Files\GameObjects\EnemyShips</Filter>
     </ClInclude>
     <ClInclude Include="Source\GameObjects\Graphics\Background.h">
-      <Filter>Header Files\Backgrounds</Filter>
+      <Filter>Header Files\GameObjects\Backgrounds</Filter>
     </ClInclude>
     <ClInclude Include="Source\Managers\RearAttackWave.h">
-      <Filter>Header Files\EnemyShips</Filter>
+      <Filter>Header Files\GameObjects\EnemyShips</Filter>
     </ClInclude>
     <ClInclude Include="Source\Managers\StarEnemyShipWave.h">
-      <Filter>Header Files\EnemyShips</Filter>
+      <Filter>Header Files\GameObjects\EnemyShips</Filter>
     </ClInclude>
     <ClInclude Include="Source\Managers\Wave.h">
-      <Filter>Header Files\EnemyShips</Filter>
+      <Filter>Header Files\GameObjects\EnemyShips</Filter>
     </ClInclude>
     <ClInclude Include="Source\DXTKGui\Controls\Button.h">
       <Filter>Header Files\DXTKGui\Controls</Filter>
@@ -387,13 +399,10 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Managers\ArrowEnemyWave.h">
-      <Filter>Header Files\EnemyShips</Filter>
+      <Filter>Header Files\GameObjects\EnemyShips</Filter>
     </ClInclude>
     <ClInclude Include="Source\GameObjects\ArrowEnemyShip.h">
-      <Filter>Header Files\EnemyShips</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\GameObjects\Graphics\AnimatedSprite.h">
-      <Filter>Header Files\Engine</Filter>
+      <Filter>Header Files\GameObjects\EnemyShips</Filter>
     </ClInclude>
     <ClInclude Include="Source\Managers\GUIOverlay.h">
       <Filter>Header Files\Managers</Filter>
@@ -401,20 +410,29 @@
     <ClInclude Include="Source\DXTKGui\Controls\Spinner.h">
       <Filter>Header Files\DXTKGui\Controls</Filter>
     </ClInclude>
-    <ClInclude Include="Source\DXTKGui\Controls\GUIFactory.h">
-      <Filter>Header Files\DXTKGui\Controls</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Engine\Camera.h">
       <Filter>Header Files\Engine</Filter>
     </ClInclude>
     <ClInclude Include="Source\GameObjects\Graphics\Tatter.h">
-      <Filter>Header Files\Backgrounds</Filter>
+      <Filter>Header Files\GameObjects\Backgrounds</Filter>
     </ClInclude>
     <ClInclude Include="Source\GameObjects\Graphics\ClothLayer.h">
-      <Filter>Header Files\Backgrounds</Filter>
+      <Filter>Header Files\GameObjects\Backgrounds</Filter>
     </ClInclude>
     <ClInclude Include="Source\GameObjects\Graphics\BackgroundLayer.h">
-      <Filter>Header Files\Backgrounds</Filter>
+      <Filter>Header Files\GameObjects\Backgrounds</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DXTKGui\GUIFactory.h">
+      <Filter>Header Files\DXTKGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameObjects\Graphics\AnimatedSprite.h">
+      <Filter>Header Files\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameObjects\Graphics\GameObject.h">
+      <Filter>Header Files\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\PlayerSlot.h">
+      <Filter>Header Files\Managers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -432,10 +450,10 @@
       <Filter>Source Files\levels</Filter>
     </Xml>
     <Xml Include="assets\EnemyShips.xml">
-      <Filter>Source Files\EnemyShips</Filter>
+      <Filter>Source Files\GameObjects\EnemyShips</Filter>
     </Xml>
     <Xml Include="assets\ShipData.xml">
-      <Filter>Source Files\PlayerShip</Filter>
+      <Filter>Source Files\GameObjects\PlayerShip</Filter>
     </Xml>
   </ItemGroup>
 </Project>

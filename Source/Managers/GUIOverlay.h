@@ -1,4 +1,3 @@
-#include "../pch.h"
 #pragma once
 
 #include "../DXTKGui/Controls/Button.h"
@@ -7,7 +6,9 @@
 class GUIOverlay {
 public:
 	GUIOverlay();
-	~GUIOverlay();
+	virtual ~GUIOverlay();
+
+	void reloadGraphicsAssets();
 
 	const Vector2& getPlayArea();
 	const Vector2& getPlayPosition();

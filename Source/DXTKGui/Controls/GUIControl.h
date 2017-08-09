@@ -6,27 +6,27 @@
 #include "../BaseGraphics/GraphicsAsset.h"
 #include "../Controllers/MouseController.h"
 
+class GUIFactory;
 interface GUIControl : public IElement2D {
 public:
 
-	void initializeControl(GUIFactory* factory,
+	GUIControl(GUIFactory* factory,
 		shared_ptr<MouseController> mouseController) {
 		guiFactory = factory;
 		mouse = mouseController;
 		projectedHitArea.reset(new HitArea(Vector2::Zero, Vector2::Zero));
 
 		translationMatrix = [&]() -> Matrix { return Matrix::Identity; };
-		cameraZoom = [&]() -> float { return 1;};
+		cameraZoom = [&]() -> float { return 1; };
 	}
 
-	/* Deprecating */
-	enum ClickAction {
-		EXIT, PLAY, SETTINGS, CANCEL, OK, UP, DOWN, NONE, CONFIRM,
-		NEUTRAL, SELECTION_CHANGED
-	};
+	virtual ~GUIControl();
 
+	virtual void reloadGraphicsAsset() = 0;
 
-	virtual void update(double deltaTime) = 0;
+	/** Return true if GUIControl has refreshed its texture and parent GUIControls
+		need to redraw themselves. */
+	virtual bool update(double deltaTime) = 0;
 
 	virtual void setFont(const pugi::char_t* font = "Default Font") = 0;
 	virtual void setText(wstring text) = 0;
@@ -41,8 +41,12 @@ public:
 	/** Remember: Rotation is around the origin! */
 	virtual void setRotation(const float rotation) override;
 	virtual void setTint(const XMFLOAT4 color) override;
+	virtual void setTint(const Color& color) override;
+	virtual void setTint(const XMVECTORF32 color) override;
 	virtual void setAlpha(const float alpha) override;
-	virtual void setLayerDepth(const float depth) override;
+	virtual void setLayerDepth(const float depth, bool frontToBack = true) override;
+	/** Warning: calling setPosition() or setScale() will reset the HitArea! */
+	virtual void setHitArea(HitArea* newHitArea);
 
 	virtual const Vector2& getPosition() const = 0;
 	virtual const Vector2& getOrigin() const override;
@@ -56,10 +60,13 @@ public:
 
 	const HitArea* getHitArea() const;
 
-	/* control->setMatrixFunction([&]() -> Matrix { return camera->translationMatrix(); }); */
+	/** Usage example:
+		control->setMatrixFunction([&]() -> Matrix { return camera->translationMatrix(); }); */
 	void setMatrixFunction(function<Matrix()> translationFunction) {
 		translationMatrix = translationFunction;
 	}
+	/** Usage example:
+		control->setCameraZoom([&]()->float { return camera->getZoom(); }); */
 	void setCameraZoom(function<float()> zoomFunction) {
 		cameraZoom = zoomFunction;
 	}
@@ -73,15 +80,19 @@ public:
 
 	bool contains(const Vector2& point);
 
-	GraphicsAsset* createTexture();
+	/** Action to perform when mouse button released over control. */
+	virtual void onClick() = 0;
+	/** Action to perform when mouse button held over control. */
+	virtual void onPress() = 0;
+	/** Action to perform when mouse over control. */
+	virtual void onHover() = 0;
+	/** Action to perform to return control back to neutral state. */
+	virtual void resetState() = 0;
 
 	virtual bool clicked() = 0;
 	/* Is Mouse Button down over control? */
 	virtual bool pressed() = 0;
 	virtual bool hovering() = 0;
-
-	/* Deprecating this method of control. Use ActionListeners instead. */
-	ClickAction action;
 
 
 protected:
@@ -98,7 +109,7 @@ protected:
 	Vector2 origin = Vector2(0, 0);
 	Color tint = DirectX::Colors::White;
 	float rotation = 0.0f;
-	float layerDepth = 1.0f;
+	float layerDepth = 0.9f;
 
 	bool isHover = false;
 	/** Button is held down over control but has not been released. */
@@ -118,8 +129,21 @@ protected:
 		Not actually implemented.... */
 interface GUIControlBox : public GUIControl {
 public:
+	GUIControlBox(GUIFactory* factory, shared_ptr<MouseController> mouseController)
+		: GUIControl(factory, mouseController) {
+	}
 	virtual size_t addControl(unique_ptr<GUIControl> control) = 0;
 	virtual void addControls(vector<unique_ptr<GUIControl> > controls) = 0;
 
 	virtual GUIControl* getControl(size_t controlPosition) const = 0;
+};
+
+
+/** A GUIControl that can be used in a SelectionManager. */
+interface Selectable : public GUIControl {
+public:
+	Selectable(GUIFactory* factory, shared_ptr<MouseController> mouseController)
+		: GUIControl(factory, mouseController) {
+	}
+	virtual bool updateSelect(double deltaTime) = 0;
 };

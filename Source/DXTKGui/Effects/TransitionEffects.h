@@ -11,29 +11,40 @@ namespace TransitionEffects {
 	finished. Adjust to feel. */
 	class TransitionEffect {
 	public:
+		TransitionEffect(IElement2D* cntrl) {
+			control = cntrl;
+		}
+		virtual ~TransitionEffect();
 
-		/* Returns true when transition effect is finished. */
-		virtual bool run(double deltaTime, IElement2D* control) = 0;
-		virtual void reset(IElement2D* control) = 0;
+		/** This must be run in SetTransition Function. */
+		virtual void initializeEffect(Texturizable* cntrl) {
+		};
+
+/* Returns true when transition effect is finished. */
+		virtual bool run(double deltaTime) = 0;
+		virtual void reset() = 0;
+		//virtual void reloadGraphicAsset();
 		/** This must return false if not being used! */
 		virtual bool draw(SpriteBatch* batch) {
 			return false;
 		}
 		float transitionSpeed;
 
-
+	protected:
+		IElement2D* control;
 	};
+
 	/* Returns true when transition effect is finished. */
-	typedef bool (TransitionEffect::*Run) (double, IElement2D*);
-	typedef void (TransitionEffect::*Reset) (IElement2D*);
+	typedef bool (TransitionEffect::*Run) (double);
+	typedef void (TransitionEffect::*Reset) ();
 	typedef bool (TransitionEffect::*Draw) (SpriteBatch*);
 
 	class GrowTransition : public TransitionEffect {
 	public:
-		GrowTransition(const Vector2& startScale, const Vector2& endScale,
+		GrowTransition(IElement2D* cntrl, const Vector2& startScale, const Vector2& endScale,
 			float transitionSpeed = 20);
-		virtual bool run(double deltaTime, IElement2D* control) override;
-		virtual void reset(IElement2D* control) override;
+		virtual bool run(double deltaTime) override;
+		virtual void reset() override;
 
 	protected:
 		Vector2 startScale;
@@ -42,17 +53,17 @@ namespace TransitionEffects {
 
 	class ShrinkTransition : public GrowTransition {
 	public:
-		ShrinkTransition(const Vector2& startScale, const Vector2& endScale,
+		ShrinkTransition(IElement2D* cntrl, const Vector2& startScale, const Vector2& endScale,
 			float transitionSpeed = 20);
-		virtual bool run(double deltaTime, IElement2D* control) override;
+		virtual bool run(double deltaTime) override;
 	};
 
 	class SlideTransition : public TransitionEffect {
 	public:
-		SlideTransition(const Vector2& startPos, const Vector2& endPos,
+		SlideTransition(IElement2D* cntrl, const Vector2& startPos, const Vector2& endPos,
 			float transitionSpeed = 20);
-		virtual bool run(double deltaTime, IElement2D* control) override;
-		virtual void reset(IElement2D* control) override;
+		virtual bool run(double deltaTime) override;
+		virtual void reset() override;
 
 	protected:
 		Vector2 startPosition;
@@ -62,11 +73,11 @@ namespace TransitionEffects {
 
 	class SlideAndGrowTransition : public TransitionEffect {
 	public:
-		SlideAndGrowTransition(const Vector2& startPos, const Vector2& endPos,
+		SlideAndGrowTransition(IElement2D* cntrl, const Vector2& startPos, const Vector2& endPos,
 			const Vector2& startScale, const Vector2& endScale,
 			float transitionSpeed = 20);
-		virtual bool run(double deltaTime, IElement2D* control) override;
-		virtual void reset(IElement2D* control) override;
+		virtual bool run(double deltaTime) override;
+		virtual void reset() override;
 
 
 	protected:
@@ -85,8 +96,10 @@ namespace TransitionEffects {
 		TrueGrowTransition(Dialog* containerControl,
 			const Vector2& startScale, const Vector2& endScale,
 			float transitionSpeed = 20);
-		virtual bool run(double deltaTime, IElement2D* control) override;
-		virtual void reset(IElement2D* control) override;
+		virtual ~TrueGrowTransition();
+
+		virtual bool run(double deltaTime) override;
+		virtual void reset() override;
 
 	protected:
 		Vector2 startScale;
@@ -95,18 +108,23 @@ namespace TransitionEffects {
 		vector<Vector2> endPositions;
 
 		bool containerDone = false;
+		Dialog* containerControl;
 	};
 
 
-	/* A base class for transitions that require advanced graphical features. */
+	/* A base class for transitions that require advanced graphical features.
+	WARNING: Every Texturizable needs to be an IElement2D as well.
+	(They should be anyway, but yeah, you know, I'm just saying). */
 	class TexturedTransition : public TransitionEffect {
 	public:
-		TexturedTransition(GUIControl* control, float transitionSpeed);
+		TexturedTransition(IElement2D* cntrl, float transitionSpeed);
+		virtual ~TexturedTransition();
 
+		virtual void initializeEffect(Texturizable* control) override;
 		virtual bool draw(SpriteBatch* batch) override;
 
 	protected:
-		std::unique_ptr<GraphicsAsset> gfxAsset;
+		unique_ptr<GraphicsAsset> gfxAsset;
 		ComPtr<ID3D11ShaderResourceView> texture;
 
 		Vector2 position = Vector2::Zero;
@@ -120,10 +138,14 @@ namespace TransitionEffects {
 
 	class BlindsTransition : public TexturedTransition {
 	public:
-		BlindsTransition(GUIControl* control, float transitionTime = .5,
+		BlindsTransition(IElement2D* cntrl, float transitionTime = .5,
 			bool vertical = true, bool horizontal = false);
-		virtual bool run(double deltaTime, IElement2D* control) override;
-		virtual void reset(IElement2D* control) override;
+		virtual ~BlindsTransition();
+
+		virtual void initializeEffect(Texturizable* control) override;
+
+		virtual bool run(double deltaTime) override;
+		virtual void reset() override;
 		virtual bool draw(SpriteBatch* batch) override;
 	private:
 		vector<vector<RECT>> squareRects;
@@ -138,9 +160,12 @@ namespace TransitionEffects {
 	class SpinGrowTransition : public TexturedTransition {
 	public:
 	/** Time for transition to complete. */
-		SpinGrowTransition(GUIControl* control, float transitionTime = .5);
-		virtual bool run(double deltaTime, IElement2D* control) override;
-		virtual void reset(IElement2D* control) override;
+		SpinGrowTransition(IElement2D* cntrl, float transitionTime = .5);
+
+		virtual void initializeEffect(Texturizable* control) override;
+
+		virtual bool run(double deltaTime) override;
+		virtual void reset() override;
 	private:
 		Vector2 startScale;
 		Vector2 endScale;
@@ -153,9 +178,13 @@ namespace TransitionEffects {
 
 	class SplitTransition : public TexturedTransition {
 	public:
-		SplitTransition(GUIControl* control, int screenWidth, float transitionSpeed = 150.0);
-		virtual bool run(double deltaTime, IElement2D* control) override;
-		virtual void reset(IElement2D* control) override;
+		SplitTransition(IElement2D* cntrl, int screenWidth, float transitionSpeed = 150.0);
+		virtual ~SplitTransition();
+
+		virtual void initializeEffect(Texturizable* control) override;
+
+		virtual bool run(double deltaTime) override;
+		virtual void reset() override;
 
 		virtual bool draw(SpriteBatch* batch) override;
 

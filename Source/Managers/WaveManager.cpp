@@ -1,4 +1,5 @@
 #include "WaveManager.h"
+#include "../assets.h"
 
 WaveManager::WaveManager() {
 }
@@ -9,7 +10,7 @@ WaveManager::~WaveManager() {
 		delete wave;
 }
 
-#include "../assets.h"
+
 bool WaveManager::initialize(GFXAssetManager* gfxAssets) {
 
 	xml_document xml_enemies;
@@ -37,6 +38,11 @@ bool WaveManager::initialize(GFXAssetManager* gfxAssets) {
 
 
 	return true;
+}
+
+void WaveManager::reloadGraphicsAssets() {
+	for (Wave* wave : waves)
+		wave->reloadGraphicsAssets();
 }
 
 void WaveManager::clear() {

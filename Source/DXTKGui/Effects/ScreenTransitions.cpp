@@ -1,22 +1,103 @@
 #include "ScreenTransitions.h"
+#include "../BaseGraphics/screen.h"
+#include "../StringHelper.h"
 
 using namespace ScreenTransitions;
 
 
-ScreenTransitionManager::ScreenTransitionManager(GUIFactory* factory, const char_t* bgName) {
-
-	guiFactory = factory;
-	bg = move(guiFactory->getSpriteFromAsset(bgName));
-	if (bg == NULL) {
-		bg = guiFactory->getSpriteFromAsset("Default Transition BG");
-	}
-	bg->setPosition(Vector2(bg->getWidth() / 2, bg->getHeight() / 2));
-	bg->setOrigin(bg->getPosition());
+ScreenTransitionManager::ScreenTransitionManager() {
 }
+
 
 ScreenTransitionManager::~ScreenTransitionManager() {
 	if (transition != NULL)
 		delete transition;
+}
+
+void ScreenTransitionManager::initialize(
+	GUIFactory* factory, const char_t* bgName, bool resize) {
+
+
+	guiFactory = factory;
+	setBGImage(bgName, resize);
+
+}
+
+
+void ScreenTransitions::ScreenTransitionManager::setBGImage(
+	const char_t* bgName, bool resize) {
+
+	bg = move(guiFactory->getSpriteFromAsset(bgName));
+	if (bg == NULL) {
+		bg = guiFactory->getSpriteFromAsset("Default Transition BG");
+	}
+	bg->setPosition(Vector2::Zero);
+	bg->setOrigin(Vector2::Zero);
+	bg->setLayerDepth(0);
+
+	resizeBGToFit = resize;
+	RECT rect;
+	GetClientRect(guiFactory->getHWND(), &rect);
+
+	int screenWidth = rect.right - rect.left;
+	int screenHeight = rect.bottom - rect.top;
+
+	if (resizeBGToFit) {
+		//scale bg image to screen
+		int horzDif = bg->getWidth() - screenWidth;
+		int vertDif = bg->getHeight() - screenHeight;
+		if (horzDif > 0 || vertDif > 0) {
+			// bg image is bigger in one or more dimensions than screen
+			if (horzDif > vertDif) {
+				float horzRatio = float(screenWidth) / bg->getWidth();
+				bg->setScale(Vector2(horzRatio, horzRatio));
+			} else {
+				float vertRatio = float(screenHeight) / bg->getHeight();
+				bg->setScale(Vector2(vertRatio, vertRatio));
+			}
+		} else {
+			if (horzDif < vertDif) {
+				float horzRatio = float(screenWidth) / bg->getWidth();
+				bg->setScale(Vector2(horzRatio, horzRatio));
+			} else {
+				float vertRatio = float(screenHeight) / bg->getHeight();
+				bg->setScale(Vector2(vertRatio, vertRatio));
+			}
+		}
+	}
+}
+
+void ScreenTransitionManager::reloadGraphicsAssets() {
+	bg->reloadGraphicsAsset(guiFactory);
+	bg->setPosition(Vector2::Zero);
+	bg->setOrigin(Vector2::Zero);
+
+	int screenWidth = Globals::WINDOW_WIDTH;
+	int screenHeight = Globals::WINDOW_HEIGHT;
+
+	if (resizeBGToFit) {
+		//scale bg image to screen
+		int horzDif = bg->getWidth() - screenWidth;
+		int vertDif = bg->getHeight() - screenHeight;
+		if (horzDif > 0 || vertDif > 0) {
+			// bg image is bigger in one or more dimensions than screen
+			if (horzDif > vertDif) {
+				float horzRatio = float(screenWidth) / bg->getWidth();
+				bg->setScale(Vector2(horzRatio, horzRatio));
+			} else {
+				float vertRatio = float(screenHeight) / bg->getHeight();
+				bg->setScale(Vector2(vertRatio, vertRatio));
+			}
+		} else {
+			if (horzDif < vertDif) {
+				float horzRatio = float(screenWidth) / bg->getWidth();
+				bg->setScale(Vector2(horzRatio, horzRatio));
+			} else {
+				float vertRatio = float(screenHeight) / bg->getHeight();
+				bg->setScale(Vector2(vertRatio, vertRatio));
+			}
+		}
+	}
 }
 
 void ScreenTransitionManager::setTransition(ScreenTransition* effect) {
@@ -26,12 +107,20 @@ void ScreenTransitionManager::setTransition(ScreenTransition* effect) {
 	transition = effect;
 }
 
+
 void ScreenTransitionManager::transitionBetween(
-	Screen* oldScreen, Screen* newScreen, float transitionTime) {
+	Screen* oldScreen, Screen* newScr, float transitionTime, bool autoBatchDraw) {
+
+	Color purple = Color(158, 0, 58);
+	Color blue = Color(0, 58, 158);
 
 	transition->setTransitionBetween(
-		guiFactory->createTextureFromScreen(oldScreen, Color(158, 0, 58)),
-		guiFactory->createTextureFromScreen(newScreen, Color(0, 58, 158)), transitionTime);
+		guiFactory->createTextureFromScreen(oldScreen, autoBatchDraw, purple),
+		guiFactory->createTextureFromScreen(newScr, autoBatchDraw, blue), transitionTime);
+
+	newScreen = newScr;
+
+
 }
 
 bool ScreenTransitionManager::runTransition(double deltaTime) {
@@ -44,13 +133,16 @@ void ScreenTransitionManager::drawTransition(SpriteBatch* batch) {
 }
 
 
-
-#include "../BaseGraphics/screen.h"
 void ScreenTransition::setTransitionBetween(
-	GraphicsAsset* oldScreen, GraphicsAsset* newScreen, float time) {
+	unique_ptr<GraphicsAsset> oldScreen, unique_ptr<GraphicsAsset> newScreen, float time) {
 
-	oldScreenAsset.reset(oldScreen);
-	newScreenAsset.reset(newScreen);
+	/*wostringstream woo;
+	woo << L"\n\n *** ScreenTransition Release *** " << endl;
+	woo << "\t\oldTexture release #: " << oldTexture.Reset() << endl;
+	woo << "\t\newTexture release #: " << newTexture.Reset() << endl;*/
+
+	oldScreenAsset = move(oldScreen);
+	newScreenAsset = move(newScreen);
 
 	oldTexture = oldScreenAsset->getTexture();
 	newTexture = newScreenAsset->getTexture();
@@ -67,6 +159,18 @@ void ScreenTransition::setTransitionBetween(
 }
 
 
+ScreenTransitions::ScreenTransition::~ScreenTransition() {
+
+	/*wostringstream woo;
+	woo << L"\n\n *** ScreenTransition Release *** " << endl;
+	woo << "\t\oldTexture release #: " << oldTexture.Reset() << endl;
+	woo << "\t\newTexture release #: " << newTexture.Reset() << endl;
+	oldScreenAsset.reset();
+	newScreenAsset.reset();
+	OutputDebugString(L"\n*** ScreenTransition Done ***");*/
+}
+
+
 
 
 
@@ -75,22 +179,18 @@ FlipScreenTransition::FlipScreenTransition(bool verticalFlip) {
 	startScale = Vector2(0, 0);
 	if (verticalFlip) {
 		startScale.x = 1;
-		//currentOrientation = SpriteEffects::SpriteEffects_FlipVertically;
 	} else {
 		startScale.y = 1;
-		//currentOrientation = SpriteEffects::SpriteEffects_FlipHorizontally;
 	}
 
 }
 
 bool FlipScreenTransition::run(double deltaTime) {
 
-	//if (currentOrientation != SpriteEffects::SpriteEffects_None) {
 	if (texture == oldTexture) {
 		scale = Vector2::Lerp(Vector2(1, 1), startScale, timer / transitionTime * 2);
 		scale.Clamp(startScale, Vector2(1, 1));
 		if (scale == startScale) {
-			//currentOrientation = SpriteEffects::SpriteEffects_None;
 			texture = newTexture;
 			timer = 0;
 		}
@@ -112,7 +212,6 @@ void FlipScreenTransition::draw(SpriteBatch* batch) {
 
 void FlipScreenTransition::reset() {
 
-	//currentOrientation = startOrientation;
 	texture = oldTexture;
 	origin = Vector2(oldScreenAsset->getWidth() / 2, oldScreenAsset->getHeight() / 2);
 	position = Vector2(oldScreenAsset->getWidth() / 2, oldScreenAsset->getHeight() / 2);
@@ -131,8 +230,8 @@ SquareFlipScreenTransition::~SquareFlipScreenTransition() {
 }
 
 void SquareFlipScreenTransition::setTransitionBetween(
-	GraphicsAsset* oldScreen, GraphicsAsset* newScreen, float time) {
-	ScreenTransition::setTransitionBetween(oldScreen, newScreen, time);
+	unique_ptr<GraphicsAsset> oldScreen, unique_ptr<GraphicsAsset> newScreen, float time) {
+	ScreenTransition::setTransitionBetween(move(oldScreen), move(newScreen), time);
 
 	int squareSize = 64;
 	int row = ceil((float) oldScreenAsset->getWidth() / squareSize) + 1;
@@ -248,6 +347,10 @@ void SquareFlipScreenTransition::reset() {
 
 
 
+ScreenTransitions::LineWipeScreenTransition::LineWipeScreenTransition(bool toleft) {
+	wipeToLeft = !toleft;
+}
+
 ScreenTransitions::LineWipeScreenTransition::~LineWipeScreenTransition() {
 	for (Line* line : lines)
 		delete line;
@@ -255,8 +358,8 @@ ScreenTransitions::LineWipeScreenTransition::~LineWipeScreenTransition() {
 }
 
 void LineWipeScreenTransition::setTransitionBetween(
-	GraphicsAsset* oldScreen, GraphicsAsset* newScreen, float time) {
-	ScreenTransition::setTransitionBetween(oldScreen, newScreen, time);
+	unique_ptr<GraphicsAsset> oldScreen, unique_ptr<GraphicsAsset> newScreen, float time) {
+	ScreenTransition::setTransitionBetween(move(oldScreen), move(newScreen), time);
 
 	int rows = 7;
 	int rowHeight = ceil((float) oldScreenAsset->getHeight() / rows);
@@ -270,14 +373,18 @@ void LineWipeScreenTransition::setTransitionBetween(
 		Line* line = new Line();
 		RECT rect;
 		rect.left = 0;
-		rect.right = oldScreen->getWidth();
+		rect.right = oldScreenAsset->getWidth();
 		rect.top = i*rowHeight;
 		rect.bottom = rect.top + rowHeight;
 		line->rect = rect;
 
 		line->position = Vector2(0, rect.top);
 		line->start = Vector2(0, rect.top);
-		line->end = Vector2(line->position.x - oldScreenAsset->getWidth(), line->position.y);
+		if (wipeToLeft)
+			line->end = Vector2(line->position.x - oldScreenAsset->getWidth(),
+				line->position.y);
+		else
+			line->end = Vector2(oldScreenAsset->getWidth(), line->position.y);
 		lines.push_back(line);
 
 	}
@@ -301,7 +408,10 @@ bool ScreenTransitions::LineWipeScreenTransition::run(double deltaTime) {
 			allDone = false;
 			break;
 		}
-		if (line->position.x + oldScreenAsset->getWidth() > 0)
+		if (wipeToLeft) {
+			if (line->position.x + oldScreenAsset->getWidth() > 0)
+				allDone = false;
+		} else if (line->position.x < oldScreenAsset->getWidth())
 			allDone = false;
 	}
 
@@ -315,11 +425,13 @@ void ScreenTransitions::LineWipeScreenTransition::draw(SpriteBatch* batch) {
 		tint, rotation, origin, scale, SpriteEffects_None);
 
 	for (Line* line : lines)
-		batch->Draw(oldTexture.Get(), line->position, &line->rect,
+		batch->Draw(oldTexture.Get(), line->position,
+			&line->rect,
 			tint, rotation, origin, scale, SpriteEffects_None);
 }
 
 void ScreenTransitions::LineWipeScreenTransition::reset() {
 
 	timer = 0;
+	wipeToLeft = !wipeToLeft;
 }

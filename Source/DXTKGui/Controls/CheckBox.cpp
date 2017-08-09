@@ -1,7 +1,9 @@
 #include "CheckBox.h"
+#include "../GUIFactory.h"
 
-CheckBox::CheckBox(unique_ptr<Sprite> unchkdSprite,
-	unique_ptr<Sprite> chckdSprite, unique_ptr<FontSet> font) {
+CheckBox::CheckBox(GUIFactory* factory, shared_ptr<MouseController> mouseController,
+	unique_ptr<Sprite> unchkdSprite, unique_ptr<Sprite> chckdSprite,
+	const pugi::char_t* font) : GUIControl(factory, mouseController) {
 
 	uncheckedSprite = move(unchkdSprite);
 	checkedSprite = move(chckdSprite);
@@ -12,29 +14,43 @@ CheckBox::CheckBox(unique_ptr<Sprite> unchkdSprite,
 
 	hitArea.reset(new HitArea(Vector2::Zero, size));
 
-	label.reset(new TextLabel(move(font)));
-	label->setText(L"");
+	label.reset(guiFactory->createTextLabel(Vector2::Zero, L"", font));
 
 	texture = uncheckedSprite->getTexture().Get();
 }
 
 CheckBox::~CheckBox() {
 
-	if (onClickListener != NULL)
-		delete onClickListener;
+	if (actionListener != NULL)
+		delete actionListener;
+
+}
+
+void CheckBox::reloadGraphicsAsset() {
+	texture = NULL;
+	uncheckedSprite->reloadGraphicsAsset(guiFactory);
+	checkedSprite->reloadGraphicsAsset(guiFactory);
+	label->reloadGraphicsAsset();
+	
+	if (isClicked)
+		texture = checkedSprite->getTexture().Get();
+	else
+		texture = uncheckedSprite->getTexture().Get();
 }
 
 
-void CheckBox::update(double deltaTime) {
+bool CheckBox::update(double deltaTime) {
 
+	refreshed = false;
 	if (hitArea->contains(mouse->getPosition())
 		|| label->contains(mouse->getPosition())) {
-		isHover = true;
-		label->setTint(hoverColorText);
-		tint = hoverColor; // this won't do anything if the checkbox is black :/
-	} else {
-		label->setTint(normalColorText);
-		tint = normalColor;
+
+		if (!isHover) {
+			isHover = true;
+			onHover();
+		}
+	} else if (isHover) {
+		resetState();
 		isHover = false;
 	}
 
@@ -44,6 +60,10 @@ void CheckBox::update(double deltaTime) {
 			onClick();
 		}
 	}
+	if (label->update(deltaTime))
+		refreshed = true;
+
+	return refreshed;
 }
 
 void CheckBox::draw(SpriteBatch* batch) {
@@ -54,7 +74,6 @@ void CheckBox::draw(SpriteBatch* batch) {
 }
 
 
-#include "GUIFactory.h"
 void CheckBox::setFont(const pugi::char_t* font) {
 	label->setFont(guiFactory->getFont(font));
 }

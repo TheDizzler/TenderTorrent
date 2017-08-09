@@ -1,21 +1,40 @@
+#include "../pch.h"
 #include "GraphicsEngine.h"
+#include "../Engine/GameEngine.h"
+#include <sstream>
 
-shared_ptr<Camera> camera;
+unique_ptr<Camera> camera;
 
-
-GraphicsEngine::GraphicsEngine() {
-
-}
+/** Forces NVidia cards to use default adapter. */
+extern "C" {  _declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001; }
 
 
 GraphicsEngine::~GraphicsEngine() {
 
+	batch.reset();
+	camera.reset();
+
+
+
 	if (swapChain.Get() != NULL)
 		swapChain->SetFullscreenState(false, NULL);
+
+
 
 	adapters.clear();
 	displays.clear();
 	displayModeList.clear();
+
+
+	device.Reset();
+	swapChain.Reset();
+	renderTargetView.Reset();
+	deviceContext->Flush();
+	deviceContext.Reset();
+
+	debugDevice->ReportLiveDeviceObjects(D3D11_RLDO_FLAGS::D3D11_RLDO_DETAIL
+		| D3D11_RLDO_FLAGS::D3D11_RLDO_SUMMARY);
+	debugDevice.Reset();
 }
 
 
@@ -39,21 +58,20 @@ bool GraphicsEngine::initD3D(HWND h) {
 
 	initializeViewport();
 
-	camera = make_shared<Camera>(Globals::WINDOW_WIDTH, Globals::WINDOW_HEIGHT);
-	camera->viewport = &viewport;
-	deviceContext->RSSetViewports(1, viewport.Get11());
+	camera = make_unique<Camera>(Globals::WINDOW_WIDTH, Globals::WINDOW_HEIGHT);
 
 	// create SpriteBatch
-	batch.reset(new SpriteBatch(deviceContext.Get()));
+	batch  = make_unique<SpriteBatch>(deviceContext.Get());
 
 	return true;
 
 }
 
-#include <sstream>
-#include "../Engine/GameEngine.h"
-bool GraphicsEngine::getDisplayAdapters() {
 
+
+
+bool GraphicsEngine::getDisplayAdapters() {
+	
 
 	ComPtr<IDXGIFactory1> factory;
 	// Create a DirectX graphics interface factory.
@@ -66,6 +84,7 @@ bool GraphicsEngine::getDisplayAdapters() {
 
 	ComPtr<IDXGIAdapter> adapter;
 	int i = 0;
+	adapters.clear();
 	// get all adapters (gfx cards)
 	while (factory->EnumAdapters(i++, adapter.GetAddressOf()) != DXGI_ERROR_NOT_FOUND) {
 		adapters.push_back(adapter);
@@ -78,7 +97,7 @@ bool GraphicsEngine::getDisplayAdapters() {
 
 
 	int size = i - 1;
-
+	displays.clear();
 	for (int j = 0; j < size; ++j) {
 		adapter = adapters[j];
 		i = 0;
@@ -166,7 +185,8 @@ bool GraphicsEngine::initializeAdapter(int adapterIndex) {
 		L"Error creating Device and Swap Chain.", L"ERROR"))
 		return false;
 
-	device.Get()->QueryInterface(__uuidof(ID3D11Debug), reinterpret_cast<void**>(debugDevice.GetAddressOf()));
+	device.Get()->QueryInterface(__uuidof(ID3D11Debug),
+		reinterpret_cast<void**>(debugDevice.GetAddressOf()));
 
 	verifyAdapter(device);
 
@@ -199,38 +219,37 @@ bool GraphicsEngine::initializeRenderTarget() {
 
 void GraphicsEngine::initializeViewport() {
 
-	/** **** Create Viewport **** **/
-	/*D3D11_VIEWPORT viewport;
-	ZeroMemory(&viewport, sizeof(D3D11_VIEWPORT));
+	/** **** Create D3D Viewport **** **/
+	ZeroMemory(&d3dViewport, sizeof(D3D11_VIEWPORT));
 
-	viewport.TopLeftX = 0;
-	viewport.TopLeftY = 0;
-	viewport.Width = Globals::WINDOW_WIDTH;
-	viewport.Height = Globals::WINDOW_HEIGHT;
-	viewport.MinDepth = 0.0f;
-	viewport.MaxDepth = 1.0f;
+	d3dViewport.TopLeftX = 0;
+	d3dViewport.TopLeftY = 0;
+	d3dViewport.Width = Globals::WINDOW_WIDTH;
+	d3dViewport.Height = Globals::WINDOW_HEIGHT;
+	d3dViewport.MinDepth = 0.0f;
+	d3dViewport.MaxDepth = 1.0f;
 
-	deviceContext->RSSetViewports(1, &viewport);*/
+	deviceContext->RSSetViewports(1, &d3dViewport);
 
 
 	/** **** Create SimpleMath Viewport **** */
-	viewport = Viewport(0, 0, Globals::WINDOW_WIDTH, Globals::WINDOW_HEIGHT, 0, 1);
-
+	//viewport = Viewport(0, 0, Globals::WINDOW_WIDTH, Globals::WINDOW_HEIGHT, 0, 1);
+	//deviceContext->RSSetViewports(1, viewport.Get11());
 }
 
 void GraphicsEngine::setViewport(int xPos, int yPos, int width, int height) {
 
-	D3D11_VIEWPORT viewport;
-	ZeroMemory(&viewport, sizeof(D3D11_VIEWPORT));
+	D3D11_VIEWPORT d3d_viewport;
+	ZeroMemory(&d3d_viewport, sizeof(D3D11_VIEWPORT));
 
-	viewport.TopLeftX = xPos;
-	viewport.TopLeftY = yPos;
-	viewport.Width = width;
-	viewport.Height = height;
-	viewport.MinDepth = 0.0f;
-	viewport.MaxDepth = 1.0f;
+	d3d_viewport.TopLeftX = xPos;
+	d3d_viewport.TopLeftY = yPos;
+	d3d_viewport.Width = width;
+	d3d_viewport.Height = height;
+	d3d_viewport.MinDepth = 0.0f;
+	d3d_viewport.MaxDepth = 1.0f;
 
-	deviceContext->RSSetViewports(1, &viewport);
+	deviceContext->RSSetViewports(1, &d3d_viewport);
 }
 
 
@@ -346,25 +365,39 @@ vector<DXGI_MODE_DESC> GraphicsEngine::getDisplayModeList(
 
 }
 
-
+/** Almost works!! */
 bool GraphicsEngine::setAdapter(size_t newAdapterIndex) {
 
 	swapChain->SetFullscreenState(false, NULL);
 
+
+	device.Reset();
+	deviceContext->Flush();
+	deviceContext.Reset();
+	swapChain.Reset();
+	debugDevice.Reset();
+	renderTargetView.Reset();
+
+	delete batch.release();
+
+
+	if (!getDisplayAdapters()) {
+		MessageBox(NULL, L"Error gathering display info", L"ERROR", MB_OK);
+		return false;
+	}
 
 	if (!initializeAdapter(newAdapterIndex)) {
 		MessageBox(NULL, L"Error initializing new Adapter", L"ERROR", MB_OK);
 		return false;
 	}
 
-	if (!initializeRenderTarget())
-		return false;
+	resizeSwapChain();
 
-	initializeViewport();
 
 	// re-create SpriteBatch
-	batch.reset(new SpriteBatch(deviceContext.Get()));
+	batch = make_unique<SpriteBatch>(deviceContext.Get());
 
+	guiFactory->reInitDevice(device, deviceContext, batch.get());
 	return true;
 }
 
@@ -373,12 +406,8 @@ bool GraphicsEngine::changeDisplayMode(size_t newDisplayModeIndex) {
 	selectedDisplayModeIndex = newDisplayModeIndex;
 	//DXGI_MODE_DESC newDisplayMode = displayModeList[selectedDisplayModeIndex];
 
-	Globals::WINDOW_WIDTH = displayModeList[selectedDisplayModeIndex].Width;
-	Globals::WINDOW_HEIGHT = displayModeList[selectedDisplayModeIndex].Height;
-
 	if (!resizeSwapChain())
 		return false;
-
 
 	return true;
 }
@@ -389,9 +418,13 @@ bool GraphicsEngine::stopFullScreen() {
 		return false;
 
 	swapChain->SetFullscreenState(false, NULL);
+	return true;
 }
 
 bool GraphicsEngine::setFullScreen(bool isFullScreen) {
+
+	if (isFullScreen == Globals::FULL_SCREEN)
+		return true;
 
 	if (swapChain.Get() == NULL)
 		return false;
@@ -433,11 +466,16 @@ bool GraphicsEngine::resizeSwapChain() {
 		L"Display Mode Change Error"))
 		return false;
 
+	Globals::WINDOW_WIDTH = displayModeList[selectedDisplayModeIndex].Width;
+	Globals::WINDOW_HEIGHT = displayModeList[selectedDisplayModeIndex].Height;
+
+
 
 	// destroy and recreate depth/stencil buffer if used (get width&height from backbuffer!)
 
 	// re-construct rendertarget
-	initializeRenderTarget();
+	if (!initializeRenderTarget())
+		return false;
 	// re-construct the viewport
 	initializeViewport();
 
@@ -505,5 +543,7 @@ bool GraphicsEngine::verifyAdapter(ComPtr<ID3D11Device> deviceCheck) {
 	dxgiDev->Release();
 	dxgiAdapter->Release();
 	factory->Release();
+
+	return true;
 }
 

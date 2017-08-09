@@ -1,35 +1,40 @@
 #include "Button.h"
+#include "../GUIFactory.h"
 
 
-Button::Button(GraphicsAsset* pixelAsset,
-	unique_ptr<FontSet> font) {
+Button::Button(GUIFactory* factory, shared_ptr<MouseController> mouseController,
+	const pugi::char_t* font) : Selectable(factory, mouseController) {
 
-	if (pixelAsset != NULL) {
-		// this stops errors when coming from ImageButton
-		frame.reset(new RectangleFrame(pixelAsset));
-		rectSprite.reset(new RectangleSprite(pixelAsset));
-	}
-	hitArea.reset(new HitArea(Vector2::Zero, Vector2::Zero));
-	buttonLabel.reset(new TextLabel(Vector2(0, 0), L"", move(font)));
+
+	hitArea = make_unique<HitArea>();
 
 	position = Vector2(-1, -1);
 
-	if (pixelAsset != NULL)
-		setToUnpressedState();	// this always calls Button::setToUnpressedState
-								// even if it is an ImageButton
+	buttonLabel.reset(guiFactory->createTextLabel(Vector2::Zero, L"", font, true));
+	rectSprite.reset(guiFactory->createRectangle());
+	frame.reset(guiFactory->createRectangleFrame());
+	texturePanel.reset(guiFactory->createPanel());
 }
 
 
 Button::~Button() {
-	if (onClickListener != NULL)
-		delete onClickListener;
-	if (onHoverListener != NULL)
-		delete onHoverListener;
+	if (actionListener != NULL)
+		delete actionListener;
+}
+
+void Button::reloadGraphicsAsset() {
+
+	buttonLabel->reloadGraphicsAsset();
+	rectSprite->reloadGraphicsAsset(guiFactory);
+	frame->reloadGraphicsAsset();
+	texturePanel.reset(guiFactory->createPanel());
+
+	refreshTexture = true;
 }
 
 
-int textMargin = 10;
-bool resized = false;
+const int textMargin = 10;
+
 void Button::setDimensions(const Vector2& pos, const Vector2& size,
 	const int frmThcknss) {
 
@@ -38,13 +43,12 @@ void Button::setDimensions(const Vector2& pos, const Vector2& size,
 	Vector2 labelSize = measureString();
 	Vector2 newSize = size;
 
-	if ((labelSize.x + textMargin * 2) > size.x) {
-		newSize.x = labelSize.x + textMargin * 2;
-		resized = true;
+
+	if ((labelSize.x + (textMargin + frameThickness) * 2) > size.x) {
+		newSize.x = labelSize.x + (textMargin + frameThickness) * 2;
 	}
-	if ((labelSize.y + textMargin * 2) > size.y) {
-		newSize.y = labelSize.y + textMargin * 2;
-		resized = true;
+	if ((labelSize.y + (textMargin + frameThickness) * 2) > size.y) {
+		newSize.y = labelSize.y + (textMargin + frameThickness) * 2;
 	}
 
 	hitArea->size = newSize;
@@ -52,45 +56,132 @@ void Button::setDimensions(const Vector2& pos, const Vector2& size,
 	width = newSize.x;
 	height = newSize.y;
 
-	setPosition(pos);
+	frame->setDimensions(position, hitArea->size, frameThickness);
+	rectSprite->setDimensions(position, hitArea->size);
 
+	setPosition(pos);
+	setLayerDepth(layerDepth);
+
+	setToUnpressedState();
+	refreshTexture = true;
 }
 
 
-void Button::update(double deltaTime) {
+bool Button::updateSelect(double deltaTime) {
 
 	updateProjectedHitArea();
 	if (projectedHitArea->contains(mouse->getPosition())) {
-		isHover = true;
+		lastWasHover = true;
+		mouseHover = true;
 		if (!isPressed) {
-			onHover();
-			setToHoverState();
+			if (!hasBeenSetHover) {
+				onHover();
+			}
 		}
-	} else
-		isHover = false;
+	} else if (lastWasHover) {
+		lastWasHover = false;
+		mouseHover = false;
+	}
 
 	if (isPressed && !mouse->leftButton()) {
-		isClicked = true;
-		isPressed = false;
 		onClick();
-		setToUnpressedState();
 	} else {
 		isClicked = false;
 		if (!isHover) {
-			isPressed = false;
-			setToUnpressedState();
-		} else if (mouse->pressed()) {
-			isPressed = true;
-			setToSelectedState();
+			if (!hasBeenSetUnpressed) {
+				resetState();
+			}
+		} else if (mouseHover && mouse->pressed()) {
+			onPress();
 		}
 	}
+
+	if (buttonLabel->update(deltaTime) && !isLetterJammer)
+		refreshTexture = true;
+
+	if (frame->update())
+		refreshTexture = true;
+
+	if (refreshTexture) {
+		texturePanel->setTexture(texturize());
+		refreshTexture = false;
+		return true;
+	}
+
+	return false;
+}
+
+bool Button::update(double deltaTime) {
+
+	updateProjectedHitArea();
+	if (projectedHitArea->contains(mouse->getPosition())) {
+		lastWasHover = true;
+		mouseHover = true;
+		if (!isPressed) {
+			if (!hasBeenSetHover) {
+				onHover();
+			}
+		}
+	} else if (lastWasHover) {
+		lastWasHover = false;
+		isHover = false;
+		mouseHover = false;
+	}
+
+	if (isPressed && !mouse->leftButton()) {
+		onClick();
+	} else {
+		isClicked = false;
+		if (!isHover) {
+			if (!hasBeenSetUnpressed) {
+				resetState();
+			}
+		} else if (mouseHover && mouse->pressed()) {
+			onPress();
+		}
+	}
+
+	if (buttonLabel->update(deltaTime) && !isLetterJammer)
+		refreshTexture = true;
+
+	if (frame->update())
+		refreshTexture = true;
+
+	if (refreshTexture) {
+		texturePanel->setTexture(texturize());
+		refreshTexture = false;
+		return true;
+	}
+
+	return false;
 }
 
 void Button::draw(SpriteBatch* batch) {
 
+	texturePanel->draw(batch);
+	if (isLetterJammer)
+		buttonLabel->draw(batch);
+
+}
+
+unique_ptr<GraphicsAsset> Button::texturize() {
+	return guiFactory->createTextureFromTexturizable(this);
+}
+
+void Button::textureDraw(SpriteBatch* batch, ComPtr<ID3D11Device> device) {
+
 	rectSprite->draw(batch);
 	frame->draw(batch);
-	buttonLabel->draw(batch);
+	if (!isLetterJammer)
+		buttonLabel->draw(batch);
+}
+
+
+void Button::setTextLabel(TextLabel* newLabel, bool letterJammer) {
+
+	buttonLabel.reset(newLabel);
+	positionText();
+	isLetterJammer = letterJammer;
 }
 
 
@@ -100,6 +191,7 @@ void Button::setToUnpressedState() {
 	buttonLabel->setTint(normalColorText);
 	buttonLabel->setPosition(unpressedTextPosition);
 
+	hasBeenSetUnpressed = true;
 }
 
 void Button::setToHoverState() {
@@ -115,7 +207,6 @@ void Button::setToSelectedState() {
 	buttonLabel->setPosition(pressedTextPosition);
 }
 
-
 void Button::setText(wstring text) {
 
 	buttonLabel->setText(text);
@@ -123,6 +214,21 @@ void Button::setText(wstring text) {
 	// SET POSITION if dimensions have been set
 	if (position != Vector2(-1, -1))
 		setDimensions(position, hitArea->size, frame->getThickness());
+	else {
+		Vector2 labelSize = measureString();
+
+		if ((labelSize.x + (textMargin + frameThickness) * 2) > hitArea->size.x) {
+			hitArea->size.x = labelSize.x + (textMargin + frameThickness) * 2;
+		}
+		if ((labelSize.y + (textMargin + frameThickness) * 2) > hitArea->size.y) {
+			hitArea->size.y = labelSize.y + (textMargin + frameThickness) * 2;
+		}
+
+		projectedHitArea->size = hitArea->size;
+		width = hitArea->size.x;
+		height = hitArea->size.y;
+	}
+
 }
 
 const wchar_t* Button::getText() {
@@ -141,17 +247,88 @@ void Button::setTextOffset(const Vector2& unpressedOffset,
 	pressedTextOffset = pressedOffset;
 }
 
-void Button::setPosition(const Vector2& pos) {
 
+void Button::moveBy(const Vector2& moveVector) {
+	GUIControl::moveBy(moveVector);
+
+	// really not sure why this is not needed... 
+	/*if (frame != NULL)
+		frame->moveBy(moveVector);*/
+	/*if (rectSprite != NULL)
+		rectSprite->moveBy(position);*/
+	//positionText();
+
+	//texturePanel->moveBy(position);
+}
+
+
+void Button::setPosition(const Vector2& pos) {
+	Vector2 oldpos = position;
 	GUIControl::setPosition(pos);
 
-	if (frame != NULL)
-		frame->setDimensions(position, hitArea->size, frameThickness);
-	if (rectSprite != NULL)
-		rectSprite->setDimensions(position, hitArea->size);
+	if (oldpos == Vector2(-1, -1))
+		setDimensions(position, hitArea->size, frame->getThickness());
 
-	// center text
+	frame->setPosition(position);
+	rectSprite->setDimensions(position, hitArea->size);
+
 	positionText();
+
+	texturePanel->setPosition(position);
+}
+
+void Button::setActionListener(ActionListener* iOnC) {
+	if (actionListener != NULL)
+		delete actionListener;
+	onClickFunction = &ActionListener::onClick;
+	onHoverFunction = &ActionListener::onHover;
+	onPressFunction = &ActionListener::onPress;
+	onResetFunction = &ActionListener::resetState;
+	actionListener = iOnC;
+}
+
+void Button::onClick() {
+	isClicked = true;
+	if (actionListener != NULL) {
+		isClicked = isPressed = false;
+		(actionListener->*onClickFunction)(this);
+	}
+	resetState();
+	hasBeenSetUnpressed = false;
+}
+
+void Button::onPress() {
+	isPressed = true;
+	if (actionListener != NULL) {
+		(actionListener->*onPressFunction)(this);
+	}
+	setToSelectedState();
+	hasBeenSetUnpressed = false;
+	hasBeenSetHover = false;
+	refreshTexture = true;
+}
+
+void Button::onHover() {
+	isHover = true;
+	if (actionListener != NULL) {
+		(actionListener->*onHoverFunction)(this);
+	}
+	setToHoverState();
+	hasBeenSetHover = true;
+	hasBeenSetUnpressed = false;
+	refreshTexture = true;
+}
+
+void Button::resetState() {
+	if (actionListener != NULL) {
+		(actionListener->*onResetFunction)(this);
+	}
+	isHover = false;
+	mouseHover = false;
+	isPressed = false;
+	setToUnpressedState();
+	hasBeenSetHover = false;
+	refreshTexture = true;
 }
 
 void Button::positionText() {
@@ -160,16 +337,9 @@ void Button::positionText() {
 	if (textsize.x > 0) {
 
 		Vector2 newPos;
-		if (resized) {
-			newPos = Vector2(
-				position.x + (getScaledWidth() - textsize.x) / 2 /*+ textMargin*/,
-				position.y + (getScaledHeight() - textsize.y) / 2 /*+ textMargin*/);
-			resized = false;
-		} else
-			newPos = Vector2(
-				position.x + (getScaledWidth() - textsize.x) / 2,
-				position.y + (getScaledHeight() - textsize.y) / 2);
-
+		newPos = Vector2(
+			(position.x) + (getScaledWidth() - textsize.x) / 2,
+			(position.y) + (getScaledHeight() - textsize.y) / 2);
 
 		unpressedTextPosition = newPos;
 		unpressedTextPosition += unpressedTextOffset;
@@ -182,6 +352,23 @@ void Button::positionText() {
 
 const Vector2& Button::getPosition() const {
 	return position;
+}
+
+void Button::setLayerDepth(float newDepth, bool frontToBack) {
+
+	layerDepth = newDepth - .00001;
+	if (layerDepth < 0) {
+		if (!frontToBack)
+			layerDepth = .00001;
+		else
+			layerDepth = 0;
+	}
+	float nudge = .00000001;
+	if (!frontToBack)
+		nudge *= -1;
+	rectSprite->setLayerDepth(layerDepth + nudge, frontToBack);
+	buttonLabel->setLayerDepth(layerDepth + nudge * 2, frontToBack);
+	frame->setLayerDepth(layerDepth + nudge * 3, frontToBack);
 }
 
 void Button::setScale(const Vector2& scl) {
@@ -197,12 +384,10 @@ void Button::setScale(const Vector2& scl) {
 
 
 const int Button::getWidth() const {
-
 	return width;
 }
 
 const int Button::getHeight() const {
-
 	return height;
 }
 
@@ -226,7 +411,6 @@ bool Button::clicked() {
 }
 
 bool Button::pressed() {
-
 	return isPressed;
 }
 
@@ -234,7 +418,6 @@ bool Button::hovering() {
 	return isHover;
 }
 
-#include "GUIFactory.h"
 void Button::setFont(const pugi::char_t* font) {
 
 	buttonLabel->setFont(guiFactory->getFont(font));
@@ -243,9 +426,10 @@ void Button::setFont(const pugi::char_t* font) {
 
 
 
-
-ImageButton::ImageButton(unique_ptr<Sprite> buttonSprite,
-	unique_ptr<FontSet> font) : Button(NULL, move(font)) {
+/** **** ImageButton **** **/
+ImageButton::ImageButton(GUIFactory* factory, shared_ptr<MouseController> mouseController,
+	unique_ptr<Sprite> buttonSprite, const pugi::char_t* font)
+	: Button(factory, mouseController, font) {
 
 	// a rough guesstimate
 	setTextOffset(Vector2(0, -5), Vector2(0, 0));
@@ -260,10 +444,11 @@ ImageButton::ImageButton(unique_ptr<Sprite> buttonSprite,
 	setToUnpressedState();
 }
 
-/** **** ImageButton **** **/
-ImageButton::ImageButton(unique_ptr<Sprite> upButtonSprite,
-	unique_ptr<Sprite> downButtonSprite, unique_ptr<FontSet> font)
-	: Button(NULL, move(font)) {
+
+ImageButton::ImageButton(GUIFactory* factory, shared_ptr<MouseController> mouseController,
+	unique_ptr<Sprite> upButtonSprite, unique_ptr<Sprite> downButtonSprite,
+	const pugi::char_t* font)
+	: Button(factory, mouseController, font) {
 
 	// a rough guesstimate
 	setTextOffset(Vector2(0, -5), Vector2(0, 0));
@@ -283,10 +468,31 @@ ImageButton::ImageButton(unique_ptr<Sprite> upButtonSprite,
 ImageButton::~ImageButton() {
 }
 
+void ImageButton::reloadGraphicsAsset() {
+	buttonLabel->reloadGraphicsAsset();
+
+	texture = NULL;
+	normalSprite->reloadGraphicsAsset(guiFactory);
+	if (pressedSprite != NULL)
+		pressedSprite->reloadGraphicsAsset(guiFactory);
+	texture = normalSprite->getTexture().Get();
+
+	rectSprite->reloadGraphicsAsset(guiFactory);
+	frame->reloadGraphicsAsset();
+
+	texturePanel.reset(guiFactory->createPanel());
+	refreshTexture = true;
+}
+
 
 void ImageButton::draw(SpriteBatch* batch) {
 
-	batch->Draw(texture, normalSprite->getPosition(), &normalSprite->getRect(),
+	texturePanel->draw(batch);
+}
+
+void ImageButton::textureDraw(SpriteBatch * batch, ComPtr<ID3D11Device> device) {
+
+	batch->Draw(texture, normalSprite->getPosition(), &sourceRect,
 		tint, rotation, normalSprite->getOrigin(), scale, SpriteEffects_None, layerDepth);
 	buttonLabel->draw(batch);
 }
@@ -295,7 +501,6 @@ void ImageButton::setDimensions(const Vector2& pos, const Vector2& size) {
 
 	setScale(Vector2(size.x / getWidth(), size.y / getHeight()));
 	Vector2 newpos = pos;
-	//newpos.x += hitArea->
 	setPosition(newpos);
 }
 
@@ -304,14 +509,22 @@ void ImageButton::setText(wstring text) {
 	positionText();
 }
 
-void ImageButton::setPosition(const Vector2& pos) {
+void ImageButton::moveBy(const Vector2& moveVector) {
+	GUIControl::moveBy(moveVector);
+	normalSprite->moveBy(moveVector);
+	texturePanel->setPosition(position);
+}
 
-	Button::setPosition(pos);
+void ImageButton::setPosition(const Vector2& pos) {
+	GUIControl::setPosition(pos);
 	Vector2 spritePos = position;
 	spritePos.x += normalSprite->getWidth() / 2;
 	spritePos.y += normalSprite->getHeight() / 2;
 	normalSprite->setPosition(spritePos);
 
+	positionText();
+
+	texturePanel->setPosition(position);
 }
 
 void ImageButton::setScale(const Vector2& scl) {
@@ -326,12 +539,25 @@ void ImageButton::setRotation(const float rot) {
 	rotation = rot;
 }
 
+void ImageButton::setLayerDepth(float newDepth, bool frontToBack) {
+
+	layerDepth = newDepth;
+	float nudge = .00000001;
+	if (!frontToBack)
+		nudge *= -1;
+	buttonLabel->setLayerDepth(newDepth + nudge, frontToBack);
+}
+
 void ImageButton::setToUnpressedState() {
 
 	buttonLabel->setTint(normalColorText);
 	buttonLabel->setPosition(unpressedTextPosition);
 	tint = normalColor;
+
 	texture = normalSprite->getTexture().Get();
+	sourceRect = normalSprite->getRect();
+
+	hasBeenSetUnpressed = true;
 }
 
 void ImageButton::setToHoverState() {
@@ -339,14 +565,17 @@ void ImageButton::setToHoverState() {
 	buttonLabel->setTint(hoverColorText);
 	tint = hoverColor;
 	texture = normalSprite->getTexture().Get();
+	sourceRect = normalSprite->getRect();
 }
 
 void ImageButton::setToSelectedState() {
 
 	buttonLabel->setPosition(pressedTextPosition);
-	if (pressedSprite.get() != NULL)
+	tint = normalColor;
+	if (pressedSprite.get() != NULL) {
 		texture = pressedSprite->getTexture().Get();
-	else
+		sourceRect = pressedSprite->getRect();
+	} else
 		tint = selectedColor;
 }
 /** ***** END OF IMAGE BUTTON **** **/
@@ -354,7 +583,8 @@ void ImageButton::setToSelectedState() {
 
 
 /** ***** Animated Button ***** **/
-AnimatedButton::AnimatedButton(shared_ptr<Animation> anim, Vector2 pos) {
+AnimatedButton::AnimatedButton(GUIFactory* factory, shared_ptr<MouseController> mouseController,
+	shared_ptr<Animation> anim, Vector2 pos) : Selectable(factory, mouseController) {
 
 	animation = anim;
 
@@ -367,23 +597,33 @@ AnimatedButton::AnimatedButton(shared_ptr<Animation> anim, Vector2 pos) {
 }
 
 AnimatedButton::~AnimatedButton() {
-	if (onClickListener != NULL)
-		delete onClickListener;
+	if (actionListener != NULL)
+		delete actionListener;
+}
 
+void AnimatedButton::reloadGraphicsAsset() {
+	string name = animation->animationName;
+	animation.reset();
+	animation = guiFactory->getAnimation(name.c_str());
 }
 
 
-void AnimatedButton::update(double deltaTime) {
+bool AnimatedButton::updateSelect(double deltaTime) {
+	return update(deltaTime);
+}
+
+bool AnimatedButton::update(double deltaTime) {
 
 	if (hitArea->contains(mouse->getPosition())) {
-		isHover = true;
+		//lastWasHover = true;
 		if (!isPressed) {
-			onHover(deltaTime);
+			timeHovering += deltaTime;
+			onHover();
 		}
-	} else {
+	} else/* if (lastWasHover)*/ {
+		//lastWasHover = false;
 		isHover = false;
 		isPressed = false;
-		//afterHover();
 		if (timeHovering > 0) {
 			timeHovering -= deltaTime;
 			isOpen = false;
@@ -401,8 +641,6 @@ void AnimatedButton::update(double deltaTime) {
 
 	if (isPressed && !mouse->leftButton()) {
 		isClicked = true;
-		isPressed = false;
-
 		onClick();
 	} else {
 		isClicked = false;
@@ -413,6 +651,8 @@ void AnimatedButton::update(double deltaTime) {
 			onPress();
 		}
 	}
+
+	return false;
 }
 
 
@@ -468,6 +708,10 @@ const int AnimatedButton::getHeight() const {
 		- animation->animationFrames[currentFrameIndex]->sourceRect.top;
 }
 
+void AnimatedButton::setLayerDepth(float newDepth, bool frontToBack) {
+	layerDepth = newDepth;
+}
+
 bool AnimatedButton::clicked() {
 	return isClicked;
 }
@@ -487,4 +731,51 @@ void AnimatedButton::setToHoverState() {
 }
 
 void AnimatedButton::setToSelectedState() {
+}
+
+void AnimatedButton::setActionListener(ActionListener* iOnC) {
+	if (actionListener != NULL)
+		delete actionListener;
+	onClickFunction = &ActionListener::onClick;
+	onHoverFunction = &ActionListener::onHover;
+	onPressFunction = &ActionListener::onPress;
+	actionListener = iOnC;
+}
+
+void AnimatedButton::onClick() {
+	if (actionListener != NULL) {
+		(actionListener->*onClickFunction)(this);
+	} else {
+		currentFrameIndex = animation->animationFrames.size() - 1;
+	}
+
+	isClicked = isPressed = false;
+}
+
+void AnimatedButton::onPress() {
+	if (actionListener != NULL) {
+		(actionListener->*onPressFunction)(this);
+	} else
+		currentFrameIndex = animation->animationFrames.size() - 2;
+}
+
+void AnimatedButton::onHover() {
+	isHover = true;
+	if (actionListener != NULL) {
+		(actionListener->*onHoverFunction)(this);
+	} else {
+		if (timeHovering > timePerFrame) {
+			timeHovering = 0;
+			++currentFrameIndex;
+			if (currentFrameIndex > animation->animationFrames.size() - 3) {
+				currentFrameIndex = animation->animationFrames.size() - 3;
+				isOpen = true;
+			} else
+				adjustPosition(currentFrameIndex - 1);
+		}
+	}
+}
+
+void AnimatedButton::resetState() {
+	setToUnpressedState();
 }

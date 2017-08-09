@@ -1,33 +1,26 @@
 #include "MouseController.h"
+#include "../GUIFactory.h"
+#include <sstream>
 
-MouseController::MouseController(HWND hWnd) {
 
-	hwnd = hWnd;
+MouseController::MouseController(HWND h) {
+
+	hwnd = h;
 	mouse.reset(new Mouse());
 	mouse->SetWindow(hwnd);
+	layerDepth = 1.0;
 
 }
-
-//MouseController::MouseController(HWND hWnd, Mouse& mse) {
-//
-//	hwnd = hWnd;
-//
-//	mouse.reset(&mse);
-//	hitArea.reset(new HitArea(
-//		Vector2(position.x/* - origin.x*/, position.y/* - origin.y*/),
-//		Vector2(width, height)));
-//}
-
 
 MouseController::~MouseController() {
+	mouse.reset();
 }
 
-#include "../Controls/GUIFactory.h"
+
 void MouseController::setState(Mouse::Mode mode) {
 	mouse->SetMode(mode);
 }
 
-#include <sstream>
 bool MouseController::loadMouseIcon(GUIFactory* guiFactory,
 	const pugi::char_t* spriteName) {
 
@@ -42,11 +35,16 @@ bool MouseController::loadMouseIcon(GUIFactory* guiFactory,
 
 	Sprite::load(mouseAsset);
 	setOrigin(mouseAsset->getOrigin());
-
+	mouseAsset = NULL;
 	return true;
 }
 
-#include "../../Engine/GameEngine.h"
+void MouseController::loadMouseIcon(GraphicsAsset* iconAsset) {
+	load(iconAsset);
+	setOrigin(iconAsset->getOrigin());
+	iconAsset = NULL;
+}
+
 void MouseController::saveMouseState() {
 
 	lastState = state;
@@ -59,8 +57,25 @@ void MouseController::saveMouseState() {
 	isPressed = !lastState.leftButton && state.leftButton;
 	isClicked = lastState.leftButton && !state.leftButton;
 
+	isRightPressed = !lastState.rightButton && state.rightButton;
+	isRightClicked = lastState.rightButton && !state.rightButton;
+
+	isMiddlePressed = !lastState.middleButton && state.middleButton;
+	isMiddleClicked = lastState.middleButton && !state.middleButton;
 }
 
+void MouseController::show() {
+	isShown = true;
+}
+
+void MouseController::hide() {
+	isShown = false;
+}
+
+void MouseController::draw(SpriteBatch* batch) {
+	if (isShown)
+		Sprite::draw(batch);
+}
 
 int MouseController::scrollWheelValue() {
 
@@ -107,6 +122,39 @@ bool MouseController::pressed() {
 
 	if (isPressed) {
 		isPressed = false;
+		return true;
+	}
+	return false;
+}
+
+bool MouseController::rightClicked() {
+
+	if (isRightClicked) {
+		isRightClicked = false;
+		return true;
+	}
+	return false;
+}
+
+bool MouseController::rightPressed() {
+	if (isRightPressed) {
+		isRightPressed = false;
+		return true;
+	}
+	return false;
+}
+
+bool MouseController::middleClicked() {
+	if (isMiddleClicked) {
+		isMiddleClicked = false;
+		return true;
+	}
+	return false;
+}
+
+bool MouseController::middlePressed() {
+	if (isMiddlePressed) {
+		isMiddlePressed = false;
 		return true;
 	}
 	return false;

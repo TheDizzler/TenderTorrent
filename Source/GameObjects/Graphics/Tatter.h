@@ -1,14 +1,12 @@
-#include "../../pch.h"
 #pragma once
+#include "../../DXTKGui/BaseGraphics/Sprite.h"
 
 class Tatter : public Sprite {
 public:
 	Tatter(const Vector2& position);
-	~Tatter();
+	virtual ~Tatter();
 
 	void update(double deltaTime);
-
-	//void setDirection();
 private:
 
 	Vector2 direction;

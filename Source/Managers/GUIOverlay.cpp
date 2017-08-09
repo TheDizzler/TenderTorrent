@@ -1,5 +1,5 @@
+#include "../pch.h"
 #include "GUIOverlay.h"
-
 #include "GameManager.h"
 
 GUIOverlay::GUIOverlay() {
@@ -36,14 +36,14 @@ GUIOverlay::GUIOverlay() {
 	pauseOverlay->setTint(Color(1, .588, 1, .8)); //should be pinkish
 
 
-	pauseLabel.reset(guiFactory->createTextLabel(Vector2::Zero, "BlackCloak"));
+	pauseLabel.reset(guiFactory->createTextLabel(Vector2::Zero, L"Blank", "BlackCloak"));
 	pauseLabel->setText(L"Paused");
 	pauseLabel->setScale(Vector2(1, 1.5));
 	Vector2 size = pauseLabel->measureString();
 	pauseLabel->setPosition(Vector2(
 		(Globals::WINDOW_WIDTH - size.x) / 2, (Globals::WINDOW_HEIGHT - size.y) / 2));
 
-	gameOverLabel.reset(guiFactory->createTextLabel(Vector2::Zero, "BlackCloak"));
+	gameOverLabel.reset(guiFactory->createTextLabel(Vector2::Zero, L"Blank", "BlackCloak"));
 	gameOverLabel->setText("Game Over");
 	gameOverLabel->setScale(Vector2(1, 1.5));
 	size = gameOverLabel->measureString();
@@ -71,7 +71,7 @@ GUIOverlay::GUIOverlay() {
 
 	warningLabel.reset(guiFactory->createTextLabel(
 		Vector2((Globals::WINDOW_WIDTH) / 2, (Globals::WINDOW_HEIGHT) / 2),
-		"BlackCloak"));
+		L"Blank", "BlackCloak"));
 	warningLabel->setText("GET READY!");
 	warningLabel->setScale(Vector2(1, 1.5));
 	size = warningLabel->measureString(L"GET READY!");
@@ -81,6 +81,15 @@ GUIOverlay::GUIOverlay() {
 
 GUIOverlay::~GUIOverlay() {
 	//activeControls.clear();
+}
+
+void GUIOverlay::reloadGraphicsAssets() {
+
+	hudBG->reloadGraphicsAsset(guiFactory.get());
+	hudBorder->reloadGraphicsAsset();
+	timerLabel->reloadGraphicsAsset();
+	scoreLabel->reloadGraphicsAsset();
+	energyLabel->reloadGraphicsAsset();
 }
 
 const Vector2& GUIOverlay::getPlayArea() {

@@ -1,8 +1,13 @@
 #include "LevelSelectScreen.h"
+#include "../assets.h"
+#include "../Engine/GameEngine.h"
+#include "GameManager.h"
+#include "MenuManager.h"
+
 
 using namespace pugi;
 
-#include "MenuManager.h"
+
 LevelSelectScreen::LevelSelectScreen(MenuManager* menu) {
 	menuManager = menu;
 }
@@ -10,11 +15,11 @@ LevelSelectScreen::LevelSelectScreen(MenuManager* menu) {
 LevelSelectScreen::~LevelSelectScreen() {
 }
 
-#include "../assets.h"
-#include "../Engine/GameEngine.h"
-#include "GameManager.h"
-bool LevelSelectScreen::initialize(ComPtr<ID3D11Device> device, shared_ptr<MouseController> mouse) {
 
+bool LevelSelectScreen::initialize(ComPtr<ID3D11Device> device,
+	shared_ptr<MouseController> ms) {
+
+	mouse = ms;
 
 	levelManifest.reset(new xml_document());
 	if (!levelManifest->load_file(Assets::levelManifestFile)) {
@@ -47,12 +52,18 @@ bool LevelSelectScreen::initialize(ComPtr<ID3D11Device> device, shared_ptr<Mouse
 	return true;
 }
 
+void LevelSelectScreen::reloadGraphicsAssets() {
+	titleLabel->reloadGraphicsAsset();
+	for (auto const& selection : levelSelections)
+		selection->reloadGraphicsAssets();
+}
+
 void LevelSelectScreen::setGameManager(GameManager* gm) {
 	game = gm;
 }
 
 //Keyboard::KeyboardStateTracker keyTracker;
-void LevelSelectScreen::update(double deltaTime, shared_ptr<MouseController> mouse) {
+void LevelSelectScreen::update(double deltaTime) {
 
 	auto state = Keyboard::Get().GetState();
 	//keyTracker.Update(state);
@@ -62,7 +73,7 @@ void LevelSelectScreen::update(double deltaTime, shared_ptr<MouseController> mou
 	}
 
 	for (auto const& selection : levelSelections)
-		selection->update(deltaTime, mouse);
+		selection->update(deltaTime, mouse.get());
 }
 
 void LevelSelectScreen::draw(SpriteBatch* batch) {
@@ -76,14 +87,20 @@ void LevelSelectScreen::draw(SpriteBatch* batch) {
 	batch->End();
 }
 
-void LevelSelectScreen::safedraw(SpriteBatch* batch) {
-	titleLabel->draw(batch);
-	for (auto const& selection : levelSelections) {
-		selection->draw(batch);
-	}
-}
+//void LevelSelectScreen::safedraw(SpriteBatch* batch) {
+//	titleLabel->draw(batch);
+//	for (auto const& selection : levelSelections) {
+//		selection->draw(batch);
+//	}
+//}
 
 void LevelSelectScreen::pause() {
+}
+
+void LevelSelectScreen::controllerRemoved(ControllerSocketNumber controllerSlot, PlayerSlotNumber slotNumber) {
+}
+
+void LevelSelectScreen::newController(shared_ptr<Joystick> newStick) {
 }
 
 void LevelSelectScreen::loadLevel(string levelXMLFile) {
@@ -145,7 +162,13 @@ LevelSelection::LevelSelection(const Vector2& position,
 
 }
 
-void LevelSelection::update(double deltaTime, shared_ptr<MouseController> mouse) {
+void LevelSelection::reloadGraphicsAssets() {
+	previewPic->reloadGraphicsAsset(guiFactory.get());
+	picFrame->reloadGraphicsAsset();
+	label->reloadGraphicsAsset();
+}
+
+void LevelSelection::update(double deltaTime, MouseController* mouse) {
 
 	if (hitArea->contains(mouse->getPosition())) {
 		isHover = true;
@@ -191,14 +214,14 @@ const Vector2& LevelSelection::getSize() {
 void LevelSelection::setToUnpressedState() {
 
 	previewPic->setTint(Vector4(1, 1, 1, 1));
-	picFrame->setTint(frameColor);
+	picFrame->setTint(frameColor, true);
 	label->setTint(labelColor);
 }
 
 void LevelSelection::setToHoverState() {
 
 	previewPic->setTint(Vector4(1, 1, 1, .75));
-	picFrame->setTint(hoverFrameColor);
+	picFrame->setTint(hoverFrameColor, true);
 	label->setTint(hoverLabelColor);
 }
 

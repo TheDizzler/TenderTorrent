@@ -64,10 +64,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Source\DXTKGui\Controls\GUIFactory.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
-    </ClCompile>
     <ClCompile Include="Source\DXTKGui\Controls\ListBox.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
@@ -93,11 +89,13 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Source\DXTKGui\GUIFactory.cpp" />
     <ClCompile Include="Source\Engine\Camera.cpp" />
     <ClCompile Include="Source\Engine\GameEngine.cpp" />
     <ClCompile Include="Source\Engine\GraphicsEngine.cpp" />
     <ClCompile Include="Source\Engine\Input.cpp" />
     <ClCompile Include="Source\Engine\main.cpp" />
+    <ClCompile Include="Source\Engine\PlayerSlot.cpp" />
     <ClCompile Include="Source\GameObjects\ArrowEnemyShip.cpp" />
     <ClCompile Include="Source\GameObjects\Bullet.cpp" />
     <ClCompile Include="Source\GameObjects\EnemyBullet.cpp" />
@@ -106,6 +104,7 @@
     <ClCompile Include="Source\GameObjects\Graphics\Background.cpp" />
     <ClCompile Include="Source\GameObjects\Graphics\BackgroundLayer.cpp" />
     <ClCompile Include="Source\GameObjects\Graphics\ClothLayer.cpp" />
+    <ClCompile Include="Source\GameObjects\Graphics\GameObject.cpp" />
     <ClCompile Include="Source\GameObjects\Graphics\Tatter.cpp" />
     <ClCompile Include="Source\GameObjects\LaserBolt.cpp" />
     <ClCompile Include="Source\GameObjects\LaserSystem.cpp" />
@@ -149,7 +148,6 @@
     <ClInclude Include="Source\DXTKGui\Controls\ComboBox.h" />
     <ClInclude Include="Source\DXTKGui\Controls\Dialog.h" />
     <ClInclude Include="Source\DXTKGui\Controls\GUIControl.h" />
-    <ClInclude Include="Source\DXTKGui\Controls\GUIFactory.h" />
     <ClInclude Include="Source\DXTKGui\Controls\ListBox.h" />
     <ClInclude Include="Source\DXTKGui\Controls\ScrollBar.h" />
     <ClInclude Include="Source\DXTKGui\Controls\Spinner.h" />
@@ -158,11 +156,13 @@
     <ClInclude Include="Source\DXTKGui\Effects\ScreenTransitions.h" />
     <ClInclude Include="Source\DXTKGui\Effects\TransitionEffects.h" />
     <ClInclude Include="Source\DXTKGui\GuiAssets.h" />
+    <ClInclude Include="Source\DXTKGui\GUIFactory.h" />
     <ClInclude Include="Source\DXTKGui\StringHelper.h" />
     <ClInclude Include="Source\Engine\Camera.h" />
     <ClInclude Include="Source\Engine\GameEngine.h" />
     <ClInclude Include="Source\Engine\GraphicsEngine.h" />
     <ClInclude Include="Source\Engine\Input.h" />
+    <ClInclude Include="Source\Engine\PlayerSlot.h" />
     <ClInclude Include="Source\GameObjects\Bullet.h" />
     <ClInclude Include="Source\GameObjects\EnemyBullet.h" />
     <ClInclude Include="Source\GameObjects\EnemyShip.h" />
@@ -170,6 +170,7 @@
     <ClInclude Include="Source\GameObjects\Graphics\Background.h" />
     <ClInclude Include="Source\GameObjects\Graphics\BackgroundLayer.h" />
     <ClInclude Include="Source\GameObjects\Graphics\ClothLayer.h" />
+    <ClInclude Include="Source\GameObjects\Graphics\GameObject.h" />
     <ClInclude Include="Source\GameObjects\Graphics\Tatter.h" />
     <ClInclude Include="Source\GameObjects\LaserBolt.h" />
     <ClInclude Include="Source\GameObjects\LaserSystem.h" />

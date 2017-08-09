@@ -6,6 +6,8 @@
 #include "LevelManager.h"
 #include "MenuManager.h"
 
+#include <CommonStates.h>
+
 extern unique_ptr<GUIFactory> guiFactory;
 extern unique_ptr<GFXAssetManager> gfxAssets;
 
@@ -17,14 +19,15 @@ class GameEngine;
 	Everything below this (GameEngine downward) should generally go unmodified. */
 class GameManager {
 public:
-	GameManager(GameEngine* gameEngine);
-	~GameManager();
+	virtual ~GameManager();
 
 
-	bool initializeGame(HWND hwnd, ComPtr<ID3D11Device> device, shared_ptr<MouseController> mouse);
+	bool initializeGame(GameEngine* gameEngine, HWND hwnd,
+		ComPtr<ID3D11Device> device, shared_ptr<MouseController> mouse);
 
+	void reloadGraphicsAssets();
 
-	void update(double deltaTime, shared_ptr<MouseController> mouse);
+	void update(double deltaTime);
 	void draw(SpriteBatch* batch);
 
 
@@ -33,6 +36,10 @@ public:
 
 	void pause();
 	void exit();
+
+	void controllerRemoved(ControllerSocketNumber controllerSocket,
+		PlayerSlotNumber slotNumber);
+	void newController(shared_ptr<Joystick> newStick);
 
 	vector<ComPtr<IDXGIAdapter> > getAdapterList();
 	vector<ComPtr<IDXGIOutput> > getDisplayList();
@@ -50,8 +57,39 @@ public:
 	size_t getSelectedDisplayModeIndex();
 
 
-	
+	static void errorMessage(wstring message, wstring title = L"Fatal Error",
+		bool showMessageBox = false) {
+
+		message += L"\n";
+		if (!Globals::FULL_SCREEN && showMessageBox)
+			MessageBox(NULL, message.c_str(), title.c_str(), MB_OK | MB_ICONERROR);
+
+		title += L" >> " + message;
+		OutputDebugString(title.c_str()); // always output debug just in case
+	}
+
+	static void showErrorDialog(wstring message, wstring title) {
+		errorDialog->show();
+		errorDialog->setTitle(title);
+		errorDialog->setText(message);
+		showDialog = errorDialog.get();
+	}
+
+	static void showWarningDialog(wstring message, wstring title) {
+		warningDialog->show();
+		warningDialog->setTitle(title);
+		warningDialog->setText(message);
+		warningDialog->setTextTint(Color(1, 0, 0, 1));
+		showDialog = warningDialog.get();
+	}
+
+	//static unique_ptr<ScreenTransitions::ScreenTransitionManager> transitionManager;
+	static ScreenTransitions::ScreenTransitionManager transitionManager;
 private:
+
+	/*enum GameState {
+		NORMAL, TRANSITIONING,
+	};*/
 
 	Screen* currentScreen = 0;
 	Screen* switchTo = NULL;
@@ -61,10 +99,20 @@ private:
 	unique_ptr<xml_document> docAssMan;
 
 	GameEngine* gameEngine;
-	
+
 	ComPtr<ID3D11Device> device;
+	CommonStates* blendState;
+
+	shared_ptr<MouseController> mouse;
+
 	
-	unique_ptr<ScreenTransitions::ScreenTransitionManager> transitionManager;
-	
-	
+
+	void initErrorDialogs();
+
+	/* Critical error dialog. Exits game when dismissed. */
+	static unique_ptr<PromptDialog> errorDialog;
+	/* Minor error dialog. Choice between exit game and continue. */
+	static unique_ptr<PromptDialog> warningDialog;
+	static Dialog* showDialog;
+
 };

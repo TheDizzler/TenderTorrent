@@ -1,9 +1,10 @@
+#include "../../pch.h"
 #include "AnimatedSprite.h"
 
 
 AnimatedSprite::AnimatedSprite(const Vector2& pos) {
 	position = pos;
-	hitArea.reset(new HitArea(position, Vector2(0, 0)));
+	hitArea.position = position;
 }
 
 AnimatedSprite::~AnimatedSprite() {
@@ -16,7 +17,9 @@ void AnimatedSprite::load(shared_ptr<Animation> anim) {
 	if (animation->animationFrames.size() > 0)
 		currentFrameIndex = 0;
 
-	hitArea.reset(new HitArea(position, Vector2(getWidth(), getHeight())));
+	//hitArea.reset(new HitArea(position, Vector2(getWidth(), getHeight())));
+	hitArea.position = position;
+	hitArea.size = Vector2(getWidth(), getHeight());
 	origin = Vector2(getWidth() / 2, getHeight() / 2);
 }
 
@@ -24,7 +27,7 @@ void AnimatedSprite::load(shared_ptr<Animation> anim) {
 void AnimatedSprite::update(double deltaTime) {
 
 	currentFrameTime += deltaTime;
-	if (currentFrameTime >= animation->timePerFrame) {
+	if (currentFrameTime >= animation->animationFrames[currentFrameIndex]->frameTime) {
 		if (++currentFrameIndex >= animation->animationFrames.size())
 			if (repeats)
 				currentFrameIndex = 0;
@@ -81,7 +84,7 @@ const int AnimatedSprite::getHeight() const {
 }
 
 const HitArea* AnimatedSprite::getHitArea() const {
-	return hitArea.get();
+	return &hitArea;
 }
 
 void AnimatedSprite::moveBy(const Vector2& moveVector) {
@@ -91,9 +94,9 @@ void AnimatedSprite::moveBy(const Vector2& moveVector) {
 void AnimatedSprite::setPosition(const Vector2& pos) {
 
 	position = pos;
-	hitArea->position = Vector2(position.x - origin.x * scale.x,
+	hitArea.position = Vector2(position.x - origin.x * scale.x,
 		position.y - origin.y * scale.y);
-	hitArea->size = Vector2(getWidth() * scale.x, getHeight() * scale.y);
+	hitArea.size = Vector2(getWidth() * scale.x, getHeight() * scale.y);
 }
 
 
@@ -104,9 +107,9 @@ void AnimatedSprite::setOrigin(const Vector2& orgn) {
 void AnimatedSprite::setScale(const Vector2& scl) {
 
 	scale = scl;
-	hitArea->position = Vector2(position.x - origin.x * scale.x,
+	hitArea.position = Vector2(position.x - origin.x * scale.x,
 		position.y - origin.y * scale.y);
-	hitArea->size = Vector2(getWidth() * scale.x, getHeight() * scale.y);
+	hitArea.size = Vector2(getWidth() * scale.x, getHeight() * scale.y);
 }
 
 void AnimatedSprite::setRotation(const float rot) {
@@ -117,6 +120,14 @@ void AnimatedSprite::setTint(const XMFLOAT4 colr) {
 	tint = colr;
 }
 
+void AnimatedSprite::setTint(const Color& color) {
+	tint = color;
+}
+
+void AnimatedSprite::setTint(const XMVECTORF32 color) {
+	tint = color;
+}
+
 void AnimatedSprite::setAlpha(const float alpha) {
 	tint.w = alpha;
 }
@@ -125,7 +136,7 @@ const float AnimatedSprite::getLayerDepth() const {
 	return layerDepth;
 }
 
-void AnimatedSprite::setLayerDepth(const float depth) {
+void AnimatedSprite::setLayerDepth(const float depth, bool frontToBack) {
 	layerDepth = depth;
 }
 
@@ -133,4 +144,3 @@ void AnimatedSprite::reset() {
 	isAlive = true;
 	currentFrameIndex = 0;
 }
-

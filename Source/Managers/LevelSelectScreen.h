@@ -7,7 +7,9 @@ public:
 
 	LevelSelection(const Vector2& position, pugi::xml_node levelNode);
 
-	void update(double deltaTime, shared_ptr<MouseController> mouse);
+	void reloadGraphicsAssets();
+
+	void update(double deltaTime, MouseController* mouse);
 	void draw(SpriteBatch* batch);
 
 	const Vector2& getSize();
@@ -83,14 +85,19 @@ public:
 	LevelSelectScreen(MenuManager* menuManager);
 	~LevelSelectScreen();
 
-	virtual bool initialize(ComPtr<ID3D11Device> device, shared_ptr<MouseController> mouse) override;
 	virtual void setGameManager(GameManager * game) override;
+	virtual bool initialize(ComPtr<ID3D11Device> device,
+		shared_ptr<MouseController> mouse) override;
+	void reloadGraphicsAssets();
 
-	virtual void update(double deltaTime, shared_ptr<MouseController> mouse) override;
+	virtual void update(double deltaTime) override;
 	virtual void draw(SpriteBatch* batch) override;
-	virtual void safedraw(SpriteBatch* batch) override;
+	//virtual void safedraw(SpriteBatch* batch) override;
 
 	virtual void pause() override;
+	virtual void controllerRemoved(ControllerSocketNumber controllerSlot,
+		PlayerSlotNumber slotNumber) override;
+	virtual void newController(shared_ptr<Joystick> newStick) override;
 
 	void loadLevel(string levelXMLFile);
 
@@ -102,6 +109,7 @@ private:
 	vector<unique_ptr<LevelSelection>> levelSelections;
 
 	unique_ptr<TextLabel> titleLabel;
+	shared_ptr<MouseController> mouse;
 };
 
 
