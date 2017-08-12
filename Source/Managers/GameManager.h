@@ -56,7 +56,8 @@ public:
 	size_t getSelectedDisplayIndex();
 	size_t getSelectedDisplayModeIndex();
 
-
+	/** If game set to FullScreen, Windows MessageBox will never display even
+	if showMessageBox set to TRUE. */
 	static void errorMessage(wstring message, wstring title = L"Fatal Error",
 		bool showMessageBox = false) {
 
@@ -66,6 +67,10 @@ public:
 
 		title += L" >> " + message;
 		OutputDebugString(title.c_str()); // always output debug just in case
+
+		if (!showMessageBox && guiFactory->initialized) {
+			showWarningDialog(message, title);
+		}
 	}
 
 	static void showErrorDialog(wstring message, wstring title) {
@@ -84,15 +89,17 @@ public:
 	}
 
 	//static unique_ptr<ScreenTransitions::ScreenTransitionManager> transitionManager;
-	static ScreenTransitions::ScreenTransitionManager transitionManager;
+
+
 private:
 
 	/*enum GameState {
 		NORMAL, TRANSITIONING,
 	};*/
 
+	ScreenTransitions::ScreenTransitionManager transitionManager;
 	Screen* currentScreen = 0;
-	Screen* switchTo = NULL;
+	Screen* switchTo;
 	Screen* lastScreen = 0;
 	unique_ptr<LevelManager> levelScreen;
 	unique_ptr<MenuManager> menuScreen;
@@ -105,7 +112,7 @@ private:
 
 	shared_ptr<MouseController> mouse;
 
-	
+
 
 	void initErrorDialogs();
 

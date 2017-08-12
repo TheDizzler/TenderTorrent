@@ -59,8 +59,9 @@ void GameEngine::onAudioDeviceChange() {
 }
 
 void GameEngine::reloadGraphicsAssets() {
+	guiFactory->reInitDevice(device, deviceContext, batch.get());
+	gfxAssets->reInitDevice(device);
 	game.reloadGraphicsAssets();
-	
 }
 
 

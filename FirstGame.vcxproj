@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="packages\directxtk_desktop_2015.2016.12.5.1\build\native\directxtk_desktop_2015.props" Condition="Exists('packages\directxtk_desktop_2015.2016.12.5.1\build\native\directxtk_desktop_2015.props')" />
+  <Import Project="packages\directxtk_desktop_2015.2017.6.21.1\build\native\directxtk_desktop_2015.props" Condition="Exists('packages\directxtk_desktop_2015.2017.6.21.1\build\native\directxtk_desktop_2015.props')" />
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -36,6 +36,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Source\DXTKGui\Controllers\Joystick.cpp" />
     <ClCompile Include="Source\DXTKGui\Controllers\KeyboardController.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
@@ -44,6 +45,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Source\DXTKGui\Controllers\Selector.cpp" />
     <ClCompile Include="Source\DXTKGui\Controls\Button.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
@@ -60,6 +62,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Source\DXTKGui\Controls\DynamicDialog.cpp" />
     <ClCompile Include="Source\DXTKGui\Controls\GUIControl.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
@@ -81,6 +84,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Source\DXTKGui\Effects\LetterJammer.cpp" />
     <ClCompile Include="Source\DXTKGui\Effects\ScreenTransitions.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
@@ -141,18 +145,22 @@
     <ClInclude Include="Source\DXTKGui\BaseGraphics\PrimitiveShapes.h" />
     <ClInclude Include="Source\DXTKGui\BaseGraphics\screen.h" />
     <ClInclude Include="Source\DXTKGui\BaseGraphics\Sprite.h" />
+    <ClInclude Include="Source\DXTKGui\Controllers\Joystick.h" />
     <ClInclude Include="Source\DXTKGui\Controllers\KeyboardController.h" />
     <ClInclude Include="Source\DXTKGui\Controllers\MouseController.h" />
+    <ClInclude Include="Source\DXTKGui\Controllers\Selector.h" />
     <ClInclude Include="Source\DXTKGui\Controls\Button.h" />
     <ClInclude Include="Source\DXTKGui\Controls\CheckBox.h" />
     <ClInclude Include="Source\DXTKGui\Controls\ComboBox.h" />
     <ClInclude Include="Source\DXTKGui\Controls\Dialog.h" />
+    <ClInclude Include="Source\DXTKGui\Controls\DynamicDialog.h" />
     <ClInclude Include="Source\DXTKGui\Controls\GUIControl.h" />
     <ClInclude Include="Source\DXTKGui\Controls\ListBox.h" />
     <ClInclude Include="Source\DXTKGui\Controls\ScrollBar.h" />
     <ClInclude Include="Source\DXTKGui\Controls\Spinner.h" />
     <ClInclude Include="Source\DXTKGui\Controls\TextLabel.h" />
     <ClInclude Include="Source\DXTKGui\Controls\TexturePanel.h" />
+    <ClInclude Include="Source\DXTKGui\Effects\LetterJammer.h" />
     <ClInclude Include="Source\DXTKGui\Effects\ScreenTransitions.h" />
     <ClInclude Include="Source\DXTKGui\Effects\TransitionEffects.h" />
     <ClInclude Include="Source\DXTKGui\GuiAssets.h" />
@@ -196,9 +204,6 @@
     <ClInclude Include="Source\pch.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
     <Xml Include="assets\AssetManifest.xml">
       <SubType>Designer</SubType>
     </Xml>
@@ -215,6 +220,9 @@
       <SubType>Designer</SubType>
     </Xml>
     <Xml Include="assets\ShipData.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{E9C22AAC-8D4D-4D44-8969-65311A131B1D}</ProjectGuid>
@@ -292,7 +300,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>hid.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -307,6 +315,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>hid.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -326,7 +335,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>hid.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -345,19 +354,20 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>hid.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
-    <Import Project="packages\pugixml.1.8.0\build\native\pugixml.targets" Condition="Exists('packages\pugixml.1.8.0\build\native\pugixml.targets')" />
-    <Import Project="packages\directxtk_desktop_2015.2016.12.5.1\build\native\directxtk_desktop_2015.targets" Condition="Exists('packages\directxtk_desktop_2015.2016.12.5.1\build\native\directxtk_desktop_2015.targets')" />
+    <Import Project="packages\directxtk_desktop_2015.2017.6.21.1\build\native\directxtk_desktop_2015.targets" Condition="Exists('packages\directxtk_desktop_2015.2017.6.21.1\build\native\directxtk_desktop_2015.targets')" />
+    <Import Project="packages\pugixml.1.8.3\build\native\pugixml.targets" Condition="Exists('packages\pugixml.1.8.3\build\native\pugixml.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('packages\pugixml.1.8.0\build\native\pugixml.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\pugixml.1.8.0\build\native\pugixml.targets'))" />
-    <Error Condition="!Exists('packages\directxtk_desktop_2015.2016.12.5.1\build\native\directxtk_desktop_2015.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\directxtk_desktop_2015.2016.12.5.1\build\native\directxtk_desktop_2015.props'))" />
-    <Error Condition="!Exists('packages\directxtk_desktop_2015.2016.12.5.1\build\native\directxtk_desktop_2015.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\directxtk_desktop_2015.2016.12.5.1\build\native\directxtk_desktop_2015.targets'))" />
+    <Error Condition="!Exists('packages\directxtk_desktop_2015.2017.6.21.1\build\native\directxtk_desktop_2015.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\directxtk_desktop_2015.2017.6.21.1\build\native\directxtk_desktop_2015.props'))" />
+    <Error Condition="!Exists('packages\directxtk_desktop_2015.2017.6.21.1\build\native\directxtk_desktop_2015.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\directxtk_desktop_2015.2017.6.21.1\build\native\directxtk_desktop_2015.targets'))" />
+    <Error Condition="!Exists('packages\pugixml.1.8.3\build\native\pugixml.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\pugixml.1.8.3\build\native\pugixml.targets'))" />
   </Target>
 </Project>

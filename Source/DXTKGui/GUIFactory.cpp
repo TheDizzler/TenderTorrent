@@ -1,7 +1,9 @@
 #include "GUIFactory.h"
 #include "StringHelper.h"
-#include "CommonStates.h"
-#include "DDSTextureLoader.h"
+#include "GuiAssets.h"
+#include <CommonStates.h>
+#include <DDSTextureLoader.h>
+
 
 bool GUIFactory::initialized = false;
 
@@ -47,7 +49,6 @@ shared_ptr<MouseController> GUIFactory::getMouseController() {
 	return mouseController;
 }
 
-#include "GuiAssets.h"
 bool GUIFactory::initialize(ComPtr<ID3D11Device> dev,
 	ComPtr<ID3D11DeviceContext> devCon, ComPtr<IDXGISwapChain> sChain,
 	SpriteBatch* sBatch, shared_ptr<MouseController> mouse, const char_t* assetManifestFile) {
@@ -96,7 +97,10 @@ void GUIFactory::reInitDevice(ComPtr<ID3D11Device> dev,
 	device = dev;
 	deviceContext = devCon;
 	batch = sBatch;
+	
 	assetMap.clear();
+	animationMap.clear();
+	setMap.clear();
 
 	if (!getGUIAssetsFromXML()) {
 		MessageBox(0, L"Sprite retrieval from Asset Manifest failed.",

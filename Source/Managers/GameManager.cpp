@@ -9,14 +9,9 @@ unique_ptr<PromptDialog> GameManager::errorDialog;
 unique_ptr<PromptDialog> GameManager::warningDialog;
 Dialog* GameManager::showDialog = NULL;
 
-ScreenTransitions::ScreenTransitionManager transitionManager;
-
 
 GameManager::~GameManager() {
 	delete blendState;
-	guiFactory.reset();
-	errorDialog.reset();
-	warningDialog.reset();
 	showDialog = NULL;
 }
 
@@ -54,6 +49,8 @@ bool GameManager::initializeGame(GameEngine* gmngn,
 	}
 
 	mouse->loadMouseIcon(guiFactory.get(), "Mouse Arrow");
+	ShowCursor(false);
+
 	blendState = new CommonStates(device.Get());
 
 	initErrorDialogs();
@@ -88,14 +85,15 @@ bool GameManager::initializeGame(GameEngine* gmngn,
 }
 
 void GameManager::reloadGraphicsAssets() {
-
+	
 	blendState = new CommonStates(device.Get());
 	errorDialog->reloadGraphicsAsset();
 	warningDialog->reloadGraphicsAsset();
 
 	transitionManager.reloadGraphicsAssets();
-	levelScreen->reloadGraphicsAssets();
+	//levelScreen->reloadGraphicsAssets();
 	menuScreen->reloadGraphicsAssets();
+	mouse->reloadGraphicsAsset(guiFactory.get());
 }
 
 
@@ -158,12 +156,12 @@ void GameManager::draw(SpriteBatch* batch) {
 		}
 		batch->End();
 	} else {
-		batch->Begin(SpriteSortMode_Deferred, NULL, NULL, NULL, NULL, NULL,
+		/*batch->Begin(SpriteSortMode_Deferred, NULL, NULL, NULL, NULL, NULL,
 			camera->translationMatrix());
-		{
-			currentScreen->draw(batch);
-		}
-		batch->End();
+		{*/
+		currentScreen->draw(batch);
+	/*}
+	batch->End();*/
 	}
 
 	batch->Begin(SpriteSortMode_Deferred);

@@ -19,7 +19,7 @@ public:
 	bool initEngine(HWND hwnd, HINSTANCE hInstance);
 	void onAudioDeviceChange();
 
-	void reloadGraphicsAssets();
+	virtual void reloadGraphicsAssets() override;
 
 	void run(double time);
 
@@ -55,15 +55,11 @@ public:
 		return false;
 	}
 
+	
 	static void errorMessage(wstring message, wstring title = L"Fatal Error",
 		bool showMessageBox = false) {
 
-		message += L"\n";
-		if (!Globals::FULL_SCREEN && showMessageBox)
-			MessageBox(NULL, message.c_str(), title.c_str(), MB_OK | MB_ICONERROR);
-
-		title += L" >> " + message;
-		OutputDebugString(title.c_str()); // always output debug just in case
+		GameManager::errorMessage(message, title, showMessageBox);
 	}
 
 	static void showErrorDialog(wstring message, wstring title) {

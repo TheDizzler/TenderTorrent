@@ -1,10 +1,8 @@
+#include "../pch.h"
 #include "LevelManager.h"
 #include "../assets.h"
 #include "GameManager.h"
 #include "../Engine/GameEngine.h"
-
-LevelManager::LevelManager() {
-}
 
 LevelManager::~LevelManager() {
 

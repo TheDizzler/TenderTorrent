@@ -1,3 +1,4 @@
+#include "../pch.h"
 #include "SunBullet.h"
 
 SunBullet::SunBullet() : Bullet() {

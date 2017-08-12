@@ -1,4 +1,3 @@
-#include "../pch.h"
 #pragma once
 
 #include "GUIOverlay.h"
@@ -47,8 +46,6 @@ public:
 		LOADING, STARTING, PAUSED, PLAYING, FINISHED, GAMEOVER
 	};
 
-
-	LevelManager();
 	virtual ~LevelManager();
 
 	virtual void setGameManager(GameManager* game);

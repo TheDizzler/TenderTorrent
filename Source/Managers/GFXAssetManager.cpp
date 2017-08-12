@@ -9,16 +9,30 @@ GFXAssetManager::GFXAssetManager(xml_node gfxAN) {
 
 GFXAssetManager::~GFXAssetManager() {
 	assetMap.clear();
+	animationMap.clear();
+	setMap.clear();
 }
 
 bool GFXAssetManager::initialize(ComPtr<ID3D11Device> device) {
 
 	if (!getGFXAssetsFromXML(device)) {
-		MessageBox(0, L"Sprite retrieval from Asset Manifest failed.",
-			L"Epic failure", MB_OK);
+		GameEngine::errorMessage(L"Sprite retrieval from Asset Manifest failed.",
+			L"Epic failure");
 		return false;
 	}
 	return true;
+}
+
+void GFXAssetManager::reInitDevice(ComPtr<ID3D11Device> device) {
+
+	assetMap.clear();
+	animationMap.clear();
+	setMap.clear();
+
+	if (!getGFXAssetsFromXML(device)) {
+		GameEngine::errorMessage(L"Sprite retrieval from Asset Manifest failed.",
+			L"Epic failure");
+	}
 }
 
 

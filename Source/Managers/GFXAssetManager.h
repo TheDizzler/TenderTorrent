@@ -9,6 +9,8 @@ public:
 
 	bool initialize(ComPtr<ID3D11Device> device);
 
+	void reInitDevice(ComPtr<ID3D11Device> device);
+
 	unique_ptr<Sprite> getSpriteFromAsset(const char_t* assetName);
 	shared_ptr<Animation> getAnimation(const char_t* animationName);
 	GraphicsAsset* const getAsset(const char_t* assetName);

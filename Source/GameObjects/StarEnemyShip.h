@@ -1,4 +1,3 @@
-#include "../pch.h"
 #pragma once
 
 #include "EnemyShip.h"
@@ -8,7 +7,7 @@ class StarEnemyShip : public EnemyShip {
 public:
 	StarEnemyShip();
 	StarEnemyShip(xml_node mirrorNode);
-	~StarEnemyShip();
+	virtual ~StarEnemyShip();
 
 	virtual void update(double deltaTime, PlayerShip* player, vector<Bullet*>& liveBullets) override;
 

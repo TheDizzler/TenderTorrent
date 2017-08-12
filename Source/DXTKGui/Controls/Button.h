@@ -54,10 +54,9 @@ public:
 	const int getScaledWidth() const;
 	const int getScaledHeight() const;
 
-	/** Colors for imageless button. */
-	Color normalColor = Color(1, 1, 1, 1);
-	Color hoverColor = Color(1, .75, 0, 1);
-	Color selectedColor = Color(1, 0, .4, 1);
+	virtual void setUnpressedColor(const Color& newColor);
+	virtual void setPressedColor(const Color& newColor);
+	virtual void setHoverColor(const Color& newColor);
 
 	/** Colors for text on button. */
 	Color normalColorText = Color(0, 0, 0, 1);
@@ -105,6 +104,10 @@ protected:
 	virtual void setToHoverState();
 	virtual void setToSelectedState();
 
+	/** Colors for imageless button. */
+	Color normalColor = Color(1, 1, 1, 1);
+	Color hoverColor = Color(1, .75, 0, 1);
+	Color selectedColor = Color(1, 0, .4, 1);
 
 	/* Offsets textlabel position.*/
 	Vector2 unpressedTextOffset = Vector2(-2, 0);

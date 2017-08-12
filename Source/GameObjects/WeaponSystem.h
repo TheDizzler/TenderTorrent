@@ -1,4 +1,3 @@
-#include "../pch.h"
 #pragma once
 
 #include "Bullet.h"
@@ -12,7 +11,7 @@
 class WeaponSystem {
 public:
 	WeaponSystem(Vector2 locationOffset);
-	~WeaponSystem();
+	virtual ~WeaponSystem();
 
 	virtual void loadBulletTexture(/*GraphicsAsset**/ shared_ptr<Animation> bulletAsset);
 

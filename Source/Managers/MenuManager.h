@@ -127,7 +127,7 @@ public:
 
 	virtual void update(double deltaTime) override;
 	virtual void draw(SpriteBatch* batch) override;
-	//virtual void safedraw(SpriteBatch* batch) override;
+	virtual void textureDraw(SpriteBatch* batch) override;
 
 	virtual void pause() override;
 
@@ -140,10 +140,9 @@ public:
 	void openLevelSelectScreen();
 	void loadLevel(string levelXMLFile);
 
-	//unique_ptr<ScreenTransitions::ScreenTransitionManager> transitionManager;
-
 private:
 
+	ScreenTransitions::ScreenTransitionManager transitionManager;
 	Screen* currentScreen = NULL;
 	Screen* switchTo = NULL;
 	unique_ptr<MainScreen> mainScreen;
@@ -195,14 +194,13 @@ public:
 
 	virtual void update(double deltaTime) override;
 	virtual void draw(SpriteBatch* batch) override;
-	//virtual void safedraw(SpriteBatch* batch) override;
 private:
 	void populateDisplayList(vector<ComPtr<IDXGIOutput> > displays);
 	void populateDisplayModeList(vector<DXGI_MODE_DESC> displayModes);
+
 	TextLabel* adapterLabel;
 	TextLabel* displayLabel;
 	TextLabel* testLabel;
-
 
 	ListBox* adapterListbox;
 	ListBox* displayListbox;
@@ -223,7 +221,6 @@ public:
 
 	virtual void update(double deltaTime) override;
 	virtual void draw(SpriteBatch* batch) override;
-	//virtual void safedraw(SpriteBatch* batch) override;
 
 private:
 	unique_ptr<PromptDialog> exitDialog;

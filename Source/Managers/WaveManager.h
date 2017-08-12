@@ -1,11 +1,9 @@
-#include "../pch.h"
 #pragma once
 
 #include "RearAttackWave.h"
 #include "StarEnemyShipWave.h"
 #include "ArrowEnemyWave.h"
 
-using namespace std;
 
 
 class WaveManager {

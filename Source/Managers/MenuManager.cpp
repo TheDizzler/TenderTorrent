@@ -2,6 +2,7 @@
 #include "MenuManager.h"
 #include "GameManager.h"
 
+
 MenuManager::MenuManager() {
 }
 
@@ -14,6 +15,7 @@ void MenuManager::setGameManager(GameManager* gm) {
 
 void MenuManager::reloadGraphicsAssets() {
 
+	transitionManager.reloadGraphicsAssets();
 	mainScreen->reloadGraphicsAssets();
 	configScreen->reloadGraphicsAssets();
 }
@@ -44,13 +46,14 @@ bool MenuManager::initialize(ComPtr<ID3D11Device> device, shared_ptr<MouseContro
 
 	currentScreen = mainScreen.get();
 
-	//transitionManager.reset(
-	//	new ScreenTransitions::ScreenTransitionManager(
-	//		guiFactory.get(), "Default Transition BG"));
-	//transitionManager->setTransition(
-	//	//new ScreenTransitions::FlipScreenTransition(true));
-	//	//new ScreenTransitions::SquareFlipScreenTransition());
-	//	new ScreenTransitions::LineWipeScreenTransition());
+	/*transitionManager.reset(
+		new ScreenTransitions::ScreenTransitionManager(
+			guiFactory.get(), "Default Transition BG"));*/
+	transitionManager.initialize(guiFactory.get(), "Default Transition BG");
+	transitionManager.setTransition(
+		//new ScreenTransitions::FlipScreenTransition(true));
+		//new ScreenTransitions::SquareFlipScreenTransition());
+		new ScreenTransitions::LineWipeScreenTransition());
 
 	return true;
 }
@@ -82,12 +85,12 @@ void MenuManager::update(double deltaTime) {
 	//	ShowCursor(true);
 	//}
 
-	/*if (switchTo != NULL) {
-		if (transitionManager->runTransition(deltaTime)) {
+	if (switchTo != NULL) {
+		if (transitionManager.runTransition(deltaTime)) {
 			currentScreen = switchTo;
 			switchTo = NULL;
 		}
-	} else*/
+	} else
 		currentScreen->update(deltaTime);
 
 }
@@ -96,16 +99,23 @@ void MenuManager::update(double deltaTime) {
 void MenuManager::draw(SpriteBatch* batch) {
 
 
-	/*if (switchTo != NULL) {
+	if (switchTo != NULL) {
 		batch->Begin(SpriteSortMode_Deferred);
 		{
-			transitionManager->drawTransition(batch);
+			transitionManager.drawTransition(batch);
 		}
 		batch->End();
-	} else*/
-		currentScreen->draw(batch);
+	} else {
+		batch->Begin(SpriteSortMode_Deferred);
+		{
+			currentScreen->draw(batch);
+		}
+		batch->End();
+	}
+}
 
-
+void MenuManager::textureDraw(SpriteBatch* batch) {
+	currentScreen->draw(batch);
 }
 
 //void MenuManager::safedraw(SpriteBatch* batch) {
@@ -119,19 +129,19 @@ void MenuManager::pause() {
 void MenuManager::openMainMenu() {
 
 	switchTo = mainScreen.get();
-	GameManager::transitionManager.transitionBetween(currentScreen, switchTo);
+	transitionManager.transitionBetween(currentScreen, switchTo);
 }
 
 void MenuManager::openConfigMenu() {
 
 	switchTo = configScreen.get();
-	GameManager::transitionManager.transitionBetween(currentScreen, switchTo);
+	transitionManager.transitionBetween(currentScreen, switchTo);
 }
 
 void MenuManager::openLevelSelectScreen() {
 
 	switchTo = levelSelectScreen.get();
-	GameManager::transitionManager.transitionBetween(currentScreen, switchTo);
+	transitionManager.transitionBetween(currentScreen, switchTo);
 }
 
 void MenuManager::loadLevel(string levelXMLFile) {
@@ -195,28 +205,28 @@ bool MainScreen::initialize(ComPtr<ID3D11Device> device, shared_ptr<MouseControl
 	buttonpos.x -= buttonsize.x / 2;
 	Button* button = guiFactory->createButton(
 		buttonpos, buttonsize, L"Play");
-	button->normalColor = Color(1, .558, 1, 1);
+	button->setUnpressedColor(Color(1, .558, 1, 1));
 	button->setActionListener(new PlayButtonListener(this));
 	guiControls.push_back(unique_ptr<GUIControl>(button));
 
 	buttonpos.y = Globals::WINDOW_HEIGHT / 2 - button->getHeight() / 2;
 	button = guiFactory->createButton(
 		buttonpos, buttonsize, L"Settings");
-	button->normalColor = Color(1, .558, 1, 1);
+	button->setUnpressedColor(Color(1, .558, 1, 1));
 	button->setActionListener(new SettingsButtonListener(this));
 	guiControls.push_back(unique_ptr<GUIControl>(button));
 
 	buttonpos.y = Globals::WINDOW_HEIGHT - Globals::WINDOW_HEIGHT / 8 - button->getHeight();
 	button = guiFactory->createButton(
 		buttonpos, buttonsize, L"Exit");
-	button->normalColor = Color(1, .558, 1, 1);
+	button->setUnpressedColor(Color(1, .558, 1, 1));
 	button->setActionListener(new OnClickListenerExitButton(this));
 	guiControls.push_back(unique_ptr<GUIControl>(button));
 
-
+	/*delete*/
 
 	{
-		
+
 		Vector2 dialogPos, dialogSize;
 		dialogSize = Vector2(Globals::WINDOW_WIDTH / 2, Globals::WINDOW_HEIGHT / 2);
 		dialogPos = dialogSize;
@@ -265,13 +275,10 @@ void MainScreen::reloadGraphicsAssets() {
 	exitDialog->reloadGraphicsAsset();
 }
 
-Keyboard::KeyboardStateTracker keyTracker;
+
 void MainScreen::update(double deltaTime) {
 
-
-	auto state = Keyboard::Get().GetState();
-	keyTracker.Update(state);
-	if (keyTracker.IsKeyReleased(Keyboard::Escape)) {
+	if (keys->isKeyPressed(Keyboard::Escape)) {
 		if (exitDialog->isOpen())
 			exitDialog->hide();
 		else
@@ -289,23 +296,11 @@ void MainScreen::update(double deltaTime) {
 
 
 void MainScreen::draw(SpriteBatch* batch) {
+	for (auto const& control : guiControls)
+		control->draw(batch);
 
-	batch->Begin(SpriteSortMode_Deferred);
-	{
-		for (auto const& control : guiControls)
-			control->draw(batch);
-
-		exitDialog->draw(batch);
-	}
-	batch->End();
+	exitDialog->draw(batch);
 }
-
-//void MainScreen::safedraw(SpriteBatch* batch) {
-//	for (auto const& control : guiControls)
-//		control->draw(batch);
-//
-//	exitDialog->draw(batch);
-//}
 
 
 void MainScreen::confirmExit() {
@@ -438,16 +433,13 @@ bool ConfigScreen::initialize(ComPtr<ID3D11Device> device, shared_ptr<MouseContr
 void ConfigScreen::reloadGraphicsAssets() {
 	for (auto const& control : guiControls)
 		control->reloadGraphicsAsset();
-
 }
 
 
 void ConfigScreen::update(double deltaTime) {
 
-	auto state = Keyboard::Get().GetState();
-	keyTracker.Update(state);
-
-	if (keyTracker.IsKeyReleased(Keyboard::Escape)) {
+	
+	if (keys->isKeyPressed(Keyboard::Escape)) {
 		menuManager->openMainMenu();
 	}
 
@@ -459,18 +451,10 @@ void ConfigScreen::update(double deltaTime) {
 
 
 void ConfigScreen::draw(SpriteBatch* batch) {
-	batch->Begin(SpriteSortMode_Deferred);
-	{
-		for (auto const& control : guiControls)
-			control->draw(batch);
-	}
-	batch->End();
+	for (auto const& control : guiControls)
+		control->draw(batch);
 }
 
-//void ConfigScreen::safedraw(SpriteBatch* batch) {
-//	for (auto const& control : guiControls)
-//		control->draw(batch);
-//}
 
 void ConfigScreen::populateDisplayList(vector<ComPtr<IDXGIOutput>> displays) {
 
@@ -546,13 +530,13 @@ void DisplayModeItem::setText() {
 void OnClickListenerAdapterList::onClick(ListBox* listbox, UINT selectedIndex) {
 
 	AdapterItem* selectedItem = (AdapterItem*) listbox->getItem(selectedIndex);
-	config->game->setAdapter(selectedIndex);
-	config->populateDisplayList(config->game->getDisplayList());
-	config->populateDisplayModeList(
-		config->game->getDisplayModeList(0
-		/*config->game->getSelectedAdapterIndex()*/));
+	if (config->game->setAdapter(selectedIndex)) {
+		config->populateDisplayList(config->game->getDisplayList());
+		config->populateDisplayModeList(
+			config->game->getDisplayModeList(config->game->getSelectedDisplayIndex()));
 
-	config->adapterLabel->setText(listbox->getSelected()->toString());
+		config->adapterLabel->setText(listbox->getSelected()->toString());
+	}
 }
 
 

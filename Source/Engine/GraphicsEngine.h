@@ -26,6 +26,8 @@ public:
 
 	bool initD3D(HWND hwnd);
 
+	/** Only needed if you want to change graphics devices in game. */
+	virtual void reloadGraphicsAssets() = 0;
 	virtual void render() = 0;
 
 	vector<ComPtr<IDXGIAdapter> > getAdapterList();

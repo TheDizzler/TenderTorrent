@@ -1,3 +1,4 @@
+#include "../pch.h"
 #include "WaveManager.h"
 #include "../assets.h"
 

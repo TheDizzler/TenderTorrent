@@ -42,26 +42,28 @@ bool GraphicsEngine::initD3D(HWND h) {
 
 	hwnd = h;
 	if (!getDisplayAdapters()) {
-		MessageBox(NULL, L"Error gathering display info", L"ERROR", MB_OK);
+		GameEngine::errorMessage(L"Error gathering display info", L"INIT3D ERROR");
 		return false;
 	}
 
 
 	if (!initializeAdapter(selectedAdapterIndex)) {
-		MessageBox(NULL, L"Error initializing Adapter", L"ERROR", MB_OK);
+		GameEngine::errorMessage(L"Error initializing Adapter", L"INIT3D ERROR");
 		return false;
 	}
 
 
-	if (!initializeRenderTarget())
+	if (!initializeRenderTarget()) {
+		GameEngine::errorMessage(L"Error initializing RenderTarget", L"INIT3D ERROR");
 		return false;
+	}
 
 	initializeViewport();
 
 	camera = make_unique<Camera>(Globals::WINDOW_WIDTH, Globals::WINDOW_HEIGHT);
 
 	// create SpriteBatch
-	batch  = make_unique<SpriteBatch>(deviceContext.Get());
+	batch = make_unique<SpriteBatch>(deviceContext.Get());
 
 	return true;
 
@@ -71,7 +73,7 @@ bool GraphicsEngine::initD3D(HWND h) {
 
 
 bool GraphicsEngine::getDisplayAdapters() {
-	
+
 
 	ComPtr<IDXGIFactory1> factory;
 	// Create a DirectX graphics interface factory.
@@ -382,22 +384,24 @@ bool GraphicsEngine::setAdapter(size_t newAdapterIndex) {
 
 
 	if (!getDisplayAdapters()) {
-		MessageBox(NULL, L"Error gathering display info", L"ERROR", MB_OK);
+		GameEngine::errorMessage(L"Error gathering display info", L"SET ADAPTER ERROR");
 		return false;
 	}
 
 	if (!initializeAdapter(newAdapterIndex)) {
-		MessageBox(NULL, L"Error initializing new Adapter", L"ERROR", MB_OK);
+		GameEngine::errorMessage(L"Error initializing new Adapter", L"SET ADAPTER ERROR");
 		return false;
 	}
 
-	resizeSwapChain();
-
+	if (!resizeSwapChain()) {
+		GameEngine::errorMessage(L"Error resizing Swap Chain", L"SET ADAPTER ERROR");
+		return false;
+	}
 
 	// re-create SpriteBatch
 	batch = make_unique<SpriteBatch>(deviceContext.Get());
 
-	guiFactory->reInitDevice(device, deviceContext, batch.get());
+	reloadGraphicsAssets();
 	return true;
 }
 
@@ -406,8 +410,11 @@ bool GraphicsEngine::changeDisplayMode(size_t newDisplayModeIndex) {
 	selectedDisplayModeIndex = newDisplayModeIndex;
 	//DXGI_MODE_DESC newDisplayMode = displayModeList[selectedDisplayModeIndex];
 
-	if (!resizeSwapChain())
+	if (!resizeSwapChain()) {
+		GameEngine::errorMessage(L"Error resizing Swap Chain",
+			L"Change Display Mode ERROR");
 		return false;
+	}
 
 	return true;
 }
@@ -434,8 +441,11 @@ bool GraphicsEngine::setFullScreen(bool isFullScreen) {
 	} else {
 		swapChain->SetFullscreenState(false, NULL);
 	}
-	if (!resizeSwapChain())
+	if (!resizeSwapChain()) {
+		GameEngine::errorMessage(L"Error resizing Swap Chain",
+			L"SetFullScreen ERROR");
 		return false;
+	}
 
 	Globals::FULL_SCREEN = isFullScreen;
 	return true;

@@ -139,7 +139,7 @@
 		<!-- Excessive buttons are excessive -->
 		<sprite name="ScrollBar Up Custom" file="ScrollBarUpCustom.dds" />
 		<sprite name="ScrollBar Up Pressed Custom" file="ScrollBarUpPressedCustom.dds" />
-		<sprite name="ScrollBar Track Custom" file="ScrollBarTrack.dds" />
+		<sprite name="ScrollBar Track Custom" file="ScrollBarTrackCustom.dds" />
 		<sprite name="Scrubber Custom" file="ScrubberCustom.dds" />
 
 

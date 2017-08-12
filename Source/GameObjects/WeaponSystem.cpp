@@ -1,3 +1,4 @@
+#include "../pch.h"
 #include "WeaponSystem.h"
 
 WeaponSystem::WeaponSystem(Vector2 offset) {

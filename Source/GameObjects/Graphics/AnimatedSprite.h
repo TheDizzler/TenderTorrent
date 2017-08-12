@@ -5,7 +5,7 @@
 class AnimatedSprite : public IElement2D {
 public:
 	AnimatedSprite(const Vector2& position);
-	~AnimatedSprite();
+	virtual ~AnimatedSprite();
 
 	void load(shared_ptr<Animation> animation);
 

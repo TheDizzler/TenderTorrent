@@ -399,6 +399,19 @@ const int Button::getScaledHeight() const {
 	return hitArea->size.y;
 }
 
+void Button::setUnpressedColor(const Color& newColor) {
+	normalColor = newColor;
+	rectSprite->setTint(normalColor);
+}
+
+void Button::setPressedColor(const Color& newColor) {
+	selectedColor = newColor;
+}
+
+void Button::setHoverColor(const Color& newColor) {
+	hoverColor = newColor;
+}
+
 
 bool Button::clicked() {
 

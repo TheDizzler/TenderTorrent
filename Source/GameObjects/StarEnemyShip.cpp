@@ -1,10 +1,13 @@
+#include "../pch.h"
 #include "StarEnemyShip.h"
+#include "../Engine/GameEngine.h"
+#include "../globals.h"
+
 
 StarEnemyShip::StarEnemyShip() {
 }
 
-#include "../Engine/GameEngine.h"
-#include "../globals.h"
+
 using namespace Globals;
 StarEnemyShip::StarEnemyShip(xml_node mirrorNode) {
 
