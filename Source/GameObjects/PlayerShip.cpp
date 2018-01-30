@@ -4,11 +4,11 @@
 #include <random>
 #include <algorithm>
 
-PlayerShip::PlayerShip(const Vector2& pos, shared_ptr<MouseController> ms) : GameObject(pos) {
+
+PlayerShip::PlayerShip(const Vector2& pos) : GameObject(pos) {
 
 	position = PLAYER_START_POSITION;
 
-	mouse = ms;
 
 	rightWeaponSlot.reset(new WeaponSystem(Vector2(26, -15)));
 	leftWeaponSlot.reset(new WeaponSystem(Vector2(-26, -15)));
@@ -120,8 +120,8 @@ void PlayerShip::update(double deltaTime) {
 	rightTurret->update(deltaTime, position);
 	leftTurret->update(deltaTime, position);
 	Vector2 turretsLocationMidPoint = (rightTurret->getPosition() + leftTurret->getPosition()) / 2;
-	int y = mouse->getPosition().y - turretsLocationMidPoint.y;
-	int x = mouse->getPosition().x - turretsLocationMidPoint.x;
+	int y = mouse.getPosition().y - turretsLocationMidPoint.y;
+	int x = mouse.getPosition().x - turretsLocationMidPoint.x;
 	Vector2 targetDirection = Vector2(x, y);
 	targetDirection.Normalize();
 
@@ -147,7 +147,7 @@ void PlayerShip::update(double deltaTime) {
 
 
 	//if (!lastStateVKLButtonDown && mouse->leftButtonDown()) {
-	if (!mouse->leftButtonLast() && mouse->leftButton()) {
+	if (!mouse.leftButtonLast() && mouse.leftButton()) {
 
 		if (rightTurret->ready()) {
 			liveBullets.push_back(rightTurret->fire());

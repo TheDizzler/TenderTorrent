@@ -8,8 +8,8 @@
 #include <wrl.h>
 #include <vector>
 
-#include <SpriteBatch.h>
-#include <CommonStates.h>
+#include "SpriteBatch.h"
+#include "CommonStates.h"
 
 #include "../globals.h"
 #include "Camera.h"
@@ -18,7 +18,9 @@ using namespace std;
 using namespace DirectX;
 using namespace Microsoft::WRL;
 
-extern unique_ptr<Camera> camera;
+
+extern Camera camera;
+
 
 class GraphicsEngine {
 public:
@@ -26,7 +28,6 @@ public:
 
 	bool initD3D(HWND hwnd);
 
-	/** Only needed if you want to change graphics devices in game. */
 	virtual void reloadGraphicsAssets() = 0;
 	virtual void render() = 0;
 
@@ -40,6 +41,7 @@ public:
 	bool setAdapter(size_t adapterIndex);
 	bool changeDisplayMode(size_t newDisplayModeIndex);
 	bool setFullScreen(bool isFullScreen);
+	/* Imcomplete: only sets main viewport. */
 	void setViewport(int xPos, int yPos, int width, int height);
 	/* Call when game loses focus. */
 	bool stopFullScreen();
@@ -53,9 +55,16 @@ public:
 	ComPtr<IDXGISwapChain> getSwapChain();
 	SpriteBatch* getSpriteBatch();
 
+	D3D11_VIEWPORT mainViewport;
+	D3D11_VIEWPORT altViewport;
+	//Viewport mainViewport;
+
+	const RECT* createScissorRECTs() const;
+	ComPtr<ID3D11RasterizerState> rasterState;
 protected:
 	HWND hwnd;
 	unique_ptr<SpriteBatch> batch;
+
 
 	/* Adapter currently being used. */
 	ComPtr<IDXGIAdapter> selectedAdapter;
@@ -83,11 +92,12 @@ protected:
 	ComPtr<ID3D11DeviceContext> deviceContext;
 	/* The backbuffer that gets drawn to. */
 	ComPtr<ID3D11RenderTargetView> renderTargetView;
+	
+	D3D11_RECT scissorRECTs[1];
 
 	//D3D_DRIVER_TYPE driverType;
 	D3D_FEATURE_LEVEL featureLevel;
-	D3D11_VIEWPORT d3dViewport;
-	//Viewport viewport;
+	
 
 	/* List of all gfx cards on this machine. */
 	vector<ComPtr<IDXGIAdapter> > adapters;

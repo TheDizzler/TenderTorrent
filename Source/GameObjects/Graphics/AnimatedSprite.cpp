@@ -87,6 +87,10 @@ const HitArea* AnimatedSprite::getHitArea() const {
 	return &hitArea;
 }
 
+bool AnimatedSprite::contains(const Vector2 & point) {
+	return hitArea.contains(point);
+}
+
 void AnimatedSprite::moveBy(const Vector2& moveVector) {
 	setPosition(position + moveVector);
 }

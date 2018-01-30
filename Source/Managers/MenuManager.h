@@ -1,7 +1,7 @@
 #pragma once
 
 #include "LevelSelectScreen.h"
-#include "../DXTKGUI/Effects/ScreenTransitions.h"
+#include "../../DXTKGUI/Effects/ScreenTransitions.h"
 
 
 
@@ -133,7 +133,7 @@ public:
 	MenuManager();
 	virtual ~MenuManager();
 
-	virtual bool initialize(ComPtr<ID3D11Device> device, shared_ptr<MouseController> mouse) override;
+	virtual bool initialize(ComPtr<ID3D11Device> device) override;
 	virtual void setGameManager(GameManager* game) override;
 	void reloadGraphicsAssets();
 
@@ -162,8 +162,6 @@ private:
 	unique_ptr<LevelSelectScreen> levelSelectScreen;
 
 	GameManager* game;
-
-	shared_ptr<MouseController> mouse;
 };
 
 
@@ -187,7 +185,8 @@ public:
 protected:
 
 	GameManager* game;
-	vector<unique_ptr<GUIControl>> guiControls;
+	//vector<unique_ptr<GUIControl>> guiControls;
+	vector<GUIControl*> guiControls;
 };
 
 
@@ -199,16 +198,24 @@ public:
 	ConfigScreen(MenuManager* manager);
 	virtual ~ConfigScreen();
 
-	virtual bool initialize(ComPtr<ID3D11Device> device,
-		shared_ptr<MouseController> mouse) override;
-
+	virtual bool initialize(ComPtr<ID3D11Device> device) override;
 	virtual void reloadGraphicsAssets() override;
 
 	virtual void update(double deltaTime) override;
 	virtual void draw(SpriteBatch* batch) override;
+
+	virtual void textureDraw(SpriteBatch* batch) override;
+
+	virtual void controllerRemoved(ControllerSocketNumber controllerSlot,
+		PlayerSlotNumber slotNumber) override;
+	virtual void newController(shared_ptr<Joystick> newStick) override;
+
 private:
 	void populateDisplayList(vector<ComPtr<IDXGIOutput> > displays);
 	void populateDisplayModeList(vector<DXGI_MODE_DESC> displayModes);
+
+	unique_ptr<TexturePanel> texturePanel;
+	bool refreshTexture = true;
 
 	TextLabel* adapterLabel;
 	TextLabel* displayLabel;
@@ -217,6 +224,9 @@ private:
 	ListBox* adapterListbox;
 	ListBox* displayListbox;
 	ComboBox* displayModeCombobox;
+
+	Spinner* testSpinner;
+	TextLabel* spinnerLabel;
 };
 
 class MainScreen : public MenuScreen {
@@ -226,8 +236,7 @@ public:
 	MainScreen(MenuManager* manager);
 	virtual ~MainScreen();
 
-	virtual bool initialize(ComPtr<ID3D11Device> device,
-		shared_ptr<MouseController> mouse) override;
+	virtual bool initialize(ComPtr<ID3D11Device> device) override;
 
 	virtual void reloadGraphicsAssets() override;
 

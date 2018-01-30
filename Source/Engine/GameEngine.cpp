@@ -1,13 +1,11 @@
 #include "../pch.h"
 #include "GameEngine.h"
 #include "CommonStates.h"
-#include "../DXTKGui/GuiAssets.h"
+#include "../../DXTKGui/GuiAssets.h"
 
 
 GameEngine::~GameEngine() {
 	
-	mouse.reset();
-	//game.reset();
 	if (audioEngine != NULL)
 		audioEngine->Suspend();
 }
@@ -15,9 +13,7 @@ GameEngine::~GameEngine() {
 
 bool GameEngine::initEngine(HWND hw, HINSTANCE hInstance) {
 
-	hwnd = hw;
-
-	if (!initD3D(hwnd)) {
+	if (!initD3D(hw)) {
 		MessageBox(0, L"Direct3D Initialization Failed", L"Error", MB_OK);
 		return false;
 	}
@@ -44,7 +40,7 @@ bool GameEngine::initEngine(HWND hw, HINSTANCE hInstance) {
 
 	
 
-	if (!game.initializeGame(this, hwnd, device, mouse)) {
+	if (!game.initializeGame(this, hwnd, device)) {
 		GameEngine::errorMessage(L"Game Manager failed to load.", L"Critical Failure");
 		return false;
 	}
@@ -59,7 +55,7 @@ void GameEngine::onAudioDeviceChange() {
 }
 
 void GameEngine::reloadGraphicsAssets() {
-	guiFactory->reInitDevice(device, deviceContext, batch.get());
+	guiFactory.reInitDevice(device, deviceContext, batch.get());
 	gfxAssets->reInitDevice(device);
 	game.reloadGraphicsAssets();
 }
@@ -97,8 +93,8 @@ void GameEngine::run(double deltaTime) {
 
 void GameEngine::update(double deltaTime) {
 
-	mouse->saveMouseState();
-	keys->saveKeyState();
+	mouse.saveMouseState();
+	keys.saveKeyState();
 	slotManager->updateGamePads();
 
 	game.update(deltaTime);

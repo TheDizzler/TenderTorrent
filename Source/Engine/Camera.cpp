@@ -1,19 +1,10 @@
 #include "../pch.h"
 #include "Camera.h"
 
-Camera::Camera(int vwprtWdth, int vwprtHght) {
+Camera::Camera() {
 
 	zoom = 1.0f;
-
-	viewportWidth = vwprtWdth;
-	viewportHeight = vwprtHght;
-	viewportCenter = Vector3(viewportWidth * .5, viewportHeight * .5, 0);
-
-
-	//viewX = (viewportWidth) / zoom / 2;
-	//viewY = (viewportHeight) / zoom / 2;
-
-	cameraPosition = Vector2::Zero;
+	position = Vector2::Zero;
 }
 
 
@@ -26,6 +17,18 @@ void Camera::setLevel(Background* bgMan) {
 	levelHeight = bgMan->getHeight();
 }
 
+
+void Camera::setViewport(D3D11_VIEWPORT cameraViewport) {
+	viewportWidth = cameraViewport.Width;
+	viewportHeight = cameraViewport.Height;
+	viewportCenter = Vector3(viewportWidth * .5, viewportHeight * .5, 0);
+}
+
+void Camera::setViewport(int vwprtWdth, int vwprtHght) {
+	viewportWidth = vwprtWdth;
+	viewportHeight = vwprtHght;
+	viewportCenter = Vector3(viewportWidth * .5, viewportHeight * .5, 0);
+}
 
 void Camera::updateViewport(const Vector2& viewport, const Vector2& viewportPos, bool zoomToFit) {
 
@@ -70,9 +73,6 @@ void Camera::setZoom(float zoomTo) {
 		zoom = 0.2f;
 	else if (zoom > 2.5f)
 		zoom = 2.5;
-
-	//viewX = (viewportWidth / zoom / 2);
-	//viewY = (viewportHeight / zoom / 2);
 }
 
 void Camera::adjustZoom(float amount) {
@@ -91,33 +91,17 @@ void Camera::adjustZoom(float amount) {
 
 void Camera::moveCamera(const Vector2& cameraMovement) {
 
-	cameraPosition += cameraMovement;
+	position += cameraMovement;
 
 }
 
-
-void Camera::setCameraPosition(const Vector2& newPosition) {
-
-	cameraPosition = newPosition;
-	/*if (position.x < 0)
-	position.x = 0;
-	if (position.x > levelWidth)
-	position.x = levelWidth;*/
-}
 
 RECT* Camera::viewportWorldBoundary() {
-
-	/*Vector2* viewportCorner = screenToWorld(Vector2::Zero);
-	Vector2* viewportBottomCorner =
-		screenToWorld(Vector2(viewportWidth, viewportHeight));*/
 
 	RECT* rect = new RECT{
 		(int) viewportPosition.x, (int) viewportPosition.y,
 		(int) (viewportWidth - viewportPosition.x),
 		(int) (viewportHeight - viewportPosition.y)};
-
-	//delete viewportCorner;
-	//delete viewportBottomCorner;
 
 	return rect;
 }
@@ -130,7 +114,7 @@ void Camera::centerOn(const Vector2& pos/*, bool showWholeLevel*/) {
 
 	}*/
 
-	cameraPosition = pos;
+	position = pos;
 }
 
 Vector2& Camera::worldToScreen(Vector2 worldPosition) {
@@ -177,7 +161,7 @@ Vector2& Camera::screenToWorld(Vector2 screenPosition) {
 
 Matrix Camera::translationMatrix() {
 	// casting to int prevents filtering artifacts??
-	return Matrix::CreateTranslation(-(int) cameraPosition.x, -(int) cameraPosition.y, 0)
+	return Matrix::CreateTranslation(-(int) position.x, -(int) position.y, 0)
 		* Matrix::CreateRotationZ(rotation)
 		* Matrix::CreateScale(zoom, zoom, 1)
 		* Matrix::CreateTranslation(viewportCenter);

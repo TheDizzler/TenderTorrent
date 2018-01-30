@@ -1,6 +1,6 @@
 #include "../../pch.h"
 #include "Background.h"
-#include "../../DXTKGui/StringHelper.h"
+#include "../../../DXTKGui/StringHelper.h"
 #include "../../Engine/GameEngine.h"
 
 Background::Background() {
@@ -15,7 +15,7 @@ Background::~Background() {
 }
 
 void Background::reloadGraphicsAssets() {
-	baseBG->reloadGraphicsAsset(guiFactory.get());
+	baseBG->reloadGraphicsAsset(&guiFactory);
 	for (const auto& layer : bgLayers)
 		layer->reloadGraphicsAssets();
 }
@@ -76,7 +76,7 @@ bool Background::loadLevel(ComPtr<ID3D11Device> device, const char_t* xmlFile) {
 
 	float scaleFactor = levelRoot.attribute("scale").as_float();
 	//baseBG->setScale(Vector2(scaleFactor, scaleFactor));
-	camera->setZoom(scaleFactor);
+	camera.setZoom(scaleFactor);
 
 	xml_node waypointsNode = levelRoot.child("waypoints");
 	xml_node introWP = waypointsNode.child("intro");
@@ -116,8 +116,8 @@ bool Background::loadLevel(ComPtr<ID3D11Device> device, const char_t* xmlFile) {
 	cornerFrame.reset(new Sprite());
 	cornerFrame->load(gfxAssets->getAsset("Corner Frame"));
 
-	camera->setLevel(this);
-	camera->centerOn(lastWaypoint->dest);
+	camera.setLevel(this);
+	camera.centerOn(lastWaypoint->dest);
 
 	return loadLevel(device, levelRoot);
 }
@@ -152,7 +152,7 @@ bool Background::startUpdate(double deltaTime) {
 	double t = totalWaypointTime / CONSTANT;
 
 	Vector2 newpos = Vector2::Lerp(lastWaypoint->dest, currentWaypoint->dest, t);
-	camera->setCameraPosition(newpos);
+	camera.centerOn(newpos);
 	if (t >= 1) {
 		totalWaypointTime = 0;
 		delete lastWaypoint;
@@ -172,7 +172,7 @@ bool Background::update(double deltaTime) {
 	double t = totalWaypointTime / CONSTANT;
 
 	Vector2 newpos = Vector2::Lerp(lastWaypoint->dest, currentWaypoint->dest, t);
-	camera->setCameraPosition(newpos);
+	camera.centerOn(newpos);
 
 	if (t >= 1) {
 		totalWaypointTime = 0;
@@ -256,8 +256,8 @@ bool Background::loadLevel(ComPtr<ID3D11Device> device, xml_node levelRoot) {
 			//bgLayer->setLayerDepth(bgLayerNode.attribute("layer").as_float());
 			bgLayer->setHealth(clothNode.attribute("health").as_int());
 			bgLayerAssets.push_back(move(spriteAsset));
-			bgLayer->setMatrixFunction([&]() -> Matrix {return camera->translationMatrix(); });
-			bgLayer->setCameraZoom([&]() -> float { return camera->getZoom(); });
+			bgLayer->setMatrixFunction([&]() -> Matrix {return camera.translationMatrix(); });
+			bgLayer->setCameraZoom([&]() -> float { return camera.getZoom(); });
 			bgLayer->setInitialPosition(worldPosition, baseBG->getScale());
 
 
@@ -306,8 +306,8 @@ bool Background::loadLevel(ComPtr<ID3D11Device> device, xml_node levelRoot) {
 				//bgLayer->setLayerDepth(bgLayerNode.attribute("layer").as_float());
 				bgLayer->setHealth(subClothNode.attribute("health").as_int());
 				bgLayerAssets.push_back(move(spriteAsset));
-				bgLayer->setMatrixFunction([&]() -> Matrix {return camera->translationMatrix(); });
-				bgLayer->setCameraZoom([&]() -> float { return camera->getZoom(); });
+				bgLayer->setMatrixFunction([&]() -> Matrix {return camera.translationMatrix(); });
+				bgLayer->setCameraZoom([&]() -> float { return camera.getZoom(); });
 				bgLayer->setInitialPosition(worldPosition, baseBG->getScale());
 
 

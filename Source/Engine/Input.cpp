@@ -3,7 +3,8 @@
 #include "../Engine/GameEngine.h"
 
 unique_ptr<PlayerSlotManager> slotManager;
-unique_ptr<KeyboardController> keys;
+KeyboardController keys;
+MouseController mouse;
 
 bool endAllThreadsNow = false;
 bool slotManagerThreadRunning = false;
@@ -22,9 +23,7 @@ Input::~Input() {
 
 bool Input::initRawInput(HWND hwnd) {
 
-	keys = make_unique<KeyboardController>();
-	mouse = make_shared<MouseController>(hwnd);
-
+	mouse.initialize(hwnd);
 	return true;
 }
 
@@ -435,12 +434,12 @@ DWORD WINAPI waitForPlayerThread(PVOID pVoid) {
 DWORD WINAPI waitForHUDThread(PVOID pVoid) {
 
 	JoyData* joyData = (JoyData*) pVoid;
-
+	
 	while (Input::gameInitialized == false) { // Jus hol up
-											  //wostringstream wss;
-											  //wss << L"Test Thread #" << GetCurrentThreadId() << endl;
-											  //wss << data->joystick->socket << " waiting for HUD." << endl;
-											  //OutputDebugString(wss.str().c_str());
+		//wostringstream wss;
+		//wss << L"Test Thread #" << GetCurrentThreadId() << endl;
+		//wss << data->joystick->socket << " waiting for HUD." << endl;
+		//OutputDebugString(wss.str().c_str());
 
 		if (endAllThreadsNow) {
 			delete joyData;

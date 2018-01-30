@@ -1,6 +1,6 @@
 #pragma once
 #include <map>
-#include "../DXTKGui/BaseGraphics/GraphicsAsset.h"
+#include "../../DXTKGui/BaseGraphics/GraphicsAsset.h"
 
 class GFXAssetManager {
 public:

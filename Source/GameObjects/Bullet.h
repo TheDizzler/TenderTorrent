@@ -24,5 +24,4 @@ public:
 protected:
 
 	float timeAlive = 0;
-
 };

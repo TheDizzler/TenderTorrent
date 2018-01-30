@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../DXTKGui/Controls/Button.h"
+#include "../../DXTKGui/Controls/Button.h"
 
 
 class GUIOverlay {

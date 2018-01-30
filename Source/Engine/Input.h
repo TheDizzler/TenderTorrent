@@ -1,13 +1,12 @@
 #pragma once
 
-
-#include "../DXTKGui/Controllers/MouseController.h"
-#include "../DXTKGui/Controllers/KeyboardController.h"
+#include "../../DXTKGui/Controllers/MouseController.h"
+#include "../../DXTKGui/Controllers/KeyboardController.h"
 #include "PlayerSlot.h"
 
 extern unique_ptr<PlayerSlotManager> slotManager;
-extern unique_ptr<KeyboardController> keys;
-
+extern KeyboardController keys;
+extern MouseController mouse;
 
 DWORD WINAPI waitForHUDThread(PVOID pVoid);
 DWORD WINAPI waitForPlayerThread(PVOID pVoid);
@@ -42,7 +41,7 @@ public:
 protected:
 	/** Should SlotManager wait for player input before connecting controller to slot? */
 	bool waitForInput;
-
+	
 	USHORT numGamePads = 0;
 
 	map<HANDLE, shared_ptr<Joystick>> joystickMap;
@@ -66,9 +65,6 @@ public:
 
 	bool initRawInput(HWND hwnd);
 
-
-public:
-	shared_ptr<MouseController> mouse;
-
+protected:
 
 };

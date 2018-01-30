@@ -2,13 +2,19 @@
 #pragma once
 
 #include "GameEngine.h"
-
+#include <fstream>
 
 
 LPCTSTR wndClassName = L"Tender Torrent";
 HWND hwnd;
 
-//unique_ptr<GameEngine> gameEngine;
+
+int Globals::WINDOW_WIDTH = 800;
+int Globals::WINDOW_HEIGHT = 600;
+int Globals::vsync_enabled = 0;
+bool Globals::FULL_SCREEN = false;
+
+
 GameEngine gameEngine;
 HDEVNOTIFY newInterface = NULL;
 
@@ -63,7 +69,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	guidHid.Data4[6] = 0x00;
 	guidHid.Data4[7] = 0x30;
 
-	//gameEngine.reset(new GameEngine());
 
 	if (!initWindow(hInstance, nShowCmd)) {
 		MessageBox(0, L"Window Initialization - Failed", L"Error", MB_OK);
@@ -113,8 +118,6 @@ int messageLoop() {
 			DispatchMessage(&msg);
 		} else {	// game code
 
-					//double frameTime = getFrameTime();
-
 			gameEngine.run(getFrameTime());
 
 		}
@@ -125,10 +128,6 @@ int messageLoop() {
 
 }
 
-int Globals::WINDOW_WIDTH = 800;
-int Globals::WINDOW_HEIGHT = 600;
-int Globals::vsync_enabled = 0;
-bool Globals::FULL_SCREEN = false;
 
 bool initWindow(HINSTANCE hInstance, int showWnd) {
 
@@ -149,7 +148,6 @@ bool initWindow(HINSTANCE hInstance, int showWnd) {
 	wc.hIconSm = LoadIcon(NULL, IDI_WINLOGO);	// taskbar icon
 
 	if (!RegisterClassEx(&wc)) {
-
 		MessageBox(NULL, L"Error registering class", L"Error", MB_OK | MB_ICONERROR);
 		return false;
 	}
@@ -184,7 +182,6 @@ bool initWindow(HINSTANCE hInstance, int showWnd) {
 		NULL);					// used for MDI client window
 
 	if (!hwnd) {
-
 		MessageBox(NULL, L"Error creating window", L"Error", MB_OK | MB_ICONERROR);
 		return false;
 	}
@@ -424,7 +421,7 @@ int registerControllers() {
 	return 1;
 }
 
-#include <fstream>
+
 /* Finds and list all HID devices. For device finding, debugging, etc. */
 int getInputDeviceInfo(bool writeToFile, wstring filename) {
 
@@ -510,9 +507,6 @@ __int64 lastFrameStartTime = 0;
 void startTimer() {
 
 	LARGE_INTEGER frequencyCount;
-	/*QueryPerformanceFrequency(&frequencyCount);
-	countsPerSecond = double(frequencyCount.QuadPart);*/
-
 	QueryPerformanceCounter(&frequencyCount);
 	counterStart = frequencyCount.QuadPart;
 	lastFrameStartTime = frequencyCount.QuadPart;
@@ -535,9 +529,6 @@ double getFrameTime() {
 
 	tickCount = currentTime.QuadPart - lastFrameStartTime;
 	lastFrameStartTime = currentTime.QuadPart;
-
-	//if (tickCount < 0.0f) // why would this ever be negative?
-	//	tickCount = 0.0f;
 
 	return double(tickCount) / countsPerSecond;
 }

@@ -1,6 +1,6 @@
 #include "../pch.h"
 #include "GFXAssetManager.h"
-#include "../DXTKGui/StringHelper.h"
+#include "../../DXTKGui/StringHelper.h"
 #include "../Engine/GameEngine.h"
 
 GFXAssetManager::GFXAssetManager(xml_node gfxAN) {

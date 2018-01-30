@@ -2,22 +2,23 @@
 
 #include "../Managers/GFXAssetManager.h"
 
-#include "../DXTKGui/Controllers/MouseController.h"
-#include "../DXTKGui/Controllers/KeyboardController.h"
+//#include "../../DXTKGui/Controllers/MouseController.h"
+//#include "../../DXTKGui/Controllers/KeyboardController.h"
 #include "LaserSystem.h"
 #include "../globals.h"
 #include "Turret.h"
 #include "Graphics\GameObject.h"
 
 /* In screenspace. */
-static const Vector2 PLAYER_START_POSITION(Globals::WINDOW_WIDTH / 2, Globals::WINDOW_HEIGHT + 175);
-
+static const Vector2 PLAYER_START_POSITION(
+	Globals::WINDOW_WIDTH / 2,
+	Globals::WINDOW_HEIGHT + 175);
 
 
 class PlayerShip : public GameObject {
 public:
 
-	PlayerShip(const Vector2& position, shared_ptr<MouseController> mouse);
+	PlayerShip(const Vector2& position);
 	virtual ~PlayerShip();
 
 	void reset();
@@ -78,6 +79,4 @@ protected:
 
 private:
 	bool lastStateVKLButtonDown;
-
-	shared_ptr<MouseController> mouse;
 };

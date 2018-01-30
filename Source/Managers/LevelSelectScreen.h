@@ -1,4 +1,3 @@
-#include "../pch.h"
 #pragma once
 
 
@@ -10,7 +9,7 @@ public:
 
 	void reloadGraphicsAssets();
 
-	void update(double deltaTime, MouseController* mouse);
+	void update(double deltaTime);
 	void draw(SpriteBatch* batch);
 
 	const Vector2& getSize();
@@ -87,8 +86,7 @@ public:
 	virtual ~LevelSelectScreen();
 
 	virtual void setGameManager(GameManager * game) override;
-	virtual bool initialize(ComPtr<ID3D11Device> device,
-		shared_ptr<MouseController> mouse) override;
+	virtual bool initialize(ComPtr<ID3D11Device> device) override;
 	void reloadGraphicsAssets();
 
 	virtual void update(double deltaTime) override;
@@ -110,7 +108,6 @@ private:
 	vector<unique_ptr<LevelSelection>> levelSelections;
 
 	unique_ptr<TextLabel> titleLabel;
-	shared_ptr<MouseController> mouse;
 };
 
 

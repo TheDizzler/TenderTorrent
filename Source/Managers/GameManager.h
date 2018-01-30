@@ -1,4 +1,3 @@
-#include "../pch.h"
 #pragma once
 
 #include "GFXAssetManager.h"
@@ -8,7 +7,7 @@
 
 #include <CommonStates.h>
 
-extern unique_ptr<GUIFactory> guiFactory;
+extern GUIFactory guiFactory;
 extern unique_ptr<GFXAssetManager> gfxAssets;
 
 //extern unique_ptr<GUIOverlay> guiOverlay;
@@ -23,7 +22,7 @@ public:
 
 
 	bool initializeGame(GameEngine* gameEngine, HWND hwnd,
-		ComPtr<ID3D11Device> device, shared_ptr<MouseController> mouse);
+		ComPtr<ID3D11Device> device);
 
 	void reloadGraphicsAssets();
 
@@ -68,7 +67,7 @@ public:
 		title += L" >> " + message;
 		OutputDebugString(title.c_str()); // always output debug just in case
 
-		if (!showMessageBox && guiFactory->initialized) {
+		if (!showMessageBox && guiFactory.initialized) {
 			showWarningDialog(message, title);
 		}
 	}
@@ -109,8 +108,6 @@ private:
 
 	ComPtr<ID3D11Device> device;
 	CommonStates* blendState;
-
-	shared_ptr<MouseController> mouse;
 
 
 

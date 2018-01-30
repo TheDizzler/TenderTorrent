@@ -1,11 +1,9 @@
+#include "../pch.h"
 #include "LevelSelectScreen.h"
 #include "../assets.h"
 #include "../Engine/GameEngine.h"
 #include "GameManager.h"
-#include "MenuManager.h"
 
-
-using namespace pugi;
 
 
 LevelSelectScreen::LevelSelectScreen(MenuManager* menu) {
@@ -16,10 +14,7 @@ LevelSelectScreen::~LevelSelectScreen() {
 }
 
 
-bool LevelSelectScreen::initialize(ComPtr<ID3D11Device> device,
-	shared_ptr<MouseController> ms) {
-
-	mouse = ms;
+bool LevelSelectScreen::initialize(ComPtr<ID3D11Device> device) {
 
 	levelManifest.reset(new xml_document());
 	if (!levelManifest->load_file(Assets::levelManifestFile)) {
@@ -29,7 +24,7 @@ bool LevelSelectScreen::initialize(ComPtr<ID3D11Device> device,
 		return false;
 	}
 
-	titleLabel.reset(guiFactory->createTextLabel(Vector2::Zero, L"Choose a Level"));
+	titleLabel.reset(guiFactory.createTextLabel(Vector2::Zero, L"Choose a Level"));
 	titleLabel->setScale(Vector2(3, 3));
 	titleLabel->setTint(Colors::Black);
 	Vector2 titlesize = titleLabel->measureString();
@@ -67,13 +62,13 @@ void LevelSelectScreen::setGameManager(GameManager* gm) {
 void LevelSelectScreen::update(double deltaTime) {
 
 
-	if (keys->isKeyPressed(Keyboard::Escape)) {
+	if (keys.isKeyPressed(Keyboard::Escape)) {
 		menuManager->openMainMenu();
 	}
 
 	titleLabel->update(deltaTime);
 	for (auto const& selection : levelSelections)
-		selection->update(deltaTime, mouse.get());
+		selection->update(deltaTime);
 }
 
 void LevelSelectScreen::draw(SpriteBatch* batch) {
@@ -128,12 +123,12 @@ LevelSelection::LevelSelection(const Vector2& position,
 	);
 
 	picFrame.reset(
-		guiFactory->createRectangleFrame(picpos, picsize,
+		guiFactory.createRectangleFrame(picpos, picsize,
 			properties.child("frameThickness").attribute("value").as_int(), frameColor));
 
 	Vector2 labelpos = picpos;
 	labelpos.y += picsize.y + frameMargin.y;
-	label.reset(guiFactory->createTextLabel(labelpos));
+	label.reset(guiFactory.createTextLabel(labelpos));
 	label->setText(levelNode.attribute("name").as_string());
 	labelColor = label->getTint();
 
@@ -159,14 +154,14 @@ LevelSelection::~LevelSelection() {
 }
 
 void LevelSelection::reloadGraphicsAssets() {
-	previewPic->reloadGraphicsAsset(guiFactory.get());
+	previewPic->reloadGraphicsAsset(&guiFactory);
 	picFrame->reloadGraphicsAsset();
 	label->reloadGraphicsAsset();
 }
 
-void LevelSelection::update(double deltaTime, MouseController* mouse) {
+void LevelSelection::update(double deltaTime) {
 
-	if (hitArea->contains(mouse->getPosition())) {
+	if (hitArea->contains(mouse.getPosition())) {
 		isHover = true;
 		if (!isPressed) {
 			onHover();
@@ -177,7 +172,7 @@ void LevelSelection::update(double deltaTime, MouseController* mouse) {
 		isHover = false;
 	}
 
-	if (isPressed && !mouse->leftButton()) {
+	if (isPressed && !mouse.leftButton()) {
 		isClicked = true;
 		isPressed = false;
 		onClick();
@@ -187,7 +182,7 @@ void LevelSelection::update(double deltaTime, MouseController* mouse) {
 		if (!isHover) {
 			isPressed = false;
 			setToUnpressedState();
-		} else if (mouse->pressed()) {
+		} else if (mouse.pressed()) {
 			isPressed = true;
 			setToSelectedState();
 		}

@@ -1,18 +1,15 @@
-#include "../pch.h"
 #include "GraphicsEngine.h"
 #include "../Engine/GameEngine.h"
 #include <sstream>
 
-unique_ptr<Camera> camera;
+Camera camera;
 
-/** Forces NVidia cards to use default adapter. */
 extern "C" {  _declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001; }
 
 
 GraphicsEngine::~GraphicsEngine() {
 
 	batch.reset();
-	camera.reset();
 
 
 
@@ -29,11 +26,12 @@ GraphicsEngine::~GraphicsEngine() {
 	device.Reset();
 	swapChain.Reset();
 	renderTargetView.Reset();
-	deviceContext->Flush();
+	if (deviceContext)
+		deviceContext->Flush();
 	deviceContext.Reset();
 
-	debugDevice->ReportLiveDeviceObjects(D3D11_RLDO_FLAGS::D3D11_RLDO_DETAIL
-		| D3D11_RLDO_FLAGS::D3D11_RLDO_SUMMARY);
+	if (debugDevice)
+		debugDevice->ReportLiveDeviceObjects(D3D11_RLDO_FLAGS::D3D11_RLDO_DETAIL);
 	debugDevice.Reset();
 }
 
@@ -42,34 +40,30 @@ bool GraphicsEngine::initD3D(HWND h) {
 
 	hwnd = h;
 	if (!getDisplayAdapters()) {
-		GameEngine::errorMessage(L"Error gathering display info", L"INIT3D ERROR");
+		MessageBox(NULL, L"Error gathering display info", L"ERROR", MB_OK);
 		return false;
 	}
 
 
 	if (!initializeAdapter(selectedAdapterIndex)) {
-		GameEngine::errorMessage(L"Error initializing Adapter", L"INIT3D ERROR");
+		MessageBox(NULL, L"Error initializing Adapter", L"ERROR", MB_OK);
 		return false;
 	}
 
 
-	if (!initializeRenderTarget()) {
-		GameEngine::errorMessage(L"Error initializing RenderTarget", L"INIT3D ERROR");
+	if (!initializeRenderTarget())
 		return false;
-	}
 
 	initializeViewport();
 
-	camera = make_unique<Camera>(Globals::WINDOW_WIDTH, Globals::WINDOW_HEIGHT);
+	camera.setViewport(mainViewport);
 
 	// create SpriteBatch
-	batch = make_unique<SpriteBatch>(deviceContext.Get());
-
+	batch.reset(new SpriteBatch(deviceContext.Get()));
+	batch->SetViewport(mainViewport);
 	return true;
 
 }
-
-
 
 
 bool GraphicsEngine::getDisplayAdapters() {
@@ -192,6 +186,14 @@ bool GraphicsEngine::initializeAdapter(int adapterIndex) {
 
 	verifyAdapter(device);
 
+	CD3D11_RASTERIZER_DESC rsDesc(D3D11_FILL_SOLID, D3D11_CULL_BACK, FALSE,
+		0, 0.f, 0.f, TRUE, TRUE, TRUE, FALSE);
+	if (GameEngine::reportError(
+		device->CreateRasterizerState(&rsDesc, rasterState.GetAddressOf()),
+		L"Error creating RasterizerState.", L"ERROR")) {
+
+		return false;
+	}
 
 	return true;
 }
@@ -199,15 +201,15 @@ bool GraphicsEngine::initializeAdapter(int adapterIndex) {
 bool GraphicsEngine::initializeRenderTarget() {
 
 	///** **** Create our Render Target **** **/
-	ID3D11Texture2D* backBufferPtr;
+	ComPtr<ID3D11Texture2D> backBufferPtr;
 	if (GameEngine::reportError(
-		swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*) &backBufferPtr),
+		swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*) backBufferPtr.GetAddressOf()),
 		L"Could not get pointer to back buffer.", L"ERROR"))
 		return false;
 
 
 	if (GameEngine::reportError(
-		device->CreateRenderTargetView(backBufferPtr,
+		device->CreateRenderTargetView(backBufferPtr.Get(),
 			NULL, renderTargetView.GetAddressOf()),
 		L"Could not create render target view.", L"ERROR"))
 		return false;
@@ -215,43 +217,54 @@ bool GraphicsEngine::initializeRenderTarget() {
 
 	deviceContext->OMSetRenderTargets(1, renderTargetView.GetAddressOf(), nullptr);
 
-	backBufferPtr->Release();
 	return true;
 }
+
+
 
 void GraphicsEngine::initializeViewport() {
 
 	/** **** Create D3D Viewport **** **/
-	ZeroMemory(&d3dViewport, sizeof(D3D11_VIEWPORT));
-
-	d3dViewport.TopLeftX = 0;
-	d3dViewport.TopLeftY = 0;
-	d3dViewport.Width = Globals::WINDOW_WIDTH;
-	d3dViewport.Height = Globals::WINDOW_HEIGHT;
-	d3dViewport.MinDepth = 0.0f;
-	d3dViewport.MaxDepth = 1.0f;
-
-	deviceContext->RSSetViewports(1, &d3dViewport);
+	ZeroMemory(&mainViewport, sizeof(D3D11_VIEWPORT));
+	mainViewport.TopLeftX = 0;
+	mainViewport.TopLeftY = 0;
+	mainViewport.Width = Globals::WINDOW_WIDTH;
+	mainViewport.Height = Globals::WINDOW_HEIGHT;
+	mainViewport.MinDepth = 0.0f;
+	mainViewport.MaxDepth = 1.0f;
+	deviceContext->RSSetViewports(1, &mainViewport);
 
 
-	/** **** Create SimpleMath Viewport **** */
-	//viewport = Viewport(0, 0, Globals::WINDOW_WIDTH, Globals::WINDOW_HEIGHT, 0, 1);
-	//deviceContext->RSSetViewports(1, viewport.Get11());
+	/*scissorRECTs[0].left = Globals::MAIN_VIEWPORT_LEFT;
+	scissorRECTs[0].right = Globals::MAIN_VIEWPORT_WIDTH;
+	scissorRECTs[0].top = Globals::MAIN_VIEWPORT_TOP;
+	scissorRECTs[0].bottom = Globals::MAIN_VIEWPORT_HEIGHT;
+
+	deviceContext->RSSetScissorRects(1, scissorRECTs);*/
+
+	/*ZeroMemory(&altViewport, sizeof(D3D11_VIEWPORT));
+	altViewport.TopLeftX = 0;
+	altViewport.TopLeftY = 0;
+	altViewport.Width = Globals::WINDOW_WIDTH;
+	altViewport.Height = Globals::WINDOW_HEIGHT;
+	altViewport.MinDepth = 0.0f;
+	altViewport.MaxDepth = 1.0f;*/
+
 }
 
 void GraphicsEngine::setViewport(int xPos, int yPos, int width, int height) {
 
-	D3D11_VIEWPORT d3d_viewport;
-	ZeroMemory(&d3d_viewport, sizeof(D3D11_VIEWPORT));
 
-	d3d_viewport.TopLeftX = xPos;
-	d3d_viewport.TopLeftY = yPos;
-	d3d_viewport.Width = width;
-	d3d_viewport.Height = height;
-	d3d_viewport.MinDepth = 0.0f;
-	d3d_viewport.MaxDepth = 1.0f;
+	/*ZeroMemory(&mainViewport, sizeof(D3D11_VIEWPORT));
 
-	deviceContext->RSSetViewports(1, &d3d_viewport);
+	mainViewport.TopLeftX = xPos;
+	mainViewport.TopLeftY = yPos;
+	mainViewport.Width = width;
+	mainViewport.Height = height;
+	mainViewport.MinDepth = 0.0f;
+	mainViewport.MaxDepth = 1.0f;
+
+	deviceContext->RSSetViewports(1, &mainViewport);*/
 }
 
 
@@ -367,7 +380,7 @@ vector<DXGI_MODE_DESC> GraphicsEngine::getDisplayModeList(
 
 }
 
-/** Almost works!! */
+/** Works!! */
 bool GraphicsEngine::setAdapter(size_t newAdapterIndex) {
 
 	swapChain->SetFullscreenState(false, NULL);
@@ -384,23 +397,20 @@ bool GraphicsEngine::setAdapter(size_t newAdapterIndex) {
 
 
 	if (!getDisplayAdapters()) {
-		GameEngine::errorMessage(L"Error gathering display info", L"SET ADAPTER ERROR");
+		MessageBox(NULL, L"Error gathering display info", L"ERROR", MB_OK);
 		return false;
 	}
 
 	if (!initializeAdapter(newAdapterIndex)) {
-		GameEngine::errorMessage(L"Error initializing new Adapter", L"SET ADAPTER ERROR");
+		MessageBox(NULL, L"Error initializing new Adapter", L"ERROR", MB_OK);
 		return false;
 	}
 
-	if (!resizeSwapChain()) {
-		GameEngine::errorMessage(L"Error resizing Swap Chain", L"SET ADAPTER ERROR");
-		return false;
-	}
+	resizeSwapChain();
+
 
 	// re-create SpriteBatch
 	batch = make_unique<SpriteBatch>(deviceContext.Get());
-
 	reloadGraphicsAssets();
 	return true;
 }
@@ -410,11 +420,8 @@ bool GraphicsEngine::changeDisplayMode(size_t newDisplayModeIndex) {
 	selectedDisplayModeIndex = newDisplayModeIndex;
 	//DXGI_MODE_DESC newDisplayMode = displayModeList[selectedDisplayModeIndex];
 
-	if (!resizeSwapChain()) {
-		GameEngine::errorMessage(L"Error resizing Swap Chain",
-			L"Change Display Mode ERROR");
+	if (!resizeSwapChain())
 		return false;
-	}
 
 	return true;
 }
@@ -441,11 +448,8 @@ bool GraphicsEngine::setFullScreen(bool isFullScreen) {
 	} else {
 		swapChain->SetFullscreenState(false, NULL);
 	}
-	if (!resizeSwapChain()) {
-		GameEngine::errorMessage(L"Error resizing Swap Chain",
-			L"SetFullScreen ERROR");
+	if (!resizeSwapChain())
 		return false;
-	}
 
 	Globals::FULL_SCREEN = isFullScreen;
 	return true;
@@ -516,6 +520,11 @@ ComPtr<IDXGISwapChain> GraphicsEngine::getSwapChain() {
 SpriteBatch* GraphicsEngine::getSpriteBatch() {
 	return batch.get();
 }
+
+const RECT* GraphicsEngine::createScissorRECTs() const {
+	return scissorRECTs;
+}
+
 
 
 /** A debug function to make sure we're using the correct graphics adapter.

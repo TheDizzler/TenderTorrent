@@ -13,7 +13,7 @@ void LevelManager::setGameManager(GameManager* gm) {
 }
 
 
-bool LevelManager::initialize(ComPtr<ID3D11Device> device, shared_ptr<MouseController> mouse) {
+bool LevelManager::initialize(ComPtr<ID3D11Device> device) {
 
 	levelManifest.reset(new xml_document());
 	xml_parse_result result = levelManifest->load_file(Assets::levelManifestFile);
@@ -27,14 +27,14 @@ bool LevelManager::initialize(ComPtr<ID3D11Device> device, shared_ptr<MouseContr
 	}
 
 
-	if (!mouse->loadMouseIcon(guiFactory.get(), "Mouse Reticle"))
+	if (!mouse.loadMouseIcon(&guiFactory, "Mouse Reticle"))
 		return false;
 
 
 	if (!waveManager.initialize(gfxAssets.get()))
 		return false;
 
-	playerShip.reset(new PlayerShip(PLAYER_START_POSITION, mouse));
+	playerShip.reset(new PlayerShip(PLAYER_START_POSITION));
 	playerShip->load(gfxAssets->getAsset("PlayerShip Hull"));
 	if (!playerShip->loadBullet(gfxAssets.get())) {
 		MessageBox(NULL, L"Failed to load weapons", L"ERROR", MB_OK);
@@ -49,7 +49,7 @@ bool LevelManager::initialize(ComPtr<ID3D11Device> device, shared_ptr<MouseContr
 
 	Vector2 viewarea = guiOverlay->getPlayArea(); // for some reason this step is necessary
 	Vector2 viewposition = guiOverlay->getPlayPosition();
-	camera->updateViewport(viewarea, viewposition);
+	camera.updateViewport(viewarea, viewposition);
 
 	return true;
 }
@@ -123,7 +123,7 @@ void LevelManager::update(double deltaTime) {
 
 
 			//if (!pauseDownLast && keyState.Escape) {
-			if (keys->isKeyPressed(Keyboard::Escape)) {
+			if (keys.isKeyPressed(Keyboard::Escape)) {
 				playState = PAUSED;
 				//pauseDownLast = true;
 			}
@@ -152,8 +152,8 @@ void LevelManager::update(double deltaTime) {
 
 			gameOverTimer += deltaTime;
 			if (gameOverTimer > 15 /*|| keyState.Escape || keyState.Enter*/
-				|| keys->isKeyPressed(Keyboard::Escape)
-				|| keys->isKeyPressed(Keyboard::Enter))
+				|| keys.isKeyPressed(Keyboard::Escape)
+				|| keys.isKeyPressed(Keyboard::Enter))
 				game->loadMainMenu();
 			break;
 		case GAMEOVER:
@@ -164,14 +164,14 @@ void LevelManager::update(double deltaTime) {
 			waveManager.update(deltaTime, playerShip.get());
 			gameOverTimer += deltaTime;
 			if (gameOverTimer > 15 /*|| keyState.Escape || keyState.Enter)*/
-				|| keys->isKeyPressed(Keyboard::Escape)
-				|| keys->isKeyPressed(Keyboard::Enter))
+				|| keys.isKeyPressed(Keyboard::Escape)
+				|| keys.isKeyPressed(Keyboard::Enter))
 				game->loadMainMenu();
 			break;
 		case PAUSED:
 			guiOverlay->updatePaused(deltaTime);
 			//if (!pauseDownLast && keyState.Escape) {
-			if (keys->isKeyPressed(Keyboard::Escape)) {
+			if (keys.isKeyPressed(Keyboard::Escape)) {
 				playState = PLAYING;
 				//pauseDownLast = true;
 			}
@@ -207,7 +207,7 @@ void LevelManager::update(double deltaTime) {
 void LevelManager::draw(SpriteBatch* batch) {
 
 	batch->Begin(SpriteSortMode_Deferred, NULL, NULL, NULL, NULL, NULL,
-		camera->translationMatrix());
+		camera.translationMatrix());
 	{
 		bgManager.draw(batch);
 

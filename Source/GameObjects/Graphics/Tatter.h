@@ -1,5 +1,5 @@
 #pragma once
-#include "../../DXTKGui/BaseGraphics/Sprite.h"
+#include "../../../DXTKGui/BaseGraphics/Sprite.h"
 
 class Tatter : public Sprite {
 public:

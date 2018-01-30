@@ -32,7 +32,7 @@ void ClothLayer::loadPiece(GraphicsAsset* const graphicsAsset) {
 }
 
 void ClothLayer::reloadGraphicsAssets() {
-	wholeCloth.reloadGraphicsAsset(guiFactory.get());
+	wholeCloth.reloadGraphicsAsset(&guiFactory);
 
 	healthLabel->reloadGraphicsAsset();
 }
@@ -51,14 +51,14 @@ void ClothLayer::setInitialPosition(const Vector2& pos, const Vector2& scl) {
 	Vector2 position = wholeCloth.getPosition();
 	Vector2 textPos(position.x + wholeCloth.getWidth() * 3 / 4,
 		position.y + wholeCloth.getHeight() * 3 / 4);
-	healthLabel.reset(guiFactory->createTextLabel(textPos, to_wstring(health)));
+	healthLabel.reset(guiFactory.createTextLabel(textPos, to_wstring(health)));
 	healthLabel->setTint(Color(0, 0, 0, 1));
 
-	projectedHitArea = make_unique<HitArea>(wholeCloth.getHitArea()->position,
-		wholeCloth.getHitArea()->size);
+	projectedHitArea = make_unique<HitArea>(wholeCloth.getHitArea().position,
+		wholeCloth.getHitArea().size);
 	updateProjectedHitArea();
 
-	const HitArea* hitArea = wholeCloth.getHitArea();
+	const HitArea* hitArea = &wholeCloth.getHitArea();
 	topLeftCornerPos = hitArea->position;
 	topRightCornerPos = Vector2(hitArea->position.x + hitArea->size.x, hitArea->position.y);
 	bottomLeftCornerPos = Vector2(hitArea->position.x,
@@ -184,7 +184,7 @@ void ClothLayer::updateProjectedHitArea() {
 
 	Vector2 screenCords = getScreenPosition(translationMatrix());
 	projectedHitArea->position = screenCords;
-	projectedHitArea->size = wholeCloth.getHitArea()->size * cameraZoom();
+	projectedHitArea->size = wholeCloth.getHitArea().size * cameraZoom();
 
 	/*wostringstream wss;
 	wss << "size: " << wholeCloth->getHitArea()->size.x << ", " << wholeCloth->getHitArea()->size.y << "\n";
@@ -195,7 +195,8 @@ void ClothLayer::updateProjectedHitArea() {
 
 const Vector2& ClothLayer::getScreenPosition(Matrix viewProjectionMatrix) const {
 
-	Vector2 screenCords = XMVector2Transform(wholeCloth.getHitArea()->position, viewProjectionMatrix);
+	Vector2 screenCords = XMVector2Transform(
+		wholeCloth.getHitArea().position, viewProjectionMatrix);
 	return screenCords;
 
 }
@@ -204,7 +205,7 @@ unique_ptr<HitArea> ClothLayer::getScreenHitArea(Matrix viewProjectionMatrix) co
 
 	Vector2 screenCords = getScreenPosition(viewProjectionMatrix);
 	unique_ptr<HitArea> projectedHitArea;
-	projectedHitArea.reset(new HitArea(screenCords, wholeCloth.getHitArea()->size));
+	projectedHitArea.reset(new HitArea(screenCords, wholeCloth.getHitArea().size));
 	return projectedHitArea;
 }
 

@@ -19,7 +19,7 @@ Wave::~Wave() {
 
 void Wave::reloadGraphicsAssets() {
 	for (EnemyShip* enemy : shipStore)
-	enemy->reloadGraphicsAsset(guiFactory.get());
+		enemy->reloadGraphicsAsset(&guiFactory);
 }
 
 void Wave::clear() {
@@ -57,7 +57,7 @@ void Wave::update(double deltaTime, PlayerShip* player) {
 		if (enemy->isAlive) {
 			enemy->update(deltaTime, player, liveBullets);
 			// check for collision with player
-			if (player->getHitArea()->collision(enemy->getHitArea())) {
+			if (player->getHitArea().collision(enemy->getHitArea())) {
 				int enemyHP = enemy->getHealth();
 				int playerHP = player->getHealth();
 				enemy->takeDamage(playerHP);

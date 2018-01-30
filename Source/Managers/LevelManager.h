@@ -50,7 +50,7 @@ public:
 
 	virtual void setGameManager(GameManager* game);
 
-	virtual bool initialize(ComPtr<ID3D11Device> device, shared_ptr<MouseController> mouse);
+	virtual bool initialize(ComPtr<ID3D11Device> device);
 	void reloadGraphicsAssets();
 
 	bool loadLevel(ComPtr<ID3D11Device> device, const char_t* levelFileName);

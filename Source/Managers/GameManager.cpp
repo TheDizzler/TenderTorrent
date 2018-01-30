@@ -1,8 +1,10 @@
+#include "../pch.h"
 #include "GameManager.h"
-#include "../DXTKGui/GuiAssets.h"
+#include "../assets.h"
 #include "../Engine/GameEngine.h"
+#include "../../DXTKGui/StringHelper.h"
 
-unique_ptr<GUIFactory> guiFactory;
+GUIFactory guiFactory;
 unique_ptr<GFXAssetManager> gfxAssets;
 
 unique_ptr<PromptDialog> GameManager::errorDialog;
@@ -16,19 +18,18 @@ GameManager::~GameManager() {
 }
 
 bool GameManager::initializeGame(GameEngine* gmngn,
-	HWND hwnd, ComPtr<ID3D11Device> dvc, shared_ptr<MouseController> ms) {
+	HWND hwnd, ComPtr<ID3D11Device> dvc) {
 
 	gameEngine = gmngn;
 
 	device = dvc;
-	mouse = ms;
 
 
 	// get graphical assets from xml file
 	docAssMan.reset(new pugi::xml_document());
-	if (!docAssMan->load_file(GUIAssets::assetManifestFile)) {
-		MessageBox(0, L"Could not read AssetManifest file!",
-			L"Fatal Read Error!", MB_OK);
+	if (!docAssMan->load_file(Assets::assetManifestFile)) {
+		StringHelper::reportError(L"Could not read AssetManifest file!",
+			L"Fatal Read Error!", !Globals::FULL_SCREEN);
 		return false;
 	}
 
@@ -36,19 +37,21 @@ bool GameManager::initializeGame(GameEngine* gmngn,
 	xml_node gfxAssetNode = docAssMan->child("root").child("gfx");
 	gfxAssets.reset(new GFXAssetManager(gfxAssetNode));
 	if (!gfxAssets->initialize(device)) {
-		MessageBox(0, L"Failed to load GFX Assets.", L"Fatal Error", MB_OK);
+		StringHelper::reportError(L"Failed to load GFX Assets.", L"Fatal Error",
+			!Globals::FULL_SCREEN);
 		return false;
 	}
 
-	guiFactory.reset(new GUIFactory(hwnd, guiAssetsNode));
-	if (!guiFactory->initialize(device, gameEngine->getDeviceContext(),
-		gameEngine->getSwapChain(), gameEngine->getSpriteBatch(), mouse)) {
 
-		MessageBox(0, L"Failed to load GUIFactory", L"Fatal Error", MB_OK);
+	if (!guiFactory.initialize(hwnd, device, gameEngine->getDeviceContext(),
+		gameEngine->getSwapChain(), gameEngine->getSpriteBatch(), &mouse,
+		Assets::assetManifestFile)) {
+		StringHelper::reportError(L"Failed to load GUIFactory", L"Fatal Error",
+			!Globals::FULL_SCREEN);
 		return false;
 	}
 
-	mouse->loadMouseIcon(guiFactory.get(), "Mouse Arrow");
+	mouse.loadMouseIcon(&guiFactory, "Mouse Arrow");
 	ShowCursor(false);
 
 	blendState = new CommonStates(device.Get());
@@ -59,13 +62,13 @@ bool GameManager::initializeGame(GameEngine* gmngn,
 
 	menuScreen.reset(new MenuManager());
 	menuScreen->setGameManager(this);
-	if (!menuScreen->initialize(device, mouse))
+	if (!menuScreen->initialize(device))
 		return false;
 
 
 	levelScreen.reset(new LevelManager());
 	levelScreen->setGameManager(this);
-	if (!levelScreen->initialize(device, mouse))
+	if (!levelScreen->initialize(device))
 		return false;
 
 
@@ -75,7 +78,7 @@ bool GameManager::initializeGame(GameEngine* gmngn,
 		new ScreenTransitions::ScreenTransitionManager(
 			guiFactory.get(), "Default Transition BG"));*/
 	//transitionManager = make_unique<ScreenTransitions::ScreenTransitionManager>();
-	transitionManager.initialize(guiFactory.get(), "Default Transition BG");
+	transitionManager.initialize(&guiFactory, "Default Transition BG");
 	transitionManager.setTransition(
 		//new ScreenTransitions::FlipScreenTransition(true));
 		new ScreenTransitions::SquareFlipScreenTransition());
@@ -85,7 +88,7 @@ bool GameManager::initializeGame(GameEngine* gmngn,
 }
 
 void GameManager::reloadGraphicsAssets() {
-	
+
 	blendState = new CommonStates(device.Get());
 	errorDialog->reloadGraphicsAsset();
 	warningDialog->reloadGraphicsAsset();
@@ -93,7 +96,7 @@ void GameManager::reloadGraphicsAssets() {
 	transitionManager.reloadGraphicsAssets();
 	//levelScreen->reloadGraphicsAssets();
 	menuScreen->reloadGraphicsAssets();
-	mouse->reloadGraphicsAsset(guiFactory.get());
+	mouse.reloadGraphicsAsset(&guiFactory);
 }
 
 
@@ -105,10 +108,10 @@ void GameManager::initErrorDialogs() {
 	dialogPos = dialogSize;
 	dialogPos.x -= dialogSize.x / 2;
 	dialogPos.y -= dialogSize.y / 2;
-	errorDialog.reset(guiFactory->createDialog(dialogSize, dialogPos, false, true, 5));
+	errorDialog.reset(guiFactory.createDialog(dialogSize, dialogPos, false, true, 5));
 	errorDialog->setTint(Color(0, 120, 207));
 	unique_ptr<Button> quitButton;
-	quitButton.reset(guiFactory->createButton());
+	quitButton.reset(guiFactory.createButton());
 	quitButton->setText(L"Exit Program");
 	quitButton->setActionListener(new QuitButtonListener(this));
 	//quitButton->setMatrixFunction([&]()-> Matrix { return camera->translationMatrix(); });
@@ -119,13 +122,13 @@ void GameManager::initErrorDialogs() {
 	scrollBarDesc.upPressedButtonImage = "ScrollBar Up Pressed Custom";
 	scrollBarDesc.trackImage = "ScrollBar Track Custom";
 	scrollBarDesc.scrubberImage = "Scrubber Custom";
-	warningDialog.reset(guiFactory->createDialog(dialogPos, dialogSize, false, true, 3));
+	warningDialog.reset(guiFactory.createDialog(dialogPos, dialogSize, false, true, 3));
 	warningDialog->setScrollBar(scrollBarDesc);
 	//warningDialog->setMatrixFunction([&]()-> Matrix { return camera->translationMatrix(); });
 	warningDialog->setTint(Color(0, 120, 207));
 	warningDialog->setCancelButton(L"Continue");
 	unique_ptr<Button> quitButton2;
-	quitButton2.reset(guiFactory->createButton());
+	quitButton2.reset(guiFactory.createButton());
 	quitButton2->setText(L"Exit Program");
 	quitButton2->setActionListener(new QuitButtonListener(this));
 	warningDialog->setConfirmButton(move(quitButton2));
@@ -166,7 +169,7 @@ void GameManager::draw(SpriteBatch* batch) {
 
 	batch->Begin(SpriteSortMode_Deferred);
 	{
-		mouse->draw(batch);
+		mouse.draw(batch);
 	}
 	batch->End();
 }

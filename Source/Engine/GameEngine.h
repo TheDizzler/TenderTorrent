@@ -77,7 +77,6 @@ private:
 	void update(double time);
 	virtual void render() override;
 
-	HWND hwnd;
 	bool retryAudio;
 
 
