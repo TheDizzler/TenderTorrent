@@ -6,6 +6,7 @@ class LevelSelection {
 public:
 
 	LevelSelection(const Vector2& position, pugi::xml_node levelNode);
+	virtual ~LevelSelection();
 
 	void reloadGraphicsAssets();
 
@@ -83,7 +84,7 @@ class MenuManager;
 class LevelSelectScreen : public Screen {
 public:
 	LevelSelectScreen(MenuManager* menuManager);
-	~LevelSelectScreen();
+	virtual ~LevelSelectScreen();
 
 	virtual void setGameManager(GameManager * game) override;
 	virtual bool initialize(ComPtr<ID3D11Device> device,

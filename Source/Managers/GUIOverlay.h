@@ -13,10 +13,11 @@ public:
 	const Vector2& getPlayArea();
 	const Vector2& getPlayPosition();
 
-
-	void updateWarning(double deltaTime);
+	void update(double deltaTime);
 	void updatePaused(double deltaTime);
-	//void drawGameOver(double deltaTime);
+	void updateWarning(double deltaTime);
+	void updateGameOver(double deltaTime);
+
 	void draw(SpriteBatch* batch);
 	void drawPaused(SpriteBatch* batch);
 	void drawWarning(SpriteBatch* batch);
@@ -31,6 +32,7 @@ public:
 	unique_ptr<TextLabel> pauseLabel;
 	unique_ptr<TextLabel> warningLabel;
 	unique_ptr<TextLabel> gameOverLabel;
+	unique_ptr<TextLabel> fpsLabel;
 
 	unique_ptr<RectangleSprite> pauseOverlay;
 private:

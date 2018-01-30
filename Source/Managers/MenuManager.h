@@ -116,6 +116,18 @@ private:
 	MainScreen* main;
 };
 
+class BackButtonListener : public Button::ActionListener {
+public:
+	BackButtonListener(ConfigScreen* screen) : configScreen(screen) {
+	}
+	virtual void onClick(Button* button) override;
+	virtual void onPress(Button* button) override;
+	virtual void onHover(Button* button) override;
+	virtual void resetState(Button* button) override;
+private:
+	ConfigScreen* configScreen;
+};
+
 class MenuManager : public Screen {
 public:
 	MenuManager();

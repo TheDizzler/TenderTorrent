@@ -416,6 +416,7 @@ bool ConfigScreen::initialize(ComPtr<ID3D11Device> device, shared_ptr<MouseContr
 	button->setPosition(
 		Vector2(Globals::WINDOW_WIDTH / 2 - button->getWidth(),
 			Globals::WINDOW_HEIGHT - button->getHeight() - 25));
+	button->setActionListener(new BackButtonListener(this));
 	guiControls.push_back(unique_ptr<GUIControl>(button));
 
 	button = (ImageButton*) guiFactory->
@@ -637,4 +638,17 @@ void PlayButtonListener::onHover(Button * button) {
 }
 
 void PlayButtonListener::resetState(Button * button) {
+}
+
+void BackButtonListener::onClick(Button* button) {
+	configScreen->menuManager->openMainMenu();
+}
+
+void BackButtonListener::onPress(Button* button) {
+}
+
+void BackButtonListener::onHover(Button* button) {
+}
+
+void BackButtonListener::resetState(Button * button) {
 }

@@ -31,6 +31,7 @@ bool LevelSelectScreen::initialize(ComPtr<ID3D11Device> device,
 
 	titleLabel.reset(guiFactory->createTextLabel(Vector2::Zero, L"Choose a Level"));
 	titleLabel->setScale(Vector2(3, 3));
+	titleLabel->setTint(Colors::Black);
 	Vector2 titlesize = titleLabel->measureString();
 	Vector2 titlepos = Vector2((Globals::WINDOW_WIDTH - titlesize.x) / 2, 10);
 	titleLabel->setPosition(titlepos);
@@ -62,37 +63,29 @@ void LevelSelectScreen::setGameManager(GameManager* gm) {
 	game = gm;
 }
 
-//Keyboard::KeyboardStateTracker keyTracker;
+
 void LevelSelectScreen::update(double deltaTime) {
 
-	auto state = Keyboard::Get().GetState();
-	//keyTracker.Update(state);
 
-	if (state.Escape) {
+	if (keys->isKeyPressed(Keyboard::Escape)) {
 		menuManager->openMainMenu();
 	}
 
+	titleLabel->update(deltaTime);
 	for (auto const& selection : levelSelections)
 		selection->update(deltaTime, mouse.get());
 }
 
 void LevelSelectScreen::draw(SpriteBatch* batch) {
-	batch->Begin(SpriteSortMode_Deferred);
-	{
-		titleLabel->draw(batch);
-		for (auto const& selection : levelSelections) {
-			selection->draw(batch);
-		}
+	/*batch->Begin(SpriteSortMode_Deferred);
+	{*/
+	titleLabel->draw(batch);
+	for (auto const& selection : levelSelections) {
+		selection->draw(batch);
 	}
-	batch->End();
+/*}
+batch->End();*/
 }
-
-//void LevelSelectScreen::safedraw(SpriteBatch* batch) {
-//	titleLabel->draw(batch);
-//	for (auto const& selection : levelSelections) {
-//		selection->draw(batch);
-//	}
-//}
 
 void LevelSelectScreen::pause() {
 }
@@ -162,6 +155,9 @@ LevelSelection::LevelSelection(const Vector2& position,
 
 }
 
+LevelSelection::~LevelSelection() {
+}
+
 void LevelSelection::reloadGraphicsAssets() {
 	previewPic->reloadGraphicsAsset(guiFactory.get());
 	picFrame->reloadGraphicsAsset();
@@ -196,6 +192,9 @@ void LevelSelection::update(double deltaTime, MouseController* mouse) {
 			setToSelectedState();
 		}
 	}
+
+	picFrame->update();
+	label->update(deltaTime);
 }
 
 void LevelSelection::draw(SpriteBatch* batch) {

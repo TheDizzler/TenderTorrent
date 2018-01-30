@@ -58,7 +58,7 @@ public:
 
 	virtual void update(double deltaTime);
 	virtual void draw(SpriteBatch* batch) override;
-	//virtual void safedraw(SpriteBatch* batch) override;
+	virtual void textureDraw(SpriteBatch* batch) override;
 
 	virtual void pause() override;
 

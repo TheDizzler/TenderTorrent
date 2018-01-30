@@ -15,20 +15,18 @@ GUIOverlay::GUIOverlay() {
 	hudBorder.reset(guiFactory->createRectangleFrame(borderpos, bordersize, borderThickness));
 
 
-	timerLabel.reset(guiFactory->createTextLabel(Vector2(500, 3)));
+	timerLabel.reset(
+		guiFactory->createTextLabel(Vector2(500, 3), L"", "Default Font", false));
 	timerLabel->setTint(Vector4(0, 0, 0, 1));
-	//textLabels.push_back(timerLabel.get());
 
-	//activeControls.push_back(timerLabel.get());
 
 	scoreLabel.reset(guiFactory->createTextLabel(Vector2(10, 3)));
 	scoreLabel->setTint(Vector4(0, 0, 0, 1));
-	//textLabels.push_back(scoreLabel.get());
-	//activeControls.push_back(scoreLabel.get());
+
 
 	energyLabel.reset(guiFactory->createTextLabel(Vector2(10, 25)));
 	energyLabel->setTint(Vector4(0, 0, 0, 1));
-	//activeControls.push_back(energyLabel.get());
+
 
 	pauseOverlay.reset(
 		guiFactory->createRectangle(Vector2(0, 0),
@@ -36,15 +34,16 @@ GUIOverlay::GUIOverlay() {
 	pauseOverlay->setTint(Color(1, .588, 1, .8)); //should be pinkish
 
 
-	pauseLabel.reset(guiFactory->createTextLabel(Vector2::Zero, L"Blank", "BlackCloak"));
+	pauseLabel.reset(
+		guiFactory->createTextLabel(Vector2::Zero, L"Blank", "BlackCloak", false));
 	pauseLabel->setText(L"Paused");
 	pauseLabel->setScale(Vector2(1, 1.5));
 	Vector2 size = pauseLabel->measureString();
 	pauseLabel->setPosition(Vector2(
 		(Globals::WINDOW_WIDTH - size.x) / 2, (Globals::WINDOW_HEIGHT - size.y) / 2));
 
-	gameOverLabel.reset(guiFactory->createTextLabel(Vector2::Zero, L"Blank", "BlackCloak"));
-	gameOverLabel->setText("Game Over");
+	gameOverLabel.reset(
+		guiFactory->createTextLabel(Vector2::Zero, L"Game Over", "BlackCloak", false));
 	gameOverLabel->setScale(Vector2(1, 1.5));
 	size = gameOverLabel->measureString();
 	gameOverLabel->setPosition(Vector2(
@@ -71,16 +70,17 @@ GUIOverlay::GUIOverlay() {
 
 	warningLabel.reset(guiFactory->createTextLabel(
 		Vector2((Globals::WINDOW_WIDTH) / 2, (Globals::WINDOW_HEIGHT) / 2),
-		L"Blank", "BlackCloak"));
-	warningLabel->setText("GET READY!");
+		L"GET READY!", "BlackCloak", false));
 	warningLabel->setScale(Vector2(1, 1.5));
 	size = warningLabel->measureString(L"GET READY!");
 	warningLabel->moveBy(-size / 2);
-	//activeControls.push_back(warningLabel.get());
+
+	fpsLabel.reset(guiFactory->createTextLabel(Vector2(10, Globals::WINDOW_HEIGHT - 50),
+		L"FPS"));
 }
 
 GUIOverlay::~GUIOverlay() {
-	//activeControls.clear();
+
 }
 
 void GUIOverlay::reloadGraphicsAssets() {
@@ -102,10 +102,56 @@ const Vector2& GUIOverlay::getPlayPosition() {
 	return pos;
 }
 
+int frameCount = 0;
+double fpsUpdateTime = 5;
+const double FPS_UPDATE_TIME = 1;
+void GUIOverlay::update(double deltaTime) {
+	hudBorder->update();
+	timerLabel->update(deltaTime);
+	scoreLabel->update(deltaTime);
+	energyLabel->update(deltaTime);
+
+	fpsUpdateTime += deltaTime;
+	++frameCount;
+	if (fpsUpdateTime >= FPS_UPDATE_TIME) {
+
+		wostringstream wss;
+		wss << "frameCount: " << frameCount << " fpsUpdateTime: " << fpsUpdateTime << endl;
+		wss << "fps: " << frameCount / fpsUpdateTime;
+		fpsLabel->setText(wss.str());
+		fpsLabel->update(deltaTime);
+		fpsUpdateTime = 0;
+		frameCount = 0;
+	}
+}
+
 
 bool rInc = true;
 bool gInc = false;
 bool bInc = true;
+void GUIOverlay::updatePaused(double deltaTime) {
+
+	//displayPause(deltaTime);
+
+	Color color = pauseLabel->getTint();
+	/** Changes the Red variable between 0 and 1. */
+	if (rInc) {
+		color.R(color.R() + deltaTime);
+		if (color.R() >= 1)
+			rInc = false;
+	} else {
+		color.R(color.R() - deltaTime);
+		if (color.R() <= 0)
+			rInc = true;
+	}
+
+	pauseLabel->setTint(color);
+	pauseLabel->update(deltaTime);
+	exitButton->update(deltaTime);
+	continueButton->update(deltaTime);
+
+}
+
 void GUIOverlay::updateWarning(double deltaTime) {
 	//displayWarning(deltaTime);
 
@@ -125,27 +171,8 @@ void GUIOverlay::updateWarning(double deltaTime) {
 	warningLabel->setTint(Vector4(1, r, r, 1));
 }
 
-void GUIOverlay::updatePaused(double deltaTime) {
-
-	//displayPause(deltaTime);
-
-	Color color = pauseLabel->getTint();
-	/** Changes the Red variable between 0 and 1. */
-	if (rInc) {
-		color.R(color.R() + deltaTime);
-		if (color.R() >= 1)
-			rInc = false;
-	} else {
-		color.R(color.R() - deltaTime);
-		if (color.R() <= 0)
-			rInc = true;
-	}
-
-	pauseLabel->setTint(color);
-
-	exitButton->update(deltaTime);
-	continueButton->update(deltaTime);
-
+void GUIOverlay::updateGameOver(double deltaTime) {
+	gameOverLabel->update(deltaTime);
 }
 
 
@@ -156,7 +183,7 @@ void GUIOverlay::draw(SpriteBatch* batch) {
 	timerLabel->draw(batch);
 	scoreLabel->draw(batch);
 	energyLabel->draw(batch);
-
+	fpsLabel->draw(batch);
 }
 
 void GUIOverlay::drawPaused(SpriteBatch* batch) {
@@ -165,7 +192,7 @@ void GUIOverlay::drawPaused(SpriteBatch* batch) {
 	exitButton->draw(batch);
 	continueButton->draw(batch);
 	pauseLabel->draw(batch);
-
+	fpsLabel->draw(batch);
 }
 
 void GUIOverlay::drawWarning(SpriteBatch* batch) {

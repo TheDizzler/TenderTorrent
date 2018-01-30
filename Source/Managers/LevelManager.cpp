@@ -199,13 +199,15 @@ void LevelManager::update(double deltaTime) {
 		guiOverlay->energyLabel->setText(ws);
 	}
 
+	guiOverlay->update(deltaTime);
 	//pauseDownLast = keyState.Escape;
 }
 
 
 void LevelManager::draw(SpriteBatch* batch) {
 
-	batch->Begin(SpriteSortMode_Deferred, NULL, NULL, NULL, NULL, NULL, camera->translationMatrix());
+	batch->Begin(SpriteSortMode_Deferred, NULL, NULL, NULL, NULL, NULL,
+		camera->translationMatrix());
 	{
 		bgManager.draw(batch);
 
@@ -245,13 +247,11 @@ void LevelManager::draw(SpriteBatch* batch) {
 	batch->End();
 }
 
-//void LevelManager::safedraw(SpriteBatch* batch) {
-//	bgManager->draw(batch);
-//
-//
-//	playerShip->draw(batch);
-//	waveManager->draw(batch);
-//}
+void LevelManager::textureDraw(SpriteBatch* batch) {
+
+	bgManager.draw(batch);
+}
+
 
 void LevelManager::pause() {
 
