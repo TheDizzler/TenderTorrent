@@ -1,4 +1,8 @@
+#include "../pch.h"
 #include "Wave.h"
+#include <algorithm>
+#include <random>
+#include "../Managers/GameManager.h"
 
 Wave::Wave() {
 }
@@ -11,6 +15,11 @@ Wave::~Wave() {
 
 	// bullets are held in ship's store
 	liveBullets.clear();
+}
+
+void Wave::reloadGraphicsAssets() {
+	for (EnemyShip* enemy : shipStore)
+		enemy->reloadGraphicsAsset(&guiFactory);
 }
 
 void Wave::clear() {
@@ -29,7 +38,6 @@ void Wave::clearEnemies() {
 }
 
 
-#include <algorithm>
 void Wave::update(double deltaTime, PlayerShip* player) {
 
 	timeSinceLastLaunch += deltaTime;
@@ -49,7 +57,7 @@ void Wave::update(double deltaTime, PlayerShip* player) {
 		if (enemy->isAlive) {
 			enemy->update(deltaTime, player, liveBullets);
 			// check for collision with player
-			if (player->getHitArea()->collision(enemy->getHitArea())) {
+			if (player->getHitArea().collision(enemy->getHitArea())) {
 				int enemyHP = enemy->getHealth();
 				int playerHP = player->getHealth();
 				enemy->takeDamage(playerHP);
@@ -90,7 +98,6 @@ void Wave::finishedUpdate(double deltaTime) {
 }
 
 
-#include <random>
 bool Wave::checkForLaunch() {
 
 	mt19937 rng;

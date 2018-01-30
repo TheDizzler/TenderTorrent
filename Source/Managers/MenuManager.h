@@ -1,8 +1,7 @@
-#include "../pch.h"
 #pragma once
 
 #include "LevelSelectScreen.h"
-#include "../DXTKGUI/Effects/ScreenTransitions.h"
+#include "../../DXTKGUI/Effects/ScreenTransitions.h"
 
 
 
@@ -38,92 +37,124 @@ protected:
 
 
 
-class OnClickListenerAdapterList : public ListBox::OnClickListener {
+class OnClickListenerAdapterList : public ListBox::ActionListener {
 public:
 	OnClickListenerAdapterList(ConfigScreen* screen) : config(screen) {
 	}
-	virtual void onClick(ListBox* listbox, int selectedIndex) override;
+	virtual void onClick(ListBox* listbox, UINT selectedItemIndex) override;
+	virtual void onHover(ListBox* listbox, short hoveredItemIndex) override;
 private:
 	ConfigScreen* config;
 };
 
-class OnClickListenerDisplayModeList : public ComboBox::OnClickListener {
+class OnClickListenerDisplayModeList : public ComboBox::ActionListener {
 public:
 	OnClickListenerDisplayModeList(ConfigScreen* screen) : config(screen) {
 	}
-	virtual void onClick(ComboBox* combobox, int selectedIndex) override;
+	virtual void onClick(ComboBox* combobox, UINT selectedIndex) override;
+	virtual void onHover(ComboBox* listbox, short hoveredItemIndex) override;
 private:
 	ConfigScreen* config;
 
 };
 
-class OnClickListenerFullScreenCheckBox : public CheckBox::OnClickListener {
+class OnClickListenerFullScreenCheckBox : public CheckBox::ActionListener {
 public:
 	OnClickListenerFullScreenCheckBox(ConfigScreen* screen) : config(screen) {
 	}
 	virtual void onClick(CheckBox* checkbox, bool isChecked) override;
+	virtual void onHover(CheckBox* checkbox, bool isChecked) override;
 private:
 	ConfigScreen* config;
 };
 
-class PlayButtonListener : public Button::OnClickListener {
+class PlayButtonListener : public Button::ActionListener {
 public:
 	PlayButtonListener(MainScreen* screen) : main(screen) {
 	}
 	virtual void onClick(Button* button) override;
+	virtual void onPress(Button* button) override;
+	virtual void onHover(Button* button) override;
+	virtual void resetState(Button* button) override;
 private:
 	MainScreen* main;
 };
 
-class SettingsButtonListener : public Button::OnClickListener {
+class SettingsButtonListener : public Button::ActionListener {
 public:
 	SettingsButtonListener(MainScreen* screen) : main(screen) {
 	}
 	virtual void onClick(Button* button) override;
+	virtual void onPress(Button* button) override;
+	virtual void onHover(Button* button) override;
+	virtual void resetState(Button* button) override;
 private:
 	MainScreen* main;
 };
 
-class OnClickListenerDialogQuitButton : public Button::OnClickListener {
+class OnClickListenerDialogQuitButton : public Button::ActionListener {
 public:
 	OnClickListenerDialogQuitButton(MainScreen* screen) : main(screen) {
 	}
-	virtual void onClick(Button * button) override;
+	virtual void onClick(Button* button) override;
+	virtual void onPress(Button* button) override;
+	virtual void onHover(Button* button) override;
+	virtual void resetState(Button* button) override;
 private:
 	MainScreen* main;
 };
 
-class OnClickListenerExitButton : public Button::OnClickListener {
+class OnClickListenerExitButton : public Button::ActionListener {
 public:
 	OnClickListenerExitButton(MainScreen* screen) : main(screen) {
 	}
 	virtual void onClick(Button* button) override;
+	virtual void onPress(Button* button) override;
+	virtual void onHover(Button* button) override;
+	virtual void resetState(Button* button) override;
 private:
 	MainScreen* main;
+};
+
+class BackButtonListener : public Button::ActionListener {
+public:
+	BackButtonListener(ConfigScreen* screen) : configScreen(screen) {
+	}
+	virtual void onClick(Button* button) override;
+	virtual void onPress(Button* button) override;
+	virtual void onHover(Button* button) override;
+	virtual void resetState(Button* button) override;
+private:
+	ConfigScreen* configScreen;
 };
 
 class MenuManager : public Screen {
 public:
 	MenuManager();
-	~MenuManager();
+	virtual ~MenuManager();
 
-	virtual bool initialize(ComPtr<ID3D11Device> device, shared_ptr<MouseController> mouse) override;
+	virtual bool initialize(ComPtr<ID3D11Device> device) override;
 	virtual void setGameManager(GameManager* game) override;
-	virtual void update(double deltaTime, shared_ptr<MouseController> mouse) override;
+	void reloadGraphicsAssets();
+
+	virtual void update(double deltaTime) override;
 	virtual void draw(SpriteBatch* batch) override;
-	virtual void safedraw(SpriteBatch* batch) override;
+	virtual void textureDraw(SpriteBatch* batch) override;
 
 	virtual void pause() override;
+
+	virtual void controllerRemoved(ControllerSocketNumber controllerSlot,
+		PlayerSlotNumber slotNumber) override;
+	virtual void newController(shared_ptr<Joystick> newStick) override;
 
 	void openMainMenu();
 	void openConfigMenu();
 	void openLevelSelectScreen();
 	void loadLevel(string levelXMLFile);
 
-	unique_ptr<ScreenTransitions::ScreenTransitionManager> transitionManager;
-
 private:
 
+	ScreenTransitions::ScreenTransitionManager transitionManager;
 	Screen* currentScreen = NULL;
 	Screen* switchTo = NULL;
 	unique_ptr<MainScreen> mainScreen;
@@ -139,16 +170,23 @@ class MenuScreen : public Screen {
 public:
 
 	MenuScreen(MenuManager* manager);
-	~MenuScreen();
+	virtual ~MenuScreen();
 
 	virtual void setGameManager(GameManager* game) override;
+	virtual void reloadGraphicsAssets() = 0;
 	virtual void pause() override;
+
+	virtual void controllerRemoved(ControllerSocketNumber controllerSlot,
+		PlayerSlotNumber slotNumber) override;
+	virtual void newController(shared_ptr<Joystick> newStick) override;
+
 
 	MenuManager* menuManager;
 protected:
 
 	GameManager* game;
-	vector<unique_ptr<GUIControl>> guiControls;
+	//vector<unique_ptr<GUIControl>> guiControls;
+	vector<GUIControl*> guiControls;
 };
 
 
@@ -158,23 +196,37 @@ class ConfigScreen : public MenuScreen {
 	friend class OnClickListenerFullScreenCheckBox;
 public:
 	ConfigScreen(MenuManager* manager);
-	~ConfigScreen();
+	virtual ~ConfigScreen();
 
-	virtual bool initialize(ComPtr<ID3D11Device> device, shared_ptr<MouseController> mouse) override;
-	virtual void update(double deltaTime, shared_ptr<MouseController> mouse) override;
+	virtual bool initialize(ComPtr<ID3D11Device> device) override;
+	virtual void reloadGraphicsAssets() override;
+
+	virtual void update(double deltaTime) override;
 	virtual void draw(SpriteBatch* batch) override;
-	virtual void safedraw(SpriteBatch* batch) override;
+
+	virtual void textureDraw(SpriteBatch* batch) override;
+
+	virtual void controllerRemoved(ControllerSocketNumber controllerSlot,
+		PlayerSlotNumber slotNumber) override;
+	virtual void newController(shared_ptr<Joystick> newStick) override;
+
 private:
 	void populateDisplayList(vector<ComPtr<IDXGIOutput> > displays);
 	void populateDisplayModeList(vector<DXGI_MODE_DESC> displayModes);
+
+	unique_ptr<TexturePanel> texturePanel;
+	bool refreshTexture = true;
+
 	TextLabel* adapterLabel;
 	TextLabel* displayLabel;
 	TextLabel* testLabel;
 
-
 	ListBox* adapterListbox;
 	ListBox* displayListbox;
 	ComboBox* displayModeCombobox;
+
+	Spinner* testSpinner;
+	TextLabel* spinnerLabel;
 };
 
 class MainScreen : public MenuScreen {
@@ -182,15 +234,17 @@ class MainScreen : public MenuScreen {
 	friend class OnClickListenerDialogQuitButton;
 public:
 	MainScreen(MenuManager* manager);
-	~MainScreen();
+	virtual ~MainScreen();
 
-	virtual bool initialize(ComPtr<ID3D11Device> device, shared_ptr<MouseController> mouse) override;
-	virtual void update(double deltaTime, shared_ptr<MouseController> mouse) override;
-	virtual void draw(SpriteBatch * batch) override;
-	virtual void safedraw(SpriteBatch* batch) override;
+	virtual bool initialize(ComPtr<ID3D11Device> device) override;
+
+	virtual void reloadGraphicsAssets() override;
+
+	virtual void update(double deltaTime) override;
+	virtual void draw(SpriteBatch* batch) override;
 
 private:
-	unique_ptr<Dialog> exitDialog;
+	unique_ptr<PromptDialog> exitDialog;
 
 	void confirmExit();
 };

@@ -1,6 +1,7 @@
+#include "../pch.h"
 #include "MenuManager.h"
 #include "GameManager.h"
-
+#include "../Engine/GameEngine.h"
 
 MenuManager::MenuManager() {
 }
@@ -12,36 +13,43 @@ void MenuManager::setGameManager(GameManager* gm) {
 	game = gm;
 }
 
+void MenuManager::reloadGraphicsAssets() {
+
+	transitionManager.reloadGraphicsAssets();
+	mainScreen->reloadGraphicsAssets();
+	configScreen->reloadGraphicsAssets();
+}
 
 
-bool MenuManager::initialize(ComPtr<ID3D11Device> device, shared_ptr<MouseController> mouse) {
+bool MenuManager::initialize(ComPtr<ID3D11Device> device) {
 
 
-	if (!mouse->loadMouseIcon(guiFactory.get(), "Mouse Reticle"))
+	if (!mouse.loadMouseIcon(&guiFactory, "Mouse Reticle"))
 		return false;
 
 	mainScreen.reset(new MainScreen(this));
 	mainScreen->setGameManager(game);
-	if (!mainScreen->initialize(device, mouse))
+	if (!mainScreen->initialize(device))
 		return false;
 
 	configScreen.reset(new ConfigScreen(this));
 	configScreen->setGameManager(game);
-	if (!configScreen->initialize(device, mouse))
+	if (!configScreen->initialize(device))
 		return false;
-	configScreen->update(0, mouse);
+	configScreen->update(0);
 
 	levelSelectScreen.reset(new LevelSelectScreen(this));
-	if (!levelSelectScreen->initialize(device, mouse)) {
+	if (!levelSelectScreen->initialize(device)) {
 		return false;
 	};
 
 	currentScreen = mainScreen.get();
 
-	transitionManager.reset(
+	/*transitionManager.reset(
 		new ScreenTransitions::ScreenTransitionManager(
-			guiFactory.get(), "Default Transition BG"));
-	transitionManager->setTransition(
+			guiFactory.get(), "Default Transition BG"));*/
+	transitionManager.initialize(&guiFactory, "Default Transition BG");
+	transitionManager.setTransition(
 		//new ScreenTransitions::FlipScreenTransition(true));
 		//new ScreenTransitions::SquareFlipScreenTransition());
 		new ScreenTransitions::LineWipeScreenTransition());
@@ -51,7 +59,7 @@ bool MenuManager::initialize(ComPtr<ID3D11Device> device, shared_ptr<MouseContro
 
 
 bool lastStateDown;
-void MenuManager::update(double deltaTime, shared_ptr<MouseController> mouse) {
+void MenuManager::update(double deltaTime) {
 
 
 	//Vector2 mousePos = mouse->getPosition();
@@ -77,12 +85,12 @@ void MenuManager::update(double deltaTime, shared_ptr<MouseController> mouse) {
 	//}
 
 	if (switchTo != NULL) {
-		if (transitionManager->runTransition(deltaTime)) {
+		if (transitionManager.runTransition(deltaTime)) {
 			currentScreen = switchTo;
 			switchTo = NULL;
 		}
 	} else
-		currentScreen->update(deltaTime, mouse);
+		currentScreen->update(deltaTime);
 
 }
 
@@ -93,18 +101,25 @@ void MenuManager::draw(SpriteBatch* batch) {
 	if (switchTo != NULL) {
 		batch->Begin(SpriteSortMode_Deferred);
 		{
-			transitionManager->drawTransition(batch);
+			transitionManager.drawTransition(batch);
 		}
 		batch->End();
-	} else
-		currentScreen->draw(batch);
-
-	
+	} else {
+		batch->Begin(SpriteSortMode_Deferred);
+		{
+			currentScreen->draw(batch);
+		}
+		batch->End();
+	}
 }
 
-void MenuManager::safedraw(SpriteBatch* batch) {
-	currentScreen->safedraw(batch);
+void MenuManager::textureDraw(SpriteBatch* batch) {
+	currentScreen->draw(batch);
 }
+
+//void MenuManager::safedraw(SpriteBatch* batch) {
+//	currentScreen->safedraw(batch);
+//}
 
 void MenuManager::pause() {
 	// do nothing?
@@ -113,24 +128,30 @@ void MenuManager::pause() {
 void MenuManager::openMainMenu() {
 
 	switchTo = mainScreen.get();
-	transitionManager->transitionBetween(currentScreen, switchTo);
+	transitionManager.transitionBetween(currentScreen, switchTo);
 }
 
 void MenuManager::openConfigMenu() {
 
 	switchTo = configScreen.get();
-	transitionManager->transitionBetween(currentScreen, switchTo);
+	transitionManager.transitionBetween(currentScreen, switchTo);
 }
 
 void MenuManager::openLevelSelectScreen() {
 
 	switchTo = levelSelectScreen.get();
-	transitionManager->transitionBetween(currentScreen, switchTo);
+	transitionManager.transitionBetween(currentScreen, switchTo);
 }
 
 void MenuManager::loadLevel(string levelXMLFile) {
 
 	game->loadLevel(levelXMLFile);
+}
+
+void MenuManager::controllerRemoved(ControllerSocketNumber controllerSlot, PlayerSlotNumber slotNumber) {
+}
+
+void MenuManager::newController(shared_ptr<Joystick> newStick) {
 }
 
 
@@ -144,10 +165,10 @@ MenuScreen::MenuScreen(MenuManager* mngr) {
 
 MenuScreen::~MenuScreen() {
 
-	//for (GUIControl* control : guiControls)
-		//delete control;
+	for (GUIControl* control : guiControls)
+		delete control;
 
-	guiControls.clear();
+	//guiControls.clear();
 }
 
 void MenuScreen::setGameManager(GameManager* gmMng) {
@@ -157,6 +178,13 @@ void MenuScreen::setGameManager(GameManager* gmMng) {
 
 void MenuScreen::pause() {
 	// do nothing??
+}
+
+void MenuScreen::controllerRemoved(ControllerSocketNumber controllerSlot,
+	PlayerSlotNumber slotNumber) {
+}
+
+void MenuScreen::newController(shared_ptr<Joystick> newStick) {
 }
 
 
@@ -169,52 +197,52 @@ MainScreen::~MainScreen() {
 }
 
 
-bool MainScreen::initialize(ComPtr<ID3D11Device> device, shared_ptr<MouseController> mouse) {
+bool MainScreen::initialize(ComPtr<ID3D11Device> device) {
 
 	Vector2 buttonpos = Vector2(Globals::WINDOW_WIDTH / 2, Globals::WINDOW_HEIGHT / 8);
 	Vector2 buttonsize = Vector2(Globals::WINDOW_WIDTH / 4, 0);
 	buttonpos.x -= buttonsize.x / 2;
-	Button* button = guiFactory->createButton(
-		buttonpos, buttonsize, L"Play");
-	button->normalColor = Color(1, .558, 1, 1);
-	button->setOnClickListener(new PlayButtonListener(this));
-	guiControls.push_back(unique_ptr<GUIControl>(button));
+	Button* button = guiFactory.createButton(buttonpos, buttonsize, L"Play");
+	button->setUnpressedColor(Color(1, .558, 1, 1));
+	button->setActionListener(new PlayButtonListener(this));
+	LetterJammer* jammer = guiFactory.createLetterJammer(
+		Vector2::Zero, L"Play", Color(0, 0, 0, 1), false);
+	jammer->setEffect(make_unique<ColorJammer>(.525));
+	button->setTextLabel(jammer, true);
+	guiControls.push_back(button);
 
 	buttonpos.y = Globals::WINDOW_HEIGHT / 2 - button->getHeight() / 2;
-	button = guiFactory->createButton(
-		buttonpos, buttonsize, L"Settings");
-	button->normalColor = Color(1, .558, 1, 1);
-	button->setOnClickListener(new SettingsButtonListener(this));
-	guiControls.push_back(unique_ptr<GUIControl>(button));
+	button = guiFactory.createButton(buttonpos, buttonsize, L"Settings");
+	button->setUnpressedColor(Color(1, .558, 1, 1));
+	button->setActionListener(new SettingsButtonListener(this));
+	guiControls.push_back(button);
 
 	buttonpos.y = Globals::WINDOW_HEIGHT - Globals::WINDOW_HEIGHT / 8 - button->getHeight();
-	button = guiFactory->createButton(
-		buttonpos, buttonsize, L"Exit");
-	button->normalColor = Color(1, .558, 1, 1);
-	button->setOnClickListener(new OnClickListenerExitButton(this));
-	guiControls.push_back(unique_ptr<GUIControl>(button));
+	button = guiFactory.createButton(buttonpos, buttonsize, L"Exit");
+	button->setUnpressedColor(Color(1, .558, 1, 1));
+	button->setActionListener(new OnClickListenerExitButton(this));
+	guiControls.push_back(button);
 
-
+	/*delete*/
 
 	{
-		exitDialog.reset(guiFactory->createDialog(true));
+
 		Vector2 dialogPos, dialogSize;
 		dialogSize = Vector2(Globals::WINDOW_WIDTH / 2, Globals::WINDOW_HEIGHT / 2);
 		dialogPos = dialogSize;
 		dialogPos.x -= dialogSize.x / 2;
 		dialogPos.y -= dialogSize.y / 2;
-		exitDialog->setDimensions(dialogPos, dialogSize);
+		exitDialog.reset(guiFactory.createDialog(dialogPos, dialogSize, true, true, 10));
 		exitDialog->setTint(Color(0, .5, 1, 1));
 		exitDialog->setTitle(L"Exit Test?", Vector2(1, 1), "BlackCloak");
 		//exitDialog->setTitleAreaDimensions(Vector2(0, 150));
 		exitDialog->setText(L"Really Quit The Test Project?");
 		unique_ptr<Button> quitButton;
-		quitButton.reset(guiFactory->createButton());
-		quitButton->setOnClickListener(new OnClickListenerDialogQuitButton(this));
+		quitButton.reset(guiFactory.createButton());
+		quitButton->setActionListener(new OnClickListenerDialogQuitButton(this));
 		quitButton->setText(L"Quit");
 		exitDialog->setConfirmButton(move(quitButton));
 		exitDialog->setCancelButton(L"Keep Testing!");
-		exitDialog->open();
 		exitDialog->setOpenTransition(
 			new TransitionEffects::SpinGrowTransition(exitDialog.get(), .5));
 			//new TransitionEffects::SplitTransition(exitDialog.get(), Globals::WINDOW_WIDTH));
@@ -232,7 +260,6 @@ bool MainScreen::initialize(ComPtr<ID3D11Device> device, shared_ptr<MouseControl
 		//exitDialog->setCloseTransition(
 		/*new TransitionEffects::ShrinkTransition(
 		Vector2(1, 1), Vector2(.001, .001)));*/
-		exitDialog->close();
 	}
 
 
@@ -240,21 +267,26 @@ bool MainScreen::initialize(ComPtr<ID3D11Device> device, shared_ptr<MouseControl
 	return true;
 }
 
-Keyboard::KeyboardStateTracker keyTracker;
-void MainScreen::update(double deltaTime, shared_ptr<MouseController> mouse) {
+void MainScreen::reloadGraphicsAssets() {
+
+	for (auto const& control : guiControls)
+		control->reloadGraphicsAsset();
+
+	exitDialog->reloadGraphicsAsset();
+}
 
 
-	auto state = Keyboard::Get().GetState();
-	keyTracker.Update(state);
-	if (keyTracker.IsKeyReleased(Keyboard::Escape)) {
-		if (exitDialog->isOpen)
-			exitDialog->close();
+void MainScreen::update(double deltaTime) {
+
+	if (keys.isKeyPressed(Keyboard::Escape)) {
+		if (exitDialog->isOpen())
+			exitDialog->hide();
 		else
-			exitDialog->open();
+			exitDialog->show();
 	}
 
 
-	if (exitDialog->isOpen) {
+	if (exitDialog->isOpen()) {
 		exitDialog->update(deltaTime);
 	} else {
 		for (auto const& control : guiControls)
@@ -264,18 +296,6 @@ void MainScreen::update(double deltaTime, shared_ptr<MouseController> mouse) {
 
 
 void MainScreen::draw(SpriteBatch* batch) {
-
-	batch->Begin(SpriteSortMode_Deferred);
-	{
-		for (auto const& control : guiControls)
-			control->draw(batch);
-
-		exitDialog->draw(batch);
-	}
-	batch->End();
-}
-
-void MainScreen::safedraw(SpriteBatch* batch) {
 	for (auto const& control : guiControls)
 		control->draw(batch);
 
@@ -284,7 +304,7 @@ void MainScreen::safedraw(SpriteBatch* batch) {
 
 
 void MainScreen::confirmExit() {
-	exitDialog->open();
+	exitDialog->show();
 }
 
 
@@ -301,60 +321,78 @@ ConfigScreen::~ConfigScreen() {
 
 int MARGIN = 10;
 int itemHeight = 32;
-bool ConfigScreen::initialize(ComPtr<ID3D11Device> device, shared_ptr<MouseController> mouse) {
+bool ConfigScreen::initialize(ComPtr<ID3D11Device> device) {
+
 
 	Vector2 controlPos = Vector2(50, 50);
-	// Labels for displaying pressed info
-	adapterLabel =
-		guiFactory->createTextLabel(controlPos, L"Test");
+	//Labels for displaying pressed info
+	adapterLabel = guiFactory.createTextLabel(controlPos, L"Test");
 	adapterLabel->setHoverable(true);
-	guiControls.push_back(unique_ptr<GUIControl>(adapterLabel));
+	guiControls.push_back(adapterLabel);
 
 	controlPos.y += adapterLabel->getHeight() + MARGIN;
 
 	// create listbox of gfx cards
-	adapterListbox =
-		guiFactory->createListBox(controlPos, 400, itemHeight);
-	guiControls.push_back(unique_ptr<GUIControl>(adapterListbox));
+	adapterListbox = guiFactory.createListBox(controlPos, 400, itemHeight);
+	guiControls.push_back(adapterListbox);
 	vector<ListItem*> adapterItems;
 	for (ComPtr<IDXGIAdapter> adap : game->getAdapterList()) {
 		AdapterItem* item = new AdapterItem();
 		item->adapter = adap;
 		adapterItems.push_back(item);
 	}
+
 	adapterListbox->addItems(adapterItems);
 	adapterListbox->setSelected(game->getSelectedAdapterIndex());
 
 	OnClickListenerAdapterList* onClickAdapterList = new OnClickListenerAdapterList(this);
-	adapterListbox->setOnClickListener(onClickAdapterList);
+	adapterListbox->setActionListener(onClickAdapterList);
+
 
 	adapterLabel->setText(adapterListbox->getSelected()->toString());
 
 
 	controlPos.y += adapterListbox->getHeight() + MARGIN * 2;
-	displayLabel = guiFactory->createTextLabel(controlPos, L"A");
-	guiControls.push_back(unique_ptr<GUIControl>(displayLabel));
+	displayLabel = guiFactory.createTextLabel(controlPos, L"A");
+	guiControls.push_back(displayLabel);
 
 	controlPos.y += displayLabel->getHeight() + MARGIN;
 
 	// create listbox of monitors available to pressed gfx card
-	displayListbox = guiFactory->createListBox(controlPos, 400, itemHeight);
-	guiControls.push_back(unique_ptr<GUIControl>(displayListbox));
+	displayListbox = guiFactory.createListBox(controlPos, 400, itemHeight);
+	guiControls.push_back(displayListbox);
 	// because only the one adapter has displays on my laptop
 	// this has to be grab the first (and only) display.
 	populateDisplayList(game->getDisplayListFor(0));
 	displayListbox->setSelected(game->getSelectedDisplayIndex());
 
 	displayLabel->setText(displayListbox->getSelected()->toString());
-
+	displayLabel->setHoverable(true);
 	// setup label for Display Mode
-	controlPos.x += displayListbox->getWidth() + MARGIN * 2;
+
+	controlPos.y += 50;
+
+	testSpinner = guiFactory.createSpinner(controlPos, 25, itemHeight);
+
+	vector<wstring> items;
+	for (const auto& playerSlot : waitingSlots) {
+		wostringstream wss;
+		wss << "Slot: " << playerSlot->getPlayerSlotNumber();
+		items.push_back(wss.str());
+	}
+
+	testSpinner->addItems(items);
+	guiControls.push_back(testSpinner);
+	controlPos.x += testSpinner->getWidth() + 25;
+
+	spinnerLabel = guiFactory.createTextLabel(controlPos, L"Controllers Found");
+	guiControls.push_back(spinnerLabel);
+
+
+	//Setup display mode combobox
+	controlPos.x = displayListbox->getPosition().x + displayListbox->getWidth() + MARGIN * 2;
 	controlPos.y = 50;
-
-
-	// Setup display mode combobox
-
-	// custom scrollbar for combo list
+	//custom scrollbar for combo list
 	ScrollBarDesc scrollBarDesc;
 	scrollBarDesc.upButtonImage = "ScrollBar Up Custom";
 	scrollBarDesc.upPressedButtonImage = "ScrollBar Up Pressed Custom";
@@ -363,84 +401,111 @@ bool ConfigScreen::initialize(ComPtr<ID3D11Device> device, shared_ptr<MouseContr
 	scrollBarDesc.scrubberImage = "Scrubber Custom";
 
 	displayModeCombobox =
-		guiFactory->createComboBox(controlPos, 75, itemHeight, 10, true);
+		guiFactory.createComboBox(controlPos, 75, itemHeight, 10, true);
+	//guiFactory->createListBox(controlPos, 75, itemHeight);
 
-	populateDisplayModeList(
-		game->getDisplayModeList(0));
+	populateDisplayModeList(game->getDisplayModeList(0));
 	displayModeCombobox->setScrollBar(scrollBarDesc);
 	displayModeCombobox->setSelected(game->getSelectedDisplayModeIndex());
-	guiControls.push_back(unique_ptr<GUIControl>(displayModeCombobox));
-
 	OnClickListenerDisplayModeList* onClickDisplayMode =
 		new OnClickListenerDisplayModeList(this);
-	displayModeCombobox->setOnClickListener(onClickDisplayMode);
+	displayModeCombobox->setActionListener(onClickDisplayMode);
+	guiControls.push_back(displayModeCombobox);
+
+
 
 
 	// Set up CheckBox for full-screen toggle
-	CheckBox* check = guiFactory->createCheckBox(
-		Vector2(50, 450), L"Full Screen");
+	CheckBox* check = guiFactory.createCheckBox(Vector2(50, 450), L"Full Screen");
 	OnClickListenerFullScreenCheckBox* onClickFullScreen
 		= new OnClickListenerFullScreenCheckBox(this);
+	check->setActionListener(onClickFullScreen);
 	check->setChecked(Globals::FULL_SCREEN);
-	check->setOnClickListener(onClickFullScreen);
-	guiControls.push_back(unique_ptr<GUIControl>(check));
 
-	testLabel = guiFactory->createTextLabel(
+	guiControls.push_back(check);
+
+	testLabel = guiFactory.createTextLabel(
 		Vector2(250, 450), L"Test Messages here");
-	guiControls.push_back(unique_ptr<GUIControl>(testLabel));
+	guiControls.push_back(testLabel);
 
 	// Create Apply and Cancel Buttons
-	ImageButton* button = (ImageButton*) guiFactory->
-		createImageButton("Button Up", "Button Down");
-	button->action = Button::ClickAction::CANCEL;
+	ImageButton* button = (ImageButton*) guiFactory.createImageButton("Button Up", "Button Down");
 	button->setText(L"Back");
 	button->setPosition(
 		Vector2(Globals::WINDOW_WIDTH / 2 - button->getWidth(),
 			Globals::WINDOW_HEIGHT - button->getHeight() - 25));
-	guiControls.push_back(unique_ptr<GUIControl>(button));
+	button->setActionListener(new BackButtonListener(this));
+	guiControls.push_back(button);
 
-	button = (ImageButton*) guiFactory->
-		createImageButton("Button Up", "Button Down");
-	button->action = Button::ClickAction::OK;
+	button = (ImageButton*) guiFactory.createImageButton("Button Up", "Button Down");
 	button->setText(L"Apply");
 	button->setPosition(
 		Vector2(Globals::WINDOW_WIDTH / 2,
 			Globals::WINDOW_HEIGHT - button->getHeight() - 25));
-	guiControls.push_back(unique_ptr<GUIControl>(button));
+	guiControls.push_back(button);
+
+	texturePanel.reset(guiFactory.createPanel());
 
 
 	return true;
 }
 
+void ConfigScreen::reloadGraphicsAssets() {
+	for (auto const& control : guiControls)
+		control->reloadGraphicsAsset();
+}
 
-void ConfigScreen::update(double deltaTime, shared_ptr<MouseController> mouse) {
 
-	auto state = Keyboard::Get().GetState();
-	keyTracker.Update(state);
+void ConfigScreen::update(double deltaTime) {
 
-	if (keyTracker.IsKeyReleased(Keyboard::Escape)) {
+
+	if (keys.isKeyPressed(Keyboard::Escape)) {
 		menuManager->openMainMenu();
 	}
 
-
 	for (auto const& control : guiControls) {
-		control->update(deltaTime);
+		if (control->update(deltaTime))
+			refreshTexture = true;
+	}
+
+	if (refreshTexture) {
+		refreshTexture = false;
+		texturePanel->setTexture(guiFactory.createTextureFromScreen(this));
 	}
 }
 
-//#include "../Engine/GameEngine.h"
+
 void ConfigScreen::draw(SpriteBatch* batch) {
-	batch->Begin(SpriteSortMode_Deferred);
-	{
-		for (auto const& control : guiControls)
-			control->draw(batch);
-	}
-	batch->End();
+	texturePanel->draw(batch);
+
 }
 
-void ConfigScreen::safedraw(SpriteBatch* batch) {
+void ConfigScreen::textureDraw(SpriteBatch* batch) {
 	for (auto const& control : guiControls)
 		control->draw(batch);
+}
+
+
+void ConfigScreen::controllerRemoved(ControllerSocketNumber controllerSlot,
+	PlayerSlotNumber slotNumber) {
+	wostringstream wss;
+	wss << "Socket: " << controllerSlot;
+	wss << " Player: " << slotNumber;
+	if (!testSpinner->removeItem(wss.str())) {
+		GameEngine::showWarningDialog(
+			L"Joystick not found in spinner", L"Joystick Removal Error");
+	}
+}
+
+void ConfigScreen::newController(shared_ptr<Joystick> newStick) {
+	wostringstream wss;
+	wss << "Socket: " << newStick->getControllerSockerNumber();
+	wss << " Player: " << newStick->getPlayerSlotNumber();
+	testSpinner->addItem(wss.str());
+
+	Vector2 newPos(testSpinner->getPosition());
+	newPos.x += testSpinner->getWidth() + 25;
+	spinnerLabel->setPosition(newPos);
 }
 
 void ConfigScreen::populateDisplayList(vector<ComPtr<IDXGIOutput>> displays) {
@@ -468,10 +533,11 @@ void ConfigScreen::populateDisplayModeList(vector<DXGI_MODE_DESC> displayModes) 
 		displayModeItems.push_back(item);
 	}
 	displayModeCombobox->addItems(displayModeItems);
+
+	displayModeItems.clear();
 }
 
 
-#include <sstream>
 void AdapterItem::setText() {
 
 	DXGI_ADAPTER_DESC desc;
@@ -514,19 +580,20 @@ void DisplayModeItem::setText() {
 }
 
 
-void OnClickListenerAdapterList::onClick(ListBox* listbox, int selectedIndex) {
+
+void OnClickListenerAdapterList::onClick(ListBox* listbox, UINT selectedIndex) {
 
 	AdapterItem* selectedItem = (AdapterItem*) listbox->getItem(selectedIndex);
 	config->game->setAdapter(selectedIndex);
-	config->populateDisplayList(config->game->getDisplayList());
-	config->populateDisplayModeList(
-		config->game->getDisplayModeList(0
-		/*config->game->getSelectedAdapterIndex()*/));
-
-	config->adapterLabel->setText(listbox->getSelected()->toString());
 }
 
-void OnClickListenerDisplayModeList::onClick(ComboBox* combobox, int selectedIndex) {
+
+void OnClickListenerAdapterList::onHover(ListBox* listbox, short hoveredItemIndex) {
+}
+
+
+
+void OnClickListenerDisplayModeList::onClick(ComboBox* combobox, UINT selectedIndex) {
 
 	if (!config->game->setDisplayMode(selectedIndex)) {
 		// change back to previous setting
@@ -538,6 +605,11 @@ void OnClickListenerDisplayModeList::onClick(ComboBox* combobox, int selectedInd
 
 }
 
+void OnClickListenerDisplayModeList::onHover(ComboBox * listbox, short hoveredItemIndex) {
+}
+
+
+
 void OnClickListenerFullScreenCheckBox::onClick(CheckBox* checkbox, bool isChecked) {
 
 	/*wostringstream wss;
@@ -548,27 +620,84 @@ void OnClickListenerFullScreenCheckBox::onClick(CheckBox* checkbox, bool isCheck
 	} else {
 		// reconstruct display
 
-		config->populateDisplayModeList(config->game->getDisplayModeList(0));
+		config->populateDisplayModeList(
+			config->game->getDisplayModeList(config->game->getSelectedDisplayIndex()));
 		//config->displayModeCombobox->setSelected(config->game->getSelectedDisplayModeIndex());
 	}
 }
+
+void OnClickListenerFullScreenCheckBox::onHover(CheckBox* checkbox,
+	bool isChecked) {
+}
+
+
 
 void SettingsButtonListener::onClick(Button* button) {
 
 	main->menuManager->openConfigMenu();
 }
 
+void SettingsButtonListener::onPress(Button * button) {
+}
+
+void SettingsButtonListener::onHover(Button * button) {
+}
+
+void SettingsButtonListener::resetState(Button * button) {
+}
+
 void OnClickListenerDialogQuitButton::onClick(Button* button) {
-	main->exitDialog->close();
+	main->exitDialog->hide();
 	main->game->exit();
 }
 
-void OnClickListenerExitButton::onClick(Button* button) {
-	main->exitDialog->open();
+void OnClickListenerDialogQuitButton::onPress(Button * button) {
 }
 
-void PlayButtonListener::onClick(Button* button) {
+void OnClickListenerDialogQuitButton::onHover(Button * button) {
+}
 
-	//game->loadLevel("Shara");
+void OnClickListenerDialogQuitButton::resetState(Button* button) {
+}
+
+void OnClickListenerExitButton::onClick(Button* button) {
+	main->exitDialog->show();
+}
+
+void OnClickListenerExitButton::onPress(Button* button) {
+}
+
+void OnClickListenerExitButton::onHover(Button* button) {
+}
+
+void OnClickListenerExitButton::resetState(Button* button) {
+}
+
+
+void PlayButtonListener::onClick(Button* button) {
 	main->menuManager->openLevelSelectScreen();
+}
+
+void PlayButtonListener::onPress(Button* button) {
+}
+
+void PlayButtonListener::onHover(Button* button) {
+	((LetterJammer*) button->buttonLabel.get())->setRun(true);
+}
+
+void PlayButtonListener::resetState(Button* button) {
+	((LetterJammer*) button->buttonLabel.get())->reset();
+}
+
+void BackButtonListener::onClick(Button* button) {
+	configScreen->menuManager->openMainMenu();
+}
+
+void BackButtonListener::onPress(Button* button) {
+}
+
+void BackButtonListener::onHover(Button* button) {
+}
+
+void BackButtonListener::resetState(Button * button) {
 }

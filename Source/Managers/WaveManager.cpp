@@ -1,4 +1,6 @@
+#include "../pch.h"
 #include "WaveManager.h"
+#include "../assets.h"
 
 WaveManager::WaveManager() {
 }
@@ -9,7 +11,7 @@ WaveManager::~WaveManager() {
 		delete wave;
 }
 
-#include "../assets.h"
+
 bool WaveManager::initialize(GFXAssetManager* gfxAssets) {
 
 	xml_document xml_enemies;
@@ -39,6 +41,11 @@ bool WaveManager::initialize(GFXAssetManager* gfxAssets) {
 	return true;
 }
 
+void WaveManager::reloadGraphicsAssets() {
+	for (Wave* wave : waves)
+		wave->reloadGraphicsAssets();
+}
+
 void WaveManager::clear() {
 
 	for each (Wave* wave in waves)
@@ -64,7 +71,7 @@ void WaveManager::update(double deltaTime, PlayerShip* player) {
 
 		for (Bullet* bullet : wave->liveBullets) {
 			bullet->update(deltaTime);
-			if (bullet->getHitArea()->collision(player->getHitArea())) {
+			if (bullet->getHitArea()->collision(&player->getHitArea())) {
 				bullet->isAlive = false;
 				player->takeDamage(bullet->damage);
 			}

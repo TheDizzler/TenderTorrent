@@ -1,3 +1,4 @@
+#include "../pch.h"
 #include "LaserSystem.h"
 
 LaserSystem::LaserSystem(Vector2 position) : WeaponSystem(position) {

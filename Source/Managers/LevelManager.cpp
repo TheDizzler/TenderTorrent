@@ -1,7 +1,8 @@
+#include "../pch.h"
 #include "LevelManager.h"
-
-LevelManager::LevelManager() {
-}
+#include "../assets.h"
+#include "GameManager.h"
+#include "../Engine/GameEngine.h"
 
 LevelManager::~LevelManager() {
 
@@ -11,10 +12,8 @@ void LevelManager::setGameManager(GameManager* gm) {
 	game = gm;
 }
 
-#include "../assets.h"
-#include "GameManager.h"
-#include "../Engine/GameEngine.h"
-bool LevelManager::initialize(ComPtr<ID3D11Device> device, shared_ptr<MouseController> mouse) {
+
+bool LevelManager::initialize(ComPtr<ID3D11Device> device) {
 
 	levelManifest.reset(new xml_document());
 	xml_parse_result result = levelManifest->load_file(Assets::levelManifestFile);
@@ -28,13 +27,11 @@ bool LevelManager::initialize(ComPtr<ID3D11Device> device, shared_ptr<MouseContr
 	}
 
 
-	if (!mouse->loadMouseIcon(guiFactory.get(), "Mouse Reticle"))
+	if (!mouse.loadMouseIcon(&guiFactory, "Mouse Reticle"))
 		return false;
 
-	bgManager.reset(new Background());
 
-	waveManager.reset(new WaveManager());
-	if (!waveManager->initialize(gfxAssets.get()))
+	if (!waveManager.initialize(gfxAssets.get()))
 		return false;
 
 	playerShip.reset(new PlayerShip(PLAYER_START_POSITION));
@@ -47,14 +44,20 @@ bool LevelManager::initialize(ComPtr<ID3D11Device> device, shared_ptr<MouseContr
 
 
 	guiOverlay = make_unique<GUIOverlay>();
-	guiOverlay->exitButton->setOnClickListener(new ExitButtonListener(this));
-	guiOverlay->continueButton->setOnClickListener(new ContinueButtonListener(this));
+	guiOverlay->exitButton->setActionListener(new ExitButtonListener(this));
+	guiOverlay->continueButton->setActionListener(new ContinueButtonListener(this));
 
 	Vector2 viewarea = guiOverlay->getPlayArea(); // for some reason this step is necessary
 	Vector2 viewposition = guiOverlay->getPlayPosition();
-	camera->updateViewport(viewarea, viewposition);
+	camera.updateViewport(viewarea, viewposition);
 
 	return true;
+}
+
+void LevelManager::reloadGraphicsAssets() {
+	bgManager.reloadGraphicsAssets();
+	waveManager.reloadGraphicsAssets();
+	guiOverlay->reloadGraphicsAssets();
 }
 
 
@@ -62,12 +65,12 @@ bool LevelManager::loadLevel(ComPtr<ID3D11Device> device, const char_t* levelFil
 
 	playState = LOADING;
 
-	bgManager->clear();
-	if (!bgManager->loadLevel(device, levelFileName))
+	bgManager.clear();
+	if (!bgManager.loadLevel(device, levelFileName))
 		return false;
 
-	waveManager.reset(new WaveManager());
-	if (!waveManager->initialize(gfxAssets.get()))
+	waveManager.clear();
+	if (!waveManager.initialize(gfxAssets.get()))
 		return false;
 
 	totalPlayTime = 0;
@@ -79,9 +82,9 @@ bool LevelManager::loadLevel(ComPtr<ID3D11Device> device, const char_t* levelFil
 }
 
 
-void LevelManager::update(double deltaTime, shared_ptr<MouseController> mouse) {
+void LevelManager::update(double deltaTime) {
 
-	auto keyState = Keyboard::Get().GetState();
+	//auto keyState = Keyboard::Get().GetState();
 	switch (playState) {
 		case PLAYING:
 			totalPlayTime += deltaTime;
@@ -89,7 +92,7 @@ void LevelManager::update(double deltaTime, shared_ptr<MouseController> mouse) {
 			// player's bullet hit detection
 			for (Bullet* bullet : playerShip->liveBullets) {
 				bullet->update(deltaTime);
-				for (Wave* wave : waveManager->waves) {
+				for (Wave* wave : waveManager.waves) {
 					for (EnemyShip* enemy : wave->shipStore) {
 						if (enemy->isAlive) {
 							if (bullet->getHitArea()->collision(enemy->getHitArea())) {
@@ -100,7 +103,7 @@ void LevelManager::update(double deltaTime, shared_ptr<MouseController> mouse) {
 					}
 				}
 
-				for (ClothLayer* layer : bgManager->getClothes()) {
+				for (ClothLayer* layer : bgManager.getClothes()) {
 					if (layer->isAlive()) {
 						if (bullet->getHitArea()->collision(layer->getHitArea())) {
 							layer->takeDamage(bullet->damage);
@@ -111,16 +114,18 @@ void LevelManager::update(double deltaTime, shared_ptr<MouseController> mouse) {
 			}
 
 
-			if (bgManager->update(deltaTime, mouse)) {
+			if (bgManager.update(deltaTime)) {
 				playState = PlayState::FINISHED;
-				waveManager->clearEnemies();
+				waveManager.clearEnemies();
 			}
-			playerShip->update(deltaTime, mouse);
-			waveManager->update(deltaTime, playerShip.get());
+			playerShip->update(deltaTime);
+			waveManager.update(deltaTime, playerShip.get());
 
-			if (!pauseDownLast && keyState.Escape) {
+
+			//if (!pauseDownLast && keyState.Escape) {
+			if (keys.isKeyPressed(Keyboard::Escape)) {
 				playState = PAUSED;
-				pauseDownLast = true;
+				//pauseDownLast = true;
 			}
 
 			if (!playerShip->isAlive) {
@@ -128,8 +133,8 @@ void LevelManager::update(double deltaTime, shared_ptr<MouseController> mouse) {
 			}
 			break;
 		case STARTING:
-			if (bgManager->startUpdate(deltaTime)) {
-				if (playerShip->startUpdate(deltaTime, mouse)) {
+			if (bgManager.startUpdate(deltaTime)) {
+				if (playerShip->startUpdate(deltaTime)) {
 					if (delayedPause) {
 						playState = PAUSED;
 						delayedPause = false;
@@ -142,11 +147,13 @@ void LevelManager::update(double deltaTime, shared_ptr<MouseController> mouse) {
 		case FINISHED:
 			for (Bullet* bullet : playerShip->liveBullets)
 				bullet->update(deltaTime);
-			waveManager->finishedUpdate(deltaTime);
+			waveManager.finishedUpdate(deltaTime);
 			playerShip->finishedUpdate(deltaTime);
 
 			gameOverTimer += deltaTime;
-			if (gameOverTimer > 15 || keyState.Escape || keyState.Enter)
+			if (gameOverTimer > 15 /*|| keyState.Escape || keyState.Enter*/
+				|| keys.isKeyPressed(Keyboard::Escape)
+				|| keys.isKeyPressed(Keyboard::Enter))
 				game->loadMainMenu();
 			break;
 		case GAMEOVER:
@@ -154,16 +161,19 @@ void LevelManager::update(double deltaTime, shared_ptr<MouseController> mouse) {
 				bullet->update(deltaTime);
 			//bgManager->update(deltaTime, mouse);
 			playerShip->deathUpdate(deltaTime);
-			waveManager->update(deltaTime, playerShip.get());
+			waveManager.update(deltaTime, playerShip.get());
 			gameOverTimer += deltaTime;
-			if (gameOverTimer > 15 || keyState.Escape || keyState.Enter)
+			if (gameOverTimer > 15 /*|| keyState.Escape || keyState.Enter)*/
+				|| keys.isKeyPressed(Keyboard::Escape)
+				|| keys.isKeyPressed(Keyboard::Enter))
 				game->loadMainMenu();
 			break;
 		case PAUSED:
 			guiOverlay->updatePaused(deltaTime);
-			if (!pauseDownLast && keyState.Escape) {
+			//if (!pauseDownLast && keyState.Escape) {
+			if (keys.isKeyPressed(Keyboard::Escape)) {
 				playState = PLAYING;
-				pauseDownLast = true;
+				//pauseDownLast = true;
 			}
 
 			break;
@@ -189,15 +199,17 @@ void LevelManager::update(double deltaTime, shared_ptr<MouseController> mouse) {
 		guiOverlay->energyLabel->setText(ws);
 	}
 
-	pauseDownLast = keyState.Escape;
+	guiOverlay->update(deltaTime);
+	//pauseDownLast = keyState.Escape;
 }
 
-#include "../Engine/GameEngine.h"
+
 void LevelManager::draw(SpriteBatch* batch) {
 
-	batch->Begin(SpriteSortMode_Deferred, NULL, NULL, NULL, NULL, NULL, camera->translationMatrix());
+	batch->Begin(SpriteSortMode_Deferred, NULL, NULL, NULL, NULL, NULL,
+		camera.translationMatrix());
 	{
-		bgManager->draw(batch);
+		bgManager.draw(batch);
 
 	}
 	batch->End();
@@ -208,7 +220,7 @@ void LevelManager::draw(SpriteBatch* batch) {
 	{
 
 
-		waveManager->draw(batch);
+		waveManager.draw(batch);
 
 
 
@@ -219,7 +231,7 @@ void LevelManager::draw(SpriteBatch* batch) {
 				break;
 			case STARTING:
 				playerShip->draw(batch);
-				if (bgManager->introScrollDone)
+				if (bgManager.introScrollDone)
 					guiOverlay->drawWarning(batch);
 				break;
 			case GAMEOVER:
@@ -235,13 +247,11 @@ void LevelManager::draw(SpriteBatch* batch) {
 	batch->End();
 }
 
-void LevelManager::safedraw(SpriteBatch* batch) {
-	bgManager->draw(batch);
+void LevelManager::textureDraw(SpriteBatch* batch) {
 
-
-	playerShip->draw(batch);
-	waveManager->draw(batch);
+	bgManager.draw(batch);
 }
+
 
 void LevelManager::pause() {
 
@@ -253,19 +263,27 @@ void LevelManager::pause() {
 }
 
 
+void LevelManager::controllerRemoved(ControllerSocketNumber controllerSlot,
+	PlayerSlotNumber slotNumber) {
+}
+
+void LevelManager::newController(shared_ptr<Joystick> newStick) {
+}
+
+
 void LevelManager::resume() {
 	playState = PLAYING;
-	pauseDownLast = true;
+	//pauseDownLast = true;
 }
 
 void LevelManager::exitLevel() {
 
-	waveManager->clear();
-	bgManager->clear();
+	waveManager.clear();
+	bgManager.clear();
 	//playerShip->clear();
 
 
-	pauseDownLast = true;
+	//pauseDownLast = true;
 
 	game->loadMainMenu();
 }
@@ -275,7 +293,25 @@ void ExitButtonListener::onClick(Button* button) {
 	lvlManager->exitLevel();
 }
 
+void ExitButtonListener::onPress(Button * button) {
+}
+
+void ExitButtonListener::onHover(Button * button) {
+}
+
+void ExitButtonListener::resetState(Button * button) {
+}
+
 void ContinueButtonListener::onClick(Button * button) {
 
 	lvlManager->resume();
+}
+
+void ContinueButtonListener::onPress(Button * button) {
+}
+
+void ContinueButtonListener::onHover(Button * button) {
+}
+
+void ContinueButtonListener::resetState(Button * button) {
 }

@@ -8,6 +8,8 @@
 #include <cctype>
 #include <sstream>
 #include <vector>
+#include <list>
+#include <deque>
 #include <WinSDKVer.h>		// these are necessary for XAudio2.8
 #define _WIN32_WINNT 0x0602	// ^
 #include <SDKDDKVer.h>		// ^
@@ -21,7 +23,8 @@
 #include <Audio.h>
 #include <pugixml.hpp>
 
-#include "DXTKGui\Controls\GUIFactory.h"
+#include "../DXTKGui/GUIFactory.h"
+#include "Engine/Input.h"
 
 using namespace std;
 using namespace pugi;

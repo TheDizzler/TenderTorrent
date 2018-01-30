@@ -1,4 +1,3 @@
-#include "../pch.h"
 #pragma once
 
 #include "GFXAssetManager.h"
@@ -8,9 +7,12 @@
 class Wave {
 public:
 	Wave();
-	~Wave();
+	virtual ~Wave();
 
 	virtual bool initialize(GFXAssetManager* gfxAssets, xml_node shipNode) = 0;
+
+	void reloadGraphicsAssets();
+
 	void clear();
 	virtual void launchNewWave() = 0;
 

@@ -1,14 +1,11 @@
-#include "../../pch.h"
 #pragma once
-
-#include "../../DXTKGui/BaseGraphics/IElement2D.h"
+#include "../../../DXTKGui/BaseGraphics/IElement2D.h"
 
 
 class AnimatedSprite : public IElement2D {
 public:
-	//AnimatedSprite();
 	AnimatedSprite(const Vector2& position);
-	~AnimatedSprite();
+	virtual ~AnimatedSprite();
 
 	void load(shared_ptr<Animation> animation);
 
@@ -27,17 +24,19 @@ public:
 	const RECT getRect() const;
 	const HitArea* getHitArea() const;
 	
-
+	virtual bool contains(const Vector2 & point) override;
 	
 
-	virtual void moveBy(const Vector2 & moveVector) override;
-	virtual void setPosition(const Vector2 & position) override;
-	virtual void setOrigin(const Vector2 & origin) override;
-	virtual void setScale(const Vector2 & scale) override;
+	virtual void moveBy(const Vector2& moveVector) override;
+	virtual void setPosition(const Vector2& position) override;
+	virtual void setOrigin(const Vector2& origin) override;
+	virtual void setScale(const Vector2& scale) override;
 	virtual void setRotation(const float rotation) override;
 	virtual void setTint(const XMFLOAT4 color) override;
+	virtual void setTint(const Color& color) override;
+	virtual void setTint(const XMVECTORF32 color) override;
 	virtual void setAlpha(const float alpha) override;
-	virtual void setLayerDepth(const float depth) override;
+	virtual void setLayerDepth(const float depth, bool frontToBack = true) override;
 
 	void reset();
 	bool repeats = true;
@@ -57,6 +56,5 @@ protected:
 	Vector2 position;
 
 	Vector2 scale = Vector2(1, 1);
-	unique_ptr<HitArea> hitArea;
-
+	HitArea hitArea;
 };

@@ -1,3 +1,4 @@
+#include "../../pch.h"
 #include "BackgroundLayer.h"
 
 BackgroundLayer::BackgroundLayer() {
@@ -12,6 +13,13 @@ BackgroundLayer::~BackgroundLayer() {
 	/*for (ClothLayer* layer : bottomLayers)
 		delete layer;*/
 	bottomLayers.clear();
+}
+
+void BackgroundLayer::reloadGraphicsAssets() {
+	for (const auto& layer : bottomLayers)
+		layer->reloadGraphicsAssets();
+	for (const auto& layer : topLayers)
+		layer->reloadGraphicsAssets();
 }
 
 

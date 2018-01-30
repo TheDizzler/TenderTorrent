@@ -1,4 +1,3 @@
-#include "../../pch.h"
 #pragma once
 
 #include "ClothLayer.h"
@@ -7,7 +6,9 @@
 class BackgroundLayer {
 public:
 	BackgroundLayer();
-	~BackgroundLayer();
+	virtual ~BackgroundLayer();
+
+	void reloadGraphicsAssets();
 
 	void update(double deltaTime);
 	void draw(SpriteBatch* batch);

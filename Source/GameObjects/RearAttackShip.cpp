@@ -1,8 +1,9 @@
+#include "../pch.h"
 #include "RearAttackShip.h"
-
-//#include "../Engine/GameEngine.h"
 #include "../globals.h"
+
 using namespace Globals;
+
 RearAttackShip::RearAttackShip(xml_node mirrorNode) {
 
 	xml_node shipNode = mirrorNode.parent().parent();

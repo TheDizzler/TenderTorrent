@@ -1,3 +1,4 @@
+#include "../pch.h"
 #include "LaserBolt.h"
 
 LaserBolt::LaserBolt() :Bullet() {

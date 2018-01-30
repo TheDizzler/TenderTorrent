@@ -1,4 +1,3 @@
-#include "../pch.h"
 #pragma once
 
 #include "Graphics\AnimatedSprite.h"
@@ -10,7 +9,7 @@ public:
 	Bullet();
 	/** For constructing actual bullets seen on stage. */
 	Bullet(const Vector2 &position);
-	~Bullet();
+	virtual ~Bullet();
 
 	void setDamage(int newDamage);
 
@@ -25,5 +24,4 @@ public:
 protected:
 
 	float timeAlive = 0;
-
 };

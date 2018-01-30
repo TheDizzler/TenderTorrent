@@ -1,4 +1,7 @@
+#include "../../pch.h"
 #include "Background.h"
+#include "../../../DXTKGui/StringHelper.h"
+#include "../../Engine/GameEngine.h"
 
 Background::Background() {
 
@@ -9,6 +12,12 @@ Background::~Background() {
 
 	clear();
 
+}
+
+void Background::reloadGraphicsAssets() {
+	baseBG->reloadGraphicsAsset(&guiFactory);
+	for (const auto& layer : bgLayers)
+		layer->reloadGraphicsAssets();
 }
 
 void Background::clear() {
@@ -34,8 +43,7 @@ void Background::clear() {
 	totalWaypointTime = 0;
 }
 
-#include "../../DXTKGui/StringHelper.h"
-#include "../../Engine/GameEngine.h"
+
 bool Background::loadLevel(ComPtr<ID3D11Device> device, const char_t* xmlFile) {
 
 	xml_document doc;
@@ -53,7 +61,8 @@ bool Background::loadLevel(ComPtr<ID3D11Device> device, const char_t* xmlFile) {
 
 	unique_ptr<GraphicsAsset> bgLayerAsset;
 	bgLayerAsset.reset(new GraphicsAsset());
-	if (!bgLayerAsset->load(device, StringHelper::convertCharStarToWCharT(filepath.c_str()))) {
+	if (!bgLayerAsset->load(device, filepath.c_str(),
+		StringHelper::convertCharStarToWCharT(filepath.c_str()))) {
 		wstringstream wss;
 		wss << "Unable to background image " << xmlFile;
 		GameEngine::showErrorDialog(wss.str(), L"Fatal Error");
@@ -67,7 +76,7 @@ bool Background::loadLevel(ComPtr<ID3D11Device> device, const char_t* xmlFile) {
 
 	float scaleFactor = levelRoot.attribute("scale").as_float();
 	//baseBG->setScale(Vector2(scaleFactor, scaleFactor));
-	camera->setZoom(scaleFactor);
+	camera.setZoom(scaleFactor);
 
 	xml_node waypointsNode = levelRoot.child("waypoints");
 	xml_node introWP = waypointsNode.child("intro");
@@ -107,8 +116,8 @@ bool Background::loadLevel(ComPtr<ID3D11Device> device, const char_t* xmlFile) {
 	cornerFrame.reset(new Sprite());
 	cornerFrame->load(gfxAssets->getAsset("Corner Frame"));
 
-	camera->setLevel(this);
-	camera->centerOn(lastWaypoint->dest);
+	camera.setLevel(this);
+	camera.centerOn(lastWaypoint->dest);
 
 	return loadLevel(device, levelRoot);
 }
@@ -143,7 +152,7 @@ bool Background::startUpdate(double deltaTime) {
 	double t = totalWaypointTime / CONSTANT;
 
 	Vector2 newpos = Vector2::Lerp(lastWaypoint->dest, currentWaypoint->dest, t);
-	camera->setCameraPosition(newpos);
+	camera.centerOn(newpos);
 	if (t >= 1) {
 		totalWaypointTime = 0;
 		delete lastWaypoint;
@@ -157,13 +166,13 @@ bool Background::startUpdate(double deltaTime) {
 }
 
 
-bool Background::update(double deltaTime, shared_ptr<MouseController> mouse) {
+bool Background::update(double deltaTime) {
 
 	totalWaypointTime += currentWaypoint->scrollSpeed * deltaTime;
 	double t = totalWaypointTime / CONSTANT;
 
 	Vector2 newpos = Vector2::Lerp(lastWaypoint->dest, currentWaypoint->dest, t);
-	camera->setCameraPosition(newpos);
+	camera.centerOn(newpos);
 
 	if (t >= 1) {
 		totalWaypointTime = 0;
@@ -208,12 +217,12 @@ bool Background::loadLevel(ComPtr<ID3D11Device> device, xml_node levelRoot) {
 	string file_s = dir + levelRoot.child("backgroundSpriteSheet").text().as_string();
 
 	const char_t* file = file_s.c_str();
-
+	const char_t* masterAssetName = levelRoot.attribute("name").as_string();
 	// the spritesheet itself is never saved
-	unique_ptr<GraphicsAsset> masterAsset;
-	masterAsset.reset(new GraphicsAsset());
-	if (!masterAsset->load(device, StringHelper::convertCharStarToWCharT(file))) {
-		MessageBox(0, L"Failed", L"Failed", MB_OK);
+	unique_ptr<GraphicsAsset> masterAsset = make_unique<GraphicsAsset>();
+	if (!masterAsset->load(device, masterAssetName,
+		StringHelper::convertCharStarToWCharT(file), Vector2::Zero)) {
+		GameEngine::errorMessage(L"Failed to load level asset file.");
 		return false;
 	}
 
@@ -223,6 +232,7 @@ bool Background::loadLevel(ComPtr<ID3D11Device> device, xml_node levelRoot) {
 
 		unique_ptr<BackgroundLayer> compoundLayer = make_unique<BackgroundLayer>();
 
+		const char_t* setName = compoundLayerNode.attribute("set").as_string();
 
 		// parse top layers
 		for (xml_node clothNode = compoundLayerNode.child("cloth"); clothNode;
@@ -237,7 +247,8 @@ bool Background::loadLevel(ComPtr<ID3D11Device> device, xml_node levelRoot) {
 			Vector2 size = Vector2(sizeNode.attribute("x").as_int(), sizeNode.attribute("y").as_int());
 
 			unique_ptr<GraphicsAsset> spriteAsset = make_unique<GraphicsAsset>();
-			spriteAsset->loadAsPartOfSheet(masterAsset->getTexture(), position, size, Vector2::Zero);
+			spriteAsset->loadAsPartOfSheet(masterAsset->getTexture(), setName,
+				position, size, Vector2::Zero);
 
 
 			unique_ptr<ClothLayer> bgLayer = make_unique<ClothLayer>();
@@ -245,8 +256,8 @@ bool Background::loadLevel(ComPtr<ID3D11Device> device, xml_node levelRoot) {
 			//bgLayer->setLayerDepth(bgLayerNode.attribute("layer").as_float());
 			bgLayer->setHealth(clothNode.attribute("health").as_int());
 			bgLayerAssets.push_back(move(spriteAsset));
-			bgLayer->setMatrixFunction([&]() -> Matrix {return camera->translationMatrix(); });
-			bgLayer->setCameraZoom([&]() -> float { return camera->getZoom(); });
+			bgLayer->setMatrixFunction([&]() -> Matrix {return camera.translationMatrix(); });
+			bgLayer->setCameraZoom([&]() -> float { return camera.getZoom(); });
 			bgLayer->setInitialPosition(worldPosition, baseBG->getScale());
 
 
@@ -257,7 +268,8 @@ bool Background::loadLevel(ComPtr<ID3D11Device> device, xml_node levelRoot) {
 				position = Vector2(pieceNode.attribute("x").as_int(), pieceNode.attribute("y").as_int());
 
 				unique_ptr<GraphicsAsset> pieceAsset = make_unique<GraphicsAsset>();
-				pieceAsset->loadAsPartOfSheet(masterAsset->getTexture(), position, size, Vector2::Zero);
+				pieceAsset->loadAsPartOfSheet(masterAsset->getTexture(), setName,
+					position, size, Vector2::Zero);
 
 				bgLayer->loadPiece(pieceAsset.get());
 				bgLayerAssets.push_back(move(pieceAsset));
@@ -285,7 +297,8 @@ bool Background::loadLevel(ComPtr<ID3D11Device> device, xml_node levelRoot) {
 				Vector2 size = Vector2(sizeNode.attribute("x").as_int(), sizeNode.attribute("y").as_int());
 
 				unique_ptr<GraphicsAsset> spriteAsset = make_unique<GraphicsAsset>();
-				spriteAsset->loadAsPartOfSheet(masterAsset->getTexture(), position, size, Vector2::Zero);
+				spriteAsset->loadAsPartOfSheet(masterAsset->getTexture(), setName,
+					position, size, Vector2::Zero);
 
 
 				unique_ptr<ClothLayer> bgLayer = make_unique<ClothLayer>();
@@ -293,8 +306,8 @@ bool Background::loadLevel(ComPtr<ID3D11Device> device, xml_node levelRoot) {
 				//bgLayer->setLayerDepth(bgLayerNode.attribute("layer").as_float());
 				bgLayer->setHealth(subClothNode.attribute("health").as_int());
 				bgLayerAssets.push_back(move(spriteAsset));
-				bgLayer->setMatrixFunction([&]() -> Matrix {return camera->translationMatrix(); });
-				bgLayer->setCameraZoom([&]() -> float { return camera->getZoom(); });
+				bgLayer->setMatrixFunction([&]() -> Matrix {return camera.translationMatrix(); });
+				bgLayer->setCameraZoom([&]() -> float { return camera.getZoom(); });
 				bgLayer->setInitialPosition(worldPosition, baseBG->getScale());
 
 
@@ -308,7 +321,8 @@ bool Background::loadLevel(ComPtr<ID3D11Device> device, xml_node levelRoot) {
 					if (sizeNode)
 						size = Vector2(sizeNode.attribute("x").as_int(), sizeNode.attribute("y").as_int());
 					unique_ptr<GraphicsAsset> pieceAsset = make_unique<GraphicsAsset>();
-					pieceAsset->loadAsPartOfSheet(masterAsset->getTexture(), position, size, Vector2::Zero);
+					pieceAsset->loadAsPartOfSheet(masterAsset->getTexture(), setName,
+						position, size, Vector2::Zero);
 
 					bgLayer->loadPiece(pieceAsset.get());
 					bgLayerAssets.push_back(move(pieceAsset));

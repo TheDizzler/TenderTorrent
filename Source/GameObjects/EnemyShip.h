@@ -1,18 +1,16 @@
-#include "../pch.h"
 #pragma once
 
-//#include "../DXTKGui/BaseGraphics/Sprite.h"
 #include "PlayerShip.h"
 #include "EnemyBullet.h"
 
 
 
 
-class EnemyShip : public Sprite {
+class EnemyShip : public GameObject {
 protected:
 	struct EnemyWeaponSystem {
 		EnemyWeaponSystem(xml_node weaponPointNode, xml_node weaponSystemsNode, bool mirrored = false);
-		~EnemyWeaponSystem();
+		virtual ~EnemyWeaponSystem();
 
 		void reset(const Vector2& shipPosition);
 
@@ -42,7 +40,7 @@ public:
 	EnemyShip();
 	/** For constructing actual enemies seen on stage. */
 	EnemyShip(const Vector2& position);
-	~EnemyShip();
+	virtual ~EnemyShip();
 
 	void reset();
 

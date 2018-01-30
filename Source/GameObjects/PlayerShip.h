@@ -1,23 +1,25 @@
-#include "../pch.h"
 #pragma once
 
 #include "../Managers/GFXAssetManager.h"
 
-#include "../DXTKGui/Controllers/MouseController.h"
-#include "../DXTKGui/Controllers/KeyboardController.h"
+//#include "../../DXTKGui/Controllers/MouseController.h"
+//#include "../../DXTKGui/Controllers/KeyboardController.h"
 #include "LaserSystem.h"
 #include "../globals.h"
 #include "Turret.h"
+#include "Graphics\GameObject.h"
 
 /* In screenspace. */
-static const Vector2 PLAYER_START_POSITION(Globals::WINDOW_WIDTH / 2, Globals::WINDOW_HEIGHT + 175);
+static const Vector2 PLAYER_START_POSITION(
+	Globals::WINDOW_WIDTH / 2,
+	Globals::WINDOW_HEIGHT + 175);
 
 
-class PlayerShip : public Sprite {
+class PlayerShip : public GameObject {
 public:
 
 	PlayerShip(const Vector2& position);
-	~PlayerShip();
+	virtual ~PlayerShip();
 
 	void reset();
 
@@ -29,8 +31,8 @@ public:
 
 	/** Update to perform before action starts.
 		Return true when ship has moved into position. */
-	bool startUpdate(double deltaTime, shared_ptr<MouseController> mouse);
-	void update(double deltaTime, shared_ptr<MouseController> mouse);
+	bool startUpdate(double deltaTime);
+	void update(double deltaTime);
 	virtual void draw(SpriteBatch* batch) override;
 
 	void finishedUpdate(double deltaTime);

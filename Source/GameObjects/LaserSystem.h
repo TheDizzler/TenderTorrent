@@ -1,4 +1,3 @@
-#include "../pch.h"
 #pragma once
 
 #include "WeaponSystem.h"
@@ -11,7 +10,7 @@
 class LaserSystem : public WeaponSystem {
 public:
 	LaserSystem(Vector2 position);
-	~LaserSystem();
+	virtual ~LaserSystem();
 
 private:
 

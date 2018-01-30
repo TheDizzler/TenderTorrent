@@ -1,4 +1,7 @@
+#include "../pch.h"
 #include "GFXAssetManager.h"
+#include "../../DXTKGui/StringHelper.h"
+#include "../Engine/GameEngine.h"
 
 GFXAssetManager::GFXAssetManager(xml_node gfxAN) {
 	gfxAssetsNode = gfxAN;
@@ -6,19 +9,33 @@ GFXAssetManager::GFXAssetManager(xml_node gfxAN) {
 
 GFXAssetManager::~GFXAssetManager() {
 	assetMap.clear();
+	animationMap.clear();
+	setMap.clear();
 }
 
 bool GFXAssetManager::initialize(ComPtr<ID3D11Device> device) {
 
 	if (!getGFXAssetsFromXML(device)) {
-		MessageBox(0, L"Sprite retrieval from Asset Manifest failed.",
-			L"Epic failure", MB_OK);
+		GameEngine::errorMessage(L"Sprite retrieval from Asset Manifest failed.",
+			L"Epic failure");
 		return false;
 	}
 	return true;
 }
 
-#include <sstream>
+void GFXAssetManager::reInitDevice(ComPtr<ID3D11Device> device) {
+
+	assetMap.clear();
+	animationMap.clear();
+	setMap.clear();
+
+	if (!getGFXAssetsFromXML(device)) {
+		GameEngine::errorMessage(L"Sprite retrieval from Asset Manifest failed.",
+			L"Epic failure");
+	}
+}
+
+
 unique_ptr<Sprite> GFXAssetManager::getSpriteFromAsset(const char_t* assetName) {
 
 	GraphicsAsset* const asset = getAsset(assetName);
@@ -43,7 +60,7 @@ shared_ptr<Animation> GFXAssetManager::getAnimation(const char_t* animationName)
 			return NULL;
 
 		// create one frame animation
-		float frameTime = 10000;
+		float frameTime = 1000;
 		vector<shared_ptr<Frame>> frames;
 		RECT rect;
 		rect.left = 0;
@@ -51,10 +68,10 @@ shared_ptr<Animation> GFXAssetManager::getAnimation(const char_t* animationName)
 		rect.right = gfxAsset->getWidth();
 		rect.bottom = gfxAsset->getHeight();
 		shared_ptr<Frame> frame;
-		frame.reset(new Frame(rect));
+		frame.reset(new Frame(rect, Vector2::Zero, frameTime));
 		frames.push_back(move(frame));
 		shared_ptr<Animation> animationAsset;
-		animationAsset.reset(new Animation(gfxAsset->getTexture(), frames, frameTime));
+		animationAsset.reset(new Animation(gfxAsset->getTexture(), frames, animationName));
 		animationMap[animationName] = animationAsset;
 
 	}
@@ -88,7 +105,7 @@ shared_ptr<AssetSet> const GFXAssetManager::getAssetSet(const char_t* setName) {
 }
 
 
-#include "../DXTKGui/StringHelper.h"
+
 bool GFXAssetManager::getGFXAssetsFromXML(ComPtr<ID3D11Device> device) {
 
 	string assetsDir =
@@ -115,10 +132,11 @@ bool GFXAssetManager::getGFXAssetsFromXML(ComPtr<ID3D11Device> device) {
 
 		unique_ptr<GraphicsAsset> gfxAsset;
 		gfxAsset.reset(new GraphicsAsset());
-		if (!gfxAsset->load(device, StringHelper::convertCharStarToWCharT(file), origin)) {
+		if (!gfxAsset->load(device, name, StringHelper::convertCharStarToWCharT(file), origin)) {
 			wstringstream wss;
 			wss << "Unable to load texture file: " << file;
-			MessageBox(0, wss.str().c_str(), L"Critical error", MB_OK);
+			//MessageBox(0, wss.str().c_str(), L"Critical error", MB_OK);
+			GameEngine::errorMessage(wss.str());
 			return false;
 		}
 
@@ -144,8 +162,11 @@ bool GFXAssetManager::getGFXAssetsFromXML(ComPtr<ID3D11Device> device) {
 		// the spritesheet itself is never saved into the map
 		unique_ptr<GraphicsAsset> masterAsset;
 		masterAsset.reset(new GraphicsAsset());
-		if (!masterAsset->load(device, StringHelper::convertCharStarToWCharT(file))) {
+		if (!masterAsset->load(device, file, StringHelper::convertCharStarToWCharT(file))) {
 			//MessageBox(0, L"Failed", L"Failed", MB_OK);
+			wstringstream wss;
+			wss << "Error load asset file: " << file;
+			GameEngine::errorMessage(wss.str());
 			return false;
 		}
 
@@ -155,6 +176,7 @@ bool GFXAssetManager::getGFXAssetsFromXML(ComPtr<ID3D11Device> device) {
 			animationNode; animationNode = animationNode.next_sibling("animation")) {
 
 			const char_t* name = animationNode.attribute("name").as_string();
+			float frameTime = animationNode.attribute("timePerFrame").as_float();
 
 			vector<shared_ptr<Frame>> frames;
 			for (xml_node spriteNode = animationNode.child("sprite"); spriteNode;
@@ -165,14 +187,26 @@ bool GFXAssetManager::getGFXAssetsFromXML(ComPtr<ID3D11Device> device) {
 				rect.top = spriteNode.attribute("y").as_int();
 				rect.right = rect.left + spriteNode.attribute("width").as_int();
 				rect.bottom = rect.top + spriteNode.attribute("height").as_int();
+
+				Vector2 origin = Vector2(0, 0);
+				xml_node originNode = spriteNode.child("origin");
+				if (originNode) {
+					origin.x = originNode.attribute("x").as_int();
+					origin.y = originNode.attribute("y").as_int();
+				}
+
 				shared_ptr<Frame> frame;
-				frame.reset(new Frame(rect));
+				if (spriteNode.attribute("frameTime"))
+					frame.reset(new Frame(rect, origin,
+						spriteNode.attribute("frameTime").as_float()));
+				else
+					frame.reset(new Frame(rect, origin, frameTime));
 				frames.push_back(move(frame));
 
 			}
-			float frameTime = animationNode.attribute("timePerFrame").as_float();
+
 			shared_ptr<Animation> animationAsset;
-			animationAsset.reset(new Animation(masterAsset->getTexture(), frames, frameTime));
+			animationAsset.reset(new Animation(masterAsset->getTexture(), frames, name));
 			animationMap[name] = animationAsset;
 		}
 
@@ -197,7 +231,8 @@ bool GFXAssetManager::getGFXAssetsFromXML(ComPtr<ID3D11Device> device) {
 
 			unique_ptr<GraphicsAsset> spriteAsset;
 			spriteAsset.reset(new GraphicsAsset());
-			spriteAsset->loadAsPartOfSheet(masterAsset->getTexture(), position, size, origin);
+			spriteAsset->loadAsPartOfSheet(masterAsset->getTexture(), name,
+				position, size, origin);
 
 			if (spriteNode.attribute("set")) {
 				string setName = spriteNode.attribute("set").as_string();
@@ -216,27 +251,3 @@ bool GFXAssetManager::getGFXAssetsFromXML(ComPtr<ID3D11Device> device) {
 	return true;
 }
 /**** ***** GFXAssetManager END ***** ****/
-
-
-
-/**** ***** AssetSet START***** ****/
-AssetSet::AssetSet(const char_t* name) {
-	setName = name;
-}
-
-void AssetSet::addAsset(string assetName, unique_ptr<GraphicsAsset> asset) {
-
-	assetMap[assetName] = move(asset);
-}
-
-GraphicsAsset* const AssetSet::getAsset(const char_t* assetName) {
-
-	if (assetMap.find(assetName) == assetMap.end()) {
-		wostringstream ws;
-		ws << "Cannot find asset file: " << assetName << " in " << setName << "\n";
-		OutputDebugString(ws.str().c_str());
-		return NULL;
-	}
-
-	return assetMap[assetName].get();
-}

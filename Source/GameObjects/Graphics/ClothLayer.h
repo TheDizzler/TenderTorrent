@@ -1,16 +1,17 @@
-#include "../../pch.h"
 #pragma once
 
-//#include "../PlayerShip.h"
 #include "Tatter.h"
+#include "GameObject.h"
 
 class ClothLayer {
 public:
 	ClothLayer();
-	~ClothLayer();
+	virtual ~ClothLayer();
 
 	void load(GraphicsAsset* const graphicsAsset, shared_ptr<Sprite> cornerFrame);
 	void loadPiece(GraphicsAsset* const graphicsAsset);
+
+	void reloadGraphicsAssets();
 
 	void setHealth(int health);
 	void setInitialPosition(const Vector2& position, const Vector2& scale);
@@ -61,8 +62,9 @@ private:
 
 	bool labelHidden = true;
 
-	unique_ptr<Sprite> whole;
-	vector<unique_ptr<Tatter> > tatters;
+	//unique_ptr<GameObject> wholeCloth;
+	GameObject wholeCloth;
+	vector<unique_ptr<Tatter>> tatters;
 
 	Vector2 scale = Vector2(1, 1);
 

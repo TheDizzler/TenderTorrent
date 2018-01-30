@@ -1,9 +1,14 @@
+#include "../pch.h"
 #include "PlayerShip.h"
+#include "../Managers/GameManager.h"
+#include <random>
+#include <algorithm>
 
 
-PlayerShip::PlayerShip(const Vector2& pos) : Sprite(pos) {
+PlayerShip::PlayerShip(const Vector2& pos) : GameObject(pos) {
 
 	position = PLAYER_START_POSITION;
+
 
 	rightWeaponSlot.reset(new WeaponSystem(Vector2(26, -15)));
 	leftWeaponSlot.reset(new WeaponSystem(Vector2(-26, -15)));
@@ -62,7 +67,7 @@ bool PlayerShip::loadBullet(GFXAssetManager* gfxAsset) {
 	return true;
 }
 
-bool PlayerShip::startUpdate(double deltaTime, shared_ptr<MouseController> mouse) {
+bool PlayerShip::startUpdate(double deltaTime) {
 
 	position.y -= firingSpeed * deltaTime;
 	rightTurret->update(deltaTime, position);
@@ -71,8 +76,8 @@ bool PlayerShip::startUpdate(double deltaTime, shared_ptr<MouseController> mouse
 }
 
 
-#include <algorithm>
-void PlayerShip::update(double deltaTime, shared_ptr<MouseController> mouse) {
+
+void PlayerShip::update(double deltaTime) {
 
 	if (!isAlive) {
 
@@ -107,8 +112,6 @@ void PlayerShip::update(double deltaTime, shared_ptr<MouseController> mouse) {
 	if (position.y > Globals::WINDOW_HEIGHT - height / 2)
 		position.y = Globals::WINDOW_HEIGHT - height / 2;
 
-	Sprite::update(deltaTime);
-
 	// Weapons
 	rightWeaponSlot->update(deltaTime, position);
 	leftWeaponSlot->update(deltaTime, position);
@@ -117,8 +120,8 @@ void PlayerShip::update(double deltaTime, shared_ptr<MouseController> mouse) {
 	rightTurret->update(deltaTime, position);
 	leftTurret->update(deltaTime, position);
 	Vector2 turretsLocationMidPoint = (rightTurret->getPosition() + leftTurret->getPosition()) / 2;
-	int y = mouse->getPosition().y - turretsLocationMidPoint.y;
-	int x = mouse->getPosition().x - turretsLocationMidPoint.x;
+	int y = mouse.getPosition().y - turretsLocationMidPoint.y;
+	int x = mouse.getPosition().x - turretsLocationMidPoint.x;
 	Vector2 targetDirection = Vector2(x, y);
 	targetDirection.Normalize();
 
@@ -144,7 +147,7 @@ void PlayerShip::update(double deltaTime, shared_ptr<MouseController> mouse) {
 
 
 	//if (!lastStateVKLButtonDown && mouse->leftButtonDown()) {
-	if (!mouse->leftButtonLast() && mouse->leftButton()) {
+	if (!mouse.leftButtonLast() && mouse.leftButton()) {
 
 		if (rightTurret->ready()) {
 			liveBullets.push_back(rightTurret->fire());
@@ -192,8 +195,7 @@ void PlayerShip::finishedUpdate(double deltaTime) {
 }
 
 
-#include "../Managers/GameManager.h"
-#include <random>
+
 const double TIME_TO_DIE = 5.0;
 const double EXPLOSION_STAGGER_TIME = .2;
 void PlayerShip::deathUpdate(double deltaTime) {

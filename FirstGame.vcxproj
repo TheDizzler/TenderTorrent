@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="packages\directxtk_desktop_2015.2016.12.5.1\build\native\directxtk_desktop_2015.props" Condition="Exists('packages\directxtk_desktop_2015.2016.12.5.1\build\native\directxtk_desktop_2015.props')" />
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -20,84 +19,37 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\DXTKGui\BaseGraphics\FontSet.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="Source\DXTKGui\BaseGraphics\GraphicsAsset.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="Source\DXTKGui\BaseGraphics\PrimitiveShapes.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="Source\DXTKGui\BaseGraphics\Sprite.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="Source\DXTKGui\Controllers\KeyboardController.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="Source\DXTKGui\Controllers\MouseController.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="Source\DXTKGui\Controls\Button.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="Source\DXTKGui\Controls\CheckBox.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="Source\DXTKGui\Controls\ComboBox.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="Source\DXTKGui\Controls\Dialog.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="Source\DXTKGui\Controls\GUIControl.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="Source\DXTKGui\Controls\GUIFactory.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="Source\DXTKGui\Controls\ListBox.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="Source\DXTKGui\Controls\ScrollBar.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="Source\DXTKGui\Controls\Spinner.cpp" />
-    <ClCompile Include="Source\DXTKGui\Controls\TextLabel.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="Source\DXTKGui\Controls\TexturePanel.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="Source\DXTKGui\Effects\ScreenTransitions.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="Source\DXTKGui\Effects\TransitionEffects.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
-    </ClCompile>
+    <ClCompile Include="DXTKGui\BaseGraphics\FontSet.cpp" />
+    <ClCompile Include="DXTKGui\BaseGraphics\GraphicsAsset.cpp" />
+    <ClCompile Include="DXTKGui\BaseGraphics\PrimitiveShapes.cpp" />
+    <ClCompile Include="DXTKGui\BaseGraphics\Sprite.cpp" />
+    <ClCompile Include="DXTKGui\Controllers\Joystick.cpp" />
+    <ClCompile Include="DXTKGui\Controllers\KeyboardController.cpp" />
+    <ClCompile Include="DXTKGui\Controllers\MouseController.cpp" />
+    <ClCompile Include="DXTKGui\Controllers\Selector.cpp" />
+    <ClCompile Include="DXTKGui\Controls\Button.cpp" />
+    <ClCompile Include="DXTKGui\Controls\CheckBox.cpp" />
+    <ClCompile Include="DXTKGui\Controls\ComboBox.cpp" />
+    <ClCompile Include="DXTKGui\Controls\Dialog.cpp" />
+    <ClCompile Include="DXTKGui\Controls\DynamicDialog.cpp" />
+    <ClCompile Include="DXTKGui\Controls\GUIControl.cpp" />
+    <ClCompile Include="DXTKGui\Controls\ListBox.cpp" />
+    <ClCompile Include="DXTKGui\Controls\Panel.cpp" />
+    <ClCompile Include="DXTKGui\Controls\ScrollBar.cpp" />
+    <ClCompile Include="DXTKGui\Controls\Spinner.cpp" />
+    <ClCompile Include="DXTKGui\Controls\TextLabel.cpp" />
+    <ClCompile Include="DXTKGui\Controls\TexturePanel.cpp" />
+    <ClCompile Include="DXTKGui\Effects\GfxAssetCombiner.cpp" />
+    <ClCompile Include="DXTKGui\Effects\LetterJammer.cpp" />
+    <ClCompile Include="DXTKGui\Effects\ScreenTransitions.cpp" />
+    <ClCompile Include="DXTKGui\Effects\TransitionEffects.cpp" />
+    <ClCompile Include="DXTKGui\GUIFactory.cpp" />
     <ClCompile Include="Source\Engine\Camera.cpp" />
     <ClCompile Include="Source\Engine\GameEngine.cpp" />
     <ClCompile Include="Source\Engine\GraphicsEngine.cpp" />
     <ClCompile Include="Source\Engine\Input.cpp" />
     <ClCompile Include="Source\Engine\main.cpp" />
+    <ClCompile Include="Source\Engine\PlayerSlot.cpp" />
     <ClCompile Include="Source\GameObjects\ArrowEnemyShip.cpp" />
     <ClCompile Include="Source\GameObjects\Bullet.cpp" />
     <ClCompile Include="Source\GameObjects\EnemyBullet.cpp" />
@@ -106,6 +58,7 @@
     <ClCompile Include="Source\GameObjects\Graphics\Background.cpp" />
     <ClCompile Include="Source\GameObjects\Graphics\BackgroundLayer.cpp" />
     <ClCompile Include="Source\GameObjects\Graphics\ClothLayer.cpp" />
+    <ClCompile Include="Source\GameObjects\Graphics\GameObject.cpp" />
     <ClCompile Include="Source\GameObjects\Graphics\Tatter.cpp" />
     <ClCompile Include="Source\GameObjects\LaserBolt.cpp" />
     <ClCompile Include="Source\GameObjects\LaserSystem.cpp" />
@@ -135,34 +88,41 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="DXTKGui\BaseGraphics\FontSet.h" />
+    <ClInclude Include="DXTKGui\BaseGraphics\GraphicsAsset.h" />
+    <ClInclude Include="DXTKGui\BaseGraphics\IElement2D.h" />
+    <ClInclude Include="DXTKGui\BaseGraphics\PrimitiveShapes.h" />
+    <ClInclude Include="DXTKGui\BaseGraphics\screen.h" />
+    <ClInclude Include="DXTKGui\BaseGraphics\Sprite.h" />
+    <ClInclude Include="DXTKGui\Controllers\Joystick.h" />
+    <ClInclude Include="DXTKGui\Controllers\KeyboardController.h" />
+    <ClInclude Include="DXTKGui\Controllers\MouseController.h" />
+    <ClInclude Include="DXTKGui\Controllers\Selector.h" />
+    <ClInclude Include="DXTKGui\Controls\Button.h" />
+    <ClInclude Include="DXTKGui\Controls\CheckBox.h" />
+    <ClInclude Include="DXTKGui\Controls\ComboBox.h" />
+    <ClInclude Include="DXTKGui\Controls\Dialog.h" />
+    <ClInclude Include="DXTKGui\Controls\DynamicDialog.h" />
+    <ClInclude Include="DXTKGui\Controls\GUIControl.h" />
+    <ClInclude Include="DXTKGui\Controls\ListBox.h" />
+    <ClInclude Include="DXTKGui\Controls\Panel.h" />
+    <ClInclude Include="DXTKGui\Controls\ScrollBar.h" />
+    <ClInclude Include="DXTKGui\Controls\Spinner.h" />
+    <ClInclude Include="DXTKGui\Controls\TextLabel.h" />
+    <ClInclude Include="DXTKGui\Controls\TexturePanel.h" />
+    <ClInclude Include="DXTKGui\Effects\GfxAssetCombiner.h" />
+    <ClInclude Include="DXTKGui\Effects\LetterJammer.h" />
+    <ClInclude Include="DXTKGui\Effects\ScreenTransitions.h" />
+    <ClInclude Include="DXTKGui\Effects\TransitionEffects.h" />
+    <ClInclude Include="DXTKGui\GuiAssets.h" />
+    <ClInclude Include="DXTKGui\GUIFactory.h" />
+    <ClInclude Include="DXTKGui\StringHelper.h" />
     <ClInclude Include="Source\assets.h" />
-    <ClInclude Include="Source\DXTKGui\BaseGraphics\FontSet.h" />
-    <ClInclude Include="Source\DXTKGui\BaseGraphics\GraphicsAsset.h" />
-    <ClInclude Include="Source\DXTKGui\BaseGraphics\IElement2D.h" />
-    <ClInclude Include="Source\DXTKGui\BaseGraphics\PrimitiveShapes.h" />
-    <ClInclude Include="Source\DXTKGui\BaseGraphics\screen.h" />
-    <ClInclude Include="Source\DXTKGui\BaseGraphics\Sprite.h" />
-    <ClInclude Include="Source\DXTKGui\Controllers\KeyboardController.h" />
-    <ClInclude Include="Source\DXTKGui\Controllers\MouseController.h" />
-    <ClInclude Include="Source\DXTKGui\Controls\Button.h" />
-    <ClInclude Include="Source\DXTKGui\Controls\CheckBox.h" />
-    <ClInclude Include="Source\DXTKGui\Controls\ComboBox.h" />
-    <ClInclude Include="Source\DXTKGui\Controls\Dialog.h" />
-    <ClInclude Include="Source\DXTKGui\Controls\GUIControl.h" />
-    <ClInclude Include="Source\DXTKGui\Controls\GUIFactory.h" />
-    <ClInclude Include="Source\DXTKGui\Controls\ListBox.h" />
-    <ClInclude Include="Source\DXTKGui\Controls\ScrollBar.h" />
-    <ClInclude Include="Source\DXTKGui\Controls\Spinner.h" />
-    <ClInclude Include="Source\DXTKGui\Controls\TextLabel.h" />
-    <ClInclude Include="Source\DXTKGui\Controls\TexturePanel.h" />
-    <ClInclude Include="Source\DXTKGui\Effects\ScreenTransitions.h" />
-    <ClInclude Include="Source\DXTKGui\Effects\TransitionEffects.h" />
-    <ClInclude Include="Source\DXTKGui\GuiAssets.h" />
-    <ClInclude Include="Source\DXTKGui\StringHelper.h" />
     <ClInclude Include="Source\Engine\Camera.h" />
     <ClInclude Include="Source\Engine\GameEngine.h" />
     <ClInclude Include="Source\Engine\GraphicsEngine.h" />
     <ClInclude Include="Source\Engine\Input.h" />
+    <ClInclude Include="Source\Engine\PlayerSlot.h" />
     <ClInclude Include="Source\GameObjects\Bullet.h" />
     <ClInclude Include="Source\GameObjects\EnemyBullet.h" />
     <ClInclude Include="Source\GameObjects\EnemyShip.h" />
@@ -170,6 +130,7 @@
     <ClInclude Include="Source\GameObjects\Graphics\Background.h" />
     <ClInclude Include="Source\GameObjects\Graphics\BackgroundLayer.h" />
     <ClInclude Include="Source\GameObjects\Graphics\ClothLayer.h" />
+    <ClInclude Include="Source\GameObjects\Graphics\GameObject.h" />
     <ClInclude Include="Source\GameObjects\Graphics\Tatter.h" />
     <ClInclude Include="Source\GameObjects\LaserBolt.h" />
     <ClInclude Include="Source\GameObjects\LaserSystem.h" />
@@ -195,9 +156,6 @@
     <ClInclude Include="Source\pch.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
     <Xml Include="assets\AssetManifest.xml">
       <SubType>Designer</SubType>
     </Xml>
@@ -214,6 +172,9 @@
       <SubType>Designer</SubType>
     </Xml>
     <Xml Include="assets\ShipData.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{E9C22AAC-8D4D-4D44-8969-65311A131B1D}</ProjectGuid>
@@ -291,7 +252,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>hid.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -306,6 +267,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>hid.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -325,7 +287,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>hid.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -344,19 +306,19 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>hid.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
-    <Import Project="packages\pugixml.1.8.0\build\native\pugixml.targets" Condition="Exists('packages\pugixml.1.8.0\build\native\pugixml.targets')" />
-    <Import Project="packages\directxtk_desktop_2015.2016.12.5.1\build\native\directxtk_desktop_2015.targets" Condition="Exists('packages\directxtk_desktop_2015.2016.12.5.1\build\native\directxtk_desktop_2015.targets')" />
+    <Import Project="packages\pugixml.1.8.5\build\native\pugixml.targets" Condition="Exists('packages\pugixml.1.8.5\build\native\pugixml.targets')" />
+    <Import Project="packages\directxtk_desktop_2015.2017.12.13.1\build\native\directxtk_desktop_2015.targets" Condition="Exists('packages\directxtk_desktop_2015.2017.12.13.1\build\native\directxtk_desktop_2015.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('packages\pugixml.1.8.0\build\native\pugixml.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\pugixml.1.8.0\build\native\pugixml.targets'))" />
-    <Error Condition="!Exists('packages\directxtk_desktop_2015.2016.12.5.1\build\native\directxtk_desktop_2015.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\directxtk_desktop_2015.2016.12.5.1\build\native\directxtk_desktop_2015.props'))" />
-    <Error Condition="!Exists('packages\directxtk_desktop_2015.2016.12.5.1\build\native\directxtk_desktop_2015.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\directxtk_desktop_2015.2016.12.5.1\build\native\directxtk_desktop_2015.targets'))" />
+    <Error Condition="!Exists('packages\pugixml.1.8.5\build\native\pugixml.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\pugixml.1.8.5\build\native\pugixml.targets'))" />
+    <Error Condition="!Exists('packages\directxtk_desktop_2015.2017.12.13.1\build\native\directxtk_desktop_2015.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\directxtk_desktop_2015.2017.12.13.1\build\native\directxtk_desktop_2015.targets'))" />
   </Target>
 </Project>

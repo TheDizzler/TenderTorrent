@@ -1,6 +1,10 @@
-#include "../pch.h"
 #pragma once
 
+#include <d3d11_1.h>
+#include <SimpleMath.h>
+
+
+#include "../globals.h"
 #include "../Managers/LevelManager.h"
 
 
@@ -8,30 +12,36 @@
 https://roguesharp.wordpress.com/2014/07/13/tutorial-5-creating-a-2d-camera-with-pan-and-zoom-in-monogame/ */
 class Camera {
 public:
-	Camera(int viewportWidth, int viewportHeight);
-	Camera(const Vector2& viewport);
-	~Camera();
+	Camera();
+	virtual ~Camera();
 
 	void setLevel(Background* bgMan);
 
-	void updateViewport(const Vector2& viewportArea, const Vector2& viewportPosition);
+	void setViewport(D3D11_VIEWPORT cameraViewport);
+	void setViewport(int viewportWidth, int viewportHeight);
+	void updateViewport(const Vector2& viewportArea,
+		const Vector2& viewportPosition, bool zoomToFit = false);
 
 
-	Viewport* viewport;
-	
+	//Viewport* viewport;
+
 
 	float rotation = 0.0f;
 
-	Vector2 viewportPosition;
+	Vector2 viewportPosition = Vector2::Zero;
 	int viewportWidth;
 	int viewportHeight;
 	Vector3 viewportCenter;
 
+	bool viewContains(const Vector2& point);
 
-	void adjustZoom(float amount);
+	float getZoom();
+	void setZoomToResolution(int width = Globals::targetResolution.x,
+		int height = Globals::targetResolution.y);
 	void setZoom(float zoomAmount);
+	void adjustZoom(float amount);
+	
 	void moveCamera(const Vector2& cameraMovement);
-	void setCameraPosition(const Vector2& newPosition);
 
 	RECT* viewportWorldBoundary();
 
@@ -39,8 +49,8 @@ public:
 
 	Matrix translationMatrix();
 	Vector2& worldToScreen(Vector2 worldPosition);
+	Vector2& screenToWorld(Vector2 screenPosition);
 
-	float getZoom();
 private:
 
 	Vector2 position;
@@ -49,11 +59,4 @@ private:
 	float levelWidth;
 	float levelHeight;
 
-	float viewX = (viewportWidth / zoom / 2);
-	float viewY = (viewportHeight / zoom / 2);
-
-
-	void zoomToFitBackground();
-	Vector2* screenToWorld(Vector2 screenPosition);
-	
 };

@@ -1,21 +1,35 @@
-#include "../pch.h"
 #pragma once
 
-#include "../globals.h"
+#pragma comment (lib, "D3D11.lib")
+#pragma comment (lib, "DXGI.lib")
 
+#include <d3d11_1.h>
+#include <dxgi1_2.h>
+#include <wrl.h>
+#include <vector>
+
+#include "SpriteBatch.h"
+#include "CommonStates.h"
+
+#include "../globals.h"
 #include "Camera.h"
 
-extern shared_ptr<Camera> camera;
+using namespace std;
+using namespace DirectX;
+using namespace Microsoft::WRL;
+
+
+extern Camera camera;
 
 
 class GraphicsEngine {
 public:
-	GraphicsEngine();
-	~GraphicsEngine();
+	virtual ~GraphicsEngine();
 
 	bool initD3D(HWND hwnd);
 
-	virtual void render(double time) = 0;
+	virtual void reloadGraphicsAssets() = 0;
+	virtual void render() = 0;
 
 	vector<ComPtr<IDXGIAdapter> > getAdapterList();
 	vector<ComPtr<IDXGIOutput> > getDisplayList();
@@ -27,6 +41,7 @@ public:
 	bool setAdapter(size_t adapterIndex);
 	bool changeDisplayMode(size_t newDisplayModeIndex);
 	bool setFullScreen(bool isFullScreen);
+	/* Imcomplete: only sets main viewport. */
 	void setViewport(int xPos, int yPos, int width, int height);
 	/* Call when game loses focus. */
 	bool stopFullScreen();
@@ -39,10 +54,18 @@ public:
 	/** Used for creating textures from an area on screen */
 	ComPtr<IDXGISwapChain> getSwapChain();
 	SpriteBatch* getSpriteBatch();
+
+	D3D11_VIEWPORT mainViewport;
+	D3D11_VIEWPORT altViewport;
+	//Viewport mainViewport;
+
+	const RECT* createScissorRECTs() const;
+	ComPtr<ID3D11RasterizerState> rasterState;
 protected:
 	HWND hwnd;
 	unique_ptr<SpriteBatch> batch;
-	//SpriteBatch* batch;
+
+
 	/* Adapter currently being used. */
 	ComPtr<IDXGIAdapter> selectedAdapter;
 	/* Monitor being used. */
@@ -69,11 +92,12 @@ protected:
 	ComPtr<ID3D11DeviceContext> deviceContext;
 	/* The backbuffer that gets drawn to. */
 	ComPtr<ID3D11RenderTargetView> renderTargetView;
+	
+	D3D11_RECT scissorRECTs[1];
 
 	//D3D_DRIVER_TYPE driverType;
 	D3D_FEATURE_LEVEL featureLevel;
-	//D3D11_VIEWPORT viewport;
-	Viewport viewport;
+	
 
 	/* List of all gfx cards on this machine. */
 	vector<ComPtr<IDXGIAdapter> > adapters;

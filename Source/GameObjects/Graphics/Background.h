@@ -1,4 +1,3 @@
-#include "../../pch.h"
 #pragma once
 
 #include <queue>
@@ -8,15 +7,17 @@
 struct Waypoint {
 	Waypoint(Vector2 destination, float speed) : dest(destination), scrollSpeed(speed) {
 	}
-	~Waypoint() {}
+	virtual ~Waypoint() {}
 	Vector2 dest;
 	float scrollSpeed = 15;
 };
 
-class Background /*: public Sprite*/ {
+class Background {
 public:
 	Background();
-	~Background();
+	virtual ~Background();
+
+	void reloadGraphicsAssets();
 
 	virtual bool loadLevel(ComPtr<ID3D11Device> device, const char_t* levelFile);
 	void clear();
@@ -27,7 +28,7 @@ public:
 	const Vector2& getStartPosition();
 
 	bool startUpdate(double deltaTime);
-	bool update(double deltaTime, shared_ptr<MouseController> mouse);
+	bool update(double deltaTime);
 	void draw(SpriteBatch* batch);
 
 	vector<ClothLayer*> getClothes();

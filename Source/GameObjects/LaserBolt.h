@@ -1,4 +1,3 @@
-#include "../pch.h"
 #pragma once
 
 #include "Bullet.h"
@@ -9,7 +8,7 @@ public:
 	LaserBolt();
 	/** For constructing actual bullets seen on stage. */
 	LaserBolt(Vector2 &position);
-	~LaserBolt();
+	virtual ~LaserBolt();
 
 
 	
