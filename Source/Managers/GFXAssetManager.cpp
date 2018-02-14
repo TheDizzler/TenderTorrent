@@ -126,8 +126,8 @@ bool GFXAssetManager::getGFXAssetsFromXML(ComPtr<ID3D11Device> device) {
 		Vector2 origin = Vector2(-1000, -1000);
 		xml_node originNode = spriteNode.child("origin");
 		if (originNode) {
-			origin.x = originNode.attribute("x").as_int();
-			origin.y = originNode.attribute("y").as_int();
+			origin.x = (float) originNode.attribute("x").as_int();
+			origin.y = (float) originNode.attribute("y").as_int();
 		}
 
 		unique_ptr<GraphicsAsset> gfxAsset;
@@ -191,8 +191,8 @@ bool GFXAssetManager::getGFXAssetsFromXML(ComPtr<ID3D11Device> device) {
 				Vector2 origin = Vector2(0, 0);
 				xml_node originNode = spriteNode.child("origin");
 				if (originNode) {
-					origin.x = originNode.attribute("x").as_int();
-					origin.y = originNode.attribute("y").as_int();
+					origin.x = (float) originNode.attribute("x").as_int();
+					origin.y = (float) originNode.attribute("y").as_int();
 				}
 
 				shared_ptr<Frame> frame;
@@ -216,17 +216,17 @@ bool GFXAssetManager::getGFXAssetsFromXML(ComPtr<ID3D11Device> device) {
 
 			const char_t* name = spriteNode.attribute("name").as_string();
 			// pos in spritesheet
-			Vector2 position = Vector2(spriteNode.attribute("x").as_int(),
-				spriteNode.attribute("y").as_int());
+			Vector2 position = Vector2((float) spriteNode.attribute("x").as_int(),
+				(float) spriteNode.attribute("y").as_int());
 			// dimensions in spritesheet
-			Vector2 size = Vector2(spriteNode.attribute("width").as_int(),
-				spriteNode.attribute("height").as_int());
+			Vector2 size = Vector2((float) spriteNode.attribute("width").as_int(),
+				(float) spriteNode.attribute("height").as_int());
 
 			Vector2 origin = Vector2(-1000, -1000);
 			xml_node originNode = spriteNode.child("origin");
 			if (originNode) {
-				origin.x = originNode.attribute("x").as_int();
-				origin.y = originNode.attribute("y").as_int();
+				origin.x = (float) originNode.attribute("x").as_int();
+				origin.y = (float) originNode.attribute("y").as_int();
 			}
 
 			unique_ptr<GraphicsAsset> spriteAsset;

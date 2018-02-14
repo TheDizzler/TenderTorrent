@@ -45,7 +45,7 @@ void EnemyShip::explodeUpdate(double deltaTime) {
 	explosion->update(deltaTime);
 	isExploding = explosion->isAlive;
 	//Color newTint = getTint();
-	setTint(Color::Lerp(getTint(), Vector4(0, 0, 0, 0), 20*deltaTime));
+	setTint(Color::Lerp(getTint(), Vector4(0.0f, 0.0f, 0.0f, 0.0f), 20* (float) deltaTime));
 }
 
 void EnemyShip::drawExplosion(SpriteBatch* batch) {
@@ -104,8 +104,8 @@ EnemyShip::EnemyWeaponSystem::EnemyWeaponSystem(xml_node weaponPointNode, xml_no
 	}
 
 	fireDelay = weaponPointNode.child("fireRate").attribute("delay").as_float();
-	positionOffset = Vector2(weaponPointNode.child("location").attribute("x").as_int(),
-		weaponPointNode.child("location").attribute("y").as_int());
+	positionOffset = Vector2((float) weaponPointNode.child("location").attribute("x").as_int(),
+		(float) weaponPointNode.child("location").attribute("y").as_int());
 }
 
 EnemyShip::EnemyWeaponSystem::~EnemyWeaponSystem() {

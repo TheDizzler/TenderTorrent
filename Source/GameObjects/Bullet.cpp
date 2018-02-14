@@ -20,8 +20,8 @@ void Bullet::setDamage(int newDamage) {
 
 void Bullet::update(double deltaTime) {
 
-	float deltaSpeed = deltaTime*bulletSpeed;
-	Vector2 newposition = position + direction*deltaSpeed;
+	double deltaSpeed = deltaTime*bulletSpeed;
+	Vector2 newposition = position + direction*(float) deltaSpeed;
 	setPosition(newposition);
 	timeAlive += deltaTime;
 

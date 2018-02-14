@@ -27,16 +27,18 @@ namespace Globals {
 	inline int getIntFrom(string value) {
 		
 		int i = value.find_first_of(" ");
+		if (i == std::string::npos) {
+			// ohnos dudes
+			
+		}
 		string token = value.substr(0, i);
 
 
 		int num = 0;
 		if (token.compare("WINDOW_WIDTH") == 0) {
 			num = Globals::WINDOW_WIDTH;
-
 		} else if (token.compare("WINDOW_HEIGHT") == 0) {
 			num = Globals::WINDOW_HEIGHT;
-
 		}
 
 		if (i == -1)
@@ -44,6 +46,9 @@ namespace Globals {
 
 		token = value.substr(i);
 		i = token.find_first_not_of(" ");
+		if (i == std::string::npos) {
+			// ohnos dudes
+		}
 
 		token = token.substr(i);
 		char op = token[0];
@@ -51,6 +56,9 @@ namespace Globals {
 			return num;
 		token = token.substr(1);
 		i = token.find_first_not_of(" ");
+		if (i == std::string::npos) {
+			// ohnos dudes
+		}
 		token = token.substr(i);
 		int next = stoi(token);
 		if (op == '+') {

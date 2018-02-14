@@ -48,8 +48,8 @@ public:
 	void centerOn(const Vector2& pos);
 
 	Matrix translationMatrix();
-	Vector2& worldToScreen(Vector2 worldPosition);
-	Vector2& screenToWorld(Vector2 screenPosition);
+	Vector2 worldToScreen(Vector2 worldPosition);
+	Vector2 screenToWorld(Vector2 screenPosition);
 
 private:
 

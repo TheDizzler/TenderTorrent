@@ -10,8 +10,8 @@ public:
 
 	void reloadGraphicsAssets();
 
-	const Vector2& getPlayArea();
-	const Vector2& getPlayPosition();
+	const Vector2 getPlayArea();
+	const Vector2 getPlayPosition();
 
 	void update(double deltaTime);
 	void updatePaused(double deltaTime);

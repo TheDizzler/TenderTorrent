@@ -4,7 +4,7 @@
 
 GUIOverlay::GUIOverlay() {
 
-	hudBG.reset(guiFactory.createRectangle(Vector2::Zero, Vector2(Globals::WINDOW_WIDTH, 55)));
+	hudBG.reset(guiFactory.createRectangle(Vector2::Zero, Vector2((float) Globals::WINDOW_WIDTH, 55.0f)));
 	hudBG->setTint(Vector4(1, 0, 1, 1));
 
 	int borderThickness = 4;
@@ -30,8 +30,8 @@ GUIOverlay::GUIOverlay() {
 
 	pauseOverlay.reset(
 		guiFactory.createRectangle(Vector2(0, 0),
-			Vector2(Globals::WINDOW_WIDTH, Globals::WINDOW_HEIGHT)));
-	pauseOverlay->setTint(Color(1, .588, 1, .8)); //should be pinkish
+			Vector2((float) Globals::WINDOW_WIDTH, (float) Globals::WINDOW_HEIGHT)));
+	pauseOverlay->setTint(Color(1, .588f, 1, .8f)); //should be pinkish
 
 
 	pauseLabel.reset(
@@ -51,16 +51,16 @@ GUIOverlay::GUIOverlay() {
 	gameOverLabel->setTint(Color(0, 0, 0, 1));
 
 	exitButton.reset(guiFactory.createImageButton(
-		Vector2(Globals::WINDOW_WIDTH / 4, Globals::WINDOW_HEIGHT * 3 / 4),
+		Vector2((float) Globals::WINDOW_WIDTH * .25f, (float) Globals::WINDOW_HEIGHT * .75f),
 		"Button Up", "Button Down"));
 	exitButton->setText(L"Exit");
-	Vector2 moveBy = Vector2(exitButton->getScaledWidth() / 2, 0);
+	Vector2 moveBy = Vector2((float) exitButton->getScaledWidth() / 2, 0);
 	exitButton->moveBy(-moveBy);
 
 
 
 	continueButton.reset(guiFactory.createImageButton(
-		Vector2(Globals::WINDOW_WIDTH * 3 / 4, Globals::WINDOW_HEIGHT * 3 / 4),
+		Vector2((float) Globals::WINDOW_WIDTH * .75f, (float) Globals::WINDOW_HEIGHT * .75f),
 		"Button Up", "Button Down"));
 	continueButton->setText(L"Continue");
 	continueButton->moveBy(-moveBy);
@@ -69,13 +69,13 @@ GUIOverlay::GUIOverlay() {
 
 
 	warningLabel.reset(guiFactory.createTextLabel(
-		Vector2((Globals::WINDOW_WIDTH) / 2, (Globals::WINDOW_HEIGHT) / 2),
+		Vector2((float) Globals::WINDOW_WIDTH / 2, (float) Globals::WINDOW_HEIGHT / 2),
 		L"GET READY!", "BlackCloak", false));
 	warningLabel->setScale(Vector2(1, 1.5));
 	size = warningLabel->measureString(L"GET READY!");
 	warningLabel->moveBy(-size / 2);
 
-	fpsLabel.reset(guiFactory.createTextLabel(Vector2(10, Globals::WINDOW_HEIGHT - 50),
+	fpsLabel.reset(guiFactory.createTextLabel(Vector2(10.0f, (float) Globals::WINDOW_HEIGHT - 50),
 		L"FPS"));
 }
 
@@ -92,11 +92,11 @@ void GUIOverlay::reloadGraphicsAssets() {
 	energyLabel->reloadGraphicsAsset();
 }
 
-const Vector2& GUIOverlay::getPlayArea() {
-	return Vector2(Globals::WINDOW_WIDTH, Globals::WINDOW_HEIGHT - hudBG->getHeight());
+const Vector2 GUIOverlay::getPlayArea() {
+	return Vector2((float) Globals::WINDOW_WIDTH, (float) Globals::WINDOW_HEIGHT - hudBG->getHeight());
 }
 
-const Vector2& GUIOverlay::getPlayPosition() {
+const Vector2 GUIOverlay::getPlayPosition() {
 	Vector2 pos = hudBG->getPosition();
 	pos.y += hudBG->getHeight();
 	return pos;
@@ -136,11 +136,11 @@ void GUIOverlay::updatePaused(double deltaTime) {
 	Color color = pauseLabel->getTint();
 	/** Changes the Red variable between 0 and 1. */
 	if (rInc) {
-		color.R(color.R() + deltaTime);
+		color.R(color.R() + (float) deltaTime);
 		if (color.R() >= 1)
 			rInc = false;
 	} else {
-		color.R(color.R() - deltaTime);
+		color.R(color.R() - (float) deltaTime);
 		if (color.R() <= 0)
 			rInc = true;
 	}
@@ -159,11 +159,11 @@ void GUIOverlay::updateWarning(double deltaTime) {
 	/** Changes the Green and Blue variables between 0 and 1. */
 	float r = color.G();
 	if (rInc) {
-		r += 5 * deltaTime;
+		r += 5 * (float) deltaTime;
 		if (r >= 1)
 			rInc = false;
 	} else {
-		r -= 5 * deltaTime;
+		r -= 5 * (float) deltaTime;
 		if (r <= 0)
 			rInc = true;
 	}

@@ -13,30 +13,30 @@ Camera::~Camera() {
 
 void Camera::setLevel(Background* bgMan) {
 
-	levelWidth = bgMan->getWidth();
-	levelHeight = bgMan->getHeight();
+	levelWidth = (float) bgMan->getWidth();
+	levelHeight = (float) bgMan->getHeight();
 }
 
 
 void Camera::setViewport(D3D11_VIEWPORT cameraViewport) {
-	viewportWidth = cameraViewport.Width;
-	viewportHeight = cameraViewport.Height;
-	viewportCenter = Vector3(viewportWidth * .5, viewportHeight * .5, 0);
+	viewportWidth = (int) cameraViewport.Width;
+	viewportHeight = (int) cameraViewport.Height;
+	viewportCenter = Vector3(viewportWidth * .5f, viewportHeight * .5f, 0);
 }
 
 void Camera::setViewport(int vwprtWdth, int vwprtHght) {
 	viewportWidth = vwprtWdth;
 	viewportHeight = vwprtHght;
-	viewportCenter = Vector3(viewportWidth * .5, viewportHeight * .5, 0);
+	viewportCenter = Vector3(viewportWidth * .5f, viewportHeight * .5f, 0);
 }
 
 void Camera::updateViewport(const Vector2& viewport, const Vector2& viewportPos, bool zoomToFit) {
 
-	viewportWidth = viewport.x - viewportPos.x;
-	viewportHeight = viewport.y - viewportPos.y;
+	viewportWidth = INT(viewport.x - viewportPos.x);
+	viewportHeight = INT(viewport.y - viewportPos.y);
 	viewportPosition = viewportPos;
-	viewportCenter = Vector3((viewportWidth) * .5 + viewportPosition.x,
-		(viewportHeight) * .5 + viewportPosition.y, 0);
+	viewportCenter = Vector3((viewportWidth) * .5f + viewportPosition.x,
+		(viewportHeight) * .5f + viewportPosition.y, 0);
 
 	//viewX = (viewportWidth) / zoom / 2;
 	//viewY = (viewportHeight) / zoom / 2;
@@ -58,8 +58,8 @@ float Camera::getZoom() {
 }
 
 void Camera::setZoomToResolution(int width, int height) {
-	float xZoom = Globals::WINDOW_WIDTH / width;
-	float yZoom = Globals::WINDOW_HEIGHT / height;
+	float xZoom = FLOAT(Globals::WINDOW_WIDTH) / FLOAT(width);
+	float yZoom = FLOAT(Globals::WINDOW_HEIGHT) / FLOAT(height);
 
 	if (xZoom < yZoom)
 		zoom = xZoom;
@@ -117,11 +117,11 @@ void Camera::centerOn(const Vector2& pos/*, bool showWholeLevel*/) {
 	position = pos;
 }
 
-Vector2& Camera::worldToScreen(Vector2 worldPosition) {
+Vector2 Camera::worldToScreen(Vector2 worldPosition) {
 	return Vector2::Transform(worldPosition, translationMatrix());
 }
 
-Vector2& Camera::screenToWorld(Vector2 screenPosition) {
+Vector2 Camera::screenToWorld(Vector2 screenPosition) {
 	return Vector2::Transform(screenPosition, translationMatrix().Invert());
 }
 

@@ -1,9 +1,11 @@
 #pragma once
 
 #include "../globals.h"
-#include "../DXTKGui/Controllers/Joystick.h"
+//#include "../../DXTKGui/Controllers/Joystick.h"
 
-using namespace std;
+
+
+//using namespace std;
 
 extern CRITICAL_SECTION cs_activeSlotsAccess;
 

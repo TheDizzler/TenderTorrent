@@ -110,7 +110,7 @@ void ClothLayer::takeDamage(int damageTaken) {
 
 void ClothLayer::setLayerDepth(float depth) {
 	wholeCloth.setLayerDepth(depth);
-	frameLayerDepth = depth + .1;
+	frameLayerDepth = depth + .1f;
 }
 
 void ClothLayer::moveBy(const Vector2& pos) {
@@ -193,7 +193,7 @@ void ClothLayer::updateProjectedHitArea() {
 	healthLabel->setText(wss);*/
 }
 
-const Vector2& ClothLayer::getScreenPosition(Matrix viewProjectionMatrix) const {
+const Vector2 ClothLayer::getScreenPosition(Matrix viewProjectionMatrix) const {
 
 	Vector2 screenCords = XMVector2Transform(
 		wholeCloth.getHitArea().position, viewProjectionMatrix);

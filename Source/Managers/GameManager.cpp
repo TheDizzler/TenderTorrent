@@ -104,7 +104,7 @@ void GameManager::reloadGraphicsAssets() {
 void GameManager::initErrorDialogs() {
 
 	Vector2 dialogPos, dialogSize;
-	dialogSize = Vector2(Globals::WINDOW_WIDTH / 2, Globals::WINDOW_HEIGHT / 2);
+	dialogSize = Vector2((float) Globals::WINDOW_WIDTH / 2, (float) Globals::WINDOW_HEIGHT / 2);
 	dialogPos = dialogSize;
 	dialogPos.x -= dialogSize.x / 2;
 	dialogPos.y -= dialogSize.y / 2;

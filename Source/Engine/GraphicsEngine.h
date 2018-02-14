@@ -110,7 +110,7 @@ protected:
 	bool resizeSwapChain();
 
 	bool getDisplayAdapters();
-	bool initializeAdapter(int adapterIndex);
+	bool initializeAdapter(size_t adapterIndex);
 	bool initializeRenderTarget();
 	void initializeViewport();
 	bool populateDisplayModeList(ComPtr<IDXGIOutput> adapterOut);

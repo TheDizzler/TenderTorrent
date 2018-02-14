@@ -17,8 +17,8 @@ ArrowEnemyShip::ArrowEnemyShip(xml_node shipNode) {
 
 	}
 
-	midPos = Vector2(-100, Globals::getIntFrom(shipNode.child("midPoint")));
-	endPos = Vector2(Globals::WINDOW_WIDTH /2, -100);
+	midPos = Vector2(-100.0, (float) Globals::getIntFrom(shipNode.child("midPoint")));
+	endPos = Vector2((float) Globals::WINDOW_WIDTH /2, -100.0);
 
 	timeToTravel = shipNode.child("timeToTravel").text().as_double();
 	maxHealth = shipNode.child("health").text().as_int();

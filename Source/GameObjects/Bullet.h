@@ -23,5 +23,5 @@ public:
 	int bulletSpeed = 400;
 protected:
 
-	float timeAlive = 0;
+	double timeAlive = 0;
 };

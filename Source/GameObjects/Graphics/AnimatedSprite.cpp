@@ -19,8 +19,8 @@ void AnimatedSprite::load(shared_ptr<Animation> anim) {
 
 	//hitArea.reset(new HitArea(position, Vector2(getWidth(), getHeight())));
 	hitArea.position = position;
-	hitArea.size = Vector2(getWidth(), getHeight());
-	origin = Vector2(getWidth() / 2, getHeight() / 2);
+	hitArea.size = Vector2(FLOAT(getWidth()), FLOAT(getHeight()));
+	origin = Vector2(FLOAT(getWidth()) / 2, FLOAT(getHeight()) / 2);
 }
 
 
