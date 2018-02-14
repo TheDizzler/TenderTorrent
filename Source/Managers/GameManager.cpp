@@ -228,8 +228,8 @@ vector<ComPtr<IDXGIOutput>> GameManager::getDisplayList() {
 	return gameEngine->getDisplayList();
 }
 
-vector<ComPtr<IDXGIOutput>> GameManager::getDisplayListFor(size_t displayIndex) {
-	return gameEngine->getDisplayListFor(displayIndex);
+vector<ComPtr<IDXGIOutput>> GameManager::getDisplayListFor(size_t adapterIndex) {
+	return gameEngine->getDisplayListFor(adapterIndex);
 }
 
 vector<ComPtr<IDXGIOutput>> GameManager::getDisplayListFor(

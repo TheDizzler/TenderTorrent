@@ -33,7 +33,9 @@ public:
 
 	vector<ComPtr<IDXGIAdapter> > getAdapterList();
 	vector<ComPtr<IDXGIOutput> > getDisplayList();
+	// Retrieves all displays attached to gfx card at index
 	vector<ComPtr<IDXGIOutput> > getDisplayListFor(size_t adapterIndex);
+	// Retrieves all displays attached to gfx card
 	vector<ComPtr<IDXGIOutput> > getDisplayListFor(ComPtr<IDXGIAdapter> adapter);
 	vector<DXGI_MODE_DESC> getDisplayModeList(size_t displayIndex);
 	vector<DXGI_MODE_DESC> getDisplayModeList(ComPtr<IDXGIOutput> display);

@@ -36,6 +36,15 @@ protected:
 };
 
 
+class OnClickListenerDisplayList : public ListBox::ActionListener {
+public:
+	OnClickListenerDisplayList(ConfigScreen* screen) : config(screen) {
+	}
+	virtual void onClick(ListBox * listbox, UINT selectedItemIndex) override;
+	virtual void onHover(ListBox * listbox, short hoveredItemIndex) override;
+private:
+	ConfigScreen* config;
+};
 
 class OnClickListenerAdapterList : public ListBox::ActionListener {
 public:
@@ -191,6 +200,7 @@ protected:
 
 
 class ConfigScreen : public MenuScreen {
+	friend class OnClickListenerDisplayList;
 	friend class OnClickListenerAdapterList;
 	friend class OnClickListenerDisplayModeList;
 	friend class OnClickListenerFullScreenCheckBox;
