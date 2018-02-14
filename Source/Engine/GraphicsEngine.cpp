@@ -334,6 +334,7 @@ vector<ComPtr<IDXGIOutput>> GraphicsEngine::getDisplayListFor(size_t adapterInde
 	return getDisplayListFor(adapters[adapterIndex]);
 }
 
+// Retrieves all displays attached to gfx cards
 vector<ComPtr<IDXGIOutput>> GraphicsEngine::getDisplayListFor(
 	ComPtr<IDXGIAdapter> adapter) {
 
@@ -342,7 +343,6 @@ vector<ComPtr<IDXGIOutput>> GraphicsEngine::getDisplayListFor(
 	int i = 0;
 
 	while (adapter->EnumOutputs(i++, &adapterOutput) != DXGI_ERROR_NOT_FOUND) {
-
 		outputs.push_back(adapterOutput);
 	}
 

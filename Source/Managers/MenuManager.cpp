@@ -365,12 +365,13 @@ bool ConfigScreen::initialize(ComPtr<ID3D11Device> device) {
 	// this has to be grab the first (and only) display.
 	populateDisplayList(game->getDisplayListFor(0));
 	displayListbox->setSelected(game->getSelectedDisplayIndex());
+	displayListbox->setActionListener(new OnClickListenerDisplayList(this));
 
 	displayLabel->setText(displayListbox->getSelected()->toString());
 	displayLabel->setHoverable(true);
 	// setup label for Display Mode
 
-	controlPos.y += 50;
+	controlPos.y += displayListbox->getHeight() + 50;
 
 	testSpinner = guiFactory.createSpinner(controlPos, 25, itemHeight);
 
@@ -404,7 +405,7 @@ bool ConfigScreen::initialize(ComPtr<ID3D11Device> device) {
 		guiFactory.createComboBox(controlPos, 75, itemHeight, 10, true);
 	//guiFactory->createListBox(controlPos, 75, itemHeight);
 
-	populateDisplayModeList(game->getDisplayModeList(0));
+	populateDisplayModeList(game->getDisplayModeList(displayListbox->getSelectedIndex()));
 	displayModeCombobox->setScrollBar(scrollBarDesc);
 	displayModeCombobox->setSelected(game->getSelectedDisplayModeIndex());
 	OnClickListenerDisplayModeList* onClickDisplayMode =
@@ -580,10 +581,20 @@ void DisplayModeItem::setText() {
 }
 
 
+void OnClickListenerDisplayList::onClick(ListBox* listbox, UINT selectedItemIndex) {
+	DisplayItem* displayItem = (DisplayItem*) listbox->getItem(selectedItemIndex);
+	//config->game->setDisplay(selectedIndex);
+	config->populateDisplayModeList(config->game->getDisplayModeList(selectedItemIndex));
+	config->displayLabel->setText(displayItem->toString());
+}
+
+void OnClickListenerDisplayList::onHover(ListBox* listbox, short hoveredItemIndex) {
+}
+
 
 void OnClickListenerAdapterList::onClick(ListBox* listbox, UINT selectedIndex) {
 
-	AdapterItem* selectedItem = (AdapterItem*) listbox->getItem(selectedIndex);
+	//AdapterItem* selectedItem = (AdapterItem*) listbox->getItem(selectedIndex);
 	config->game->setAdapter(selectedIndex);
 }
 
@@ -701,3 +712,5 @@ void BackButtonListener::onHover(Button* button) {
 
 void BackButtonListener::resetState(Button * button) {
 }
+
+
