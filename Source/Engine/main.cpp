@@ -28,7 +28,7 @@ __int64 counterStart = 0;
 int registerControllers();
 /** Creates a list of all attached USB devices. */
 int getInputDeviceInfo(bool writeToFile, wstring filename = L"USB Devices.txt");
-int messageLoop();
+WPARAM messageLoop();
 void startTimer();
 double getSecondsSinceStart();
 double getFrameTime();
@@ -104,7 +104,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 }
 
 
-int messageLoop() {
+WPARAM messageLoop() {
 
 	MSG msg;
 	ZeroMemory(&msg, sizeof(msg));

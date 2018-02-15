@@ -40,8 +40,8 @@ class OnClickListenerDisplayList : public ListBox::ActionListener {
 public:
 	OnClickListenerDisplayList(ConfigScreen* screen) : config(screen) {
 	}
-	virtual void onClick(ListBox * listbox, UINT selectedItemIndex) override;
-	virtual void onHover(ListBox * listbox, short hoveredItemIndex) override;
+	virtual void onClick(ListBox* listbox, size_t selectedItemIndex) override;
+	virtual void onHover(ListBox* listbox, int hoveredItemIndex) override;
 private:
 	ConfigScreen* config;
 };
@@ -50,8 +50,8 @@ class OnClickListenerAdapterList : public ListBox::ActionListener {
 public:
 	OnClickListenerAdapterList(ConfigScreen* screen) : config(screen) {
 	}
-	virtual void onClick(ListBox* listbox, UINT selectedItemIndex) override;
-	virtual void onHover(ListBox* listbox, short hoveredItemIndex) override;
+	virtual void onClick(ListBox* listbox, size_t selectedItemIndex) override;
+	virtual void onHover(ListBox* listbox, int hoveredItemIndex) override;
 private:
 	ConfigScreen* config;
 };
@@ -60,8 +60,8 @@ class OnClickListenerDisplayModeList : public ComboBox::ActionListener {
 public:
 	OnClickListenerDisplayModeList(ConfigScreen* screen) : config(screen) {
 	}
-	virtual void onClick(ComboBox* combobox, UINT selectedIndex) override;
-	virtual void onHover(ComboBox* listbox, short hoveredItemIndex) override;
+	virtual void onClick(ComboBox* listbox, size_t selectedItemIndex) override;
+	virtual void onHover(ComboBox* listbox, int hoveredItemIndex) override;
 private:
 	ConfigScreen* config;
 

@@ -581,30 +581,30 @@ void DisplayModeItem::setText() {
 }
 
 
-void OnClickListenerDisplayList::onClick(ListBox* listbox, UINT selectedItemIndex) {
+void OnClickListenerDisplayList::onClick(ListBox* listbox, size_t selectedItemIndex) {
 	DisplayItem* displayItem = (DisplayItem*) listbox->getItem(selectedItemIndex);
 	//config->game->setDisplay(selectedIndex);
 	config->populateDisplayModeList(config->game->getDisplayModeList(selectedItemIndex));
 	config->displayLabel->setText(displayItem->toString());
 }
 
-void OnClickListenerDisplayList::onHover(ListBox* listbox, short hoveredItemIndex) {
+void OnClickListenerDisplayList::onHover(ListBox* listbox, int hoveredItemIndex) {
 }
 
 
-void OnClickListenerAdapterList::onClick(ListBox* listbox, UINT selectedIndex) {
+void OnClickListenerAdapterList::onClick(ListBox* listbox, size_t selectedIndex) {
 
 	//AdapterItem* selectedItem = (AdapterItem*) listbox->getItem(selectedIndex);
 	config->game->setAdapter(selectedIndex);
 }
 
 
-void OnClickListenerAdapterList::onHover(ListBox* listbox, short hoveredItemIndex) {
+void OnClickListenerAdapterList::onHover(ListBox* listbox, int hoveredItemIndex) {
 }
 
 
 
-void OnClickListenerDisplayModeList::onClick(ComboBox* combobox, UINT selectedIndex) {
+void OnClickListenerDisplayModeList::onClick(ComboBox* combobox, size_t selectedIndex) {
 
 	if (!config->game->setDisplayMode(selectedIndex)) {
 		// change back to previous setting
@@ -616,7 +616,7 @@ void OnClickListenerDisplayModeList::onClick(ComboBox* combobox, UINT selectedIn
 
 }
 
-void OnClickListenerDisplayModeList::onHover(ComboBox * listbox, short hoveredItemIndex) {
+void OnClickListenerDisplayModeList::onHover(ComboBox* listbox, int hoveredItemIndex) {
 }
 
 
