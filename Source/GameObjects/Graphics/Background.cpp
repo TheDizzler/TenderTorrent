@@ -82,25 +82,28 @@ bool Background::loadLevel(ComPtr<ID3D11Device> device, const char_t* xmlFile) {
 	xml_node introWP = waypointsNode.child("intro");
 
 	// set intro scroll
-	Vector2 currentWPVector = Vector2(introWP.attribute("x").as_int(), introWP.attribute("y").as_int());
+	Vector2 currentWPVector = Vector2(
+		introWP.attribute("x").as_float(), introWP.attribute("y").as_float());
 	constrainToBackground(currentWPVector);
 	lastWaypoint = new Waypoint(currentWPVector, 0);
 
 	// set initial position of level
 	xml_node startWP = waypointsNode.child("start");
 	if (startWP.attribute("center").as_bool() == true) {
-		currentWPVector = Vector2(baseBG->getWidth() / 2, baseBG->getHeight());
+		currentWPVector = Vector2(float(baseBG->getWidth()) / 2, (float) baseBG->getHeight());
 		constrainToBackground(currentWPVector);
 		currentWaypoint = new Waypoint(
 			currentWPVector, startWP.attribute("speed").as_float());
 	} else {
-		currentWPVector = Vector2(startWP.attribute("x").as_int(), startWP.attribute("y").as_int());
+		currentWPVector = Vector2(
+			startWP.attribute("x").as_float(), startWP.attribute("y").as_float());
 		constrainToBackground(currentWPVector);
 		currentWaypoint = new Waypoint(currentWPVector, startWP.attribute("speed").as_float());
 	}
 
 	for (xml_node waypoint : waypointsNode.children("waypoint")) {
-		currentWPVector = Vector2(waypoint.attribute("x").as_int(), waypoint.attribute("y").as_int());
+		currentWPVector = Vector2(
+			waypoint.attribute("x").as_float(), waypoint.attribute("y").as_float());
 		constrainToBackground(currentWPVector);
 		waypoints.push(new Waypoint(currentWPVector, waypoint.attribute("speed").as_float()));
 
@@ -108,7 +111,8 @@ bool Background::loadLevel(ComPtr<ID3D11Device> device, const char_t* xmlFile) {
 
 	// last waypoint
 	xml_node endWP = waypointsNode.child("end");
-	currentWPVector = Vector2(endWP.attribute("x").as_int(), endWP.attribute("y").as_int());
+	currentWPVector = Vector2(
+		endWP.attribute("x").as_float(), endWP.attribute("y").as_float());
 	constrainToBackground(currentWPVector);
 	waypoints.push(new Waypoint(currentWPVector, endWP.attribute("speed").as_float()));
 
@@ -151,7 +155,7 @@ bool Background::startUpdate(double deltaTime) {
 
 	double t = totalWaypointTime / CONSTANT;
 
-	Vector2 newpos = Vector2::Lerp(lastWaypoint->dest, currentWaypoint->dest, t);
+	Vector2 newpos = Vector2::Lerp(lastWaypoint->dest, currentWaypoint->dest, (float) t);
 	camera.centerOn(newpos);
 	if (t >= 1) {
 		totalWaypointTime = 0;
@@ -171,7 +175,7 @@ bool Background::update(double deltaTime) {
 	totalWaypointTime += currentWaypoint->scrollSpeed * deltaTime;
 	double t = totalWaypointTime / CONSTANT;
 
-	Vector2 newpos = Vector2::Lerp(lastWaypoint->dest, currentWaypoint->dest, t);
+	Vector2 newpos = Vector2::Lerp(lastWaypoint->dest, currentWaypoint->dest, (float) t);
 	camera.centerOn(newpos);
 
 	if (t >= 1) {
@@ -240,11 +244,14 @@ bool Background::loadLevel(ComPtr<ID3D11Device> device, xml_node levelRoot) {
 
 			xml_node posNode = clothNode.child("position");
 			// pos relative to level
-			Vector2 worldPosition = Vector2(posNode.attribute("x").as_int(), posNode.attribute("y").as_int());
+			Vector2 worldPosition = Vector2(
+				posNode.attribute("x").as_float(), posNode.attribute("y").as_float());
 			// pos in sprite sheet
-			Vector2 position = Vector2(clothNode.attribute("x").as_int(), clothNode.attribute("y").as_int());
+			Vector2 position = Vector2(
+				clothNode.attribute("x").as_float(), clothNode.attribute("y").as_float());
 			xml_node sizeNode = clothNode.child("size");
-			Vector2 size = Vector2(sizeNode.attribute("x").as_int(), sizeNode.attribute("y").as_int());
+			Vector2 size = Vector2(
+				sizeNode.attribute("x").as_float(), sizeNode.attribute("y").as_float());
 
 			unique_ptr<GraphicsAsset> spriteAsset = make_unique<GraphicsAsset>();
 			spriteAsset->loadAsPartOfSheet(masterAsset->getTexture(), setName,
@@ -265,7 +272,8 @@ bool Background::loadLevel(ComPtr<ID3D11Device> device, xml_node levelRoot) {
 			for (xml_node pieceNode = clothNode.child("tatter"); pieceNode;
 				pieceNode = pieceNode.next_sibling("tatter")) {
 
-				position = Vector2(pieceNode.attribute("x").as_int(), pieceNode.attribute("y").as_int());
+				position = Vector2(
+					pieceNode.attribute("x").as_float(), pieceNode.attribute("y").as_float());
 
 				unique_ptr<GraphicsAsset> pieceAsset = make_unique<GraphicsAsset>();
 				pieceAsset->loadAsPartOfSheet(masterAsset->getTexture(), setName,
@@ -290,11 +298,14 @@ bool Background::loadLevel(ComPtr<ID3D11Device> device, xml_node levelRoot) {
 
 				xml_node posNode = subClothNode.child("position");
 				// pos relative to level
-				Vector2 worldPosition = Vector2(posNode.attribute("x").as_int(), posNode.attribute("y").as_int());
-				// pos in sprite sheet
-				Vector2 position = Vector2(subClothNode.attribute("x").as_int(), subClothNode.attribute("y").as_int());
+				Vector2 worldPosition = Vector2(
+					posNode.attribute("x").as_float(), posNode.attribute("y").as_float());
+					// pos in sprite sheet
+				Vector2 position = Vector2(
+					subClothNode.attribute("x").as_float(), subClothNode.attribute("y").as_float());
 				xml_node sizeNode = subClothNode.child("size");
-				Vector2 size = Vector2(sizeNode.attribute("x").as_int(), sizeNode.attribute("y").as_int());
+				Vector2 size = Vector2(
+					sizeNode.attribute("x").as_float(), sizeNode.attribute("y").as_float());
 
 				unique_ptr<GraphicsAsset> spriteAsset = make_unique<GraphicsAsset>();
 				spriteAsset->loadAsPartOfSheet(masterAsset->getTexture(), setName,
@@ -315,11 +326,13 @@ bool Background::loadLevel(ComPtr<ID3D11Device> device, xml_node levelRoot) {
 				for (xml_node pieceNode = subClothNode.child("tatter"); pieceNode;
 					pieceNode = pieceNode.next_sibling("tatter")) {
 
-					position = Vector2(pieceNode.attribute("x").as_int(), pieceNode.attribute("y").as_int());
+					position = Vector2(
+						pieceNode.attribute("x").as_float(), pieceNode.attribute("y").as_float());
 
 					xml_node sizeNode = pieceNode.child("size");
 					if (sizeNode)
-						size = Vector2(sizeNode.attribute("x").as_int(), sizeNode.attribute("y").as_int());
+						size = Vector2(
+							sizeNode.attribute("x").as_float(), sizeNode.attribute("y").as_float());
 					unique_ptr<GraphicsAsset> pieceAsset = make_unique<GraphicsAsset>();
 					pieceAsset->loadAsPartOfSheet(masterAsset->getTexture(), setName,
 						position, size, Vector2::Zero);

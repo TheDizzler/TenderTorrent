@@ -199,11 +199,12 @@ MainScreen::~MainScreen() {
 
 bool MainScreen::initialize(ComPtr<ID3D11Device> device) {
 
-	Vector2 buttonpos = Vector2(Globals::WINDOW_WIDTH / 2, Globals::WINDOW_HEIGHT / 8);
-	Vector2 buttonsize = Vector2(Globals::WINDOW_WIDTH / 4, 0);
+	Vector2 buttonpos = Vector2(
+		float(Globals::WINDOW_WIDTH) / 2, float(Globals::WINDOW_HEIGHT) / 8);
+	Vector2 buttonsize = Vector2(float(Globals::WINDOW_WIDTH) / 4, 0);
 	buttonpos.x -= buttonsize.x / 2;
 	Button* button = guiFactory.createButton(buttonpos, buttonsize, L"Play");
-	button->setUnpressedColor(Color(1, .558, 1, 1));
+	button->setUnpressedColor(Color(1, .558f, 1, 1));
 	button->setActionListener(new PlayButtonListener(this));
 	LetterJammer* jammer = guiFactory.createLetterJammer(
 		Vector2::Zero, L"Play", Color(0, 0, 0, 1), false);
@@ -211,15 +212,15 @@ bool MainScreen::initialize(ComPtr<ID3D11Device> device) {
 	button->setTextLabel(jammer, true);
 	guiControls.push_back(button);
 
-	buttonpos.y = Globals::WINDOW_HEIGHT / 2 - button->getHeight() / 2;
+	buttonpos.y = float(Globals::WINDOW_HEIGHT) / 2 - float(button->getHeight()) / 2;
 	button = guiFactory.createButton(buttonpos, buttonsize, L"Settings");
-	button->setUnpressedColor(Color(1, .558, 1, 1));
+	button->setUnpressedColor(Color(1, .558f, 1, 1));
 	button->setActionListener(new SettingsButtonListener(this));
 	guiControls.push_back(button);
 
-	buttonpos.y = Globals::WINDOW_HEIGHT - Globals::WINDOW_HEIGHT / 8 - button->getHeight();
+	buttonpos.y = float(Globals::WINDOW_HEIGHT - Globals::WINDOW_HEIGHT / 8 - button->getHeight());
 	button = guiFactory.createButton(buttonpos, buttonsize, L"Exit");
-	button->setUnpressedColor(Color(1, .558, 1, 1));
+	button->setUnpressedColor(Color(1, .558f, 1, 1));
 	button->setActionListener(new OnClickListenerExitButton(this));
 	guiControls.push_back(button);
 
@@ -228,7 +229,7 @@ bool MainScreen::initialize(ComPtr<ID3D11Device> device) {
 	{
 
 		Vector2 dialogPos, dialogSize;
-		dialogSize = Vector2(Globals::WINDOW_WIDTH / 2, Globals::WINDOW_HEIGHT / 2);
+		dialogSize = Vector2(float(Globals::WINDOW_WIDTH) / 2, float(Globals::WINDOW_HEIGHT) / 2);
 		dialogPos = dialogSize;
 		dialogPos.x -= dialogSize.x / 2;
 		dialogPos.y -= dialogSize.y / 2;
@@ -433,16 +434,16 @@ bool ConfigScreen::initialize(ComPtr<ID3D11Device> device) {
 	ImageButton* button = (ImageButton*) guiFactory.createImageButton("Button Up", "Button Down");
 	button->setText(L"Back");
 	button->setPosition(
-		Vector2(Globals::WINDOW_WIDTH / 2 - button->getWidth(),
-			Globals::WINDOW_HEIGHT - button->getHeight() - 25));
+		Vector2((float) Globals::WINDOW_WIDTH / 2 - button->getWidth(),
+			(float) Globals::WINDOW_HEIGHT - button->getHeight() - 25));
 	button->setActionListener(new BackButtonListener(this));
 	guiControls.push_back(button);
 
 	button = (ImageButton*) guiFactory.createImageButton("Button Up", "Button Down");
 	button->setText(L"Apply");
 	button->setPosition(
-		Vector2(Globals::WINDOW_WIDTH / 2,
-			Globals::WINDOW_HEIGHT - button->getHeight() - 25));
+		Vector2((float) Globals::WINDOW_WIDTH / 2,
+			(float) Globals::WINDOW_HEIGHT - button->getHeight() - 25));
 	guiControls.push_back(button);
 
 	texturePanel.reset(guiFactory.createPanel());

@@ -1,17 +1,16 @@
 #include "RearAttackWave.h"
+#include "../Engine/GameEngine.h"
 
-RearAttackWave::RearAttackWave() {
 
-}
 
 RearAttackWave::~RearAttackWave() {
 }
 
-#include "../Engine/GameEngine.h"
+
 bool RearAttackWave::initialize(GFXAssetManager* gfxAssets, xml_node shipNode) {
 
 	xml_node waveDataNode = shipNode.child("waveData");
-	maxTimeBetweenLaunches = waveDataNode.attribute("maxTimeBetweenWaves").as_double();
+	maxTimeBetweenLaunches = waveDataNode.attribute("maxTimeBetweenWaves").as_uint();
 	timeBetweenChecks = waveDataNode.attribute("timeBetweenChanceForWave").as_double();
 
 

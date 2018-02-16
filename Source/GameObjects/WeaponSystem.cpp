@@ -28,7 +28,7 @@ void WeaponSystem::fillBulletStore(shared_ptr<Animation> bulletAsset) {
 }
 
 
-void WeaponSystem::setWeaponStats(int damage, int nrgCst, float coolTime) {
+void WeaponSystem::setWeaponStats(int damage, int nrgCst, double coolTime) {
 
 	for (Bullet* bullet : bulletStore)
 		bullet->setDamage(damage);
@@ -57,7 +57,7 @@ void WeaponSystem::draw(SpriteBatch* batch) {
 
 bool WeaponSystem::ready() {
 
-	int size = bulletStore.size();
+	size_t size = bulletStore.size();
 	if (nextBullet >= size || bulletStore[nextBullet]->isAlive == true) {
 		for (int i = 0; i < size; ++i) {
 			if (bulletStore[i]->isAlive == false) {

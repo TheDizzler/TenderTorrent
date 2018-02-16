@@ -6,9 +6,9 @@ Tatter::Tatter(const Vector2& pos) : Sprite(pos) {
 
 	mt19937 rng;
 	rng.seed(random_device{}());
-	uniform_int_distribution<mt19937::result_type> rand((int) 0, XM_2PI);
+	uniform_real_distribution<> rand(0, XM_2PI);
 
-	direction = Vector2(cos(rand(rng)), sin(rand(rng)));
+	direction = Vector2((float) cos(rand(rng)), (float) sin(rand(rng)));
 	direction.Normalize();
 	speed = 50;
 }
@@ -31,5 +31,5 @@ void Tatter::update(double deltaTime) {
 				setAlpha(0);
 		}
 	}
-	moveBy(deltaTime*direction*speed);
+	moveBy(direction*float(deltaTime*speed));
 }

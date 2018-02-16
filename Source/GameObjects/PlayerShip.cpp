@@ -69,7 +69,7 @@ bool PlayerShip::loadBullet(GFXAssetManager* gfxAsset) {
 
 bool PlayerShip::startUpdate(double deltaTime) {
 
-	position.y -= firingSpeed * deltaTime;
+	position.y -= float(firingSpeed * deltaTime);
 	rightTurret->update(deltaTime, position);
 	leftTurret->update(deltaTime, position);
 	return position.y < Globals::WINDOW_HEIGHT - 3 * height;
@@ -84,33 +84,33 @@ void PlayerShip::update(double deltaTime) {
 		return;
 	}
 	// Movement
-	int currentSpeed = speed;
+	float currentSpeed = speed;
 	if (firing)
 		currentSpeed = firingSpeed;
 
 	auto keyState = Keyboard::Get().GetState();
 
 	if (keyState.A)
-		position.x -= currentSpeed * deltaTime;
+		position.x -= float(currentSpeed * deltaTime);
 
 	if (keyState.D)
-		position.x += currentSpeed * deltaTime;
+		position.x += float(currentSpeed * deltaTime);
 
-	if (position.x < 0 + width / 2)
-		position.x = 0 + width / 2;
+	if (position.x < width / 2)
+		position.x = float(width) / 2;
 	if (position.x > Globals::WINDOW_WIDTH - width / 2)
-		position.x = Globals::WINDOW_WIDTH - width / 2;
+		position.x = Globals::WINDOW_WIDTH - float(width) / 2;
 
 
 	if (keyState.W)
-		position.y -= currentSpeed * deltaTime;
+		position.y -= float(currentSpeed * deltaTime);
 	if (keyState.S)
-		position.y += currentSpeed * deltaTime;
+		position.y += float(currentSpeed * deltaTime);
 
-	if (position.y < 0 + height / 2)
-		position.y = 0 + height / 2;
+	if (position.y < height / 2)
+		position.y = float(height) / 2;
 	if (position.y > Globals::WINDOW_HEIGHT - height / 2)
-		position.y = Globals::WINDOW_HEIGHT - height / 2;
+		position.y = Globals::WINDOW_HEIGHT - float(height) / 2;
 
 	// Weapons
 	rightWeaponSlot->update(deltaTime, position);
@@ -120,8 +120,8 @@ void PlayerShip::update(double deltaTime) {
 	rightTurret->update(deltaTime, position);
 	leftTurret->update(deltaTime, position);
 	Vector2 turretsLocationMidPoint = (rightTurret->getPosition() + leftTurret->getPosition()) / 2;
-	int y = mouse.getPosition().y - turretsLocationMidPoint.y;
-	int x = mouse.getPosition().x - turretsLocationMidPoint.x;
+	float y = mouse.getPosition().y - turretsLocationMidPoint.y;
+	float x = mouse.getPosition().x - turretsLocationMidPoint.x;
 	Vector2 targetDirection = Vector2(x, y);
 	targetDirection.Normalize();
 
@@ -200,17 +200,19 @@ const double TIME_TO_DIE = 5.0;
 const double EXPLOSION_STAGGER_TIME = .2;
 void PlayerShip::deathUpdate(double deltaTime) {
 
-	Vector2 movement = deathVector * deltaTime;
+	Vector2 movement = deathVector * (float) deltaTime;
 	position += movement;
 	rightTurret->update(deltaTime, position);
 	leftTurret->update(deltaTime, position);
 
-	Color newTint = Color::Lerp(Vector4(1, 1, 1, 1), Vector4(0, 0, 0, 0), totalDeathTime / TIME_TO_DIE);
+	Color newTint = Color::Lerp(Vector4(1, 1, 1, 1), Vector4(0, 0, 0, 0),
+		float(totalDeathTime / TIME_TO_DIE));
 	setTint(newTint);
 	rightTurret->setTint(newTint);
 	leftTurret->setTint(newTint);
 
-	Vector2 newSize = Vector2::Lerp(Vector2(1, 1), Vector2(0, 0), totalDeathTime / TIME_TO_DIE);
+	Vector2 newSize = Vector2::Lerp(Vector2(1, 1), Vector2(0, 0),
+		float(totalDeathTime / TIME_TO_DIE));
 	setScale(newSize);
 	rightTurret->setScale(newSize);
 	leftTurret->setScale(newSize);

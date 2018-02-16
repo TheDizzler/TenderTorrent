@@ -106,13 +106,13 @@ LevelSelection::LevelSelection(const Vector2& position,
 	xml_node properties = levelNode.parent().child("properties");
 
 	Vector2 frameMargin = Vector2(
-		properties.child("frameMargin").attribute("x").as_int(),
-		properties.child("frameMargin").attribute("y").as_int());
+		properties.child("frameMargin").attribute("x").as_float(),
+		properties.child("frameMargin").attribute("y").as_float());
 	Vector2 picpos = position + frameMargin;
 
 	Vector2 picsize = Vector2(
-		properties.child("frameDimensions").attribute("x").as_int(),
-		properties.child("frameDimensions").attribute("y").as_int());
+		properties.child("frameDimensions").attribute("x").as_float(),
+		properties.child("frameDimensions").attribute("y").as_float());
 
 	xml_node color = properties.child("frameColor");
 	frameColor = Vector4(

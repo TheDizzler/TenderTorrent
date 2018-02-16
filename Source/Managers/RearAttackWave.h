@@ -6,8 +6,8 @@
 
 class RearAttackWave : public Wave {
 public:
-	RearAttackWave();
-	~RearAttackWave();
+	
+	virtual ~RearAttackWave();
 
 	virtual bool initialize(GFXAssetManager* gfxAssets, xml_node shipNode) override;
 	virtual void launchNewWave() override;

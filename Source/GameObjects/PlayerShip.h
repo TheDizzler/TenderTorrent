@@ -11,8 +11,8 @@
 
 /* In screenspace. */
 static const Vector2 PLAYER_START_POSITION(
-	Globals::WINDOW_WIDTH / 2,
-	Globals::WINDOW_HEIGHT + 175);
+	(float)Globals::WINDOW_WIDTH / 2,
+	(float)Globals::WINDOW_HEIGHT + 175);
 
 
 class PlayerShip : public GameObject {

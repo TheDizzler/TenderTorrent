@@ -15,7 +15,7 @@ public:
 
 	virtual void loadBulletTexture(/*GraphicsAsset**/ shared_ptr<Animation> bulletAsset);
 
-	virtual void setWeaponStats(int damage, int energyCost, float coolDownTime);
+	virtual void setWeaponStats(int damage, int energyCost, double coolDownTime);
 
 
 	void update(double deltaTime, Vector2 positionUpdate);
@@ -35,8 +35,7 @@ public:
 	Vector2 locationOffset;
 
 protected:
-	//unique_ptr<Sprite> baseBulletSprite;
-	float coolDownTime = .1;
+	double coolDownTime = .1;
 
 	Vector2 weaponLocation;
 
@@ -45,7 +44,7 @@ protected:
 	vector<Bullet*> bulletStore;
 
 	int nextBullet = 0;
-	float timeSinceFired = 0;
+	double timeSinceFired = 0;
 
 
 };

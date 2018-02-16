@@ -24,9 +24,9 @@ namespace Globals {
 
 	
 
-	inline int getIntFrom(string value) {
+	inline float getFloatFrom(string value) {
 		
-		int i = value.find_first_of(" ");
+		size_t i = value.find_first_of(" ");
 		if (i == std::string::npos) {
 			// ohnos dudes
 			
@@ -34,14 +34,14 @@ namespace Globals {
 		string token = value.substr(0, i);
 
 
-		int num = 0;
+		float num = 0;
 		if (token.compare("WINDOW_WIDTH") == 0) {
-			num = Globals::WINDOW_WIDTH;
+			num = (float) Globals::WINDOW_WIDTH;
 		} else if (token.compare("WINDOW_HEIGHT") == 0) {
-			num = Globals::WINDOW_HEIGHT;
+			num = (float) Globals::WINDOW_HEIGHT;
 		}
 
-		if (i == -1)
+		if (i == std::string::npos)
 			return num;
 
 		token = value.substr(i);
@@ -62,10 +62,10 @@ namespace Globals {
 		token = token.substr(i);
 		int next = stoi(token);
 		if (op == '+') {
-			num += next;
+			num += (float) next;
 
 		} else if (op == '-') {
-			num -= next;
+			num -= (float) next;
 
 		} else if (op == '/') {
 			num /= next;
@@ -84,21 +84,21 @@ namespace Globals {
 	}
 
 	/* Extract int from node text. */
-	inline int getIntFrom(xml_node node) {
+	inline float getFloatFrom(xml_node node) {
 
 		string value = node.text().as_string();
 		if (isdigit(value[0]))
-			return node.text().as_int();
-		return getIntFrom(value);
+			return node.text().as_float();
+		return getFloatFrom(value);
 	}
 
 	/* Extract int from node attribute. */
-	inline int getIntFrom(xml_attribute attr) {
+	inline float getFloatFrom(xml_attribute attr) {
 
 		string value = attr.as_string();
 		if (isdigit(value[0]))
-			return attr.as_int();
-		return getIntFrom(value);
+			return attr.as_float();
+		return getFloatFrom(value);
 	}
 
 };

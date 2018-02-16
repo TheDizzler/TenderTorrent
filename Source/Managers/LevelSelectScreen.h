@@ -72,8 +72,8 @@ public:
 	Vector4 frameColor;
 	Vector4 labelColor;
 
-	Vector4 hoverFrameColor = Vector4(0, 0, 0, .5);
-	Vector4 hoverLabelColor = Vector4(0, 0, 0, .8);
+	Vector4 hoverFrameColor = Vector4(0, 0, 0, .5f);
+	Vector4 hoverLabelColor = Vector4(0, 0, 0, .8f);
 };
 
 

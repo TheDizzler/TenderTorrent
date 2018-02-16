@@ -12,10 +12,14 @@ RearAttackShip::RearAttackShip(xml_node mirrorNode) {
 	xml_node controlNode = mirrorNode.child("controlPoint");
 	xml_node climaxNode = mirrorNode.child("climax");
 	xml_node endNode = mirrorNode.child("end");
-	startPos = Vector2(getIntFrom(startNode.attribute("x")), getIntFrom(startNode.attribute("y")));
-	controlPoint = Vector2(getIntFrom(controlNode.attribute("x")), getIntFrom(controlNode.attribute("y")));
-	climaxPos = Vector2(getIntFrom(climaxNode.attribute("x")), getIntFrom(climaxNode.attribute("y")));;
-	endPos = Vector2(getIntFrom(endNode.attribute("x")), getIntFrom(endNode.attribute("y")));
+	startPos = Vector2(
+		getFloatFrom(startNode.attribute("x")), getFloatFrom(startNode.attribute("y")));
+	controlPoint = Vector2(
+		getFloatFrom(controlNode.attribute("x")), getFloatFrom(controlNode.attribute("y")));
+	climaxPos = Vector2(
+		getFloatFrom(climaxNode.attribute("x")), getFloatFrom(climaxNode.attribute("y")));;
+	endPos = Vector2(
+		getFloatFrom(endNode.attribute("x")), getFloatFrom(endNode.attribute("y")));
 
 
 	xml_node weaponPointsNode = shipNode.child("weaponPoints");
@@ -56,7 +60,8 @@ void RearAttackShip::update(double deltaTime, PlayerShip* player, vector<Bullet*
 	double percent = timeAlive / TIME_TO_CLIMAX;
 	percent = 1 - cos(percent*XM_PIDIV2);
 	double rt = 1 - percent;
-	position = rt*rt*startPos + 2 * rt*percent*controlPoint + percent*percent*climaxPos;
+	position = float(rt*rt)*startPos + 2 * float(rt*percent)*controlPoint
+		+ float(percent*percent)*climaxPos;
 
 
 	for (auto const& weapon : weaponSystems) {

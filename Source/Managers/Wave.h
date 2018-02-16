@@ -6,7 +6,7 @@
 
 class Wave {
 public:
-	Wave();
+	
 	virtual ~Wave();
 
 	virtual bool initialize(GFXAssetManager* gfxAssets, xml_node shipNode) = 0;
@@ -40,7 +40,7 @@ protected:
 	double timeBetweenChecks = 3;
 	double timeUntilNextCheck = timeBetweenChecks;
 	double timeSinceLastLaunch = 0;
-	int maxTimeBetweenLaunches = 25;
+	unsigned int maxTimeBetweenLaunches = 25;
 
 
 private:

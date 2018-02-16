@@ -1,5 +1,6 @@
 #include "../pch.h"
 #include "SunBullet.h"
+#include "../globals.h"
 
 SunBullet::SunBullet() : Bullet() {
 
@@ -14,10 +15,10 @@ SunBullet::SunBullet(const Vector2& position) : Bullet(position) {
 SunBullet::~SunBullet() {
 }
 
-#include "../globals.h"
+
 void SunBullet::update(double deltaTime) {
 
-	float deltaSpeed = deltaTime*bulletSpeed;
+	float deltaSpeed = (float) deltaTime*bulletSpeed;
 	Vector2 newposition = position + direction*deltaSpeed;
 	setPosition(newposition);
 	/*position.x += direction.x*deltaSpeed;

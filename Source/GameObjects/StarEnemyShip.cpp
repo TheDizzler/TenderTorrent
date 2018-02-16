@@ -15,8 +15,10 @@ StarEnemyShip::StarEnemyShip(xml_node mirrorNode) {
 
 	xml_node startNode = mirrorNode.child("start");
 	xml_node endNode = mirrorNode.child("end");
-	startPos = Vector2(getIntFrom(startNode.attribute("x")), getIntFrom(startNode.attribute("y")));
-	endPos = Vector2(getIntFrom(endNode.attribute("x")), getIntFrom(endNode.attribute("y")));
+	startPos = Vector2(
+		getFloatFrom(startNode.attribute("x")), getFloatFrom(startNode.attribute("y")));
+	endPos = Vector2(
+		getFloatFrom(endNode.attribute("x")), getFloatFrom(endNode.attribute("y")));
 
 	xml_node weaponPointsNode = shipNode.child("weaponPoints");
 	xml_node weaponSystemsNode = shipNode.parent().child("weaponSystems");
@@ -49,7 +51,7 @@ void StarEnemyShip::update(double deltaTime, PlayerShip* player, vector<Bullet*>
 	timeAlive += deltaTime;
 	double percent = timeAlive / timeToTravel;
 
-	position = Vector2::Lerp(startPos, endPos, percent);
+	position = Vector2::Lerp(startPos, endPos, (float)percent);
 
 
 	isAlive = percent < 1;

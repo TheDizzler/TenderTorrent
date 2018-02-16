@@ -4,8 +4,6 @@
 #include <random>
 #include "../Managers/GameManager.h"
 
-Wave::Wave() {
-}
 
 Wave::~Wave() {
 

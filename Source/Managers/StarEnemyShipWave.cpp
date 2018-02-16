@@ -10,7 +10,7 @@ StarEnemyShipWave::~StarEnemyShipWave() {
 bool StarEnemyShipWave::initialize(GFXAssetManager* gfxAssets, xml_node shipNode) {
 
 	xml_node waveDataNode = shipNode.child("waveData");
-	maxTimeBetweenLaunches = waveDataNode.attribute("maxTimeBetweenWaves").as_double();
+	maxTimeBetweenLaunches = waveDataNode.attribute("maxTimeBetweenWaves").as_uint();
 	timeBetweenChecks = waveDataNode.attribute("timeBetweenChanceForWave").as_double();
 
 	const char_t* shipName = shipNode.child("sprite").text().as_string();

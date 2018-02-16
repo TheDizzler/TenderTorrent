@@ -5,6 +5,7 @@
 
 class SunBullet : public Bullet {
 public:
+	/** For constructing base bullet sprites */
 	SunBullet();
 	SunBullet(const Vector2& position);
 	virtual ~SunBullet();

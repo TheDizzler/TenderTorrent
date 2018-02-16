@@ -160,8 +160,8 @@ Vector2 Camera::screenToWorld(Vector2 screenPosition) {
 
 
 Matrix Camera::translationMatrix() {
-	// casting to int prevents filtering artifacts??
-	return Matrix::CreateTranslation(-(int) position.x, -(int) position.y, 0)
+	// casting to int in CreateTranslation prevents filtering artifacts??
+	return Matrix::CreateTranslation(-/*(int)*/ position.x, -/*(int)*/ position.y, 0)
 		* Matrix::CreateRotationZ(rotation)
 		* Matrix::CreateScale(zoom, zoom, 1)
 		* Matrix::CreateTranslation(viewportCenter);
