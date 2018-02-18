@@ -33,8 +33,12 @@ public:
 	int viewportHeight;
 	Vector3 viewportCenter;
 
+	/* Returns true if point (in WORLD coords) is on screen. */
 	bool viewContains(const Vector2& point);
 
+	const Vector2& getPosition() const;
+	/* Amount screen has moved since last update*/
+	const Vector2& getDelta() const;
 	float getZoom();
 	void setZoomToResolution(int width = Globals::targetResolution.x,
 		int height = Globals::targetResolution.y);
@@ -54,6 +58,7 @@ public:
 private:
 
 	Vector2 position;
+	Vector2 positionDelta;
 
 	float zoom;
 	float levelWidth;

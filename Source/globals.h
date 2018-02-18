@@ -9,7 +9,8 @@ namespace Globals {
 	extern int WINDOW_HEIGHT;	// in pixels
 
 	const static Vector2 targetResolution = Vector2(256, 224); // true SNES resolution
-
+	const static Vector2 SHIP_STORE_POSITION = Vector2(-100, -100); // in world coords
+	const static Vector2 BULLET_STORE_POSITION = Vector2(-100, -50); // in world coors
 	/**	0 = Present as fast as possible.
 		1 = Lock to screen refresh rate. */
 	extern int vsync_enabled;

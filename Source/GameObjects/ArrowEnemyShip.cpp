@@ -1,5 +1,6 @@
 #include "../pch.h"
 #include "ArrowEnemyShip.h"
+#include "../Engine/GameEngine.h"
 
 ArrowEnemyShip::ArrowEnemyShip() {
 }
@@ -18,13 +19,15 @@ ArrowEnemyShip::ArrowEnemyShip(xml_node shipNode) {
 	}
 
 	midPos = Vector2(-100.0f, Globals::getFloatFrom(shipNode.child("midPoint")));
-	endPos = Vector2((float) Globals::WINDOW_WIDTH /2, -100.0);
+	endPos = Vector2((float) Globals::WINDOW_WIDTH / 2, -100.0);
 
 	timeToTravel = shipNode.child("timeToTravel").text().as_double();
 	maxHealth = shipNode.child("health").text().as_int();
 
 	startPos = Vector2((float) -100, float(Globals::WINDOW_HEIGHT + 100));
-	position = startPos;
+	position = Globals::SHIP_STORE_POSITION;
+	for (auto const& weapon : weaponSystems)
+		weapon->reset(position);
 	health = maxHealth;
 }
 
@@ -37,9 +40,12 @@ void ArrowEnemyShip::update(double deltaTime, PlayerShip* player, vector<Bullet*
 	double percent = timeAlive / timeToTravel;
 
 	if (percent < .50)
-		position = Vector2::Lerp(startPos, midPos, float(percent * 2));
+		position = camera.screenToWorld(Vector2::Lerp(startPos, midPos, float(percent * 2)));
 	else {
-		position = Vector2::Lerp(midPos, endPos, float(percent - .50) * 2);
+		position = camera.screenToWorld(Vector2::Lerp(midPos, endPos, float(percent - .50) * 2));
+
+		if (!camera.viewContains(position))
+			isAlive = false;
 
 		for (auto const& weapon : weaponSystems) {
 			weapon->updatePosition(position);
@@ -52,7 +58,7 @@ void ArrowEnemyShip::update(double deltaTime, PlayerShip* player, vector<Bullet*
 			}
 		}
 	}
-	EnemyShip::update(deltaTime);
+	//EnemyShip::update(deltaTime);
 }
 
 
@@ -61,7 +67,7 @@ void ArrowEnemyShip::update(double deltaTime, PlayerShip* player, vector<Bullet*
 void ArrowEnemyShip::setStart(int xPos) {
 
 	startPos.x = (float) xPos;
-	position = startPos;
+	position = camera.screenToWorld(startPos);
 	midPos.x = startPos.x;
 
 	for (auto const& weapon : weaponSystems)

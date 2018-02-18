@@ -208,7 +208,7 @@ bool MainScreen::initialize(ComPtr<ID3D11Device> device) {
 	button->setActionListener(new PlayButtonListener(this));
 	LetterJammer* jammer = guiFactory.createLetterJammer(
 		Vector2::Zero, L"Play", Color(0, 0, 0, 1), false);
-	jammer->setEffect(make_unique<ColorJammer>(.525));
+	jammer->setEffect(make_unique<ColorJammer>(.525f));
 	button->setTextLabel(jammer, true);
 	guiControls.push_back(button);
 

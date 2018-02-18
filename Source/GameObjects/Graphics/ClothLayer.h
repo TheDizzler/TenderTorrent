@@ -5,10 +5,10 @@
 
 class ClothLayer {
 public:
-	ClothLayer();
+
 	virtual ~ClothLayer();
 
-	void load(GraphicsAsset* const graphicsAsset, shared_ptr<Sprite> cornerFrame);
+	void load(GraphicsAsset* const graphicsAsset, Sprite* cornerFrame);
 	void loadPiece(GraphicsAsset* const graphicsAsset);
 
 	void reloadGraphicsAssets();
@@ -24,11 +24,11 @@ public:
 	void update(double deltaTime);
 	void draw(SpriteBatch* batch);
 
-	const HitArea* getHitArea() const;
+	const HitArea& getHitArea() const;
 
 	/* example of use:
 	control->setMatrixFunction([&]() -> Matrix { return camera->translationMatrix(); }); */
-	void setMatrixFunction(function<Matrix()> translationMat) {
+	/*void setMatrixFunction(function<Matrix()> translationMat) {
 		translationMatrix = translationMat;
 	}
 	void setCameraZoom(function<float()> zoomFunction) {
@@ -38,14 +38,16 @@ public:
 	virtual void updateProjectedHitArea();
 
 	virtual const Vector2 getScreenPosition(Matrix viewProjectionMatrix) const;
-	virtual unique_ptr<HitArea> getScreenHitArea(Matrix viewProjectionMatrix) const;
+	virtual unique_ptr<HitArea> getScreenHitArea(Matrix viewProjectionMatrix) const;*/
 
 
 	bool isAlive();
 private:
-	function<Matrix()> translationMatrix;
-	function<float()> cameraZoom;
-	unique_ptr<HitArea> projectedHitArea;
+	//function<Matrix()> translationMatrix;
+	//function<float()> cameraZoom;
+	//unique_ptr<HitArea> projectedHitArea;
+
+	HitArea hitArea;
 
 	ComPtr<ID3D11ShaderResourceView> frameTexture;
 	RECT frameRect;

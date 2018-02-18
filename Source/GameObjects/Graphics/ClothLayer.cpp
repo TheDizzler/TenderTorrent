@@ -2,13 +2,11 @@
 #include "ClothLayer.h"
 #include "../../Managers/GameManager.h"
 
-ClothLayer::ClothLayer() {
-}
 
 ClothLayer::~ClothLayer() {
 }
 
-void ClothLayer::load(GraphicsAsset* const graphicsAsset, shared_ptr<Sprite> cornerFrame) {
+void ClothLayer::load(GraphicsAsset* const graphicsAsset, Sprite* cornerFrame) {
 
 	//wholeCloth = make_unique<GameObject>();
 	wholeCloth.load(graphicsAsset);
@@ -54,17 +52,13 @@ void ClothLayer::setInitialPosition(const Vector2& pos, const Vector2& scl) {
 	healthLabel.reset(guiFactory.createTextLabel(textPos, to_wstring(health)));
 	healthLabel->setTint(Color(0, 0, 0, 1));
 
-	projectedHitArea = make_unique<HitArea>(wholeCloth.getHitArea().position,
-		wholeCloth.getHitArea().size);
-	updateProjectedHitArea();
-
-	const HitArea* hitArea = &wholeCloth.getHitArea();
-	topLeftCornerPos = hitArea->position;
-	topRightCornerPos = Vector2(hitArea->position.x + hitArea->size.x, hitArea->position.y);
-	bottomLeftCornerPos = Vector2(hitArea->position.x,
-		hitArea->position.y + hitArea->size.y);
-	bottomRightCornerPos = Vector2(hitArea->position.x + hitArea->size.x,
-		hitArea->position.y + hitArea->size.y);
+	hitArea = &wholeCloth.getHitArea();
+	topLeftCornerPos = hitArea.position;
+	topRightCornerPos = Vector2(hitArea.position.x + hitArea.size.x, hitArea.position.y);
+	bottomLeftCornerPos = Vector2(hitArea.position.x,
+		hitArea.position.y + hitArea.size.y);
+	bottomRightCornerPos = Vector2(hitArea.position.x + hitArea.size.x,
+		hitArea.position.y + hitArea.size.y);
 
 }
 
@@ -117,7 +111,7 @@ void ClothLayer::moveBy(const Vector2& pos) {
 
 	wholeCloth.moveBy(pos);
 	//hitArea->position += pos;
-	updateProjectedHitArea();
+	//updateProjectedHitArea();
 	healthLabel->moveBy(pos);
 	topLeftCornerPos += pos;
 	topRightCornerPos += pos;
@@ -129,14 +123,8 @@ void ClothLayer::moveBy(const Vector2& pos) {
 
 void ClothLayer::update(double deltaTime) {
 
-	updateProjectedHitArea();
-	/*if (projectedHitArea->contains(mouse->getPosition())) {
-		frameTint = Color(1, 0, 1, 1);
-		healthLabel->setTint(Color(1, 0, 1, 1));
-	} else {
-		frameTint = Color(1, 1, 1, 1);
-		healthLabel->setTint(Color(1, 1, 1, 1));
-	}*/
+	//updateProjectedHitArea();
+
 
 	if (wholeCloth.isExploding) {
 		timeExploding += deltaTime;
@@ -145,6 +133,8 @@ void ClothLayer::update(double deltaTime) {
 		for (const auto& piece : tatters)
 			piece->update(deltaTime);
 	}
+
+	healthLabel->update(deltaTime);
 
 }
 
@@ -175,39 +165,39 @@ void ClothLayer::draw(SpriteBatch* batch/*, Sprite* frame*/) {
 	}
 }
 
-const HitArea* ClothLayer::getHitArea() const {
-	return projectedHitArea.get();
+const HitArea& ClothLayer::getHitArea() const {
+	return hitArea;
 }
-
-
-void ClothLayer::updateProjectedHitArea() {
-
-	Vector2 screenCords = getScreenPosition(translationMatrix());
-	projectedHitArea->position = screenCords;
-	projectedHitArea->size = wholeCloth.getHitArea().size * cameraZoom();
-
-	/*wostringstream wss;
-	wss << "size: " << wholeCloth->getHitArea()->size.x << ", " << wholeCloth->getHitArea()->size.y << "\n";
-	wss << "pro size: " << projectedHitArea->size.x << ", " << projectedHitArea->size.y << "\n";
-	wss << "pos: " << projectedHitArea->position.x << ", " << projectedHitArea->position.y;
-	healthLabel->setText(wss);*/
-}
-
-const Vector2 ClothLayer::getScreenPosition(Matrix viewProjectionMatrix) const {
-
-	Vector2 screenCords = XMVector2Transform(
-		wholeCloth.getHitArea().position, viewProjectionMatrix);
-	return screenCords;
-
-}
-
-unique_ptr<HitArea> ClothLayer::getScreenHitArea(Matrix viewProjectionMatrix) const {
-
-	Vector2 screenCords = getScreenPosition(viewProjectionMatrix);
-	unique_ptr<HitArea> projectedHitArea;
-	projectedHitArea.reset(new HitArea(screenCords, wholeCloth.getHitArea().size));
-	return projectedHitArea;
-}
+//
+//
+//void ClothLayer::updateProjectedHitArea() {
+//
+//	Vector2 screenCords = getScreenPosition(translationMatrix());
+//	projectedHitArea->position = screenCords;
+//	projectedHitArea->size = wholeCloth.getHitArea().size * cameraZoom();
+//
+//	/*wostringstream wss;
+//	wss << "size: " << wholeCloth->getHitArea()->size.x << ", " << wholeCloth->getHitArea()->size.y << "\n";
+//	wss << "pro size: " << projectedHitArea->size.x << ", " << projectedHitArea->size.y << "\n";
+//	wss << "pos: " << projectedHitArea->position.x << ", " << projectedHitArea->position.y;
+//	healthLabel->setText(wss);*/
+//}
+//
+//const Vector2 ClothLayer::getScreenPosition(Matrix viewProjectionMatrix) const {
+//
+//	Vector2 screenCords = XMVector2Transform(
+//		wholeCloth.getHitArea().position, viewProjectionMatrix);
+//	return screenCords;
+//
+//}
+//
+//unique_ptr<HitArea> ClothLayer::getScreenHitArea(Matrix viewProjectionMatrix) const {
+//
+//	Vector2 screenCords = getScreenPosition(viewProjectionMatrix);
+//	unique_ptr<HitArea> projectedHitArea;
+//	projectedHitArea.reset(new HitArea(screenCords, wholeCloth.getHitArea().size));
+//	return projectedHitArea;
+//}
 
 bool ClothLayer::isAlive() {
 	return wholeCloth.isAlive;

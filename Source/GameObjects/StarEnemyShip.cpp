@@ -36,7 +36,7 @@ StarEnemyShip::StarEnemyShip(xml_node mirrorNode) {
 	maxHealth = shipNode.child("health").text().as_int();
 
 
-	position = startPos;
+	position = Globals::SHIP_STORE_POSITION;
 	health = maxHealth;
 }
 
@@ -51,7 +51,7 @@ void StarEnemyShip::update(double deltaTime, PlayerShip* player, vector<Bullet*>
 	timeAlive += deltaTime;
 	double percent = timeAlive / timeToTravel;
 
-	position = Vector2::Lerp(startPos, endPos, (float)percent);
+	position = camera.screenToWorld(Vector2::Lerp(startPos, endPos, (float)percent));
 
 
 	isAlive = percent < 1;
@@ -64,5 +64,4 @@ void StarEnemyShip::update(double deltaTime, PlayerShip* player, vector<Bullet*>
 			liveBullets.push_back(bullet);
 		}
 	}
-	EnemyShip::update(deltaTime);
 }

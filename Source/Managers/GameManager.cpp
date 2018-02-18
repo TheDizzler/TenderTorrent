@@ -33,7 +33,7 @@ bool GameManager::initializeGame(GameEngine* gmngn,
 		return false;
 	}
 
-	xml_node guiAssetsNode = docAssMan->child("root").child("gui");
+	//xml_node guiAssetsNode = docAssMan->child("root").child("gui");
 	xml_node gfxAssetNode = docAssMan->child("root").child("gfx");
 	gfxAssets.reset(new GFXAssetManager(gfxAssetNode));
 	if (!gfxAssets->initialize(device)) {

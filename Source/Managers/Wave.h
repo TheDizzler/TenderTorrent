@@ -23,6 +23,7 @@ public:
 	/** Draws both ships and enemy bullets. */
 	void draw(SpriteBatch* batch);
 
+	/* Update to play when level finished. */
 	virtual void finishedUpdate(double deltaTime);
 
 	vector<Bullet*> liveBullets;
@@ -34,9 +35,6 @@ protected:
 	
 	virtual bool checkForLaunch();
 
-	//unique_ptr<Sprite> sharedShipSprite;
-
-	
 	double timeBetweenChecks = 3;
 	double timeUntilNextCheck = timeBetweenChecks;
 	double timeSinceLastLaunch = 0;

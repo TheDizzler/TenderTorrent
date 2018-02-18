@@ -17,7 +17,6 @@ void AnimatedSprite::load(shared_ptr<Animation> anim) {
 	if (animation->animationFrames.size() > 0)
 		currentFrameIndex = 0;
 
-	//hitArea.reset(new HitArea(position, Vector2(getWidth(), getHeight())));
 	hitArea.position = position;
 	hitArea.size = Vector2(FLOAT(getWidth()), FLOAT(getHeight()));
 	origin = Vector2(FLOAT(getWidth()) / 2, FLOAT(getHeight()) / 2);

@@ -28,6 +28,7 @@ public:
 	const Vector2& getStartPosition();
 
 	bool startUpdate(double deltaTime);
+	/* Returns true on victory condition. */
 	bool update(double deltaTime);
 	void draw(SpriteBatch* batch);
 
@@ -41,8 +42,10 @@ private:
 	Waypoint* currentWaypoint = NULL;
 	Waypoint* lastWaypoint = NULL;
 
+	Vector2 startWaypoint;
+
 	unique_ptr<Sprite> baseBG;
-	shared_ptr<Sprite> cornerFrame;
+	unique_ptr<Sprite> cornerFrame;
 	vector<unique_ptr<GraphicsAsset> > bgLayerAssets;
 	vector<unique_ptr<BackgroundLayer>> bgLayers;
 

@@ -17,8 +17,7 @@ static const Vector2 PLAYER_START_POSITION(
 
 class PlayerShip : public GameObject {
 public:
-
-	PlayerShip(const Vector2& position);
+	PlayerShip();
 	virtual ~PlayerShip();
 
 	void reset();
@@ -29,6 +28,7 @@ public:
 	*/
 	bool loadBullet(GFXAssetManager* gfxAssets);
 
+	
 	/** Update to perform before action starts.
 		Return true when ship has moved into position. */
 	bool startUpdate(double deltaTime);

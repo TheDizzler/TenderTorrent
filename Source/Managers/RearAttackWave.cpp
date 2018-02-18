@@ -39,6 +39,7 @@ bool RearAttackWave::initialize(GFXAssetManager* gfxAssets, xml_node shipNode) {
 	return true;
 }
 
+
 void RearAttackWave::launchNewWave() {
 
 	timeSinceLastLaunch = 0;
@@ -46,6 +47,7 @@ void RearAttackWave::launchNewWave() {
 
 	launchNextMiniWave();
 }
+
 
 void RearAttackWave::update(double deltaTime, PlayerShip* player) {
 

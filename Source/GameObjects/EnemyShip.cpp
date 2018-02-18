@@ -2,15 +2,16 @@
 #include "EnemyShip.h"
 #include "../Engine/GameEngine.h"
 
-EnemyShip::EnemyShip() : GameObject(SimpleMath::Vector2(0, 0)) {
+EnemyShip::EnemyShip() : GameObject() {
 
 	isAlive = false;
 	setExplosion(gfxAssets->getAnimation("big explosion"));
 }
 
-EnemyShip::EnemyShip(const Vector2& position) : GameObject(position) {
+EnemyShip::EnemyShip(const Vector2& pos) : GameObject() {
 
 	isAlive = false;
+	position = pos;
 }
 
 EnemyShip::~EnemyShip() {
@@ -18,7 +19,7 @@ EnemyShip::~EnemyShip() {
 }
 
 void EnemyShip::reset() {
-	position = startPos;
+	position = Globals::SHIP_STORE_POSITION;
 	for (auto const& weapon : weaponSystems)
 		weapon->reset(position);
 	health = maxHealth;
@@ -36,16 +37,15 @@ void EnemyShip::setExplosion(shared_ptr<Animation> explos) {
 }
 
 
-void EnemyShip::update(double deltaTime) {
-	//Sprite::update(deltaTime);
-}
-
 void EnemyShip::explodeUpdate(double deltaTime) {
 
 	explosion->update(deltaTime);
 	isExploding = explosion->isAlive;
-	//Color newTint = getTint();
-	setTint(Color::Lerp(getTint(), Vector4(0.0f, 0.0f, 0.0f, 0.0f), 20* (float) deltaTime));
+	setTint(Color::Lerp(getTint(), Vector4(0.0f, 0.0f, 0.0f, 0.0f), 20 * (float) deltaTime));
+
+	if (!isExploding)
+		setPosition(Globals::SHIP_STORE_POSITION);
+
 }
 
 void EnemyShip::drawExplosion(SpriteBatch* batch) {
@@ -69,7 +69,8 @@ void EnemyShip::takeDamage(int damageTaken) {
 
 
 
-EnemyShip::EnemyWeaponSystem::EnemyWeaponSystem(xml_node weaponPointNode, xml_node weaponSystemsNode, bool mirrored) {
+EnemyShip::EnemyWeaponSystem::EnemyWeaponSystem(xml_node weaponPointNode,
+	xml_node weaponSystemsNode, bool mirrored) {
 
 	const char_t* weaponTypeName = weaponPointNode.attribute("type").as_string();
 	xml_node weaponTypeNode = weaponSystemsNode.find_child_by_attribute("weaponType", "name", weaponTypeName);
@@ -114,16 +115,16 @@ EnemyShip::EnemyWeaponSystem::~EnemyWeaponSystem() {
 	bulletStore.clear();
 }
 
-void EnemyShip::EnemyWeaponSystem::reset(const Vector2 & shipPosition) {
+void EnemyShip::EnemyWeaponSystem::reset(const Vector2& shipPosition) {
 	systemLocation = shipPosition + positionOffset;
 	fired = false;
 }
 
-void EnemyShip::EnemyWeaponSystem::updatePosition(Vector2 shipPosition) {
+void EnemyShip::EnemyWeaponSystem::updatePosition(const Vector2& shipPosition) {
 	systemLocation = shipPosition + positionOffset;
 }
 
-EnemyBullet* EnemyShip::EnemyWeaponSystem::launchBullet(Vector2 target) {
+EnemyBullet* EnemyShip::EnemyWeaponSystem::launchBullet(const Vector2& target) {
 
 	EnemyBullet* bullet = bulletStore[nextBulletInStore++];
 	bullet->setPosition(systemLocation);

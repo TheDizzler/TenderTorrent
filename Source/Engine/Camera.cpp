@@ -38,19 +38,39 @@ void Camera::updateViewport(const Vector2& viewport, const Vector2& viewportPos,
 	viewportCenter = Vector3((viewportWidth) * .5f + viewportPosition.x,
 		(viewportHeight) * .5f + viewportPosition.y, 0);
 
-	//viewX = (viewportWidth) / zoom / 2;
-	//viewY = (viewportHeight) / zoom / 2;
-	//if (zoomToFit)
-		//zoomToFitBuilding();
 }
 
 bool Camera::viewContains(const Vector2& point) {
-	RECT* rect = viewportWorldBoundary();
+	/*RECT* rect = viewportWorldBoundary();
 
 	bool contains = rect->left < point.x && point.x < rect->right
 		&& rect->top < point.y && point.y < rect->bottom;
-	delete rect;
-	return contains;
+	delete rect;*/
+
+	Vector2 screenPos = worldToScreen(point);
+
+	return screenPos.x > viewportPosition.x
+		&& screenPos.y > viewportPosition.y
+		&& screenPos.x < viewportWidth + viewportPosition.x
+		&& screenPos.y < viewportHeight + viewportPosition.y;
+
+	/*if (!(screenPos.x > viewportPosition.x))
+		return false;
+	if (!(screenPos.y > viewportPosition.y))
+		return false;
+	if (!(screenPos.x < viewportWidth + viewportPosition.x))
+		return false;
+	if (!(screenPos.y < viewportHeight + viewportPosition.y))
+		return false;
+	return true;*/
+}
+
+const Vector2& Camera::getPosition() const {
+	return position;
+}
+
+const Vector2 & Camera::getDelta() const {
+	return positionDelta;
 }
 
 float Camera::getZoom() {
@@ -83,8 +103,6 @@ void Camera::adjustZoom(float amount) {
 	else if (zoom > 2.5f)
 		zoom = 2.5;
 
-	//viewX = (viewportWidth / zoom / 2);
-	//viewY = (viewportHeight / zoom / 2);
 }
 
 
@@ -109,6 +127,7 @@ RECT* Camera::viewportWorldBoundary() {
 
 void Camera::centerOn(const Vector2& pos/*, bool showWholeLevel*/) {
 
+	positionDelta = position - pos;
 	/*if (showWholeLevel) {
 		zoomToFitBackground();
 
@@ -142,21 +161,6 @@ Vector2 Camera::screenToWorld(Vector2 screenPosition) {
 //
 //	}
 //}
-
-//void Camera::buildingClampedPosition(Vector2& position) {
-//
-//
-//	Vector2 cameraMax = Vector2(
-//		buildingWidth - viewX,
-//		buildingHeight - viewY);
-//
-//	Vector2 cameraMin = Vector2(viewX, viewY);
-//	if (cameraMax.x < cameraMin.x)
-//		position.Clamp(cameraMax, cameraMin);
-//	else
-//		position.Clamp(cameraMin, cameraMax);
-//}
-
 
 
 Matrix Camera::translationMatrix() {

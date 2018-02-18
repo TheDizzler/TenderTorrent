@@ -24,19 +24,18 @@ protected:
 		float fireDelay = 0;
 		//int timesFired = 0;
 
-		void updatePosition(Vector2 shipPosition);
+		void updatePosition(const Vector2& shipPosition);
 		/** Launches projectile at target. */
-		EnemyBullet* launchBullet(Vector2 target);
+		EnemyBullet* launchBullet(const Vector2& target);
 		/** Luanches projectile at set angle. */
 		EnemyBullet* launchBullet();
 
 	private:
 		/* Weapon system position relative to ship's origin. */
 		Vector2 positionOffset;
-		//Vector2 direction;
 	};
 public:
-	/** For constructing base sprites. VESTIGIAL. */
+	/** For constructing base sprites. */
 	EnemyShip();
 	/** For constructing actual enemies seen on stage. */
 	EnemyShip(const Vector2& position);
@@ -48,7 +47,6 @@ public:
 
 
 	virtual void update(double deltaTime, PlayerShip* player, vector<Bullet*>& liveBullets) = 0;
-	virtual void update(double deltaTime);
 	virtual void explodeUpdate(double deltaTime);
 
 	virtual void drawExplosion(SpriteBatch* batch);
@@ -68,6 +66,7 @@ protected:
 	int maxHealth = 10;
 	int health = 10;
 
+	/* Start position in SCREEN coordinates, NOT world. */
 	Vector2 startPos;
 
 	double timeAlive = 0;

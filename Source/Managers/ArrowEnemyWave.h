@@ -1,4 +1,3 @@
-#include "../pch.h"
 #pragma once
 
 #include "Wave.h"
@@ -7,8 +6,8 @@
 
 class ArrowEnemyWave : public Wave {
 public:
-	ArrowEnemyWave();
-	~ArrowEnemyWave();
+	
+	virtual ~ArrowEnemyWave();
 
 	virtual bool initialize(GFXAssetManager* gfxAssets, xml_node shipNode) override;
 	virtual void update(double deltaTime, PlayerShip* player) override;
@@ -23,5 +22,8 @@ private:
 	int miniWavesLaunched = 0;
 	int miniWavesMax = 3;
 
+	int shipWidth;
+	// in SCREEN coords, NOT world coords
+	int startX;
 
 };

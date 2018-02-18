@@ -1,13 +1,12 @@
 #include "../pch.h"
 #include "PlayerShip.h"
-#include "../Managers/GameManager.h"
+//#include "../Managers/GameManager.h"
+#include "../Engine/GameEngine.h"
 #include <random>
 #include <algorithm>
 
 
-PlayerShip::PlayerShip(const Vector2& pos) : GameObject(pos) {
-
-	position = PLAYER_START_POSITION;
+PlayerShip::PlayerShip() : GameObject() {
 
 
 	rightWeaponSlot.reset(new WeaponSystem(Vector2(26, -15)));
@@ -39,7 +38,7 @@ void PlayerShip::reset() {
 	isAlive = true;
 	maxEnergy = startMaxEnergy;
 	energy = startMaxEnergy;
-	position = PLAYER_START_POSITION;
+	//position = PLAYER_START_POSITION;
 
 	rightWeaponSlot->update(0, position);
 	leftWeaponSlot->update(0, position);
@@ -72,7 +71,8 @@ bool PlayerShip::startUpdate(double deltaTime) {
 	position.y -= float(firingSpeed * deltaTime);
 	rightTurret->update(deltaTime, position);
 	leftTurret->update(deltaTime, position);
-	return position.y < Globals::WINDOW_HEIGHT - 3 * height;
+	//return position.y < Globals::WINDOW_HEIGHT - 3 * height;
+	return camera.worldToScreen(position).y < Globals::WINDOW_HEIGHT - 3 * height;
 }
 
 
@@ -80,9 +80,12 @@ bool PlayerShip::startUpdate(double deltaTime) {
 void PlayerShip::update(double deltaTime) {
 
 	if (!isAlive) {
-
 		return;
 	}
+
+	// auto-movement from camera movement
+	position -= camera.getDelta();
+
 	// Movement
 	float currentSpeed = speed;
 	if (firing)
@@ -96,10 +99,10 @@ void PlayerShip::update(double deltaTime) {
 	if (keyState.D)
 		position.x += float(currentSpeed * deltaTime);
 
-	if (position.x < width / 2)
+	/*if (position.x < width / 2)
 		position.x = float(width) / 2;
 	if (position.x > Globals::WINDOW_WIDTH - width / 2)
-		position.x = Globals::WINDOW_WIDTH - float(width) / 2;
+		position.x = Globals::WINDOW_WIDTH - float(width) / 2;*/
 
 
 	if (keyState.W)
@@ -107,10 +110,10 @@ void PlayerShip::update(double deltaTime) {
 	if (keyState.S)
 		position.y += float(currentSpeed * deltaTime);
 
-	if (position.y < height / 2)
+	/*if (position.y < height / 2)
 		position.y = float(height) / 2;
 	if (position.y > Globals::WINDOW_HEIGHT - height / 2)
-		position.y = Globals::WINDOW_HEIGHT - float(height) / 2;
+		position.y = Globals::WINDOW_HEIGHT - float(height) / 2;*/
 
 	// Weapons
 	rightWeaponSlot->update(deltaTime, position);
@@ -120,8 +123,9 @@ void PlayerShip::update(double deltaTime) {
 	rightTurret->update(deltaTime, position);
 	leftTurret->update(deltaTime, position);
 	Vector2 turretsLocationMidPoint = (rightTurret->getPosition() + leftTurret->getPosition()) / 2;
-	float y = mouse.getPosition().y - turretsLocationMidPoint.y;
-	float x = mouse.getPosition().x - turretsLocationMidPoint.x;
+	Vector2 mousepos = camera.screenToWorld(mouse.getPosition());
+	float y = mousepos.y - turretsLocationMidPoint.y;
+	float x = mousepos.x - turretsLocationMidPoint.x;
 	Vector2 targetDirection = Vector2(x, y);
 	targetDirection.Normalize();
 

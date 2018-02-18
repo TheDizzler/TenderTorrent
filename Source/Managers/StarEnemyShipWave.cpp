@@ -1,12 +1,10 @@
 #include "StarEnemyShipWave.h"
-
-StarEnemyShipWave::StarEnemyShipWave() {
-}
+#include "../Engine/GameEngine.h"
 
 StarEnemyShipWave::~StarEnemyShipWave() {
 }
 
-#include "../Engine/GameEngine.h"
+
 bool StarEnemyShipWave::initialize(GFXAssetManager* gfxAssets, xml_node shipNode) {
 
 	xml_node waveDataNode = shipNode.child("waveData");

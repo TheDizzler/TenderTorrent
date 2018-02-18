@@ -22,7 +22,8 @@ bool LevelManager::initialize(ComPtr<ID3D11Device> device) {
 		wostringstream wss;
 		wss << "Could not read Level Manifest file!";
 		wss << "\n" << result.description();
-		MessageBox(0, wss.str().c_str(), L"Fatal Read Error!", MB_OK);
+		//MessageBox(0, wss.str().c_str(), L"Fatal Read Error!", MB_OK);
+		GameManager::showErrorDialog(wss.str().c_str(), L"Fatal Read Error!");
 		return false;
 	}
 
@@ -30,17 +31,16 @@ bool LevelManager::initialize(ComPtr<ID3D11Device> device) {
 	if (!mouse.loadMouseIcon(&guiFactory, "Mouse Reticle"))
 		return false;
 
-
 	if (!waveManager.initialize(gfxAssets.get()))
 		return false;
 
-	playerShip.reset(new PlayerShip(PLAYER_START_POSITION));
-	playerShip->load(gfxAssets->getAsset("PlayerShip Hull"));
-	if (!playerShip->loadBullet(gfxAssets.get())) {
+
+	playerShip.load(gfxAssets->getAsset("PlayerShip Hull"));
+	if (!playerShip.loadBullet(gfxAssets.get())) {
 		MessageBox(NULL, L"Failed to load weapons", L"ERROR", MB_OK);
 		return false;
 	}
-	playerShip->setDimensions(playerShip.get());
+	playerShip.setDimensions(&playerShip);
 
 
 	guiOverlay = make_unique<GUIOverlay>();
@@ -64,6 +64,9 @@ void LevelManager::reloadGraphicsAssets() {
 bool LevelManager::loadLevel(ComPtr<ID3D11Device> device, const char_t* levelFileName) {
 
 	playState = LOADING;
+	totalPlayTime = 0;
+	gameOverTimer = 0;
+	playerShip.reset();
 
 	bgManager.clear();
 	if (!bgManager.loadLevel(device, levelFileName))
@@ -73,9 +76,11 @@ bool LevelManager::loadLevel(ComPtr<ID3D11Device> device, const char_t* levelFil
 	if (!waveManager.initialize(gfxAssets.get()))
 		return false;
 
-	totalPlayTime = 0;
-	gameOverTimer = 0;
-	playerShip->reset();
+	Vector2 startPos = bgManager.getStartPosition();
+	startPos.y += Globals::WINDOW_HEIGHT / 2;
+	playerShip.setPosition(startPos);
+
+
 
 	playState = STARTING;
 	return true;
@@ -83,14 +88,16 @@ bool LevelManager::loadLevel(ComPtr<ID3D11Device> device, const char_t* levelFil
 
 
 void LevelManager::update(double deltaTime) {
-
-	//auto keyState = Keyboard::Get().GetState();
+	
+	int liveCount = 0;
+	bool once = true;
 	switch (playState) {
 		case PLAYING:
 			totalPlayTime += deltaTime;
 
 			// player's bullet hit detection
-			for (Bullet* bullet : playerShip->liveBullets) {
+			for (Bullet* bullet : playerShip.liveBullets) {
+
 				bullet->update(deltaTime);
 				for (Wave* wave : waveManager.waves) {
 					for (EnemyShip* enemy : wave->shipStore) {
@@ -99,6 +106,8 @@ void LevelManager::update(double deltaTime) {
 								enemy->takeDamage(bullet->damage);
 								bullet->isAlive = false;
 							}
+							if (once)
+								++liveCount;
 						}
 					}
 				}
@@ -111,6 +120,7 @@ void LevelManager::update(double deltaTime) {
 						}
 					}
 				}
+				once = false;
 			}
 
 
@@ -118,8 +128,8 @@ void LevelManager::update(double deltaTime) {
 				playState = PlayState::FINISHED;
 				waveManager.clearEnemies();
 			}
-			playerShip->update(deltaTime);
-			waveManager.update(deltaTime, playerShip.get());
+			playerShip.update(deltaTime);
+			waveManager.update(deltaTime, &playerShip);
 
 
 			//if (!pauseDownLast && keyState.Escape) {
@@ -128,13 +138,13 @@ void LevelManager::update(double deltaTime) {
 				//pauseDownLast = true;
 			}
 
-			if (!playerShip->isAlive) {
+			if (!playerShip.isAlive) {
 				playState = PlayState::GAMEOVER;
 			}
 			break;
 		case STARTING:
 			if (bgManager.startUpdate(deltaTime)) {
-				if (playerShip->startUpdate(deltaTime)) {
+				if (playerShip.startUpdate(deltaTime)) {
 					if (delayedPause) {
 						playState = PAUSED;
 						delayedPause = false;
@@ -145,10 +155,10 @@ void LevelManager::update(double deltaTime) {
 			guiOverlay->updateWarning(deltaTime);
 			break;
 		case FINISHED:
-			for (Bullet* bullet : playerShip->liveBullets)
+			for (Bullet* bullet : playerShip.liveBullets)
 				bullet->update(deltaTime);
 			waveManager.finishedUpdate(deltaTime);
-			playerShip->finishedUpdate(deltaTime);
+			playerShip.finishedUpdate(deltaTime);
 
 			gameOverTimer += deltaTime;
 			if (gameOverTimer > 15 /*|| keyState.Escape || keyState.Enter*/
@@ -157,11 +167,11 @@ void LevelManager::update(double deltaTime) {
 				game->loadMainMenu();
 			break;
 		case GAMEOVER:
-			for (Bullet* bullet : playerShip->liveBullets)
+			for (Bullet* bullet : playerShip.liveBullets)
 				bullet->update(deltaTime);
 			//bgManager->update(deltaTime, mouse);
-			playerShip->deathUpdate(deltaTime);
-			waveManager.update(deltaTime, playerShip.get());
+			playerShip.deathUpdate(deltaTime);
+			waveManager.update(deltaTime, &playerShip);
 			gameOverTimer += deltaTime;
 			if (gameOverTimer > 15 /*|| keyState.Escape || keyState.Enter)*/
 				|| keys.isKeyPressed(Keyboard::Escape)
@@ -195,56 +205,110 @@ void LevelManager::update(double deltaTime) {
 
 	{
 		wostringstream ws;
-		ws << "Energy: " << playerShip->energy;
+		ws << "Energy: " << playerShip.energy;
 		guiOverlay->energyLabel->setText(ws);
 	}
 
+	/*{
+		wostringstream ws;
+		ws << "Player: " << playerShip.getPosition().x << ", " << playerShip.getPosition().y;
+		guiOverlay->playerLoc->setText(ws);
+	}
+
+	{
+		wostringstream ws;
+		ws << "Camera: " << camera.getPosition().x << ", " << camera.getPosition().y;
+		guiOverlay->cameraLoc->setText(ws);
+	}*/
+
+	{
+		wostringstream ws;
+		ws << "Bullets: " << waveManager.getBulletCount();
+		guiOverlay->bulletCount->setText(ws);
+	}
+	{
+		wostringstream ws;
+		ws << "Enemies: " << liveCount;
+		guiOverlay->enemyCount->setText(ws);
+	}
+
 	guiOverlay->update(deltaTime);
-	//pauseDownLast = keyState.Escape;
 }
 
 
 void LevelManager::draw(SpriteBatch* batch) {
 
-	batch->Begin(SpriteSortMode_Deferred, NULL, NULL, NULL, NULL, NULL,
-		camera.translationMatrix());
-	{
-		bgManager.draw(batch);
-
-	}
-	batch->End();
 
 
+	switch (playState) {
+		case PAUSED:
+			batch->Begin(SpriteSortMode_Deferred, NULL, NULL, NULL, NULL, NULL,
+				camera.translationMatrix());
+			{
+				bgManager.draw(batch);
+				waveManager.draw(batch);
+				playerShip.draw(batch);
 
-	batch->Begin(SpriteSortMode_Deferred);
-	{
-
-
-		waveManager.draw(batch);
-
-
-
-		switch (playState) {
-			case PAUSED:
-				playerShip->draw(batch);
+			}
+			batch->End();
+			batch->Begin(SpriteSortMode_Deferred);
+			{
+				guiOverlay->draw(batch);
 				guiOverlay->drawPaused(batch);
-				break;
-			case STARTING:
-				playerShip->draw(batch);
+			}
+			batch->End();
+			break;
+		case STARTING:
+			batch->Begin(SpriteSortMode_Deferred, NULL, NULL, NULL, NULL, NULL,
+				camera.translationMatrix());
+			{
+				bgManager.draw(batch);
+				playerShip.draw(batch);
+			}
+			batch->End();
+
+			batch->Begin(SpriteSortMode_Deferred);
+			{
 				if (bgManager.introScrollDone)
 					guiOverlay->drawWarning(batch);
-				break;
-			case GAMEOVER:
-				playerShip->deathDraw(batch);
-				guiOverlay->drawGameOver(batch);
-				break;
-			default:
-				playerShip->draw(batch);
-		}
+				guiOverlay->draw(batch);
+			}
+			batch->End();
+			break;
+		case GAMEOVER:
+			batch->Begin(SpriteSortMode_Deferred, NULL, NULL, NULL, NULL, NULL,
+				camera.translationMatrix());
+			{
+				bgManager.draw(batch);
+				playerShip.deathDraw(batch);
+			}
+			batch->End();
 
-		guiOverlay->draw(batch);
+			batch->Begin(SpriteSortMode_Deferred);
+			{
+				guiOverlay->draw(batch);
+				guiOverlay->drawGameOver(batch);
+			}
+			batch->End();
+			break;
+		default:
+			batch->Begin(SpriteSortMode_Deferred, NULL, NULL, NULL, NULL, NULL,
+				camera.translationMatrix());
+			{
+				bgManager.draw(batch);
+				waveManager.draw(batch);
+				playerShip.draw(batch);
+			}
+			batch->End();
+			batch->Begin(SpriteSortMode_Deferred);
+			{
+				guiOverlay->draw(batch);
+			}
+			batch->End();
 	}
-	batch->End();
+
+
+
 }
 
 void LevelManager::textureDraw(SpriteBatch* batch) {
@@ -265,6 +329,8 @@ void LevelManager::pause() {
 
 void LevelManager::controllerRemoved(ControllerSocketNumber controllerSlot,
 	PlayerSlotNumber slotNumber) {
+
+	playState = PAUSED;
 }
 
 void LevelManager::newController(shared_ptr<Joystick> newStick) {

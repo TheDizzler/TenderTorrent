@@ -75,35 +75,38 @@ bool Background::loadLevel(ComPtr<ID3D11Device> device, const char_t* xmlFile) {
 
 
 	float scaleFactor = levelRoot.attribute("scale").as_float();
-	//baseBG->setScale(Vector2(scaleFactor, scaleFactor));
-	camera.setZoom(scaleFactor);
+	scaleFactor = 1;
+	baseBG->setScale(Vector2(scaleFactor, scaleFactor));
+	//camera.setZoom(scaleFactor);
 
 	xml_node waypointsNode = levelRoot.child("waypoints");
 	xml_node introWP = waypointsNode.child("intro");
 
 	// set intro scroll
 	Vector2 currentWPVector = Vector2(
-		introWP.attribute("x").as_float(), introWP.attribute("y").as_float());
+		introWP.attribute("x").as_float(), introWP.attribute("y").as_float()) * scaleFactor;
 	constrainToBackground(currentWPVector);
 	lastWaypoint = new Waypoint(currentWPVector, 0);
 
 	// set initial position of level
 	xml_node startWP = waypointsNode.child("start");
 	if (startWP.attribute("center").as_bool() == true) {
-		currentWPVector = Vector2(float(baseBG->getWidth()) / 2, (float) baseBG->getHeight());
+		currentWPVector = Vector2(float(baseBG->getWidth()) / 2, (float) baseBG->getHeight()) * scaleFactor;
 		constrainToBackground(currentWPVector);
 		currentWaypoint = new Waypoint(
 			currentWPVector, startWP.attribute("speed").as_float());
 	} else {
 		currentWPVector = Vector2(
-			startWP.attribute("x").as_float(), startWP.attribute("y").as_float());
+			startWP.attribute("x").as_float(), startWP.attribute("y").as_float()) * scaleFactor;
 		constrainToBackground(currentWPVector);
 		currentWaypoint = new Waypoint(currentWPVector, startWP.attribute("speed").as_float());
 	}
 
+	startWaypoint = currentWPVector;
+
 	for (xml_node waypoint : waypointsNode.children("waypoint")) {
 		currentWPVector = Vector2(
-			waypoint.attribute("x").as_float(), waypoint.attribute("y").as_float());
+			waypoint.attribute("x").as_float(), waypoint.attribute("y").as_float()) * scaleFactor;
 		constrainToBackground(currentWPVector);
 		waypoints.push(new Waypoint(currentWPVector, waypoint.attribute("speed").as_float()));
 
@@ -112,7 +115,7 @@ bool Background::loadLevel(ComPtr<ID3D11Device> device, const char_t* xmlFile) {
 	// last waypoint
 	xml_node endWP = waypointsNode.child("end");
 	currentWPVector = Vector2(
-		endWP.attribute("x").as_float(), endWP.attribute("y").as_float());
+		endWP.attribute("x").as_float(), endWP.attribute("y").as_float()) * scaleFactor;
 	constrainToBackground(currentWPVector);
 	waypoints.push(new Waypoint(currentWPVector, endWP.attribute("speed").as_float()));
 
@@ -137,7 +140,8 @@ int Background::getHeight() {
 }
 
 const Vector2& Background::getStartPosition() {
-	return lastWaypoint->dest;
+	//return lastWaypoint->dest;
+	return startWaypoint;
 }
 
 const float CONSTANT = 150;
@@ -259,12 +263,12 @@ bool Background::loadLevel(ComPtr<ID3D11Device> device, xml_node levelRoot) {
 
 
 			unique_ptr<ClothLayer> bgLayer = make_unique<ClothLayer>();
-			bgLayer->load(spriteAsset.get(), cornerFrame);
+			bgLayer->load(spriteAsset.get(), cornerFrame.get());
 			//bgLayer->setLayerDepth(bgLayerNode.attribute("layer").as_float());
 			bgLayer->setHealth(clothNode.attribute("health").as_int());
 			bgLayerAssets.push_back(move(spriteAsset));
-			bgLayer->setMatrixFunction([&]() -> Matrix {return camera.translationMatrix(); });
-			bgLayer->setCameraZoom([&]() -> float { return camera.getZoom(); });
+			//bgLayer->setMatrixFunction([&]() -> Matrix {return camera.translationMatrix(); });
+			//bgLayer->setCameraZoom([&]() -> float { return camera.getZoom(); });
 			bgLayer->setInitialPosition(worldPosition, baseBG->getScale());
 
 
@@ -313,12 +317,12 @@ bool Background::loadLevel(ComPtr<ID3D11Device> device, xml_node levelRoot) {
 
 
 				unique_ptr<ClothLayer> bgLayer = make_unique<ClothLayer>();
-				bgLayer->load(spriteAsset.get(), cornerFrame);
+				bgLayer->load(spriteAsset.get(), cornerFrame.get());
 				//bgLayer->setLayerDepth(bgLayerNode.attribute("layer").as_float());
 				bgLayer->setHealth(subClothNode.attribute("health").as_int());
 				bgLayerAssets.push_back(move(spriteAsset));
-				bgLayer->setMatrixFunction([&]() -> Matrix {return camera.translationMatrix(); });
-				bgLayer->setCameraZoom([&]() -> float { return camera.getZoom(); });
+				//bgLayer->setMatrixFunction([&]() -> Matrix {return camera.translationMatrix(); });
+				//bgLayer->setCameraZoom([&]() -> float { return camera.getZoom(); });
 				bgLayer->setInitialPosition(worldPosition, baseBG->getScale());
 
 

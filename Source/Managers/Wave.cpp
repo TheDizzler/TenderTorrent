@@ -2,7 +2,7 @@
 #include "Wave.h"
 #include <algorithm>
 #include <random>
-#include "../Managers/GameManager.h"
+#include "../Engine/GameEngine.h"
 
 
 Wave::~Wave() {
@@ -50,9 +50,10 @@ void Wave::update(double deltaTime, PlayerShip* player) {
 	liveBullets.erase(remove_if(liveBullets.begin(), liveBullets.end(),
 		[](const Bullet* bullet) { return !bullet->isAlive; }), liveBullets.end());
 
-
+	Vector2 cameraD = camera.getDelta();
 	for (EnemyShip* enemy : shipStore) {
 		if (enemy->isAlive) {
+			enemy->moveBy(cameraD);
 			enemy->update(deltaTime, player, liveBullets);
 			// check for collision with player
 			if (player->getHitArea().collision(enemy->getHitArea())) {
@@ -91,7 +92,8 @@ void Wave::finishedUpdate(double deltaTime) {
 
 
 	for (EnemyShip* enemy : shipStore) {
-		enemy->explodeUpdate(deltaTime);
+		if (enemy->isAlive)
+			enemy->explodeUpdate(deltaTime);
 	}
 }
 

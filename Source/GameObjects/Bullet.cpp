@@ -1,5 +1,6 @@
 #include "../pch.h"
 #include "Bullet.h"
+#include "../Engine/GameEngine.h"
 
 Bullet::Bullet() :AnimatedSprite(weaponStore) {
 	isAlive = false;
@@ -7,7 +8,6 @@ Bullet::Bullet() :AnimatedSprite(weaponStore) {
 
 Bullet::Bullet(const Vector2 &position) : AnimatedSprite(position) {
 
-	/*hitArea.reset(new HitArea(position, Vector2(getWidth(), getHeight())));*/
 	isAlive = false;
 }
 
@@ -25,7 +25,8 @@ void Bullet::update(double deltaTime) {
 	setPosition(newposition);
 	timeAlive += deltaTime;
 
-	if (position.y < 0) {
+	//if (position.y < 0) {
+	if (!camera.viewContains(position)) {
 		isAlive = false;
 		position = weaponStore;
 		timeAlive = 0;

@@ -1,6 +1,7 @@
 #include "../pch.h"
 #include "RearAttackShip.h"
 #include "../globals.h"
+#include "../Engine/GameEngine.h"
 
 using namespace Globals;
 
@@ -38,7 +39,8 @@ RearAttackShip::RearAttackShip(xml_node mirrorNode) {
 	maxHealth = shipNode.child("health").text().as_int();
 
 
-	position = startPos;
+	//position = startPos;
+	position = SHIP_STORE_POSITION;
 	health = maxHealth;
 
 	rotation = XM_PI;
@@ -60,8 +62,8 @@ void RearAttackShip::update(double deltaTime, PlayerShip* player, vector<Bullet*
 	double percent = timeAlive / TIME_TO_CLIMAX;
 	percent = 1 - cos(percent*XM_PIDIV2);
 	double rt = 1 - percent;
-	position = float(rt*rt)*startPos + 2 * float(rt*percent)*controlPoint
-		+ float(percent*percent)*climaxPos;
+	position = camera.screenToWorld(float(rt*rt)*startPos + 2 * float(rt*percent)*controlPoint
+		+ float(percent*percent)*climaxPos);
 
 
 	for (auto const& weapon : weaponSystems) {
@@ -75,9 +77,9 @@ void RearAttackShip::update(double deltaTime, PlayerShip* player, vector<Bullet*
 
 
 
-	EnemyShip::update(deltaTime);
+	//EnemyShip::update(deltaTime);
 
-	if (position.y > Globals::WINDOW_HEIGHT + 120) {
+	if (position.y > camera.screenToWorld(Vector2(0, Globals::WINDOW_HEIGHT + 120)).y) {
 		isAlive = false;
 	}
 }

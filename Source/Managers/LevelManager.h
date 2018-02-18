@@ -80,7 +80,7 @@ private:
 	unique_ptr<GUIOverlay> guiOverlay;
 
 
-	unique_ptr<PlayerShip> playerShip;
+	PlayerShip playerShip;
 
 
 

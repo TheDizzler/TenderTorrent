@@ -1,14 +1,12 @@
 #include "ArrowEnemyWave.h"
-
-ArrowEnemyWave::ArrowEnemyWave() {
-}
+#include "../Engine/GameEngine.h"
+#include <random>
 
 
 ArrowEnemyWave::~ArrowEnemyWave() {
 }
 
-int shipWidth;
-#include "../Engine/GameEngine.h"
+
 bool ArrowEnemyWave::initialize(GFXAssetManager * gfxAssets, xml_node shipNode) {
 
 	xml_node waveDataNode = shipNode.child("waveData");
@@ -51,8 +49,7 @@ void ArrowEnemyWave::update(double deltaTime, PlayerShip* player) {
 	}
 }
 
-#include <random>
-int startX;
+
 void ArrowEnemyWave::launchNewWave() {
 
 	timeSinceLastLaunch = 0;

@@ -34,12 +34,16 @@ public:
 	unique_ptr<TextLabel> gameOverLabel;
 	unique_ptr<TextLabel> fpsLabel;
 
+	unique_ptr<TextLabel> playerLoc;
+	unique_ptr<TextLabel> cameraLoc;
+	unique_ptr<TextLabel> bulletCount;
+	unique_ptr<TextLabel> enemyCount;
+
 	unique_ptr<RectangleSprite> pauseOverlay;
 private:
 
 	unique_ptr<RectangleSprite> hudBG;
 	unique_ptr<RectangleFrame> hudBorder;
-	//vector<GUIControl* > activeControls;
 
 	//inline void displayWarning(double deltaTime);
 	//inline void displayPause(double deltaTime);
