@@ -268,6 +268,16 @@ void GraphicsEngine::setViewport(int xPos, int yPos, int width, int height) {
 }
 
 
+void GraphicsEngine::createScissorRect(const Vector2& viewportArea, const Vector2& viewportPosition) {
+
+	scissorRECTs[0].left = viewportPosition.x;
+	scissorRECTs[0].right = viewportArea.x + viewportPosition.x;
+	scissorRECTs[0].top = viewportPosition.y;
+	scissorRECTs[0].bottom = viewportArea.y + viewportPosition.y;
+
+	deviceContext->RSSetScissorRects(1, scissorRECTs);
+}
+
 bool GraphicsEngine::populateDisplayModeList(ComPtr<IDXGIOutput> display) {
 
 	UINT numModes = 0;
@@ -521,7 +531,7 @@ SpriteBatch* GraphicsEngine::getSpriteBatch() {
 	return batch.get();
 }
 
-const RECT* GraphicsEngine::createScissorRECTs() const {
+const RECT* GraphicsEngine::getScissorRECTs() const {
 	return scissorRECTs;
 }
 

@@ -211,6 +211,8 @@ public:
 	virtual bool initialize(ComPtr<ID3D11Device> device) override;
 	virtual void reloadGraphicsAssets() override;
 
+	void setup();
+
 	virtual void update(double deltaTime) override;
 	virtual void draw(SpriteBatch* batch) override;
 

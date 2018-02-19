@@ -93,16 +93,16 @@ void PlayerShip::update(double deltaTime) {
 
 	auto keyState = Keyboard::Get().GetState();
 
-	if (keyState.A || )
+	if (keyState.A || joystick->isLeftPressed())
 		position.x -= float(currentSpeed * deltaTime);
 
-	if (keyState.D)
+	if (keyState.D || joystick->isRightPressed())
 		position.x += float(currentSpeed * deltaTime);
 
 
-	if (keyState.W)
+	if (keyState.W || joystick->isUpPressed())
 		position.y -= float(currentSpeed * deltaTime);
-	if (keyState.S)
+	if (keyState.S || joystick->isDownPressed())
 		position.y += float(currentSpeed * deltaTime);
 
 	camera.confineToScreen(this);
@@ -128,7 +128,7 @@ void PlayerShip::update(double deltaTime) {
 		[](const Bullet* bullet) { return !bullet->isAlive; }), liveBullets.end());
 
 
-	if (keyState.Space) {
+	if (keyState.Space || joystick->xButtonDown()) {
 		for (WeaponSystem* weaponSlot : weaponSlots) {
 			if (energy >= weaponSlot->energyCost
 				&& weaponSlot->ready()) {
@@ -223,7 +223,7 @@ void PlayerShip::deathUpdate(double deltaTime) {
 		Vector2 offset(randx(rng) - getOrigin().x, randy(rng) - getOrigin().y);
 
 		unique_ptr<AnimatedSprite> newExplosion = make_unique<AnimatedSprite>(getPosition() + offset);
-		newExplosion->load(gfxAssets->getAnimation("big explosion"));
+		newExplosion->load(gfxAssets.getAnimation("big explosion"));
 		newExplosion->repeats = false;
 		explosions.push_back(move(newExplosion));
 

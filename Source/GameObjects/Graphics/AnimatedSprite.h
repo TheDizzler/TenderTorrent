@@ -7,7 +7,7 @@ public:
 	AnimatedSprite(const Vector2& position);
 	virtual ~AnimatedSprite();
 
-	void load(shared_ptr<Animation> animation);
+	void load(Animation* animation);
 
 	virtual void update(double deltaTime);
 	virtual void draw(SpriteBatch * batch) override;
@@ -43,7 +43,7 @@ public:
 	bool isAlive = true;
 	
 protected:
-	shared_ptr<Animation> animation;
+	Animation* animation;
 	int currentFrameIndex = -1;
 
 	double currentFrameTime = 0;

@@ -114,7 +114,11 @@ void MenuManager::draw(SpriteBatch* batch) {
 }
 
 void MenuManager::textureDraw(SpriteBatch* batch) {
-	currentScreen->draw(batch);
+	batch->Begin(SpriteSortMode_Deferred);
+	{
+		currentScreen->draw(batch);
+	}
+	batch->End();
 }
 
 //void MenuManager::safedraw(SpriteBatch* batch) {
@@ -132,7 +136,7 @@ void MenuManager::openMainMenu() {
 }
 
 void MenuManager::openConfigMenu() {
-
+	configScreen->setup();
 	switchTo = configScreen.get();
 	transitionManager.transitionBetween(currentScreen, switchTo);
 }
@@ -435,7 +439,7 @@ bool ConfigScreen::initialize(ComPtr<ID3D11Device> device) {
 	button->setText(L"Back");
 	button->setPosition(
 		Vector2((float) Globals::WINDOW_WIDTH / 2 - button->getWidth(),
-			(float) Globals::WINDOW_HEIGHT - button->getHeight() - 25));
+		(float) Globals::WINDOW_HEIGHT - button->getHeight() - 25));
 	button->setActionListener(new BackButtonListener(this));
 	guiControls.push_back(button);
 
@@ -443,7 +447,7 @@ bool ConfigScreen::initialize(ComPtr<ID3D11Device> device) {
 	button->setText(L"Apply");
 	button->setPosition(
 		Vector2((float) Globals::WINDOW_WIDTH / 2,
-			(float) Globals::WINDOW_HEIGHT - button->getHeight() - 25));
+		(float) Globals::WINDOW_HEIGHT - button->getHeight() - 25));
 	guiControls.push_back(button);
 
 	texturePanel.reset(guiFactory.createPanel());
@@ -455,6 +459,23 @@ bool ConfigScreen::initialize(ComPtr<ID3D11Device> device) {
 void ConfigScreen::reloadGraphicsAssets() {
 	for (auto const& control : guiControls)
 		control->reloadGraphicsAsset();
+}
+
+void ConfigScreen::setup() {
+
+	vector<wstring> items;
+	for (const auto& playerSlot : activeSlots) {
+		wostringstream wss;
+		wss << "Socket: " << playerSlot->getStick()->getControllerSockerNumber();
+		wss << " Player: " << playerSlot->getPlayerSlotNumber();
+		items.push_back(wss.str());
+	}
+
+	testSpinner->addItems(items);
+
+	Vector2 newPos(testSpinner->getPosition());
+	newPos.x += testSpinner->getWidth() + 25;
+	spinnerLabel->setPosition(newPos);
 }
 
 

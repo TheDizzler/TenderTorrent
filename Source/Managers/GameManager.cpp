@@ -5,7 +5,8 @@
 #include "../../DXTKGui/StringHelper.h"
 
 GUIFactory guiFactory;
-unique_ptr<GFXAssetManager> gfxAssets;
+GFXAssetManager gfxAssets;
+Joystick* joystick = NULL;
 
 unique_ptr<PromptDialog> GameManager::errorDialog;
 unique_ptr<PromptDialog> GameManager::warningDialog;
@@ -35,8 +36,7 @@ bool GameManager::initializeGame(GameEngine* gmngn,
 
 	//xml_node guiAssetsNode = docAssMan->child("root").child("gui");
 	xml_node gfxAssetNode = docAssMan->child("root").child("gfx");
-	gfxAssets.reset(new GFXAssetManager(gfxAssetNode));
-	if (!gfxAssets->initialize(device)) {
+	if (!gfxAssets.initialize(device, gfxAssetNode)) {
 		StringHelper::reportError(L"Failed to load GFX Assets.", L"Fatal Error",
 			!Globals::FULL_SCREEN);
 		return false;
@@ -58,7 +58,12 @@ bool GameManager::initializeGame(GameEngine* gmngn,
 
 	initErrorDialogs();
 
-
+	for (const auto& slot : waitingSlots) {
+		if (slot->hasJoystick()) {
+			joystick = slot->getStick();
+			break;
+		}
+	}
 
 	menuScreen.reset(new MenuManager());
 	menuScreen->setGameManager(this);
@@ -159,12 +164,7 @@ void GameManager::draw(SpriteBatch* batch) {
 		}
 		batch->End();
 	} else {
-		/*batch->Begin(SpriteSortMode_Deferred, NULL, NULL, NULL, NULL, NULL,
-			camera->translationMatrix());
-		{*/
 		currentScreen->draw(batch);
-	/*}
-	batch->End();*/
 	}
 
 	batch->Begin(SpriteSortMode_Deferred);
@@ -183,20 +183,15 @@ void GameManager::loadLevel(string levelName) {
 		return;
 	}
 	switchTo = levelScreen.get();
-	transitionManager.transitionBetween(currentScreen, switchTo);
+	transitionManager.transitionBetween(currentScreen, switchTo, .5f, false);
 	lastScreen = currentScreen;
-	//currentScreen = levelScreen.get();
-
-
 }
 
 void GameManager::loadMainMenu() {
 
 	switchTo = menuScreen.get();
-	transitionManager.transitionBetween(currentScreen, switchTo);
+	transitionManager.transitionBetween(currentScreen, switchTo, .5f, false);
 	lastScreen = currentScreen;
-	//currentScreen = menuScreen.get();
-
 }
 
 
@@ -217,6 +212,9 @@ void GameManager::controllerRemoved(ControllerSocketNumber controllerSocket,
 
 void GameManager::newController(shared_ptr<Joystick> newStick) {
 	currentScreen->newController(newStick);
+	if (joystick == NULL) {
+		joystick = newStick.get();
+	}
 }
 
 
@@ -255,6 +253,10 @@ bool GameManager::setDisplayMode(size_t displayModeIndex) {
 
 bool GameManager::setFullScreen(bool isFullScreen) {
 	return gameEngine->setFullScreen(isFullScreen);
+}
+
+void GameManager::setScissorRect(const Vector2& viewportArea, const Vector2& viewportPosition) {
+	gameEngine->createScissorRect(viewportArea, viewportPosition);
 }
 
 

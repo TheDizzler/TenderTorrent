@@ -49,7 +49,7 @@ void Camera::confineToScreen(GameObject* obj) {
 		Vector2(viewportCenter.x + viewportWidth / 2, viewportCenter.y + viewportHeight / 2));
 
 	Vector2 pos = obj->getPosition();
-	Vector2 halfsize(obj->getWidth()/2, obj->getHeight()/2);
+	Vector2 halfsize(float(obj->getWidth()) / 2, float(obj->getHeight()) / 2);
 	Vector2 confinedpos = pos;
 	if (pos.x - halfsize.x < topleftWorld.x)
 		confinedpos.x = topleftWorld.x + halfsize.x;

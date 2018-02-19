@@ -7,7 +7,7 @@ ArrowEnemyWave::~ArrowEnemyWave() {
 }
 
 
-bool ArrowEnemyWave::initialize(GFXAssetManager * gfxAssets, xml_node shipNode) {
+bool ArrowEnemyWave::initialize(GFXAssetManager* gfxAssets, xml_node shipNode) {
 
 	xml_node waveDataNode = shipNode.child("waveData");
 	maxTimeBetweenLaunches = waveDataNode.attribute("maxTimeBetweenWaves").as_uint();

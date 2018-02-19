@@ -121,11 +121,11 @@ bool Background::loadLevel(ComPtr<ID3D11Device> device, const char_t* xmlFile) {
 
 
 	cornerFrame.reset(new Sprite());
-	cornerFrame->load(gfxAssets->getAsset("Corner Frame"));
+	cornerFrame->load(gfxAssets.getAsset("Corner Frame"));
 
 	camera.setLevel(this);
 	camera.centerOn(lastWaypoint->dest);
-
+	update(0);
 	return loadLevel(device, levelRoot);
 }
 

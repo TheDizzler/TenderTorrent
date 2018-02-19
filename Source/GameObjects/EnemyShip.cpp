@@ -5,7 +5,7 @@
 EnemyShip::EnemyShip() : GameObject() {
 
 	isAlive = false;
-	setExplosion(gfxAssets->getAnimation("big explosion"));
+	setExplosion(gfxAssets.getAnimation("big explosion"));
 }
 
 EnemyShip::EnemyShip(const Vector2& pos) : GameObject() {
@@ -29,7 +29,7 @@ void EnemyShip::reset() {
 	explosion->reset();
 }
 
-void EnemyShip::setExplosion(shared_ptr<Animation> explos) {
+void EnemyShip::setExplosion(Animation* explos) {
 	explosion.reset(new AnimatedSprite(position));
 	explosion->load(explos);
 	explosion->repeats = false;
@@ -78,8 +78,8 @@ EnemyShip::EnemyWeaponSystem::EnemyWeaponSystem(xml_node weaponPointNode,
 	int bulletSpeed = weaponTypeNode.child("bulletSpeed").text().as_int();
 	const char_t* bulletName = weaponTypeNode.child("sprite").text().as_string();
 
-	shared_ptr<Animation> bulletAsset;
-	bulletAsset = gfxAssets->getAnimation(bulletName);
+	Animation* bulletAsset;
+	bulletAsset = gfxAssets.getAnimation(bulletName);
 	if (bulletAsset == NULL) {
 		wostringstream wss;
 		wss << "Unable to find weapon asset " << bulletName;

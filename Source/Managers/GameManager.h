@@ -8,8 +8,8 @@
 #include <CommonStates.h>
 
 extern GUIFactory guiFactory;
-extern unique_ptr<GFXAssetManager> gfxAssets;
-
+extern GFXAssetManager gfxAssets;
+extern Joystick* joystick;
 
 class GameEngine;
 
@@ -49,6 +49,8 @@ public:
 	bool setAdapter(size_t adapterIndex);
 	bool setDisplayMode(size_t displayModeIndex);
 	bool setFullScreen(bool isFullScreen);
+
+	void setScissorRect(const Vector2& viewportArea, const Vector2& viewportPosition);
 
 	size_t getSelectedAdapterIndex();
 	size_t getSelectedDisplayIndex();

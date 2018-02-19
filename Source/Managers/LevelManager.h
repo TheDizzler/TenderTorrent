@@ -77,6 +77,7 @@ private:
 	Background bgManager;
 	WaveManager waveManager;
 
+	ComPtr<ID3D11RasterizerState> rasterState;
 	unique_ptr<GUIOverlay> guiOverlay;
 	unique_ptr<RectangleFrame> testFrame;
 	Sprite cameraCenter;

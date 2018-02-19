@@ -79,7 +79,7 @@ void RearAttackShip::update(double deltaTime, PlayerShip* player, vector<Bullet*
 
 	//EnemyShip::update(deltaTime);
 
-	if (position.y > camera.screenToWorld(Vector2(0, Globals::WINDOW_HEIGHT + 120)).y) {
+	if (position.y > camera.screenToWorld(Vector2(0, float(Globals::WINDOW_HEIGHT + 120))).y) {
 		isAlive = false;
 	}
 }

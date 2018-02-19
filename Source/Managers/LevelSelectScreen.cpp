@@ -140,7 +140,7 @@ LevelSelection::LevelSelection(const Vector2& position,
 
 	previewPic.reset(new Sprite(picpos));
 	previewPic->load(
-		gfxAssets->getAsset(levelNode.attribute("preview").as_string()));
+		gfxAssets.getAsset(levelNode.attribute("preview").as_string()));
 	previewPic->setOrigin(Vector2::Zero);
 
 	Vector2 labelsize = label->measureString();

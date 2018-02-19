@@ -12,13 +12,13 @@ WeaponSystem::~WeaponSystem() {
 }
 
 
-void WeaponSystem::loadBulletTexture(shared_ptr<Animation> bulletAsset) {
+void WeaponSystem::loadBulletTexture(Animation* bulletAsset) {
 
 	fillBulletStore(bulletAsset);
 }
 
 
-void WeaponSystem::fillBulletStore(shared_ptr<Animation> bulletAsset) {
+void WeaponSystem::fillBulletStore(Animation* bulletAsset) {
 
 	for (int i = 0; i < maxStoreSize; ++i) {
 		Bullet* bullet = new Bullet(weaponStore);

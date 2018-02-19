@@ -43,7 +43,7 @@ public:
 
 	void reset();
 
-	virtual void setExplosion(shared_ptr<Animation> explosion);
+	virtual void setExplosion(Animation* explosion);
 
 
 	virtual void update(double deltaTime, PlayerShip* player, vector<Bullet*>& liveBullets) = 0;

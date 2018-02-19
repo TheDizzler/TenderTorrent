@@ -22,7 +22,6 @@ bool LevelManager::initialize(ComPtr<ID3D11Device> device) {
 		wostringstream wss;
 		wss << "Could not read Level Manifest file!";
 		wss << "\n" << result.description();
-		//MessageBox(0, wss.str().c_str(), L"Fatal Read Error!", MB_OK);
 		GameManager::showErrorDialog(wss.str().c_str(), L"Fatal Read Error!");
 		return false;
 	}
@@ -31,12 +30,12 @@ bool LevelManager::initialize(ComPtr<ID3D11Device> device) {
 	if (!mouse.loadMouseIcon(&guiFactory, "Mouse Reticle"))
 		return false;
 
-	if (!waveManager.initialize(gfxAssets.get()))
+	if (!waveManager.initialize(&gfxAssets))
 		return false;
 
 
-	playerShip.load(gfxAssets->getAsset("PlayerShip Hull"));
-	if (!playerShip.loadBullet(gfxAssets.get())) {
+	playerShip.load(gfxAssets.getAsset("PlayerShip Hull"));
+	if (!playerShip.loadBullet(&gfxAssets)) {
 		MessageBox(NULL, L"Failed to load weapons", L"ERROR", MB_OK);
 		return false;
 	}
@@ -56,6 +55,17 @@ bool LevelManager::initialize(ComPtr<ID3D11Device> device) {
 
 	cameraCenter.load(guiFactory.getAsset("Mouse Reticle"));
 	cameraCenter.setPosition(Vector2(camera.viewportCenter));
+
+	CD3D11_RASTERIZER_DESC rsDesc(D3D11_FILL_SOLID, D3D11_CULL_BACK, FALSE,
+		0, 0.f, 0.f, TRUE, TRUE, TRUE, FALSE);
+	if (GameEngine::reportError(
+		device->CreateRasterizerState(&rsDesc, rasterState.GetAddressOf()),
+		L"Error creating RasterizerState.", L"ERROR")) {
+
+		return false;
+	}
+
+	game->setScissorRect(viewarea, viewposition);
 
 	return true;
 }
@@ -79,13 +89,14 @@ bool LevelManager::loadLevel(ComPtr<ID3D11Device> device, const char_t* levelFil
 		return false;
 
 	waveManager.clear();
-	if (!waveManager.initialize(gfxAssets.get()))
+	if (!waveManager.initialize(&gfxAssets))
 		return false;
 
 	Vector2 startPos = bgManager.getStartPosition();
 	startPos.y += Globals::WINDOW_HEIGHT / 2;
 	playerShip.setPosition(startPos);
 
+	
 
 
 	playState = STARTING;
@@ -227,7 +238,7 @@ void LevelManager::update(double deltaTime) {
 		guiOverlay->cameraLoc->setText(ws);
 	}*/
 
-	{
+	/*{
 		wostringstream ws;
 		ws << "Bullets: " << waveManager.getBulletCount();
 		guiOverlay->bulletCount->setText(ws);
@@ -241,7 +252,7 @@ void LevelManager::update(double deltaTime) {
 		wostringstream ws;
 		ws << "Mouse: " << mouse.getPosition().x << ", " << mouse.getPosition().y;
 		guiOverlay->mouseLoc->setText(ws);
-	}
+	}*/
 
 	testFrame->update();
 	guiOverlay->update(deltaTime);
@@ -254,7 +265,7 @@ void LevelManager::draw(SpriteBatch* batch) {
 
 	switch (playState) {
 		case PAUSED:
-			batch->Begin(SpriteSortMode_Deferred, NULL, NULL, NULL, NULL, NULL,
+			batch->Begin(SpriteSortMode_Deferred, NULL, NULL, NULL, rasterState.Get(), NULL,
 				camera.translationMatrix());
 			{
 				bgManager.draw(batch);
@@ -271,7 +282,7 @@ void LevelManager::draw(SpriteBatch* batch) {
 			batch->End();
 			break;
 		case STARTING:
-			batch->Begin(SpriteSortMode_Deferred, NULL, NULL, NULL, NULL, NULL,
+			batch->Begin(SpriteSortMode_Deferred, NULL, NULL, NULL, rasterState.Get(), NULL,
 				camera.translationMatrix());
 			{
 				bgManager.draw(batch);
@@ -288,7 +299,7 @@ void LevelManager::draw(SpriteBatch* batch) {
 			batch->End();
 			break;
 		case GAMEOVER:
-			batch->Begin(SpriteSortMode_Deferred, NULL, NULL, NULL, NULL, NULL,
+			batch->Begin(SpriteSortMode_Deferred, NULL, NULL, NULL, rasterState.Get(), NULL,
 				camera.translationMatrix());
 			{
 				bgManager.draw(batch);
@@ -304,7 +315,7 @@ void LevelManager::draw(SpriteBatch* batch) {
 			batch->End();
 			break;
 		default:
-			batch->Begin(SpriteSortMode_Deferred, NULL, NULL, NULL, NULL, NULL,
+			batch->Begin(SpriteSortMode_Deferred, NULL, NULL, NULL, rasterState.Get(), NULL,
 				camera.translationMatrix());
 			{
 				bgManager.draw(batch);
@@ -327,7 +338,13 @@ void LevelManager::draw(SpriteBatch* batch) {
 
 void LevelManager::textureDraw(SpriteBatch* batch) {
 
-	bgManager.draw(batch);
+	batch->Begin(SpriteSortMode_Deferred, NULL, NULL, NULL, rasterState.Get(), NULL,
+		camera.translationMatrix());
+	{
+		bgManager.draw(batch);
+		playerShip.draw(batch);
+	}
+	batch->End();
 }
 
 

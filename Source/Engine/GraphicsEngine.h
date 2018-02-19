@@ -61,7 +61,8 @@ public:
 	D3D11_VIEWPORT altViewport;
 	//Viewport mainViewport;
 
-	const RECT* createScissorRECTs() const;
+	void createScissorRect(const Vector2& viewportArea,const Vector2& viewportPosition);
+	const RECT* getScissorRECTs() const;
 	ComPtr<ID3D11RasterizerState> rasterState;
 protected:
 	HWND hwnd;

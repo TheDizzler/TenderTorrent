@@ -56,7 +56,7 @@ void GameEngine::onAudioDeviceChange() {
 
 void GameEngine::reloadGraphicsAssets() {
 	guiFactory.reInitDevice(device, deviceContext, batch.get());
-	gfxAssets->reInitDevice(device);
+	gfxAssets.reInitDevice(device);
 	game.reloadGraphicsAssets();
 }
 
@@ -95,7 +95,7 @@ void GameEngine::update(double deltaTime) {
 
 	mouse.saveMouseState();
 	keys.saveKeyState();
-	slotManager->updateGamePads();
+	slotManager.updateGamePads();
 
 	game.update(deltaTime);
 }

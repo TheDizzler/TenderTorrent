@@ -79,12 +79,12 @@ GUIOverlay::GUIOverlay() {
 		L"FPS"));
 
 
-	bulletCount.reset(guiFactory.createTextLabel(Vector2(10.0f, (float) Globals::WINDOW_HEIGHT - 75),
+	/*bulletCount.reset(guiFactory.createTextLabel(Vector2(10.0f, (float) Globals::WINDOW_HEIGHT - 75),
 		L"", "Default Font", false));
 	enemyCount.reset(guiFactory.createTextLabel(Vector2(10.0f, (float) Globals::WINDOW_HEIGHT - 100),
 		L"", "Default Font", false));
 	mouseLoc.reset(guiFactory.createTextLabel(Vector2(10.0f, (float) Globals::WINDOW_HEIGHT - 125),
-		L"", "Default Font", false));
+		L"", "Default Font", false));*/
 }
 
 GUIOverlay::~GUIOverlay() {
@@ -134,9 +134,9 @@ void GUIOverlay::update(double deltaTime) {
 
 
 	}
-	bulletCount->update(deltaTime);
+	/*bulletCount->update(deltaTime);
 	enemyCount->update(deltaTime);
-	mouseLoc->update(deltaTime);
+	mouseLoc->update(deltaTime);*/
 }
 
 
@@ -197,9 +197,9 @@ void GUIOverlay::draw(SpriteBatch* batch) {
 	scoreLabel->draw(batch);
 	energyLabel->draw(batch);
 	fpsLabel->draw(batch);
-	bulletCount->draw(batch);
+	/*bulletCount->draw(batch);
 	enemyCount->draw(batch);
-	mouseLoc->draw(batch);
+	mouseLoc->draw(batch);*/
 }
 
 void GUIOverlay::drawPaused(SpriteBatch* batch) {

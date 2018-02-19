@@ -10,7 +10,7 @@ AnimatedSprite::AnimatedSprite(const Vector2& pos) {
 AnimatedSprite::~AnimatedSprite() {
 }
 
-void AnimatedSprite::load(shared_ptr<Animation> anim) {
+void AnimatedSprite::load(Animation* anim) {
 
 	animation = anim;
 
