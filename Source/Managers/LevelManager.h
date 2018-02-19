@@ -78,9 +78,8 @@ private:
 	WaveManager waveManager;
 
 	ComPtr<ID3D11RasterizerState> rasterState;
-	unique_ptr<GUIOverlay> guiOverlay;
+	GUIOverlay guiOverlay;
 	unique_ptr<RectangleFrame> testFrame;
-	Sprite cameraCenter;
 
 
 	PlayerShip playerShip;

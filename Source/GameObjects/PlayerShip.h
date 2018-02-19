@@ -28,6 +28,7 @@ public:
 	*/
 	bool loadBullet(GFXAssetManager* gfxAssets);
 
+	virtual void setPosition(const Vector2& newPosition) override;
 	
 	/** Update to perform before action starts.
 		Return true when ship has moved into position. */
@@ -43,7 +44,7 @@ public:
 	int getHealth();
 	void takeDamage(int damageTaken);
 
-	int startMaxEnergy = 1020;
+	int startMaxEnergy = 100;
 	int maxEnergy = startMaxEnergy;
 	int energy = maxEnergy;
 
@@ -67,7 +68,7 @@ protected:
 	bool firing = false;
 
 
-	float speed = 200.0f;
+	float speed = 225.0f;
 	float firingSpeed = 150;
 
 	/* direction travelling while killed, for eye candy. */

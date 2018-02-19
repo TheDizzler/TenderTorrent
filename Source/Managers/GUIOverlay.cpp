@@ -75,7 +75,7 @@ GUIOverlay::GUIOverlay() {
 	size = warningLabel->measureString(L"GET READY!");
 	warningLabel->moveBy(-size / 2);
 
-	fpsLabel.reset(guiFactory.createTextLabel(Vector2(10.0f, (float) Globals::WINDOW_HEIGHT - 50),
+	fpsLabel.reset(guiFactory.createTextLabel(Vector2(10.0f, (float) Globals::WINDOW_HEIGHT - 25),
 		L"FPS"));
 
 
@@ -101,7 +101,8 @@ void GUIOverlay::reloadGraphicsAssets() {
 }
 
 const Vector2 GUIOverlay::getPlayArea() {
-	return Vector2((float) Globals::WINDOW_WIDTH - 50*2, (float) Globals::WINDOW_HEIGHT - hudBG->getHeight()*2);
+	return Vector2((float) Globals::WINDOW_WIDTH - 50 * 2,
+		(float) Globals::WINDOW_HEIGHT - hudBG->getHeight() * 2);
 }
 
 const Vector2 GUIOverlay::getPlayPosition() {
@@ -125,7 +126,6 @@ void GUIOverlay::update(double deltaTime) {
 	if (fpsUpdateTime >= FPS_UPDATE_TIME) {
 
 		wostringstream wss;
-		wss << "frameCount: " << frameCount << " fpsUpdateTime: " << fpsUpdateTime << endl;
 		wss << "fps: " << frameCount / fpsUpdateTime;
 		fpsLabel->setText(wss.str());
 		fpsLabel->update(deltaTime);

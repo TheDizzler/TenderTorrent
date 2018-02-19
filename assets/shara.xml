@@ -8,6 +8,8 @@
 		<waypoint x="162" y="1203" speed="10" />
 		<waypoint x="162" y="741" speed="15" />
 		<waypoint x="0" y="350" speed="15" />
+		<waypoint x="900" y="200" speed="25" />
+		<waypoint x="350" y="650" speed="15" />
 		<end x="395" y="0" speed="5" />
 	</waypoints>
 

@@ -43,9 +43,14 @@ void PlayerShip::reset() {
 	rightWeaponSlot->update(0, position);
 	leftWeaponSlot->update(0, position);
 	centerWeaponSlot->update(0, position);
-	rightTurret->update(0, position);
-	leftTurret->update(0, position);
+	
+	rightTurret->setTint(Vector4(1, 1, 1, 1));
+	leftTurret->setTint(Vector4(1, 1, 1, 1));
+	rightTurret->setScale(Vector2(1, 1));
+	leftTurret->setScale(Vector2(1, 1));
 
+	setScale(Vector2(1, 1));
+	
 	setTint(Vector4(1, 1, 1, 1));
 	totalDeathTime = 0;
 }
@@ -64,6 +69,16 @@ bool PlayerShip::loadBullet(GFXAssetManager* gfxAsset) {
 	rightTurret->loadBulletTexture(gfxAsset->getAnimation("Sun Bullet"));
 
 	return true;
+}
+
+
+void PlayerShip::setPosition(const Vector2& newPosition) {
+	Sprite::setPosition(newPosition);
+	rightWeaponSlot->update(0, position);
+	leftWeaponSlot->update(0, position);
+	centerWeaponSlot->update(0, position);
+	rightTurret->update(0, position);
+	leftTurret->update(0, position);
 }
 
 bool PlayerShip::startUpdate(double deltaTime) {
@@ -134,22 +149,22 @@ void PlayerShip::update(double deltaTime) {
 				&& weaponSlot->ready()) {
 				firing = true;
 				liveBullets.push_back(weaponSlot->fire());
-				energy -= weaponSlot->energyCost;
+				//energy -= weaponSlot->energyCost;
 			}
 		}
 	} else {
 		firing = false;
 	}
 
-
-	//if (!lastStateVKLButtonDown && mouse->leftButtonDown()) {
 	if (!mouse.leftButtonLast() && mouse.leftButton()) {
 
 		if (rightTurret->ready()) {
 			liveBullets.push_back(rightTurret->fire());
+			energy -= rightTurret->energyCost;
 		}
 		if (leftTurret->ready()) {
 			liveBullets.push_back(leftTurret->fire());
+			energy -= rightTurret->energyCost;
 		}
 	}
 

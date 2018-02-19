@@ -21,9 +21,9 @@ void ClothLayer::load(GraphicsAsset* const graphicsAsset, Sprite* cornerFrame) {
 }
 
 void ClothLayer::loadPiece(GraphicsAsset* const graphicsAsset) {
-
 	unique_ptr<Tatter> newTatter = make_unique<Tatter>(wholeCloth.getPosition());
 	newTatter->load(graphicsAsset);
+	newTatter->setScale(scale);
 	newTatter->setOrigin(Vector2::Zero);
 
 	tatters.push_back(move(newTatter));
@@ -44,7 +44,7 @@ void ClothLayer::setInitialPosition(const Vector2& pos, const Vector2& scl) {
 
 	scale = scl;
 	wholeCloth.setScale(scale);
-	wholeCloth.setPosition(pos);
+	wholeCloth.setPosition(pos * scale);
 
 	Vector2 position = wholeCloth.getPosition();
 	Vector2 textPos(position.x + wholeCloth.getWidth() * 3 / 4,

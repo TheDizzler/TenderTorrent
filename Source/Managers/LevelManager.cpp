@@ -42,19 +42,16 @@ bool LevelManager::initialize(ComPtr<ID3D11Device> device) {
 	playerShip.setDimensions(&playerShip);
 
 
-	guiOverlay = make_unique<GUIOverlay>();
-	guiOverlay->exitButton->setActionListener(new ExitButtonListener(this));
-	guiOverlay->continueButton->setActionListener(new ContinueButtonListener(this));
+	guiOverlay.exitButton->setActionListener(new ExitButtonListener(this));
+	guiOverlay.continueButton->setActionListener(new ContinueButtonListener(this));
 
 	
-	Vector2 viewarea = guiOverlay->getPlayArea(); // for some reason this step is necessary
-	Vector2 viewposition = guiOverlay->getPlayPosition();
+	Vector2 viewarea = guiOverlay.getPlayArea(); // for some reason this step is necessary
+	Vector2 viewposition = guiOverlay.getPlayPosition();
 	testFrame.reset(guiFactory.createRectangleFrame(viewposition, viewarea, 14, Color(.94f, .97f, 1, 1)));
 
 	camera.updateViewport(viewarea, viewposition);
 
-	cameraCenter.load(guiFactory.getAsset("Mouse Reticle"));
-	cameraCenter.setPosition(Vector2(camera.viewportCenter));
 
 	CD3D11_RASTERIZER_DESC rsDesc(D3D11_FILL_SOLID, D3D11_CULL_BACK, FALSE,
 		0, 0.f, 0.f, TRUE, TRUE, TRUE, FALSE);
@@ -73,7 +70,7 @@ bool LevelManager::initialize(ComPtr<ID3D11Device> device) {
 void LevelManager::reloadGraphicsAssets() {
 	bgManager.reloadGraphicsAssets();
 	waveManager.reloadGraphicsAssets();
-	guiOverlay->reloadGraphicsAssets();
+	guiOverlay.reloadGraphicsAssets();
 }
 
 
@@ -150,7 +147,7 @@ void LevelManager::update(double deltaTime) {
 
 
 			//if (!pauseDownLast && keyState.Escape) {
-			if (keys.isKeyPressed(Keyboard::Escape)) {
+			if (keys.isKeyPressed(Keyboard::Escape) || joystick->startButtonPushed()) {
 				playState = PAUSED;
 				//pauseDownLast = true;
 			}
@@ -169,7 +166,7 @@ void LevelManager::update(double deltaTime) {
 						playState = PLAYING;
 				}
 			}
-			guiOverlay->updateWarning(deltaTime);
+			guiOverlay.updateWarning(deltaTime);
 			break;
 		case FINISHED:
 			for (Bullet* bullet : playerShip.liveBullets)
@@ -196,7 +193,7 @@ void LevelManager::update(double deltaTime) {
 				game->loadMainMenu();
 			break;
 		case PAUSED:
-			guiOverlay->updatePaused(deltaTime);
+			guiOverlay.updatePaused(deltaTime);
 			//if (!pauseDownLast && keyState.Escape) {
 			if (keys.isKeyPressed(Keyboard::Escape)) {
 				playState = PLAYING;
@@ -210,20 +207,20 @@ void LevelManager::update(double deltaTime) {
 	{
 		wostringstream ws;
 		ws << "Score: " << score;
-		guiOverlay->scoreLabel->setText(ws);
+		guiOverlay.scoreLabel->setText(ws);
 	}
 
 	{
 		wostringstream ws;
 		ws << "Time: " << (int) totalPlayTime << "s";
-		guiOverlay->timerLabel->setText(ws);
+		guiOverlay.timerLabel->setText(ws);
 	}
 
 
 	{
 		wostringstream ws;
 		ws << "Energy: " << playerShip.energy;
-		guiOverlay->energyLabel->setText(ws);
+		guiOverlay.energyLabel->setText(ws);
 	}
 
 	/*{
@@ -255,7 +252,7 @@ void LevelManager::update(double deltaTime) {
 	}*/
 
 	testFrame->update();
-	guiOverlay->update(deltaTime);
+	guiOverlay.update(deltaTime);
 }
 
 
@@ -276,8 +273,8 @@ void LevelManager::draw(SpriteBatch* batch) {
 			batch->End();
 			batch->Begin(SpriteSortMode_Deferred);
 			{
-				guiOverlay->draw(batch);
-				guiOverlay->drawPaused(batch);
+				guiOverlay.draw(batch);
+				guiOverlay.drawPaused(batch);
 			}
 			batch->End();
 			break;
@@ -293,8 +290,8 @@ void LevelManager::draw(SpriteBatch* batch) {
 			batch->Begin(SpriteSortMode_Deferred);
 			{
 				if (bgManager.introScrollDone)
-					guiOverlay->drawWarning(batch);
-				guiOverlay->draw(batch);
+					guiOverlay.drawWarning(batch);
+				guiOverlay.draw(batch);
 			}
 			batch->End();
 			break;
@@ -309,8 +306,8 @@ void LevelManager::draw(SpriteBatch* batch) {
 
 			batch->Begin(SpriteSortMode_Deferred);
 			{
-				guiOverlay->draw(batch);
-				guiOverlay->drawGameOver(batch);
+				guiOverlay.draw(batch);
+				guiOverlay.drawGameOver(batch);
 			}
 			batch->End();
 			break;
@@ -326,8 +323,7 @@ void LevelManager::draw(SpriteBatch* batch) {
 			batch->Begin(SpriteSortMode_Deferred);
 			{
 				testFrame->draw(batch);
-				cameraCenter.draw(batch);
-				guiOverlay->draw(batch);
+				guiOverlay.draw(batch);
 			}
 			batch->End();
 	}
@@ -342,7 +338,6 @@ void LevelManager::textureDraw(SpriteBatch* batch) {
 		camera.translationMatrix());
 	{
 		bgManager.draw(batch);
-		playerShip.draw(batch);
 	}
 	batch->End();
 }
