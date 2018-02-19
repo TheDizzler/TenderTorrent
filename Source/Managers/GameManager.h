@@ -10,7 +10,6 @@
 extern GUIFactory guiFactory;
 extern unique_ptr<GFXAssetManager> gfxAssets;
 
-//extern unique_ptr<GUIOverlay> guiOverlay;
 
 class GameEngine;
 

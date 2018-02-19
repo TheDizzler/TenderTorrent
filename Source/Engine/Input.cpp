@@ -2,7 +2,7 @@
 #include "Input.h"
 #include "../Engine/GameEngine.h"
 
-unique_ptr<PlayerSlotManager> slotManager;
+PlayerSlotManager slotManager;
 KeyboardController keys;
 MouseController mouse;
 
@@ -35,13 +35,10 @@ ControllerListener::ControllerListener() {
 		availableControllerSockets.push_back(
 			ControllerSocketNumber(ControllerSocketNumber::SOCKET_1 + i));
 	}
-
-	slotManager = make_unique<PlayerSlotManager>();
 }
 
 ControllerListener::~ControllerListener() {
 
-	slotManager.reset();
 	joystickMap.clear();
 
 	availableControllerSockets.clear();
@@ -82,7 +79,7 @@ void ControllerListener::addJoysticks(vector<ControllerDevice> controllerDevices
 					}
 					PlayerSlotNumber slotNumber = foundJoy->getPlayerSlotNumber();
 					ControllerSocketNumber socket = foundJoy->getControllerSockerNumber();
-					slotManager->gamePadRemoved(foundJoy);
+					slotManager.gamePadRemoved(foundJoy);
 					controllerRemoved(socket, slotNumber);
 
 					foundJoy.reset();
@@ -115,7 +112,7 @@ void ControllerListener::addJoysticks(vector<ControllerDevice> controllerDevices
 				PlayerSlotNumber slotNumber = foundJoy->getPlayerSlotNumber();
 				ControllerSocketNumber socket = foundJoy->getControllerSockerNumber();
 				if (slotNumber != PlayerSlotNumber::NONE) {
-					slotManager->controllerRemoved(foundJoy);
+					slotManager.controllerRemoved(foundJoy);
 				}
 				controllerRemoved(socket, slotNumber);
 			}
@@ -148,7 +145,7 @@ void ControllerListener::addJoysticks(vector<ControllerDevice> controllerDevices
 						ControllerSocketNumber socket
 							= foundJoy->getControllerSockerNumber();
 						PlayerSlotNumber slotNumber = foundJoy->getPlayerSlotNumber();
-						slotManager->gamePadRemoved(foundJoy);
+						slotManager.gamePadRemoved(foundJoy);
 						controllerRemoved(socket, slotNumber);
 
 						foundJoy.reset();
@@ -194,7 +191,7 @@ void ControllerListener::addJoysticks(vector<ControllerDevice> controllerDevices
 					DWORD id;
 					CreateThread(NULL, 0, waitForPlayerThread, (PVOID) data, 0, &id);
 				} else {
-					slotManager->controllerTryingToPair(data);
+					slotManager.controllerTryingToPair(data);
 					playerAcceptedSlot(data);
 				}
 
@@ -238,13 +235,13 @@ void ControllerListener::addGamePad(HANDLE handle) {
 		// Simply get the state of the controller from XInput.
 		dwResult = XInputGetState(xInputSlotNum, &state);
 
-		if (dwResult == ERROR_SUCCESS && !slotManager->checkXInputSlotNumber(xInputSlotNum)) {
+		if (dwResult == ERROR_SUCCESS && !slotManager.checkXInputSlotNumber(xInputSlotNum)) {
 			OutputDebugString(L"Attempting to link new GamePad!\n");
 
 			shared_ptr<GamePadJoystick> newPad = make_shared<GamePadJoystick>(
 				getNextAvailableControllerSocket(), xInputSlotNum);
 			newPad->registerNewHandle(handle);
-			slotManager->addGamePad(newPad);
+			slotManager.addGamePad(newPad);
 
 			numGamePads++;
 
@@ -256,7 +253,7 @@ void ControllerListener::addGamePad(HANDLE handle) {
 				if (waitForInput) {
 					CreateThread(NULL, 0, waitForPlayerThread, (PVOID) data, 0, &id);
 				} else {
-					slotManager->controllerTryingToPair(data);
+					slotManager.controllerTryingToPair(data);
 					playerAcceptedSlot(data);
 				}
 			} else
@@ -365,7 +362,7 @@ void ControllerListener::unpairedJoystickRemoved(JoyData* joyData) {
 
 
 void ControllerListener::playerAcceptedSlot(JoyData* joyData) {
-	slotManager->finalizePair(joyData);
+	slotManager.finalizePair(joyData);
 	newController(joyData->joystick);
 	delete joyData;
 }
@@ -386,7 +383,7 @@ DWORD WINAPI slotManagerThread(PVOID pVoid) {
 	OutputDebugString(wss.str().c_str());
 
 	while (waitingSlots.size() > 0) {
-		slotManager->waiting();
+		slotManager.waiting();
 		if (endAllThreadsNow) {
 			slotManagerThreadRunning = false;
 			return 0;
@@ -406,7 +403,7 @@ DWORD WINAPI waitForPlayerThread(PVOID pVoid) {
 
 	JoyData* joyData = (JoyData*) pVoid;
 
-	slotManager->controllerTryingToPair(joyData);
+	slotManager.controllerTryingToPair(joyData);
 	while (!joyData->finishFlag) {
 		// thread is now waiting for the player to confirm their Player Slot
 		if (endAllThreadsNow) {
@@ -449,7 +446,7 @@ DWORD WINAPI waitForHUDThread(PVOID pVoid) {
 	}
 
 	if (!joyData->waitForInput) {
-		slotManager->controllerTryingToPair(joyData);
+		slotManager.controllerTryingToPair(joyData);
 		joyData->listener->playerAcceptedSlot(joyData);
 		return 0;
 	}

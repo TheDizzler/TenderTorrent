@@ -93,27 +93,17 @@ void PlayerShip::update(double deltaTime) {
 
 	auto keyState = Keyboard::Get().GetState();
 
-	if (keyState.A)
+	if (keyState.A || )
 		position.x -= float(currentSpeed * deltaTime);
 
 	if (keyState.D)
 		position.x += float(currentSpeed * deltaTime);
-
-	/*if (position.x < width / 2)
-		position.x = float(width) / 2;
-	if (position.x > Globals::WINDOW_WIDTH - width / 2)
-		position.x = Globals::WINDOW_WIDTH - float(width) / 2;*/
 
 
 	if (keyState.W)
 		position.y -= float(currentSpeed * deltaTime);
 	if (keyState.S)
 		position.y += float(currentSpeed * deltaTime);
-
-	/*if (position.y < height / 2)
-		position.y = float(height) / 2;
-	if (position.y > Globals::WINDOW_HEIGHT - height / 2)
-		position.y = Globals::WINDOW_HEIGHT - float(height) / 2;*/
 
 	camera.confineToScreen(this);
 
