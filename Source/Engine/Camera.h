@@ -33,6 +33,8 @@ public:
 	int viewportHeight;
 	Vector3 viewportCenter;
 
+	/* Prevents GameObject from leaving viewable screen. */
+	void confineToScreen(GameObject* obj);
 	/* Returns true if point (in WORLD coords) is on screen. */
 	bool viewContains(const Vector2& point);
 

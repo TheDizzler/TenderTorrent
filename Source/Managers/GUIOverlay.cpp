@@ -37,7 +37,7 @@ GUIOverlay::GUIOverlay() {
 	pauseLabel.reset(
 		guiFactory.createTextLabel(Vector2::Zero, L"Blank", "BlackCloak", false));
 	pauseLabel->setText(L"Paused");
-	pauseLabel->setScale(Vector2(1, 1.5));
+	pauseLabel->setScale(Vector2(1, 1.5f));
 	Vector2 size = pauseLabel->measureString();
 	pauseLabel->setPosition(Vector2(
 		(Globals::WINDOW_WIDTH - size.x) / 2, (Globals::WINDOW_HEIGHT - size.y) / 2));
@@ -83,6 +83,8 @@ GUIOverlay::GUIOverlay() {
 		L"", "Default Font", false));
 	enemyCount.reset(guiFactory.createTextLabel(Vector2(10.0f, (float) Globals::WINDOW_HEIGHT - 100),
 		L"", "Default Font", false));
+	mouseLoc.reset(guiFactory.createTextLabel(Vector2(10.0f, (float) Globals::WINDOW_HEIGHT - 125),
+		L"", "Default Font", false));
 }
 
 GUIOverlay::~GUIOverlay() {
@@ -99,11 +101,12 @@ void GUIOverlay::reloadGraphicsAssets() {
 }
 
 const Vector2 GUIOverlay::getPlayArea() {
-	return Vector2((float) Globals::WINDOW_WIDTH, (float) Globals::WINDOW_HEIGHT - hudBG->getHeight());
+	return Vector2((float) Globals::WINDOW_WIDTH - 50*2, (float) Globals::WINDOW_HEIGHT - hudBG->getHeight()*2);
 }
 
 const Vector2 GUIOverlay::getPlayPosition() {
 	Vector2 pos = hudBG->getPosition();
+	pos.x += 50;
 	pos.y += hudBG->getHeight();
 	return pos;
 }
@@ -133,6 +136,7 @@ void GUIOverlay::update(double deltaTime) {
 	}
 	bulletCount->update(deltaTime);
 	enemyCount->update(deltaTime);
+	mouseLoc->update(deltaTime);
 }
 
 
@@ -195,6 +199,7 @@ void GUIOverlay::draw(SpriteBatch* batch) {
 	fpsLabel->draw(batch);
 	bulletCount->draw(batch);
 	enemyCount->draw(batch);
+	mouseLoc->draw(batch);
 }
 
 void GUIOverlay::drawPaused(SpriteBatch* batch) {

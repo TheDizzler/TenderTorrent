@@ -115,6 +115,8 @@ void PlayerShip::update(double deltaTime) {
 	if (position.y > Globals::WINDOW_HEIGHT - height / 2)
 		position.y = Globals::WINDOW_HEIGHT - float(height) / 2;*/
 
+	camera.confineToScreen(this);
+
 	// Weapons
 	rightWeaponSlot->update(deltaTime, position);
 	leftWeaponSlot->update(deltaTime, position);

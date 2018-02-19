@@ -78,6 +78,8 @@ private:
 	WaveManager waveManager;
 
 	unique_ptr<GUIOverlay> guiOverlay;
+	unique_ptr<RectangleFrame> testFrame;
+	Sprite cameraCenter;
 
 
 	PlayerShip playerShip;

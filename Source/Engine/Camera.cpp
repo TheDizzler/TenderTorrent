@@ -32,20 +32,39 @@ void Camera::setViewport(int vwprtWdth, int vwprtHght) {
 
 void Camera::updateViewport(const Vector2& viewport, const Vector2& viewportPos, bool zoomToFit) {
 
-	viewportWidth = INT(viewport.x - viewportPos.x);
-	viewportHeight = INT(viewport.y - viewportPos.y);
+	viewportWidth = INT(viewport.x);
+	viewportHeight = INT(viewport.y);
 	viewportPosition = viewportPos;
-	viewportCenter = Vector3((viewportWidth) * .5f + viewportPosition.x,
-		(viewportHeight) * .5f + viewportPosition.y, 0);
+	viewportCenter = Vector3((viewport.x) * .5f + viewportPosition.x,
+		(viewport.y) * .5f + viewportPosition.y, 0);
+
+}
+
+void Camera::confineToScreen(GameObject* obj) {
+
+	Vector2 topleftWorld = screenToWorld(
+		Vector2(viewportCenter.x - viewportWidth / 2, viewportCenter.y - viewportHeight / 2));
+
+	Vector2 bottomRightWorld = screenToWorld(
+		Vector2(viewportCenter.x + viewportWidth / 2, viewportCenter.y + viewportHeight / 2));
+
+	Vector2 pos = obj->getPosition();
+	Vector2 halfsize(obj->getWidth()/2, obj->getHeight()/2);
+	Vector2 confinedpos = pos;
+	if (pos.x - halfsize.x < topleftWorld.x)
+		confinedpos.x = topleftWorld.x + halfsize.x;
+	else if (pos.x + halfsize.x > bottomRightWorld.x)
+		confinedpos.x = bottomRightWorld.x - halfsize.x;
+	if (pos.y - halfsize.y < topleftWorld.y)
+		confinedpos.y = topleftWorld.y + halfsize.y;
+	else if (pos.y + halfsize.y > bottomRightWorld.y)
+		confinedpos.y = bottomRightWorld.y - halfsize.y;
+
+	obj->setPosition(confinedpos);
 
 }
 
 bool Camera::viewContains(const Vector2& point) {
-	/*RECT* rect = viewportWorldBoundary();
-
-	bool contains = rect->left < point.x && point.x < rect->right
-		&& rect->top < point.y && point.y < rect->bottom;
-	delete rect;*/
 
 	Vector2 screenPos = worldToScreen(point);
 
@@ -53,16 +72,6 @@ bool Camera::viewContains(const Vector2& point) {
 		&& screenPos.y > viewportPosition.y
 		&& screenPos.x < viewportWidth + viewportPosition.x
 		&& screenPos.y < viewportHeight + viewportPosition.y;
-
-	/*if (!(screenPos.x > viewportPosition.x))
-		return false;
-	if (!(screenPos.y > viewportPosition.y))
-		return false;
-	if (!(screenPos.x < viewportWidth + viewportPosition.x))
-		return false;
-	if (!(screenPos.y < viewportHeight + viewportPosition.y))
-		return false;
-	return true;*/
 }
 
 const Vector2& Camera::getPosition() const {

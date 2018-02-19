@@ -47,9 +47,15 @@ bool LevelManager::initialize(ComPtr<ID3D11Device> device) {
 	guiOverlay->exitButton->setActionListener(new ExitButtonListener(this));
 	guiOverlay->continueButton->setActionListener(new ContinueButtonListener(this));
 
+	
 	Vector2 viewarea = guiOverlay->getPlayArea(); // for some reason this step is necessary
 	Vector2 viewposition = guiOverlay->getPlayPosition();
+	testFrame.reset(guiFactory.createRectangleFrame(viewposition, viewarea, 14, Color(.94f, .97f, 1, 1)));
+
 	camera.updateViewport(viewarea, viewposition);
+
+	cameraCenter.load(guiFactory.getAsset("Mouse Reticle"));
+	cameraCenter.setPosition(Vector2(camera.viewportCenter));
 
 	return true;
 }
@@ -231,7 +237,13 @@ void LevelManager::update(double deltaTime) {
 		ws << "Enemies: " << liveCount;
 		guiOverlay->enemyCount->setText(ws);
 	}
+	{
+		wostringstream ws;
+		ws << "Mouse: " << mouse.getPosition().x << ", " << mouse.getPosition().y;
+		guiOverlay->mouseLoc->setText(ws);
+	}
 
+	testFrame->update();
 	guiOverlay->update(deltaTime);
 }
 
@@ -302,6 +314,8 @@ void LevelManager::draw(SpriteBatch* batch) {
 			batch->End();
 			batch->Begin(SpriteSortMode_Deferred);
 			{
+				testFrame->draw(batch);
+				cameraCenter.draw(batch);
 				guiOverlay->draw(batch);
 			}
 			batch->End();
