@@ -1,6 +1,6 @@
-#include "../pch.h"
+#include "../../pch.h"
 #include "EnemyBullet.h"
-#include "../Engine/GameEngine.h"
+#include "../../Engine/GameEngine.h"
 
 EnemyBullet::EnemyBullet() :Bullet(SimpleMath::Vector2(0, 0)) {
 }

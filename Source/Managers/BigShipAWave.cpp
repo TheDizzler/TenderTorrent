@@ -1,12 +1,13 @@
 #include "../pch.h"
-#include "StarEnemyShipWave.h"
+#include "BigShipAWave.h"
 #include "../Engine/GameEngine.h"
+#include "../GameObjects/Enemies/BigShipA.h"
 
-StarEnemyShipWave::~StarEnemyShipWave() {
+
+BigShipAWave::~BigShipAWave() {
 }
 
-
-bool StarEnemyShipWave::initialize(GFXAssetManager* gfxAssets, xml_node shipNode) {
+bool BigShipAWave::initialize(GFXAssetManager* gfxAssets, xml_node shipNode) {
 
 	xml_node waveDataNode = shipNode.child("waveData");
 	maxTimeBetweenLaunches = waveDataNode.attribute("maxTimeBetweenWaves").as_uint();
@@ -17,33 +18,37 @@ bool StarEnemyShipWave::initialize(GFXAssetManager* gfxAssets, xml_node shipNode
 	if (ship == NULL) {
 		wostringstream wss;
 		wss << "Unable to find asset " << shipName;
-		wss << " in StarEnemyShipWave.";
+		wss << " in BigShipAWave.";
 		GameEngine::showErrorDialog(wss.str(), L"This is bad");
 		return false;
 	}
 
-	MAX_SHIPS_IN_STORE = 4;
+
+
+	MAX_SHIPS_IN_STORE = 2;
 
 	for (int i = 0; i < MAX_SHIPS_IN_STORE; ++i) {
-		for (xml_node mirrorNode : shipNode.child("mirrors").children("mirror")) {
-			StarEnemyShip* enemy = new StarEnemyShip(mirrorNode);
-			enemy->load(ship);
-			shipStore.push_back(enemy);
-		}
+		BigShipA* enemy = new BigShipA(shipNode);
+		enemy->load(ship);
+		shipStore.push_back(enemy);
 	}
-	
+
 	return true;
 }
 
-void StarEnemyShipWave::launchNewWave() {
+void BigShipAWave::launchNewWave() {
 
 	timeSinceLastLaunch = 0;
+	
 
 	EnemyShip* next = shipStore[nextShipInStore++];
-	next->launch();
-	next = shipStore[nextShipInStore++];
 	next->launch();
 
 	if (nextShipInStore >= shipStore.size())
 		nextShipInStore = 0;
+}
+
+void BigShipAWave::update(double deltaTime, PlayerShip* player) {
+
+	Wave::update(deltaTime, player);
 }

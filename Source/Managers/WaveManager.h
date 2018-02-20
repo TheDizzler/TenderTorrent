@@ -1,14 +1,9 @@
 #pragma once
-
-#include "RearAttackWave.h"
-#include "StarEnemyShipWave.h"
-#include "ArrowEnemyWave.h"
-
+#include "Wave.h"
 
 
 class WaveManager {
 public:
-	WaveManager();
 	virtual ~WaveManager();
 
 	bool initialize(GFXAssetManager* gfxAssets);

@@ -106,8 +106,6 @@ void GameEngine::render() {
 
 	deviceContext->ClearRenderTargetView(renderTargetView.Get(), Colors::PeachPuff);
 
-	/*batch->Begin(SpriteSortMode_Deferred, NULL, NULL, NULL, NULL, NULL, camera->translationMatrix());
-	{*/
 	game.draw(batch.get());
 
 

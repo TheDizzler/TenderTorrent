@@ -5,7 +5,6 @@
 
 class StarEnemyShip : public EnemyShip {
 public:
-	StarEnemyShip();
 	StarEnemyShip(xml_node mirrorNode);
 	virtual ~StarEnemyShip();
 

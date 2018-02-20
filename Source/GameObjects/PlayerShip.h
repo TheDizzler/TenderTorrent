@@ -2,8 +2,6 @@
 
 #include "../Managers/GFXAssetManager.h"
 
-//#include "../../DXTKGui/Controllers/MouseController.h"
-//#include "../../DXTKGui/Controllers/KeyboardController.h"
 #include "LaserSystem.h"
 #include "../globals.h"
 #include "Turret.h"

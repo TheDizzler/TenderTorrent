@@ -7,6 +7,8 @@
 
 #include <CommonStates.h>
 
+#define _QUICK_LAUNCH
+
 extern GUIFactory guiFactory;
 extern GFXAssetManager gfxAssets;
 extern Joystick* joystick;

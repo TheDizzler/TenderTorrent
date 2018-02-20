@@ -1,7 +1,7 @@
-#include "../pch.h"
+#include "../../pch.h"
 #include "RearAttackShip.h"
-#include "../globals.h"
-#include "../Engine/GameEngine.h"
+#include "../../globals.h"
+#include "../../Engine/GameEngine.h"
 
 using namespace Globals;
 
@@ -29,7 +29,8 @@ RearAttackShip::RearAttackShip(xml_node mirrorNode) {
 	for (xml_node weaponNode = weaponPointsNode.child("weapon");
 		weaponNode; weaponNode = weaponNode.next_sibling()) {
 
-		weaponSystems.push_back(unique_ptr<EnemyWeaponSystem>(new EnemyWeaponSystem(weaponNode, weaponSystemsNode)));
+		weaponSystems.push_back(unique_ptr<EnemyWeaponSystem>(
+			new EnemyWeaponSystem(weaponNode, weaponSystemsNode)));
 
 	}
 
@@ -75,12 +76,9 @@ void RearAttackShip::update(double deltaTime, PlayerShip* player, vector<Bullet*
 		}
 	}
 
-
-
-	//EnemyShip::update(deltaTime);
-
 	if (position.y > camera.screenToWorld(Vector2(0, float(Globals::WINDOW_HEIGHT + 120))).y) {
 		isAlive = false;
+		reset();
 	}
 }
 

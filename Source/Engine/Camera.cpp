@@ -123,15 +123,15 @@ void Camera::moveCamera(const Vector2& cameraMovement) {
 }
 
 
-RECT* Camera::viewportWorldBoundary() {
-
-	RECT* rect = new RECT{
-		(int) viewportPosition.x, (int) viewportPosition.y,
-		(int) (viewportWidth - viewportPosition.x),
-		(int) (viewportHeight - viewportPosition.y)};
-
-	return rect;
-}
+//RECT* Camera::viewportWorldBoundary() {
+//
+//	RECT* rect = new RECT{
+//		(int) viewportPosition.x, (int) viewportPosition.y,
+//		(int) (viewportWidth - viewportPosition.x),
+//		(int) (viewportHeight - viewportPosition.y)};
+//
+//	return rect;
+//}
 
 
 void Camera::centerOn(const Vector2& pos/*, bool showWholeLevel*/) {

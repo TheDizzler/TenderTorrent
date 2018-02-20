@@ -75,12 +75,6 @@
     <ClCompile Include="Source\GameObjects\LaserBolt.cpp">
       <Filter>Source Files\GameObjects\PlayerShip</Filter>
     </ClCompile>
-    <ClCompile Include="Source\GameObjects\EnemyShip.cpp">
-      <Filter>Source Files\GameObjects\EnemyShips</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\GameObjects\EnemyBullet.cpp">
-      <Filter>Source Files\GameObjects\EnemyShips</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Engine\GameEngine.cpp">
       <Filter>Source Files\Engine</Filter>
     </ClCompile>
@@ -93,17 +87,11 @@
     <ClCompile Include="Source\Engine\Input.cpp">
       <Filter>Source Files\Engine</Filter>
     </ClCompile>
-    <ClCompile Include="Source\GameObjects\RearAttackShip.cpp">
-      <Filter>Source Files\GameObjects\EnemyShips</Filter>
-    </ClCompile>
     <ClCompile Include="Source\GameObjects\Turret.cpp">
       <Filter>Source Files\GameObjects\PlayerShip</Filter>
     </ClCompile>
     <ClCompile Include="Source\GameObjects\SunBullet.cpp">
       <Filter>Source Files\GameObjects\PlayerShip</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\GameObjects\StarEnemyShip.cpp">
-      <Filter>Source Files\GameObjects\EnemyShips</Filter>
     </ClCompile>
     <ClCompile Include="Source\GameObjects\Graphics\Background.cpp">
       <Filter>Source Files\GameObjects\Backgrounds</Filter>
@@ -137,9 +125,6 @@
     </ClCompile>
     <ClCompile Include="Source\pch.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\GameObjects\ArrowEnemyShip.cpp">
-      <Filter>Source Files\GameObjects\EnemyShips</Filter>
     </ClCompile>
     <ClCompile Include="Source\Managers\ArrowEnemyWave.cpp">
       <Filter>Source Files\GameObjects\EnemyShips</Filter>
@@ -243,6 +228,27 @@
     <ClCompile Include="Source\Engine\PlayerSlot.cpp">
       <Filter>Source Files\Engine</Filter>
     </ClCompile>
+    <ClCompile Include="Source\GameObjects\Enemies\ArrowEnemyShip.cpp">
+      <Filter>Source Files\GameObjects\EnemyShips</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameObjects\Enemies\EnemyBullet.cpp">
+      <Filter>Source Files\GameObjects\EnemyShips</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameObjects\Enemies\EnemyShip.cpp">
+      <Filter>Source Files\GameObjects\EnemyShips</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameObjects\Enemies\RearAttackShip.cpp">
+      <Filter>Source Files\GameObjects\EnemyShips</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameObjects\Enemies\StarEnemyShip.cpp">
+      <Filter>Source Files\GameObjects\EnemyShips</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameObjects\Enemies\BigShipA.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Managers\BigShipAWave.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\globals.h">
@@ -263,12 +269,6 @@
     <ClInclude Include="Source\GameObjects\Bullet.h">
       <Filter>Header Files\GameObjects\PlayerShip</Filter>
     </ClInclude>
-    <ClInclude Include="Source\GameObjects\EnemyShip.h">
-      <Filter>Header Files\GameObjects\EnemyShips</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\GameObjects\EnemyBullet.h">
-      <Filter>Header Files\GameObjects\EnemyShips</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Engine\GameEngine.h">
       <Filter>Header Files\Engine</Filter>
     </ClInclude>
@@ -278,9 +278,6 @@
     <ClInclude Include="Source\Engine\Input.h">
       <Filter>Header Files\Engine</Filter>
     </ClInclude>
-    <ClInclude Include="Source\GameObjects\RearAttackShip.h">
-      <Filter>Header Files\GameObjects\EnemyShips</Filter>
-    </ClInclude>
     <ClInclude Include="Source\GameObjects\Turret.h">
       <Filter>Header Files\GameObjects\PlayerShip</Filter>
     </ClInclude>
@@ -289,9 +286,6 @@
     </ClInclude>
     <ClInclude Include="Source\assets.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\GameObjects\StarEnemyShip.h">
-      <Filter>Header Files\GameObjects\EnemyShips</Filter>
     </ClInclude>
     <ClInclude Include="Source\GameObjects\Graphics\Background.h">
       <Filter>Header Files\GameObjects\Backgrounds</Filter>
@@ -327,9 +321,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Managers\ArrowEnemyWave.h">
-      <Filter>Header Files\GameObjects\EnemyShips</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\GameObjects\ArrowEnemyShip.h">
       <Filter>Header Files\GameObjects\EnemyShips</Filter>
     </ClInclude>
     <ClInclude Include="Source\Managers\GUIOverlay.h">
@@ -442,6 +433,27 @@
     </ClInclude>
     <ClInclude Include="Source\Engine\PlayerSlot.h">
       <Filter>Header Files\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameObjects\Enemies\ArrowEnemyShip.h">
+      <Filter>Header Files\GameObjects\EnemyShips</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameObjects\Enemies\EnemyBullet.h">
+      <Filter>Header Files\GameObjects\EnemyShips</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameObjects\Enemies\EnemyShip.h">
+      <Filter>Header Files\GameObjects\EnemyShips</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameObjects\Enemies\RearAttackShip.h">
+      <Filter>Header Files\GameObjects\EnemyShips</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameObjects\Enemies\StarEnemyShip.h">
+      <Filter>Header Files\GameObjects\EnemyShips</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameObjects\Enemies\BigShipA.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Managers\BigShipAWave.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

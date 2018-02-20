@@ -14,8 +14,8 @@ Turret::~Turret() {
 
 void Turret::loadTurretTexture(GraphicsAsset* turretAsset) {
 
-	turretSprite.reset(new Sprite(weaponLocation));
-	turretSprite->load(turretAsset);
+	turretSprite.load(turretAsset);
+	turretSprite.setPosition(weaponLocation);
 }
 
 
@@ -26,18 +26,9 @@ Bullet* Turret::fire() {
 	return bullet;
 }
 
-//void Turret::fillBulletStore(/*GraphicsAsset**/ shared_ptr<Animation> bulletAsset) {
-//
-//	for (int i = 0; i < maxStoreSize; ++i) {
-//		Bullet* bullet = new SunBullet(weaponStore);
-//		bullet->load(bulletAsset);
-//		bulletStore.push_back(bullet);
-//	}
-//}
 
-
-void Turret::setTurretRotation(const Vector2 & targetDirection) {
-	turretSprite->setRotation(atan2(targetDirection.y, targetDirection.x) + XM_PIDIV2);
+void Turret::setTurretRotation(const Vector2& targetDirection) {
+	turretSprite.setRotation(atan2(targetDirection.y, targetDirection.x) + XM_PIDIV2);
 	turretDirection = Vector2(targetDirection.x, targetDirection.y);
 	turretDirection.Normalize();
 }
@@ -45,25 +36,19 @@ void Turret::setTurretRotation(const Vector2 & targetDirection) {
 void Turret::update(double deltaTime, Vector2 positionUpdate) {
 
 	WeaponSystem::update(deltaTime, positionUpdate);
-	turretSprite->setPosition(weaponLocation);
-
-	/*int y = mousePosition.y - weaponLocation.y;
-	int x = mousePosition.x - weaponLocation.x;
-	turretDirection = Vector2(x, y);
-	turretDirection.Normalize();
-	turretSprite->setRotation(atan2(targetDirection.y, targetDirection.x) + XM_PIDIV2);*/
+	turretSprite.setPosition(weaponLocation);
 }
 
-void Turret::draw(SpriteBatch * batch) {
+void Turret::draw(SpriteBatch* batch) {
 
-	turretSprite->draw(batch);
+	turretSprite.draw(batch);
 	WeaponSystem::draw(batch);
 }
 
 void Turret::setTint(const XMFLOAT4 newTint) {
-	turretSprite->setTint(newTint);
+	turretSprite.setTint(newTint);
 }
 
 void Turret::setScale(const Vector2& newScale) {
-	turretSprite->setScale(newScale);
+	turretSprite.setScale(newScale);
 }

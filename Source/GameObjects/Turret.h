@@ -22,5 +22,5 @@ public:
 private:
 
 	Vector2 turretDirection;
-	unique_ptr<Sprite> turretSprite;
+	Sprite turretSprite;
 };

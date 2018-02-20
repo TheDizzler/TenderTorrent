@@ -1,12 +1,13 @@
 #include "../pch.h"
 #include "WaveManager.h"
 #include "../assets.h"
+#include "RearAttackWave.h"
+#include "StarEnemyShipWave.h"
+#include "ArrowEnemyWave.h"
+#include "BigShipAWave.h"
 
-WaveManager::WaveManager() {
-}
 
 WaveManager::~WaveManager() {
-
 	for (Wave* wave : waves)
 		delete wave;
 }
@@ -18,8 +19,8 @@ bool WaveManager::initialize(GFXAssetManager* gfxAssets) {
 	xml_enemies.load_file(Assets::enemyShipManifestFile);
 
 	xml_node root = xml_enemies.child("root");
-	xml_node shipNode = root.child("ship");
 
+	xml_node shipNode = root.child("ship");
 	Wave* wave = new RearAttackWave();
 	if (!wave->initialize(gfxAssets, shipNode))
 		return false;
@@ -37,6 +38,11 @@ bool WaveManager::initialize(GFXAssetManager* gfxAssets) {
 		return false;
 	waves.push_back(wave);
 
+	shipNode = shipNode.next_sibling();
+	wave = new BigShipAWave();
+	if (!wave->initialize(gfxAssets, shipNode))
+		return false;
+	waves.push_back(wave);
 
 	return true;
 }

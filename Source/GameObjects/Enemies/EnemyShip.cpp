@@ -1,39 +1,37 @@
-#include "../pch.h"
+#include "../../pch.h"
 #include "EnemyShip.h"
-#include "../Engine/GameEngine.h"
+#include "../../Engine/GameEngine.h"
+#include "../../globals.h"
+
 
 EnemyShip::EnemyShip() : GameObject() {
-
 	isAlive = false;
 	setExplosion(gfxAssets.getAnimation("big explosion"));
-}
-
-EnemyShip::EnemyShip(const Vector2& pos) : GameObject() {
-
-	isAlive = false;
-	position = pos;
 }
 
 EnemyShip::~EnemyShip() {
 	weaponSystems.clear();
 }
 
-void EnemyShip::reset() {
-	position = Globals::SHIP_STORE_POSITION;
-	for (auto const& weapon : weaponSystems)
-		weapon->reset(position);
-	health = maxHealth;
-	timeAlive = 0;
-	isAlive = true;
-	setTint(Vector4(1, 1, 1, 1));
-	explosion->reset();
-}
-
 void EnemyShip::setExplosion(Animation* explos) {
 	explosion.reset(new AnimatedSprite(position));
 	explosion->load(explos);
 	explosion->repeats = false;
+}
 
+void EnemyShip::reset() {
+	setPosition(Globals::SHIP_STORE_POSITION);
+	for (auto const& weapon : weaponSystems)
+		weapon->reset(position);
+	health = maxHealth;
+	timeAlive = 0;
+	isAlive = false;
+	setTint(Vector4(1, 1, 1, 1));
+	explosion->reset();
+}
+
+void EnemyShip::launch() {
+	isAlive = true;
 }
 
 
@@ -43,8 +41,10 @@ void EnemyShip::explodeUpdate(double deltaTime) {
 	isExploding = explosion->isAlive;
 	setTint(Color::Lerp(getTint(), Vector4(0.0f, 0.0f, 0.0f, 0.0f), 20 * (float) deltaTime));
 
-	if (!isExploding)
+	if (!isExploding) {
 		setPosition(Globals::SHIP_STORE_POSITION);
+		reset();
+	}
 
 }
 
@@ -68,9 +68,8 @@ void EnemyShip::takeDamage(int damageTaken) {
 }
 
 
-
-EnemyShip::EnemyWeaponSystem::EnemyWeaponSystem(xml_node weaponPointNode,
-	xml_node weaponSystemsNode, bool mirrored) {
+EnemyShip::EnemyWeaponSystem::EnemyWeaponSystem(
+	xml_node weaponPointNode, xml_node weaponSystemsNode, bool mirrored) {
 
 	const char_t* weaponTypeName = weaponPointNode.attribute("type").as_string();
 	xml_node weaponTypeNode = weaponSystemsNode.find_child_by_attribute("weaponType", "name", weaponTypeName);
@@ -96,12 +95,12 @@ EnemyShip::EnemyWeaponSystem::EnemyWeaponSystem(xml_node weaponPointNode,
 	direction *= Vector2(sin(angle), cos(angle));
 	direction.Normalize();
 	for (int i = 0; i < MAX_BULLETS_IN_STORE; ++i) {
-		EnemyBullet* bullet = new EnemyBullet();
+		unique_ptr<EnemyBullet> bullet = make_unique<EnemyBullet>();
 		bullet->damage = damage;
 		bullet->bulletSpeed = bulletSpeed;
 		bullet->direction = direction;
 		bullet->load(bulletAsset);
-		bulletStore.push_back(bullet);
+		bulletStore.push_back(move(bullet));
 	}
 
 	fireDelay = weaponPointNode.child("fireRate").attribute("delay").as_float();
@@ -110,10 +109,9 @@ EnemyShip::EnemyWeaponSystem::EnemyWeaponSystem(xml_node weaponPointNode,
 }
 
 EnemyShip::EnemyWeaponSystem::~EnemyWeaponSystem() {
-	for each (Bullet* bullet in bulletStore)
-		delete bullet;
 	bulletStore.clear();
 }
+
 
 void EnemyShip::EnemyWeaponSystem::reset(const Vector2& shipPosition) {
 	systemLocation = shipPosition + positionOffset;
@@ -126,7 +124,7 @@ void EnemyShip::EnemyWeaponSystem::updatePosition(const Vector2& shipPosition) {
 
 EnemyBullet* EnemyShip::EnemyWeaponSystem::launchBullet(const Vector2& target) {
 
-	EnemyBullet* bullet = bulletStore[nextBulletInStore++];
+	EnemyBullet* bullet = bulletStore[nextBulletInStore++].get();
 	bullet->setPosition(systemLocation);
 	Vector2 direction = target - systemLocation;
 	direction.Normalize();
@@ -140,7 +138,7 @@ EnemyBullet* EnemyShip::EnemyWeaponSystem::launchBullet(const Vector2& target) {
 
 EnemyBullet* EnemyShip::EnemyWeaponSystem::launchBullet() {
 
-	EnemyBullet* bullet = bulletStore[nextBulletInStore++];
+	EnemyBullet* bullet = bulletStore[nextBulletInStore++].get();
 	bullet->setPosition(systemLocation);
 	bullet->isAlive = true;
 

@@ -43,7 +43,11 @@ bool MenuManager::initialize(ComPtr<ID3D11Device> device) {
 		return false;
 	};
 
+#ifdef _QUICK_LAUNCH
+	currentScreen = levelSelectScreen.get();
+#else
 	currentScreen = mainScreen.get();
+#endif
 
 	/*transitionManager.reset(
 		new ScreenTransitions::ScreenTransitionManager(

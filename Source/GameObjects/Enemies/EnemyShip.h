@@ -1,6 +1,6 @@
 #pragma once
 
-#include "PlayerShip.h"
+#include "../PlayerShip.h"
 #include "EnemyBullet.h"
 
 
@@ -8,14 +8,15 @@
 
 class EnemyShip : public GameObject {
 protected:
-	struct EnemyWeaponSystem {
+	class EnemyWeaponSystem {
+	public:
 		EnemyWeaponSystem(xml_node weaponPointNode, xml_node weaponSystemsNode, bool mirrored = false);
 		virtual ~EnemyWeaponSystem();
 
 		void reset(const Vector2& shipPosition);
 
 		Vector2 systemLocation;
-		vector<EnemyBullet*> bulletStore;
+		vector<unique_ptr<EnemyBullet>> bulletStore;
 		size_t nextBulletInStore = 0;
 		size_t MAX_BULLETS_IN_STORE = 3;
 
@@ -24,26 +25,25 @@ protected:
 		float fireDelay = 0;
 		//int timesFired = 0;
 
-		void updatePosition(const Vector2& shipPosition);
+		virtual void updatePosition(const Vector2& shipPosition);
 		/** Launches projectile at target. */
 		EnemyBullet* launchBullet(const Vector2& target);
 		/** Luanches projectile at set angle. */
 		EnemyBullet* launchBullet();
 
-	private:
+	protected:
 		/* Weapon system position relative to ship's origin. */
 		Vector2 positionOffset;
 	};
 public:
-	/** For constructing base sprites. */
 	EnemyShip();
-	/** For constructing actual enemies seen on stage. */
-	EnemyShip(const Vector2& position);
 	virtual ~EnemyShip();
 
-	void reset();
-
 	virtual void setExplosion(Animation* explosion);
+
+	virtual void reset();
+	virtual void launch();
+	
 
 
 	virtual void update(double deltaTime, PlayerShip* player, vector<Bullet*>& liveBullets) = 0;
@@ -61,7 +61,7 @@ public:
 
 protected:
 
-	shared_ptr<AnimatedSprite> explosion;
+	unique_ptr<AnimatedSprite> explosion;
 
 	int maxHealth = 10;
 	int health = 10;

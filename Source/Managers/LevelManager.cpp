@@ -45,7 +45,7 @@ bool LevelManager::initialize(ComPtr<ID3D11Device> device) {
 	guiOverlay.exitButton->setActionListener(new ExitButtonListener(this));
 	guiOverlay.continueButton->setActionListener(new ContinueButtonListener(this));
 
-	
+
 	Vector2 viewarea = guiOverlay.getPlayArea(); // for some reason this step is necessary
 	Vector2 viewposition = guiOverlay.getPlayPosition();
 	testFrame.reset(guiFactory.createRectangleFrame(viewposition, viewarea, 14, Color(.94f, .97f, 1, 1)));
@@ -93,7 +93,7 @@ bool LevelManager::loadLevel(ComPtr<ID3D11Device> device, const char_t* levelFil
 	startPos.y += Globals::WINDOW_HEIGHT / 2;
 	playerShip.setPosition(startPos);
 
-	
+
 
 
 	playState = STARTING;
@@ -102,7 +102,7 @@ bool LevelManager::loadLevel(ComPtr<ID3D11Device> device, const char_t* levelFil
 
 
 void LevelManager::update(double deltaTime) {
-	
+
 	int liveCount = 0;
 	bool once = true;
 	switch (playState) {
@@ -146,10 +146,8 @@ void LevelManager::update(double deltaTime) {
 			waveManager.update(deltaTime, &playerShip);
 
 
-			//if (!pauseDownLast && keyState.Escape) {
 			if (keys.isKeyPressed(Keyboard::Escape) || joystick->startButtonPushed()) {
 				playState = PAUSED;
-				//pauseDownLast = true;
 			}
 
 			if (!playerShip.isAlive) {
@@ -175,7 +173,7 @@ void LevelManager::update(double deltaTime) {
 			playerShip.finishedUpdate(deltaTime);
 
 			gameOverTimer += deltaTime;
-			if (gameOverTimer > 15 /*|| keyState.Escape || keyState.Enter*/
+			if (gameOverTimer > 15
 				|| keys.isKeyPressed(Keyboard::Escape)
 				|| keys.isKeyPressed(Keyboard::Enter))
 				game->loadMainMenu();
@@ -187,17 +185,15 @@ void LevelManager::update(double deltaTime) {
 			playerShip.deathUpdate(deltaTime);
 			waveManager.update(deltaTime, &playerShip);
 			gameOverTimer += deltaTime;
-			if (gameOverTimer > 15 /*|| keyState.Escape || keyState.Enter)*/
+			if (gameOverTimer > 15
 				|| keys.isKeyPressed(Keyboard::Escape)
 				|| keys.isKeyPressed(Keyboard::Enter))
 				game->loadMainMenu();
 			break;
 		case PAUSED:
 			guiOverlay.updatePaused(deltaTime);
-			//if (!pauseDownLast && keyState.Escape) {
-			if (keys.isKeyPressed(Keyboard::Escape)) {
+			if (keys.isKeyPressed(Keyboard::Escape) || joystick->startButtonPushed()) {
 				playState = PLAYING;
-				//pauseDownLast = true;
 			}
 
 			break;
@@ -378,6 +374,11 @@ void LevelManager::exitLevel() {
 	//pauseDownLast = true;
 
 	game->loadMainMenu();
+
+#ifdef _QUICK_LAUNCH
+	game->exit();
+#endif
+
 }
 
 void ExitButtonListener::onClick(Button* button) {

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "GFXAssetManager.h"
-#include "../GameObjects/EnemyShip.h"
+#include "../GameObjects/Enemies/EnemyShip.h"
 
 
 class Wave {

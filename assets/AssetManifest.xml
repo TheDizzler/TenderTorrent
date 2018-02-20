@@ -40,6 +40,18 @@
 		<sprite name="EnemyShip RearAttack" file="enemy ship A.dds"/>
 		<sprite name="EnemyShip Star" file="enemy ship B.dds"/>
 		<sprite name="EnemyShip Arrow" file="enemy ship arrow.dds"/>
+		<spritesheet file="BigShipA.dds">
+			<sprite name="BigShipA" x="0" y="4" width="116" height="60" />
+			<sprite name="HexTurret" x="120" y="15" width="16" height="22">
+				<origin x="8" y="14" />
+			</sprite>
+			<animation name="EngineBurn" timePerFrame=".02">
+				<sprite x="120" y="1" width="13" height="13"/>
+				<sprite x="135" y="1" width="13" height="13"/>
+				<sprite x="150" y="1" width="13" height="13"/>
+				<sprite x="165" y="1" width="13" height="13"/>
+			</animation>
+		</spritesheet>
 
 		<!-- Player ship sprites -->
 		<sprite name="PlayerShip Hull" file="HeroShip.dds"/>

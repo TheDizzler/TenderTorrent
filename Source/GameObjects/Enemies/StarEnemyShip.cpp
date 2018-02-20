@@ -1,14 +1,11 @@
-#include "../pch.h"
+#include "../../pch.h"
 #include "StarEnemyShip.h"
-#include "../Engine/GameEngine.h"
-#include "../globals.h"
-
-
-StarEnemyShip::StarEnemyShip() {
-}
-
+#include "../../Engine/GameEngine.h"
+#include "../../globals.h"
 
 using namespace Globals;
+
+
 StarEnemyShip::StarEnemyShip(xml_node mirrorNode) {
 
 	xml_node shipNode = mirrorNode.parent().parent();
@@ -27,7 +24,8 @@ StarEnemyShip::StarEnemyShip(xml_node mirrorNode) {
 	for (xml_node weaponNode = weaponPointsNode.child("weapon");
 		weaponNode; weaponNode = weaponNode.next_sibling()) {
 
-		weaponSystems.push_back(unique_ptr<EnemyWeaponSystem>(new EnemyWeaponSystem(weaponNode, weaponSystemsNode, mirrored)));
+		weaponSystems.push_back(unique_ptr<EnemyWeaponSystem>(
+			new EnemyWeaponSystem(weaponNode, weaponSystemsNode, mirrored)));
 
 	}
 
@@ -51,10 +49,7 @@ void StarEnemyShip::update(double deltaTime, PlayerShip* player, vector<Bullet*>
 	timeAlive += deltaTime;
 	double percent = timeAlive / timeToTravel;
 
-	position = camera.screenToWorld(Vector2::Lerp(startPos, endPos, (float)percent));
-
-
-	isAlive = percent < 1;
+	position = camera.screenToWorld(Vector2::Lerp(startPos, endPos, (float) percent));
 
 	for (auto const& weapon : weaponSystems) {
 		weapon->updatePosition(position);
@@ -63,5 +58,10 @@ void StarEnemyShip::update(double deltaTime, PlayerShip* player, vector<Bullet*>
 			Bullet* bullet = weapon->launchBullet();
 			liveBullets.push_back(bullet);
 		}
+	}
+
+	isAlive = percent < 1;
+	if (!isAlive) {
+		reset();
 	}
 }

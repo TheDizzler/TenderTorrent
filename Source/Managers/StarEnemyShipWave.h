@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Wave.h"
-#include "../GameObjects/StarEnemyShip.h"
+#include "../GameObjects/Enemies/StarEnemyShip.h"
 
 class StarEnemyShipWave : public Wave {
 public:

@@ -76,7 +76,6 @@ bool GameManager::initializeGame(GameEngine* gmngn,
 	if (!levelScreen->initialize(device))
 		return false;
 
-
 	currentScreen = menuScreen.get();
 
 	/*transitionManager.reset(
@@ -151,8 +150,13 @@ void GameManager::update(double deltaTime) {
 			switchTo = NULL;
 		}
 
-	} else
-		currentScreen->update(deltaTime);
+	} else {
+		if (showDialog->isOpen())
+			showDialog->update(deltaTime);
+		else
+			currentScreen->update(deltaTime);
+	}
+
 }
 
 
@@ -169,6 +173,8 @@ void GameManager::draw(SpriteBatch* batch) {
 
 	batch->Begin(SpriteSortMode_Deferred);
 	{
+		if (showDialog->isOpen())
+			showDialog->draw(batch);
 		mouse.draw(batch);
 	}
 	batch->End();

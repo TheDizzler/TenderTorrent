@@ -3,7 +3,7 @@
 
 	<waypoints>
 		<intro x="357" y="0" />
-		<start center="false" x="400" y="1400" speed="20"/>
+		<start center="false" x="400" y="1400" speed="60"/>
 		<waypoint x="615" y="851" speed="7"/>
 		<waypoint x="162" y="1203" speed="10" />
 		<waypoint x="162" y="741" speed="15" />

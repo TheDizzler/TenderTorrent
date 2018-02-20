@@ -22,10 +22,6 @@ public:
 	void updateViewport(const Vector2& viewportArea,
 		const Vector2& viewportPosition, bool zoomToFit = false);
 
-
-	//Viewport* viewport;
-
-
 	float rotation = 0.0f;
 
 	Vector2 viewportPosition = Vector2::Zero;
@@ -38,6 +34,7 @@ public:
 	/* Returns true if point (in WORLD coords) is on screen. */
 	bool viewContains(const Vector2& point);
 
+	/* Get world coordinates of camera. */
 	const Vector2& getPosition() const;
 	/* Amount screen has moved since last update*/
 	const Vector2& getDelta() const;
@@ -49,7 +46,7 @@ public:
 	
 	void moveCamera(const Vector2& cameraMovement);
 
-	RECT* viewportWorldBoundary();
+	//RECT* viewportWorldBoundary();
 
 	void centerOn(const Vector2& pos);
 

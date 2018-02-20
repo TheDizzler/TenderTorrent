@@ -89,6 +89,25 @@
 		<waveData maxTimeBetweenWaves="20" timeBetweenChanceForWave="3" />
 	</ship>
 
+	<ship name="BigShipA">
+		<sprite>BigShipA</sprite>
+		<health>100</health>
+		<timeToTravel>4</timeToTravel>
+		<weaponPoints>
+			<weapon type="Turret Cannon">
+				<sprite name="HexTurret" />
+				<location x="-57" y="-30" />
+			</weapon>
+			<weapon type="Turret Cannon">
+				<sprite name="HexTurret" />
+				<location x="40" y="-30" />
+			</weapon>
+		</weaponPoints>
+
+		<waveData maxTimeBetweenWaves="10" timeBetweenChanceForWave="3" />
+	</ship>
+
+
 
 	<ship name="Attack from corner then return">
 

@@ -1,9 +1,7 @@
-#include "../pch.h"
+#include "../../pch.h"
 #include "ArrowEnemyShip.h"
-#include "../Engine/GameEngine.h"
+#include "../../Engine/GameEngine.h"
 
-ArrowEnemyShip::ArrowEnemyShip() {
-}
 
 ArrowEnemyShip::ArrowEnemyShip(xml_node shipNode) {
 
@@ -44,8 +42,10 @@ void ArrowEnemyShip::update(double deltaTime, PlayerShip* player, vector<Bullet*
 	else {
 		position = camera.screenToWorld(Vector2::Lerp(midPos, endPos, float(percent - .50) * 2));
 
-		if (!camera.viewContains(position))
+		if (!camera.viewContains(position)) {
 			isAlive = false;
+			reset();
+		}
 
 		for (auto const& weapon : weaponSystems) {
 			weapon->updatePosition(position);
@@ -58,7 +58,6 @@ void ArrowEnemyShip::update(double deltaTime, PlayerShip* player, vector<Bullet*
 			}
 		}
 	}
-	//EnemyShip::update(deltaTime);
 }
 
 

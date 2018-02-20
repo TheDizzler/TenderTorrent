@@ -6,7 +6,6 @@
 		First flies straight then drifts in a new direction after firing.*/
 class ArrowEnemyShip : public EnemyShip {
 public:
-	ArrowEnemyShip();
 	ArrowEnemyShip(xml_node shipNode);
 	virtual ~ArrowEnemyShip();
 
@@ -16,6 +15,8 @@ public:
 private:
 
 	double timeToTravel;
+	/* Position in SCREEN coordinates, NOT world. */
 	Vector2 midPos;
+	/* Position in SCREEN coordinates, NOT world. */
 	Vector2 endPos;
 };

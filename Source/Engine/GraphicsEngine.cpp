@@ -270,10 +270,10 @@ void GraphicsEngine::setViewport(int xPos, int yPos, int width, int height) {
 
 void GraphicsEngine::createScissorRect(const Vector2& viewportArea, const Vector2& viewportPosition) {
 
-	scissorRECTs[0].left = viewportPosition.x;
-	scissorRECTs[0].right = viewportArea.x + viewportPosition.x;
-	scissorRECTs[0].top = viewportPosition.y;
-	scissorRECTs[0].bottom = viewportArea.y + viewportPosition.y;
+	scissorRECTs[0].left = (LONG) viewportPosition.x;
+	scissorRECTs[0].right = (LONG) viewportArea.x + viewportPosition.x;
+	scissorRECTs[0].top = (LONG) viewportPosition.y;
+	scissorRECTs[0].bottom = (LONG) viewportArea.y + viewportPosition.y;
 
 	deviceContext->RSSetScissorRects(1, scissorRECTs);
 }

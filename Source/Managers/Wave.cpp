@@ -64,7 +64,6 @@ void Wave::update(double deltaTime, PlayerShip* player) {
 			}
 		} else if (enemy->isExploding) {
 			enemy->explodeUpdate(deltaTime);
-
 		}
 	}
 
@@ -100,6 +99,8 @@ void Wave::finishedUpdate(double deltaTime) {
 
 bool Wave::checkForLaunch() {
 
+	if (timeSinceLastLaunch >= maxTimeBetweenLaunches)
+		return true;
 	mt19937 rng;
 	rng.seed(random_device{}());
 	uniform_int_distribution<mt19937::result_type> rand((int) timeSinceLastLaunch, maxTimeBetweenLaunches);
