@@ -30,17 +30,6 @@ bool LevelManager::initialize(ComPtr<ID3D11Device> device) {
 	if (!mouse.loadMouseIcon(&guiFactory, "Mouse Reticle"))
 		return false;
 
-	if (!waveManager.initialize(&gfxAssets))
-		return false;
-
-
-	playerShip.load(gfxAssets.getAsset("PlayerShip Hull"));
-	if (!playerShip.loadBullet(&gfxAssets)) {
-		MessageBox(NULL, L"Failed to load weapons", L"ERROR", MB_OK);
-		return false;
-	}
-	playerShip.setDimensions(&playerShip);
-
 
 	guiOverlay.exitButton->setActionListener(new ExitButtonListener(this));
 	guiOverlay.continueButton->setActionListener(new ContinueButtonListener(this));
@@ -79,6 +68,13 @@ bool LevelManager::loadLevel(ComPtr<ID3D11Device> device, const char_t* levelFil
 	playState = LOADING;
 	totalPlayTime = 0;
 	gameOverTimer = 0;
+
+	playerShip.load(gfxAssets.getAsset("PlayerShip Hull"));
+	if (!playerShip.loadBullet(&gfxAssets)) {
+		MessageBox(NULL, L"Failed to load weapons", L"ERROR", MB_OK);
+		return false;
+	}
+	playerShip.setDimensions(&playerShip);
 	playerShip.reset();
 
 	bgManager.clear();
@@ -88,6 +84,7 @@ bool LevelManager::loadLevel(ComPtr<ID3D11Device> device, const char_t* levelFil
 	waveManager.clear();
 	if (!waveManager.initialize(&gfxAssets))
 		return false;
+
 
 	Vector2 startPos = bgManager.getStartPosition();
 	startPos.y += Globals::WINDOW_HEIGHT / 2;
@@ -103,7 +100,6 @@ bool LevelManager::loadLevel(ComPtr<ID3D11Device> device, const char_t* levelFil
 
 void LevelManager::update(double deltaTime) {
 
-	int liveCount = 0;
 	bool once = true;
 	switch (playState) {
 		case PLAYING:
@@ -113,7 +109,8 @@ void LevelManager::update(double deltaTime) {
 			for (Bullet* bullet : playerShip.liveBullets) {
 
 				bullet->update(deltaTime);
-				for (Wave* wave : waveManager.waves) {
+				waveManager.checkHitDetection(bullet);
+				/*for (Wave* wave : waveManager.waves) {
 					for (EnemyShip* enemy : wave->shipStore) {
 						if (enemy->isAlive) {
 							if (bullet->getHitArea()->collision(enemy->getHitArea())) {
@@ -124,7 +121,7 @@ void LevelManager::update(double deltaTime) {
 								++liveCount;
 						}
 					}
-				}
+				}*/
 
 				for (ClothLayer* layer : bgManager.getClothes()) {
 					if (layer->isAlive()) {
@@ -181,13 +178,14 @@ void LevelManager::update(double deltaTime) {
 		case GAMEOVER:
 			for (Bullet* bullet : playerShip.liveBullets)
 				bullet->update(deltaTime);
-			//bgManager->update(deltaTime, mouse);
+			bgManager.update(deltaTime);
 			playerShip.deathUpdate(deltaTime);
 			waveManager.update(deltaTime, &playerShip);
 			gameOverTimer += deltaTime;
 			if (gameOverTimer > 15
 				|| keys.isKeyPressed(Keyboard::Escape)
-				|| keys.isKeyPressed(Keyboard::Enter))
+				|| keys.isKeyPressed(Keyboard::Enter)
+				|| joystick->startButtonPushed())
 				game->loadMainMenu();
 			break;
 		case PAUSED:
@@ -235,13 +233,13 @@ void LevelManager::update(double deltaTime) {
 		wostringstream ws;
 		ws << "Bullets: " << waveManager.getBulletCount();
 		guiOverlay->bulletCount->setText(ws);
-	}
+	}*/
 	{
 		wostringstream ws;
-		ws << "Enemies: " << liveCount;
-		guiOverlay->enemyCount->setText(ws);
+		ws << "Enemies: " << waveManager.getLiveCount();
+		guiOverlay.enemyCount->setText(ws);
 	}
-	{
+	/*{
 		wostringstream ws;
 		ws << "Mouse: " << mouse.getPosition().x << ", " << mouse.getPosition().y;
 		guiOverlay->mouseLoc->setText(ws);

@@ -27,12 +27,27 @@ void Wave::clear() {
 
 	shipStore.clear();
 	liveBullets.clear();
+
+	shipsLaunched = 0;
 }
 
 void Wave::clearEnemies() {
 	for (EnemyShip* enemy : shipStore)
 		if (enemy->isAlive)
 			enemy->takeDamage(1000);
+}
+
+void Wave::checkHitDetection(Bullet* bullet) {
+	for (EnemyShip* enemy : shipStore) {
+		if (enemy->isAlive) {
+			if (bullet->getHitArea()->collision(enemy->getHitArea())) {
+				enemy->takeDamage(bullet->damage);
+				bullet->isAlive = false;
+			}
+			if (!enemy->isAlive)
+				--shipsLaunched;
+		}
+	}
 }
 
 
@@ -62,6 +77,8 @@ void Wave::update(double deltaTime, PlayerShip* player) {
 				enemy->takeDamage(playerHP);
 				player->takeDamage(enemyHP);
 			}
+			if (!enemy->isAlive)
+				--shipsLaunched;
 		} else if (enemy->isExploding) {
 			enemy->explodeUpdate(deltaTime);
 		}
@@ -98,6 +115,9 @@ void Wave::finishedUpdate(double deltaTime) {
 
 
 bool Wave::checkForLaunch() {
+
+	if (shipsLaunched >= MAX_SHIPS_IN_STORE)
+		return false;
 
 	if (timeSinceLastLaunch >= maxTimeBetweenLaunches)
 		return true;

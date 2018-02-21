@@ -39,13 +39,20 @@ bool BigShipAWave::initialize(GFXAssetManager* gfxAssets, xml_node shipNode) {
 void BigShipAWave::launchNewWave() {
 
 	timeSinceLastLaunch = 0;
-	
+
 
 	EnemyShip* next = shipStore[nextShipInStore++];
+	while (next->isAlive) {
+		if (nextShipInStore >= shipStore.size())
+			nextShipInStore = 0;
+		next = shipStore[nextShipInStore++];
+	}
 	next->launch();
 
 	if (nextShipInStore >= shipStore.size())
 		nextShipInStore = 0;
+
+	++shipsLaunched;
 }
 
 void BigShipAWave::update(double deltaTime, PlayerShip* player) {

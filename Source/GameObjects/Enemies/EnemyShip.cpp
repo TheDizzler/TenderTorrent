@@ -64,7 +64,9 @@ void EnemyShip::takeDamage(int damageTaken) {
 		isAlive = false;
 		isExploding = true;
 		explosion->setPosition(position);
+		//return true;
 	}
+	//return false;
 }
 
 
@@ -86,7 +88,8 @@ EnemyShip::EnemyWeaponSystem::EnemyWeaponSystem(
 		GameEngine::showErrorDialog(wss.str(), L"This is bad");
 		return;
 	}
-	float angle = weaponPointNode.child("angle").text().as_float()*XM_PI / 180;
+	float angleDeg = weaponPointNode.child("angle").text().as_float();
+	float angle = angleDeg * XM_PI / 180;
 	Vector2 direction;
 	if (mirrored)
 		direction = Vector2(1, 1);
@@ -106,6 +109,8 @@ EnemyShip::EnemyWeaponSystem::EnemyWeaponSystem(
 	fireDelay = weaponPointNode.child("fireRate").attribute("delay").as_float();
 	positionOffset = Vector2((float) weaponPointNode.child("location").attribute("x").as_int(),
 		(float) weaponPointNode.child("location").attribute("y").as_int());
+
+	targeted = weaponTypeNode.child("targeted").text().as_bool();
 }
 
 EnemyShip::EnemyWeaponSystem::~EnemyWeaponSystem() {
@@ -124,16 +129,20 @@ void EnemyShip::EnemyWeaponSystem::updatePosition(const Vector2& shipPosition) {
 
 EnemyBullet* EnemyShip::EnemyWeaponSystem::launchBullet(const Vector2& target) {
 
-	EnemyBullet* bullet = bulletStore[nextBulletInStore++].get();
-	bullet->setPosition(systemLocation);
-	Vector2 direction = target - systemLocation;
-	direction.Normalize();
-	bullet->direction = direction;
-	bullet->isAlive = true;
+	if (!targeted)
+		return launchBullet();
+	else {
+		EnemyBullet* bullet = bulletStore[nextBulletInStore++].get();
+		bullet->setPosition(systemLocation);
+		Vector2 direction = target - systemLocation;
+		direction.Normalize();
+		bullet->direction = direction;
+		bullet->isAlive = true;
 
-	if (nextBulletInStore >= bulletStore.size())
-		nextBulletInStore = 0;
-	return bullet;
+		if (nextBulletInStore >= bulletStore.size())
+			nextBulletInStore = 0;
+		return bullet;
+	}
 }
 
 EnemyBullet* EnemyShip::EnemyWeaponSystem::launchBullet() {

@@ -37,7 +37,7 @@ public:
 	//unique_ptr<TextLabel> mouseLoc;
 	//unique_ptr<TextLabel> cameraLoc;
 	//unique_ptr<TextLabel> bulletCount;
-	//unique_ptr<TextLabel> enemyCount;
+	unique_ptr<TextLabel> enemyCount;
 
 
 	unique_ptr<RectangleSprite> pauseOverlay;

@@ -6,12 +6,14 @@
 
 class ArrowEnemyWave : public Wave {
 public:
-	
+
 	virtual ~ArrowEnemyWave();
 
 	virtual bool initialize(GFXAssetManager* gfxAssets, xml_node shipNode) override;
 	virtual void update(double deltaTime, PlayerShip* player) override;
 
+
+protected:
 	virtual void launchNewWave() override;
 
 private:

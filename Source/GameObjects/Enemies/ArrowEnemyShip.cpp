@@ -42,8 +42,7 @@ void ArrowEnemyShip::update(double deltaTime, PlayerShip* player, vector<Bullet*
 	else {
 		position = camera.screenToWorld(Vector2::Lerp(midPos, endPos, float(percent - .50) * 2));
 
-		if (!camera.viewContains(position)) {
-			isAlive = false;
+		if (position.y < camera.screenToWorld(Vector2(0, float(-120))).y) {
 			reset();
 		}
 

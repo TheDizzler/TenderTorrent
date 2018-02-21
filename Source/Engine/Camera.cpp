@@ -123,17 +123,6 @@ void Camera::moveCamera(const Vector2& cameraMovement) {
 }
 
 
-//RECT* Camera::viewportWorldBoundary() {
-//
-//	RECT* rect = new RECT{
-//		(int) viewportPosition.x, (int) viewportPosition.y,
-//		(int) (viewportWidth - viewportPosition.x),
-//		(int) (viewportHeight - viewportPosition.y)};
-//
-//	return rect;
-//}
-
-
 void Camera::centerOn(const Vector2& pos/*, bool showWholeLevel*/) {
 
 	positionDelta = position - pos;
@@ -152,24 +141,6 @@ Vector2 Camera::worldToScreen(Vector2 worldPosition) {
 Vector2 Camera::screenToWorld(Vector2 screenPosition) {
 	return Vector2::Transform(screenPosition, translationMatrix().Invert());
 }
-
-
-
-//void Camera::zoomToFitBackground() {
-//	int widthDif = levelWidth - viewX;
-//	int heightDif = levelHeight - viewY;
-//	if (widthDif > heightDif) {
-//		zoom = (viewportWidth / levelWidth);
-//		viewX = (viewportWidth / zoom / 2);
-//		viewY = (viewportHeight / zoom / 2);
-//
-//	} else {
-//		zoom = (viewportHeight / levelHeight);
-//		viewX = (viewportWidth / zoom / 2);
-//		viewY = (viewportHeight / zoom / 2);
-//
-//	}
-//}
 
 
 Matrix Camera::translationMatrix() {

@@ -14,10 +14,11 @@ public:
 	void reloadGraphicsAssets();
 
 	void clear();
-	virtual void launchNewWave() = 0;
+	
 
 	void clearEnemies();
 
+	void checkHitDetection(Bullet* bullet);
 	/** Updates ships only (not bullets). Removes dead enemy bullets. */
 	virtual void update(double deltaTime, PlayerShip* player);
 	/** Draws both ships and enemy bullets. */
@@ -28,12 +29,14 @@ public:
 
 	vector<Bullet*> liveBullets;
 	vector<EnemyShip*> shipStore;
-	
+	size_t shipsLaunched = 0;
 protected:
 	size_t MAX_SHIPS_IN_STORE = 2;
 	size_t nextShipInStore = 0;
 	
-	virtual bool checkForLaunch();
+	virtual void launchNewWave() = 0;
+	
+	bool checkForLaunch();
 
 	double timeBetweenChecks = 3;
 	double timeUntilNextCheck = timeBetweenChecks;

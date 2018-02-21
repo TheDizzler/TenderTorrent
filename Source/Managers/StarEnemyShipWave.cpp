@@ -40,10 +40,25 @@ void StarEnemyShipWave::launchNewWave() {
 	timeSinceLastLaunch = 0;
 
 	EnemyShip* next = shipStore[nextShipInStore++];
-	next->launch();
-	next = shipStore[nextShipInStore++];
+	while (next->isAlive) {
+		if (nextShipInStore >= shipStore.size())
+			nextShipInStore = 0;
+		next = shipStore[nextShipInStore++];
+	}
 	next->launch();
 
 	if (nextShipInStore >= shipStore.size())
 		nextShipInStore = 0;
+	next = shipStore[nextShipInStore++];
+	while (next->isAlive) {
+		if (nextShipInStore >= shipStore.size())
+			nextShipInStore = 0;
+		next = shipStore[nextShipInStore++];
+	}
+	next->launch();
+
+	if (nextShipInStore >= shipStore.size())
+		nextShipInStore = 0;
+
+	shipsLaunched += 2;
 }

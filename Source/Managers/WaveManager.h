@@ -12,14 +12,16 @@ public:
 	void clear();
 	void clearEnemies();
 
+	int getLiveCount();
 	int getBulletCount();
+	void checkHitDetection(Bullet* bullet);
 	void update(double deltaTime, PlayerShip* player);
 	void draw(SpriteBatch* batch);
 
 	/* Update to play when level finished. */
 	void finishedUpdate(double deltaTime);
 
-	vector<Wave*> waves;
+	vector<unique_ptr<Wave>> waves;
 private:
 
 

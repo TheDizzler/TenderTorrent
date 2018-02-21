@@ -38,7 +38,6 @@ void PlayerShip::reset() {
 	isAlive = true;
 	maxEnergy = startMaxEnergy;
 	energy = startMaxEnergy;
-	//position = PLAYER_START_POSITION;
 
 	rightWeaponSlot->update(0, position);
 	leftWeaponSlot->update(0, position);
@@ -210,6 +209,9 @@ void PlayerShip::finishedUpdate(double deltaTime) {
 const double TIME_TO_DIE = 5.0;
 const double EXPLOSION_STAGGER_TIME = .2;
 void PlayerShip::deathUpdate(double deltaTime) {
+
+	// auto-movement from camera movement
+	position -= camera.getDelta();
 
 	Vector2 movement = deathVector * (float) deltaTime;
 	position += movement;

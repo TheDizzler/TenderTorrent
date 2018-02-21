@@ -8,8 +8,6 @@
 
 
 WaveManager::~WaveManager() {
-	for (Wave* wave : waves)
-		delete wave;
 }
 
 
@@ -21,47 +19,47 @@ bool WaveManager::initialize(GFXAssetManager* gfxAssets) {
 	xml_node root = xml_enemies.child("root");
 
 	xml_node shipNode = root.child("ship");
-	Wave* wave = new RearAttackWave();
+	unique_ptr<Wave> wave = make_unique<RearAttackWave>();
 	if (!wave->initialize(gfxAssets, shipNode))
 		return false;
-	waves.push_back(wave);
+	waves.push_back(move(wave));
 
 	shipNode = shipNode.next_sibling();
-	wave = new StarEnemyShipWave();
+	wave.reset(new StarEnemyShipWave());
 	if (!wave->initialize(gfxAssets, shipNode))
 		return false;
-	waves.push_back(wave);
+	waves.push_back(move(wave));
 
 	shipNode = shipNode.next_sibling();
-	wave = new ArrowEnemyWave();
+	wave.reset(new ArrowEnemyWave());
 	if (!wave->initialize(gfxAssets, shipNode))
 		return false;
-	waves.push_back(wave);
+	waves.push_back(move(wave));
 
 	shipNode = shipNode.next_sibling();
-	wave = new BigShipAWave();
+	wave.reset(new BigShipAWave());
 	if (!wave->initialize(gfxAssets, shipNode))
 		return false;
-	waves.push_back(wave);
+	waves.push_back(move(wave));
 
 	return true;
 }
 
 void WaveManager::reloadGraphicsAssets() {
-	for (Wave* wave : waves)
+	for (const auto& wave : waves)
 		wave->reloadGraphicsAssets();
 }
 
 void WaveManager::clear() {
 
-	for each (Wave* wave in waves)
+	for (const auto& wave : waves)
 		wave->clear();
 
 	waves.clear();
 }
 
 void WaveManager::clearEnemies() {
-	for each (Wave* wave in waves) {
+	for (const auto& wave : waves) {
 		wave->clearEnemies();
 		for (Bullet* bullet : wave->liveBullets)
 			bullet->isAlive = false;
@@ -69,19 +67,36 @@ void WaveManager::clearEnemies() {
 }
 
 
+
+int WaveManager::getLiveCount() {
+	int count = 0;
+	for (const auto& wave : waves) {
+		count += wave->shipsLaunched;
+	}
+	return count;
+}
 int liveBullets;
 int WaveManager::getBulletCount() {
 	return liveBullets;
 }
 
+
+void WaveManager::checkHitDetection(Bullet* bullet) {
+
+	for (const auto& wave : waves) {
+		wave->checkHitDetection(bullet);
+	}
+
+}
+
 void WaveManager::update(double deltaTime, PlayerShip* player) {
 
-	liveBullets = 0;
-	for (Wave* wave : waves) {
+	//liveBullets = 0;
+	for (const auto& wave : waves) {
 		wave->update(deltaTime, player);
 
 		for (Bullet* bullet : wave->liveBullets) {
-			++liveBullets;
+			//++liveBullets;
 			bullet->update(deltaTime);
 			if (bullet->getHitArea()->collision(&player->getHitArea())) {
 				bullet->isAlive = false;
@@ -93,14 +108,14 @@ void WaveManager::update(double deltaTime, PlayerShip* player) {
 
 
 
-void WaveManager::draw(SpriteBatch * batch) {
+void WaveManager::draw(SpriteBatch* batch) {
 
-	for (Wave* wave : waves)
+	for (const auto& wave : waves)
 		wave->draw(batch);
 
 }
 
 void WaveManager::finishedUpdate(double deltaTime) {
-	for (Wave* wave : waves)
+	for (const auto& wave : waves)
 		wave->finishedUpdate(deltaTime);
 }

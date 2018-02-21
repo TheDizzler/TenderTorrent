@@ -34,6 +34,7 @@ protected:
 	protected:
 		/* Weapon system position relative to ship's origin. */
 		Vector2 positionOffset;
+		bool targeted;
 	};
 public:
 	EnemyShip();
@@ -52,6 +53,7 @@ public:
 	virtual void drawExplosion(SpriteBatch* batch);
 
 	int getHealth();
+	
 	void takeDamage(int damageTaken);
 
 	/** Points awarded for killing. */

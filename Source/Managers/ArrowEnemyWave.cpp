@@ -67,12 +67,20 @@ void ArrowEnemyWave::launchNewWave() {
 void ArrowEnemyWave::launchNextMiniWave() {
 
 	ArrowEnemyShip* next = (ArrowEnemyShip*) shipStore[nextShipInStore++];
+	while (next->isAlive) {
+		if (nextShipInStore >= shipStore.size())
+			nextShipInStore = 0;
+		next = static_cast<ArrowEnemyShip*>(shipStore[nextShipInStore++]);
+	}
 	next->setStart(startX);
 	next->launch();
 
+	
 	if (nextShipInStore >= shipStore.size())
 		nextShipInStore = 0;
 
 	++miniWavesLaunched;
 	timeSinceLastMiniLaunch = 0;
+
+	++shipsLaunched;
 }

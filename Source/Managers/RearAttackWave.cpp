@@ -67,7 +67,11 @@ void RearAttackWave::launchNextMiniWave() {
 
 
 	EnemyShip* next = shipStore[nextShipInStore++];
-	next = shipStore[nextShipInStore++];
+	while (next->isAlive) {
+		if (nextShipInStore >= shipStore.size())
+			nextShipInStore = 0;
+		next = shipStore[nextShipInStore++];
+	}
 	next->launch();
 
 	if (nextShipInStore >= shipStore.size())
@@ -75,4 +79,6 @@ void RearAttackWave::launchNextMiniWave() {
 
 	++miniWavesLaunched;
 	timeSinceLastMiniLaunch = 0;
+
+	++shipsLaunched;
 }

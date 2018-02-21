@@ -12,6 +12,8 @@ protected:
 		virtual void draw(SpriteBatch* batch);
 
 		virtual void updatePosition(const Vector2& shipPosition) override;
+
+		virtual void setRotation(const Vector2& targetPosition);
 	protected:
 		Sprite turretSprite;
 	};
@@ -35,8 +37,22 @@ private:
 
 	BigShipState state;
 
-	/* set in xml */
+	/* Time ship stays in ATTACK state...almost. Actually includes the ENTERING time. */
+	float TIME_TO_ATTACK;
+
+
+	/** Position where BigShip stops moving forward and commences it's attack pattern. */
+	Vector2 attackPosition = Vector2::Zero;
+	/* Time to reach AttackPosition set in xml */
 	double timeToTravel;
+	double timeTraveling = 0;
+	double timeSinceExiting;
+
+	float TIME_TO_CROSS_SCREEN = 5;
+	Vector2 leftMost;
+	Vector2 rightMost;
+	Vector2 startTravel, endTravel;
+	Vector2 startExit, endExit;
 
 	
 	HexTurret* hexTurretL;

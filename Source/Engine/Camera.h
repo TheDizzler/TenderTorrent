@@ -1,9 +1,5 @@
 #pragma once
 
-#include <d3d11_1.h>
-#include <SimpleMath.h>
-
-
 #include "../globals.h"
 #include "../Managers/LevelManager.h"
 
@@ -45,8 +41,6 @@ public:
 	void adjustZoom(float amount);
 	
 	void moveCamera(const Vector2& cameraMovement);
-
-	//RECT* viewportWorldBoundary();
 
 	void centerOn(const Vector2& pos);
 

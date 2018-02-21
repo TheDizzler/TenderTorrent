@@ -3,12 +3,12 @@
 
 	<ship name="Rear Attack Ship" mirrored="true">
 		<sprite>EnemyShip RearAttack</sprite>
-		<health>6</health>
+		<health>25</health>
 		<speed>0</speed>
 		<weaponPoints>
 			<weapon type="Turret Cannon">
 				<location x="0" y="-8"/>
-				<fireRate delay="2.5" repeat="1" />
+				<fireRate delay="2.5"/>
 			</weapon>
 		</weaponPoints>
 
@@ -36,22 +36,22 @@
 
 	<ship name="Star Drift Ship">
 		<sprite>EnemyShip Star</sprite>
-		<health>10</health>
+		<health>50</health>
 		<timeToTravel>4.8</timeToTravel>
 		<weaponPoints>
 			<weapon type="Cannon">
 				<location x="0" y="0" />
-				<fireRate delay="2.5" repeat="1" />
+				<fireRate delay="2.5"/>
 				<angle>0</angle>
 			</weapon>
 			<weapon type="Cannon">
 				<location x="0" y="0" />
-				<fireRate delay="2.5" repeat="1" />
+				<fireRate delay="2.5"/>
 				<angle>30</angle>
 			</weapon>
 			<weapon type="Cannon">
 				<location x="0" y="0" />
-				<fireRate delay="2.5" repeat="1" />
+				<fireRate delay="2.5"/>
 				<angle>60</angle>
 			</weapon>
 		</weaponPoints>
@@ -76,13 +76,13 @@
 		<!-- A ship that comes in threes and has a random start location at the bottom of the screen.
 		First flies straight then drifts in a new direction after firing. -->
 		<sprite>EnemyShip Arrow</sprite>
-		<health>5</health>
+		<health>15</health>
 		<timeToTravel>5</timeToTravel>
 		<midPoint>WINDOW_HEIGHT / 2</midPoint>
 		<weaponPoints>
 			<weapon type="Turret Cannon">
 				<location x="0" y="0" />
-				<fireRate delay=".5" repeat="3" />
+				<fireRate delay=".5"/>
 			</weapon>
 		</weaponPoints>
 
@@ -91,20 +91,50 @@
 
 	<ship name="BigShipA">
 		<sprite>BigShipA</sprite>
-		<health>100</health>
+		<health>300</health>
 		<timeToTravel>4</timeToTravel>
+		<attackPosition>250</attackPosition>
+		<attackTime>18</attackTime>
 		<weaponPoints>
 			<weapon type="Turret Cannon">
 				<sprite name="HexTurret" />
-				<location x="-57" y="-30" />
+				<location x="-57" y="-28" />
+				<fireRate delay="1" />
 			</weapon>
 			<weapon type="Turret Cannon">
 				<sprite name="HexTurret" />
-				<location x="40" y="-30" />
+				<location x="40" y="-28" />
+				<fireRate delay="1"/>
+			</weapon>
+
+			<weapon type="Cannon">
+				<location x="0" y="0" />
+				<fireRate delay="2.5"/>
+				<angle>0</angle>
+			</weapon>
+			<weapon type="Cannon">
+				<location x="0" y="0" />
+				<fireRate delay="2.5"/>
+				<angle>30</angle>
+			</weapon>
+			<weapon type="Cannon">
+				<location x="0" y="0" />
+				<fireRate delay="2.5"/>
+				<angle>60</angle>
+			</weapon>
+			<weapon type="Cannon">
+				<location x="0" y="0" />
+				<fireRate delay="2.5"/>
+				<angle>-30</angle>
+			</weapon>
+			<weapon type="Cannon">
+				<location x="0" y="0" />
+				<fireRate delay="2.5"/>
+				<angle>-60</angle>
 			</weapon>
 		</weaponPoints>
 
-		<waveData maxTimeBetweenWaves="10" timeBetweenChanceForWave="3" />
+		<waveData maxTimeBetweenWaves="30" timeBetweenChanceForWave="10" />
 	</ship>
 
 
@@ -126,14 +156,14 @@
 			As a rule, only one projectile may be fired from a single system at a time. -->
 		<weaponType name="Cannon">
 			<sprite>Enemy Bullet A</sprite>
-			<target>0</target>
+			<targeted>false</targeted>
 			<damage>10</damage>
 			<bulletSpeed>400</bulletSpeed>
 		</weaponType>
 
 		<weaponType name="Turret Cannon">
 			<sprite>Enemy Bullet A</sprite>
-			<target>player</target>
+			<targeted>true</targeted>
 			<damage>10</damage>
 			<bulletSpeed>400</bulletSpeed>
 		</weaponType>
