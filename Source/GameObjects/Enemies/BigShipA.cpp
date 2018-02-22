@@ -31,11 +31,16 @@ BigShipA::BigShipA(xml_node shipNode) : EnemyShip() {
 	position = Globals::SHIP_STORE_POSITION;
 	health = maxHealth;
 
+
+	engineL.load(gfxAssets.getAnimation("EngineBurn"));
+	engineR.load(gfxAssets.getAnimation("EngineBurn"));
+
 }
 
 
 BigShipA::~BigShipA() {
 }
+
 
 void BigShipA::reset() {
 	EnemyShip::reset();
@@ -46,13 +51,13 @@ void BigShipA::launch() {
 	EnemyShip::launch();
 
 	leftMost = Vector2(camera.viewportPosition.x + getWidth() / 2, attackPosition.y);
-	rightMost = Vector2(camera.viewportWidth, attackPosition.y);
+	rightMost = Vector2((float)camera.viewportWidth, attackPosition.y);
 
 	state = BigShipState::ENTERING;
 
 	mt19937 rng;
 	rng.seed(random_device{}());
-	uniform_int_distribution<mt19937::result_type> randStartPos(0, TIME_TO_CROSS_SCREEN * 10);
+	uniform_int_distribution<mt19937::result_type> randStartPos(0, (int)TIME_TO_CROSS_SCREEN * 10);
 
 	timeTraveling = float(randStartPos(rng)) / 10;
 
@@ -71,7 +76,7 @@ void BigShipA::launch() {
 
 	startPos.x = Vector2::Lerp(
 		startTravel, endTravel,
-		timeTraveling / TIME_TO_CROSS_SCREEN).x;
+		float(timeTraveling / TIME_TO_CROSS_SCREEN)).x;
 	attackPosition.x = startPos.x;
 }
 
@@ -125,7 +130,7 @@ void BigShipA::update(double deltaTime, PlayerShip* player, vector<Bullet*>& liv
 			timeTraveling += deltaTime;
 			setPosition(camera.screenToWorld(Vector2::Lerp(
 				startTravel, endTravel,
-				timeTraveling / TIME_TO_CROSS_SCREEN)));
+				float(timeTraveling / TIME_TO_CROSS_SCREEN))));
 
 			if (timeTraveling >= TIME_TO_CROSS_SCREEN) {
 				timeTraveling = 0;
@@ -139,7 +144,7 @@ void BigShipA::update(double deltaTime, PlayerShip* player, vector<Bullet*>& liv
 				timeSinceExiting = 0;
 				startExit = camera.worldToScreen(position);
 				endExit = startExit;
-				endExit.y = camera.viewportHeight;
+				endExit.y = (float) camera.viewportHeight;
 			}
 			break;
 		case BigShipState::EXITING:
@@ -158,7 +163,7 @@ void BigShipA::update(double deltaTime, PlayerShip* player, vector<Bullet*>& liv
 
 			percent = timeSinceExiting / timeToTravel;
 			setPosition(camera.screenToWorld(Vector2::Lerp(
-				startExit, endExit, percent)));
+				startExit, endExit, (float)percent)));
 
 			if (percent > 1.2) { // give it a bit of time to go away
 				reset();
@@ -166,12 +171,17 @@ void BigShipA::update(double deltaTime, PlayerShip* player, vector<Bullet*>& liv
 
 			break;
 	}
+
+	engineL.update(deltaTime);
+	engineR.update(deltaTime);
 }
 
 void BigShipA::draw(SpriteBatch* batch) {
 	EnemyShip::draw(batch);
 	hexTurretL->draw(batch);
 	hexTurretR->draw(batch);
+	engineL.draw(batch);
+	engineR.draw(batch);
 }
 
 void BigShipA::setPosition(const Vector2& newPosition) {

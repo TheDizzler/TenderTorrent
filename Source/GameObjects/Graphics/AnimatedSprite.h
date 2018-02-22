@@ -1,9 +1,10 @@
 #pragma once
-#include "../../../DXTKGui/BaseGraphics/IElement2D.h"
 
+#include "../../../DXTKGui/BaseGraphics/GraphicsAsset.h"
 
 class AnimatedSprite : public IElement2D {
 public:
+	AnimatedSprite();
 	AnimatedSprite(const Vector2& position);
 	virtual ~AnimatedSprite();
 

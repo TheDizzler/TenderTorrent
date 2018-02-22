@@ -21,13 +21,15 @@ void Camera::setLevel(Background* bgMan) {
 void Camera::setViewport(D3D11_VIEWPORT cameraViewport) {
 	viewportWidth = (int) cameraViewport.Width;
 	viewportHeight = (int) cameraViewport.Height;
-	viewportCenter = Vector3(viewportWidth * .5f, viewportHeight * .5f, 0);
+	viewportCenter = Vector3(viewportWidth * .5f + viewportPosition.x,
+		viewportHeight * .5f + viewportPosition.y, 0);
 }
 
 void Camera::setViewport(int vwprtWdth, int vwprtHght) {
 	viewportWidth = vwprtWdth;
 	viewportHeight = vwprtHght;
-	viewportCenter = Vector3(viewportWidth * .5f, viewportHeight * .5f, 0);
+	viewportCenter = Vector3(viewportWidth * .5f + viewportPosition.x,
+		viewportHeight * .5f + viewportPosition.y, 0);
 }
 
 void Camera::updateViewport(const Vector2& viewport, const Vector2& viewportPos, bool zoomToFit) {

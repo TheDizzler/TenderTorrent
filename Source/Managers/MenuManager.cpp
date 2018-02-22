@@ -62,31 +62,7 @@ bool MenuManager::initialize(ComPtr<ID3D11Device> device) {
 }
 
 
-bool lastStateDown;
 void MenuManager::update(double deltaTime) {
-
-
-	//Vector2 mousePos = mouse->getPosition();
-	//if (mousePos.x > Globals::WINDOW_WIDTH) {
-	//	mousePos.x = Globals::WINDOW_WIDTH;
-	//	//SetCursorPos(mousePos.x, mousePos.y);
-	//	ShowCursor(true);
-	//}
-	//if (mousePos.y > Globals::WINDOW_HEIGHT) {
-	//	mousePos.y = Globals::WINDOW_HEIGHT;
-	//	//SetCursorPos(mousePos.x, mousePos.y);
-	//	ShowCursor(true);
-	//}
-	//if (mousePos.x < 0) {
-	//	mousePos.x = 0;
-	//	//SetCursorPos(mousePos.x, mousePos.y);
-	//	ShowCursor(true);
-	//}
-	//if (mousePos.y < 0) {
-	//	mousePos.y = 0;
-	//	//SetCursorPos(mousePos.x, mousePos.y);
-	//	ShowCursor(true);
-	//}
 
 	if (switchTo != NULL) {
 		if (transitionManager.runTransition(deltaTime)) {
@@ -125,9 +101,6 @@ void MenuManager::textureDraw(SpriteBatch* batch) {
 	batch->End();
 }
 
-//void MenuManager::safedraw(SpriteBatch* batch) {
-//	currentScreen->safedraw(batch);
-//}
 
 void MenuManager::pause() {
 	// do nothing?

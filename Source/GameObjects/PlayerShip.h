@@ -2,15 +2,16 @@
 
 #include "../Managers/GFXAssetManager.h"
 
-#include "LaserSystem.h"
-#include "../globals.h"
-#include "Turret.h"
-#include "Graphics\GameObject.h"
+#include "WeaponSystems/LaserSystem.h"
+#include "WeaponSystems/Turret.h"
+#include "Graphics/GameObject.h"
+
+
 
 /* In screenspace. */
-static const Vector2 PLAYER_START_POSITION(
-	(float)Globals::WINDOW_WIDTH / 2,
-	(float)Globals::WINDOW_HEIGHT + 175);
+//static const Vector2 PLAYER_START_POSITION(
+//	(float)camera.viewportCenter.x ,
+//	(float)camera.viewportHeight + 175);
 
 
 class PlayerShip : public GameObject {
@@ -24,7 +25,7 @@ public:
 		TODO?
 			Loading bullets should be done internally of weapon system.
 	*/
-	bool loadBullet(GFXAssetManager* gfxAssets);
+	//bool loadBullet(GFXAssetManager* gfxAssets);
 
 	virtual void setPosition(const Vector2& newPosition) override;
 	

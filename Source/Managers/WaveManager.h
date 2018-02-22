@@ -12,7 +12,7 @@ public:
 	void clear();
 	void clearEnemies();
 
-	int getLiveCount();
+	size_t getLiveCount();
 	int getBulletCount();
 	void checkHitDetection(Bullet* bullet);
 	void update(double deltaTime, PlayerShip* player);

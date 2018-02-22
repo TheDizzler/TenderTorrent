@@ -2,6 +2,9 @@
 #include "AnimatedSprite.h"
 
 
+AnimatedSprite::AnimatedSprite() {
+}
+
 AnimatedSprite::AnimatedSprite(const Vector2& pos) {
 	position = pos;
 	hitArea.position = position;

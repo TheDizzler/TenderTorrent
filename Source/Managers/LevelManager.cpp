@@ -70,10 +70,10 @@ bool LevelManager::loadLevel(ComPtr<ID3D11Device> device, const char_t* levelFil
 	gameOverTimer = 0;
 
 	playerShip.load(gfxAssets.getAsset("PlayerShip Hull"));
-	if (!playerShip.loadBullet(&gfxAssets)) {
-		MessageBox(NULL, L"Failed to load weapons", L"ERROR", MB_OK);
-		return false;
-	}
+	//if (!playerShip.loadBullet(&gfxAssets)) {
+	//	MessageBox(NULL, L"Failed to load weapons", L"ERROR", MB_OK);
+	//	return false;
+	//}
 	playerShip.setDimensions(&playerShip);
 	playerShip.reset();
 
@@ -87,7 +87,7 @@ bool LevelManager::loadLevel(ComPtr<ID3D11Device> device, const char_t* levelFil
 
 
 	Vector2 startPos = bgManager.getStartPosition();
-	startPos.y += Globals::WINDOW_HEIGHT / 2;
+	startPos.y += camera.viewportHeight / 2;
 	playerShip.setPosition(startPos);
 
 

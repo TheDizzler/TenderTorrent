@@ -9,8 +9,8 @@ LPCTSTR wndClassName = L"Tender Torrent";
 HWND hwnd;
 
 
-int Globals::WINDOW_WIDTH = 800;
-int Globals::WINDOW_HEIGHT = 600;
+int Globals::WINDOW_WIDTH = 1024;
+int Globals::WINDOW_HEIGHT = 768;
 int Globals::vsync_enabled = 0;
 bool Globals::FULL_SCREEN = false;
 

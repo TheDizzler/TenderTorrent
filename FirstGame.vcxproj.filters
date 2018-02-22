@@ -60,19 +60,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\GameObjects\Bullet.cpp">
-      <Filter>Source Files\GameObjects\PlayerShip</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\GameObjects\WeaponSystem.cpp">
-      <Filter>Source Files\GameObjects\PlayerShip</Filter>
-    </ClCompile>
     <ClCompile Include="Source\GameObjects\PlayerShip.cpp">
-      <Filter>Source Files\GameObjects\PlayerShip</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\GameObjects\LaserSystem.cpp">
-      <Filter>Source Files\GameObjects\PlayerShip</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\GameObjects\LaserBolt.cpp">
       <Filter>Source Files\GameObjects\PlayerShip</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\GameEngine.cpp">
@@ -86,12 +74,6 @@
     </ClCompile>
     <ClCompile Include="Source\Engine\Input.cpp">
       <Filter>Source Files\Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\GameObjects\Turret.cpp">
-      <Filter>Source Files\GameObjects\PlayerShip</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\GameObjects\SunBullet.cpp">
-      <Filter>Source Files\GameObjects\PlayerShip</Filter>
     </ClCompile>
     <ClCompile Include="Source\GameObjects\Graphics\Background.cpp">
       <Filter>Source Files\GameObjects\Backgrounds</Filter>
@@ -249,24 +231,33 @@
     <ClCompile Include="Source\Managers\BigShipAWave.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\GameObjects\WeaponSystems\LaserBolt.cpp">
+      <Filter>Source Files\GameObjects\PlayerShip</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameObjects\WeaponSystems\LaserSystem.cpp">
+      <Filter>Source Files\GameObjects\PlayerShip</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameObjects\WeaponSystems\SunBullet.cpp">
+      <Filter>Source Files\GameObjects\PlayerShip</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameObjects\WeaponSystems\Turret.cpp">
+      <Filter>Source Files\GameObjects\PlayerShip</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameObjects\WeaponSystems\WeaponSystem.cpp">
+      <Filter>Source Files\GameObjects\PlayerShip</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameObjects\WeaponSystems\BasicGun.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameObjects\WeaponSystems\Bullet.cpp">
+      <Filter>Source Files\GameObjects\PlayerShip</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\globals.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\GameObjects\LaserBolt.h">
-      <Filter>Header Files\GameObjects\PlayerShip</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\GameObjects\LaserSystem.h">
-      <Filter>Header Files\GameObjects\PlayerShip</Filter>
-    </ClInclude>
     <ClInclude Include="Source\GameObjects\PlayerShip.h">
-      <Filter>Header Files\GameObjects\PlayerShip</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\GameObjects\WeaponSystem.h">
-      <Filter>Header Files\GameObjects\PlayerShip</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\GameObjects\Bullet.h">
       <Filter>Header Files\GameObjects\PlayerShip</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\GameEngine.h">
@@ -277,12 +268,6 @@
     </ClInclude>
     <ClInclude Include="Source\Engine\Input.h">
       <Filter>Header Files\Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\GameObjects\Turret.h">
-      <Filter>Header Files\GameObjects\PlayerShip</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\GameObjects\SunBullet.h">
-      <Filter>Header Files\GameObjects\PlayerShip</Filter>
     </ClInclude>
     <ClInclude Include="Source\assets.h">
       <Filter>Header Files</Filter>
@@ -454,6 +439,27 @@
     </ClInclude>
     <ClInclude Include="Source\Managers\BigShipAWave.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameObjects\WeaponSystems\LaserBolt.h">
+      <Filter>Header Files\GameObjects\PlayerShip</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameObjects\WeaponSystems\LaserSystem.h">
+      <Filter>Header Files\GameObjects\PlayerShip</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameObjects\WeaponSystems\SunBullet.h">
+      <Filter>Header Files\GameObjects\PlayerShip</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameObjects\WeaponSystems\Turret.h">
+      <Filter>Header Files\GameObjects\PlayerShip</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameObjects\WeaponSystems\WeaponSystem.h">
+      <Filter>Header Files\GameObjects\PlayerShip</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameObjects\WeaponSystems\BasicGun.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameObjects\WeaponSystems\Bullet.h">
+      <Filter>Header Files\GameObjects\PlayerShip</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

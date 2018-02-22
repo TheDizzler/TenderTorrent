@@ -58,7 +58,7 @@ void ArrowEnemyWave::launchNewWave() {
 	mt19937 rng;
 	rng.seed(random_device{}());
 	uniform_int_distribution<mt19937::result_type> rand(
-		shipWidth, camera.viewportPosition.x + camera.viewportWidth - shipWidth);
+		shipWidth, int(camera.viewportPosition.x) + camera.viewportWidth - shipWidth);
 	startX = rand(rng);
 
 	launchNextMiniWave();

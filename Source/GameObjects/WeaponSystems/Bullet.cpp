@@ -1,15 +1,16 @@
-#include "../pch.h"
+#include "../../pch.h"
 #include "Bullet.h"
-#include "../Engine/GameEngine.h"
+#include "../../Engine/GameEngine.h"
 
-Bullet::Bullet() :AnimatedSprite(weaponStore) {
+Bullet::Bullet() : AnimatedSprite(weaponStore) {
 	isAlive = false;
+	load(gfxAssets.getAnimation("Cross Bullet"));
 }
 
-Bullet::Bullet(const Vector2 &position) : AnimatedSprite(position) {
-
-	isAlive = false;
-}
+//Bullet::Bullet(const Vector2 &position) : AnimatedSprite(position) {
+//
+//	isAlive = false;
+//}
 
 Bullet::~Bullet() {
 }
@@ -25,13 +26,15 @@ void Bullet::update(double deltaTime) {
 	setPosition(newposition);
 	timeAlive += deltaTime;
 
-	//if (position.y < 0) {
 	if (!camera.viewContains(position)) {
 		isAlive = false;
-		position = weaponStore;
-		timeAlive = 0;
 	}
 
+	if (!isAlive) {
+		setPosition(weaponStore);
+		currentFrameTime = 0;
+		timeAlive = 0;
+	}
 	AnimatedSprite::update(deltaTime);
 }
 

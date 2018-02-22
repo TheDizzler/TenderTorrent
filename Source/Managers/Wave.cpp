@@ -34,7 +34,7 @@ void Wave::clear() {
 void Wave::clearEnemies() {
 	for (EnemyShip* enemy : shipStore)
 		if (enemy->isAlive)
-			enemy->takeDamage(1000);
+			enemy->takeDamage(10000);
 }
 
 void Wave::checkHitDetection(Bullet* bullet) {

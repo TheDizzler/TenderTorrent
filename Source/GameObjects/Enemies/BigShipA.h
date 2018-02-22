@@ -31,6 +31,9 @@ public:
 	virtual void setPosition(const Vector2& newPosition) override;
 
 private:
+	AnimatedSprite engineL;
+	AnimatedSprite engineR;
+
 	enum BigShipState {
 		ENTERING, ATTACK, EXITING
 	};

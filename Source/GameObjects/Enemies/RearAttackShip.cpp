@@ -3,7 +3,6 @@
 #include "../../globals.h"
 #include "../../Engine/GameEngine.h"
 
-using namespace Globals;
 
 RearAttackShip::RearAttackShip(xml_node mirrorNode) {
 
@@ -14,13 +13,17 @@ RearAttackShip::RearAttackShip(xml_node mirrorNode) {
 	xml_node climaxNode = mirrorNode.child("climax");
 	xml_node endNode = mirrorNode.child("end");
 	startPos = Vector2(
-		getFloatFrom(startNode.attribute("x")), getFloatFrom(startNode.attribute("y")));
+		getFloatFrom(startNode.attribute("x")) + camera.viewportPosition.x,
+		getFloatFrom(startNode.attribute("y")));
 	controlPoint = Vector2(
-		getFloatFrom(controlNode.attribute("x")), getFloatFrom(controlNode.attribute("y")));
+		getFloatFrom(controlNode.attribute("x")) + camera.viewportPosition.x,
+		getFloatFrom(controlNode.attribute("y")));
 	climaxPos = Vector2(
-		getFloatFrom(climaxNode.attribute("x")), getFloatFrom(climaxNode.attribute("y")));;
+		getFloatFrom(climaxNode.attribute("x")) + camera.viewportPosition.x,
+		getFloatFrom(climaxNode.attribute("y")));;
 	endPos = Vector2(
-		getFloatFrom(endNode.attribute("x")), getFloatFrom(endNode.attribute("y")));
+		getFloatFrom(endNode.attribute("x")) + camera.viewportPosition.x,
+		getFloatFrom(endNode.attribute("y")));
 
 
 	xml_node weaponPointsNode = shipNode.child("weaponPoints");
@@ -41,7 +44,7 @@ RearAttackShip::RearAttackShip(xml_node mirrorNode) {
 
 
 	//position = startPos;
-	position = SHIP_STORE_POSITION;
+	position = Globals::SHIP_STORE_POSITION;
 	health = maxHealth;
 
 	rotation = XM_PI;
@@ -76,7 +79,7 @@ void RearAttackShip::update(double deltaTime, PlayerShip* player, vector<Bullet*
 		}
 	}
 
-	if (position.y > camera.screenToWorld(Vector2(0, float(Globals::WINDOW_HEIGHT + 120))).y) {
+	if (position.y > camera.screenToWorld(Vector2(0, float(camera.viewportHeight + 120))).y) {
 		reset();
 	}
 }

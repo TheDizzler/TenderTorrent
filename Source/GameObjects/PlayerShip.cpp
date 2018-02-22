@@ -1,16 +1,16 @@
 #include "../pch.h"
 #include "PlayerShip.h"
-//#include "../Managers/GameManager.h"
+#include "../GameObjects/WeaponSystems/BasicGun.h"
 #include "../Engine/GameEngine.h"
 #include <random>
 #include <algorithm>
-
+//#include "../globals.h"
 
 PlayerShip::PlayerShip() : GameObject() {
 
 
-	rightWeaponSlot.reset(new WeaponSystem(Vector2(26, -15)));
-	leftWeaponSlot.reset(new WeaponSystem(Vector2(-26, -15)));
+	rightWeaponSlot.reset(new BasicGun(Vector2(26, -15)));
+	leftWeaponSlot.reset(new BasicGun(Vector2(-26, -15)));
 	centerWeaponSlot.reset(new LaserSystem(Vector2(0, 0)));
 
 	weaponSlots.push_back(rightWeaponSlot.get());
@@ -27,6 +27,7 @@ PlayerShip::~PlayerShip() {
 
 	liveBullets.clear();
 	explosions.clear();
+	weaponSlots.clear();
 }
 
 void PlayerShip::reset() {
@@ -56,19 +57,19 @@ void PlayerShip::reset() {
 
 
 
-bool PlayerShip::loadBullet(GFXAssetManager* gfxAsset) {
-
-	rightWeaponSlot->loadBulletTexture(gfxAsset->getAnimation("Cross Bullet"));
-	leftWeaponSlot->loadBulletTexture(gfxAsset->getAnimation("Cross Bullet"));
-	centerWeaponSlot->loadBulletTexture(gfxAsset->getAnimation("Laserbolt"));
-
-	leftTurret->loadTurretTexture(gfxAsset->getAsset("PlayerShip Turret"));
-	rightTurret->loadTurretTexture(gfxAsset->getAsset("PlayerShip Turret"));
-	leftTurret->loadBulletTexture(gfxAsset->getAnimation("Sun Bullet"));
-	rightTurret->loadBulletTexture(gfxAsset->getAnimation("Sun Bullet"));
-
-	return true;
-}
+//bool PlayerShip::loadBullet(GFXAssetManager* gfxAsset) {
+//
+//	//rightWeaponSlot->loadBulletTexture(gfxAsset->getAnimation("Cross Bullet"));
+//	//leftWeaponSlot->loadBulletTexture(gfxAsset->getAnimation("Cross Bullet"));
+//	//centerWeaponSlot->loadBulletTexture(gfxAsset->getAnimation("Laserbolt"));
+//
+//	//leftTurret->loadTurretTexture(gfxAsset->getAsset("PlayerShip Turret"));
+//	//rightTurret->loadTurretTexture(gfxAsset->getAsset("PlayerShip Turret"));
+//	//leftTurret->loadBulletTexture(gfxAsset->getAnimation("Sun Bullet"));
+//	//rightTurret->loadBulletTexture(gfxAsset->getAnimation("Sun Bullet"));
+//
+//	return true;
+//}
 
 
 void PlayerShip::setPosition(const Vector2& newPosition) {
@@ -85,8 +86,7 @@ bool PlayerShip::startUpdate(double deltaTime) {
 	position.y -= float(firingSpeed * deltaTime);
 	rightTurret->update(deltaTime, position);
 	leftTurret->update(deltaTime, position);
-	//return position.y < Globals::WINDOW_HEIGHT - 3 * height;
-	return camera.worldToScreen(position).y < Globals::WINDOW_HEIGHT - 3 * height;
+	return camera.worldToScreen(position).y < camera.viewportHeight - 3 * height;
 }
 
 

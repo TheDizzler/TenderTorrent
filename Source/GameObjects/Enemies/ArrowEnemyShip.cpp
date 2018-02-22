@@ -16,13 +16,13 @@ ArrowEnemyShip::ArrowEnemyShip(xml_node shipNode) {
 
 	}
 
-	midPos = Vector2(-100.0f, Globals::getFloatFrom(shipNode.child("midPoint")));
-	endPos = Vector2((float) Globals::WINDOW_WIDTH / 2, -100.0);
+	midPos = Vector2(-100.0f, getFloatFrom(shipNode.child("midPoint")));
+	endPos = Vector2((float) camera.viewportCenter.x , -100.0);
 
 	timeToTravel = shipNode.child("timeToTravel").text().as_double();
 	maxHealth = shipNode.child("health").text().as_int();
 
-	startPos = Vector2((float) -100, float(Globals::WINDOW_HEIGHT + 100));
+	startPos = Vector2((float) -100, float(camera.viewportHeight + 100));
 	position = Globals::SHIP_STORE_POSITION;
 	for (auto const& weapon : weaponSystems)
 		weapon->reset(position);

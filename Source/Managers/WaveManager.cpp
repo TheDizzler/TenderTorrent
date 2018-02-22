@@ -68,8 +68,8 @@ void WaveManager::clearEnemies() {
 
 
 
-int WaveManager::getLiveCount() {
-	int count = 0;
+size_t WaveManager::getLiveCount() {
+	size_t count = 0;
 	for (const auto& wave : waves) {
 		count += wave->shipsLaunched;
 	}
