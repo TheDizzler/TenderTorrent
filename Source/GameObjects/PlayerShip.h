@@ -19,16 +19,12 @@ public:
 	PlayerShip();
 	virtual ~PlayerShip();
 
+	void loadShip(xml_node shipNode);
+
 	void reset();
 
-	/*
-		TODO?
-			Loading bullets should be done internally of weapon system.
-	*/
-	//bool loadBullet(GFXAssetManager* gfxAssets);
-
 	virtual void setPosition(const Vector2& newPosition) override;
-	
+
 	/** Update to perform before action starts.
 		Return true when ship has moved into position. */
 	bool startUpdate(double deltaTime);
@@ -39,6 +35,8 @@ public:
 
 	void deathUpdate(double deltaTime);
 	void deathDraw(SpriteBatch* batch);
+
+	bool checkHitDetection(const HitArea& object);
 
 	int getHealth();
 	void takeDamage(int damageTaken);
@@ -55,19 +53,40 @@ protected:
 	float rechargeTickCount = 1.5f;
 	double timeSinceRecharge = 0.0;
 
-	vector<WeaponSystem*> weaponSlots;
+	class SubHitArea {
+	public:
+		SubHitArea(const Vector2& locOffset, const Vector2& size) : locationOffset(locOffset) {
+			hitArea.size = size;
+		}
+		virtual ~SubHitArea() {
+		}
+		void setPosition(const Vector2& shipPosition) {
+			hitArea.position = shipPosition + locationOffset;
+		}
+		bool collision(_In_ const HitArea& other) const {
+			return hitArea.collision(other);
+		}
+
+	private:
+		Vector2 locationOffset;
+		HitArea hitArea;
+	};
+	vector<unique_ptr<SubHitArea>> subHitAreas;
+	vector<unique_ptr<WeaponSystem>> weaponSlots;
+	vector<unique_ptr<Mount>> mounts;
 	// need these for now for loading bullet textures
-	unique_ptr<WeaponSystem> leftWeaponSlot;
+	/*unique_ptr<WeaponSystem> leftWeaponSlot;
 	unique_ptr<WeaponSystem> rightWeaponSlot;
 	unique_ptr<WeaponSystem> centerWeaponSlot;
 
 	unique_ptr<Turret> leftTurret;
-	unique_ptr<Turret> rightTurret;
+	unique_ptr<Turret> rightTurret;*/
 
 	bool firing = false;
 
-
+	/* Normal speed of ship */
 	float speed = 225.0f;
+	/* Speed of ship while shooting */
 	float firingSpeed = 150;
 
 	/* direction travelling while killed, for eye candy. */

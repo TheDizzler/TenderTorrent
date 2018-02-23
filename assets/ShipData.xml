@@ -1,22 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<root game="TenderTorrent" xml="ShipData" dir="assets/">
+<shipData game="TenderTorrent" xml="ShipData" dir="assets/">
 
-	<weaponSystems>
+	<!-- All coordinates from top-left of sprite -->
+	<ship name="Diamond Ship" hull="Diamond Ship Hull">
+
+		<speed normal="225" firing="150"/>
+		<energy max="100" rechargeAmount="25" rechargeDelay="1.5" />
+
+		<hitBoxes>
+			<hitBox x="7" y="14" width="35" height="44" />
+			<hitBox x="13" y="8" width="22" height="6" />
+			<hitBox x="20" y="3" width="9" height="5" />
+			<hitBox x="3" y="17" width="43" height="16" />
+		</hitBoxes>
 
 		<weaponSlots>
-
-
+			<weaponSlot x="6" y="17" type="0" />
+			<weaponSlot x="32" y="32" type="1" />
+			<weaponSlot x="58" y="17" type="0" />
 		</weaponSlots>
-		
-		
-		<turrets>
 
-			<turret name="Sun Cannon">
-				<bullet type="Sun Bullet"/>
-			</turret>
+		<mounts>
+			<mount x="11" y="25" type="1" />
+			<mount x="37" y="25" type="1" />
+		</mounts>
 
-
-		</turrets>
-	</weaponSystems>
-
-</root>
+	</ship>
+</shipData>

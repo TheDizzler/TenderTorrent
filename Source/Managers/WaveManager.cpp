@@ -1,7 +1,7 @@
 #include "../pch.h"
 #include "WaveManager.h"
 #include "../assets.h"
-#include "RearAttackWave.h"
+#include "FrogShipWave.h"
 #include "StarEnemyShipWave.h"
 #include "ArrowEnemyWave.h"
 #include "BigShipAWave.h"
@@ -19,7 +19,7 @@ bool WaveManager::initialize(GFXAssetManager* gfxAssets) {
 	xml_node root = xml_enemies.child("root");
 
 	xml_node shipNode = root.child("ship");
-	unique_ptr<Wave> wave = make_unique<RearAttackWave>();
+	unique_ptr<Wave> wave = make_unique<FrogShipWave>();
 	if (!wave->initialize(gfxAssets, shipNode))
 		return false;
 	waves.push_back(move(wave));
@@ -98,7 +98,11 @@ void WaveManager::update(double deltaTime, PlayerShip* player) {
 		for (Bullet* bullet : wave->liveBullets) {
 			//++liveBullets;
 			bullet->update(deltaTime);
-			if (bullet->getHitArea()->collision(&player->getHitArea())) {
+			/*if (bullet->getHitArea()->collision(&player->getHitArea())) {
+				bullet->isAlive = false;
+				player->takeDamage(bullet->damage);
+			}*/
+			if (player->checkHitDetection(bullet->getHitArea())) {
 				bullet->isAlive = false;
 				player->takeDamage(bullet->damage);
 			}

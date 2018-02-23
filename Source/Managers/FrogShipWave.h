@@ -1,12 +1,12 @@
 #pragma once
 
 #include "Wave.h"
-#include "../GameObjects/Enemies/RearAttackShip.h"
+#include "../GameObjects/Enemies/FrogShip.h"
 
-class RearAttackWave : public Wave {
+class FrogShipWave : public Wave {
 public:
 	
-	virtual ~RearAttackWave();
+	virtual ~FrogShipWave();
 
 	virtual bool initialize(GFXAssetManager* gfxAssets, xml_node shipNode) override;
 	

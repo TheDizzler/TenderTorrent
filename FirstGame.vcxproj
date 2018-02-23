@@ -52,6 +52,7 @@
     <ClCompile Include="Source\Engine\main.cpp" />
     <ClCompile Include="Source\Engine\PlayerSlot.cpp" />
     <ClCompile Include="Source\GameObjects\Enemies\ArrowEnemyShip.cpp" />
+    <ClCompile Include="Source\GameObjects\Graphics\Attachment.cpp" />
     <ClCompile Include="Source\GameObjects\WeaponSystems\Bullet.cpp" />
     <ClCompile Include="Source\GameObjects\Enemies\EnemyBullet.cpp" />
     <ClCompile Include="Source\GameObjects\Enemies\EnemyShip.cpp" />
@@ -65,8 +66,9 @@
     <ClCompile Include="Source\GameObjects\WeaponSystems\LaserBolt.cpp" />
     <ClCompile Include="Source\GameObjects\WeaponSystems\LaserSystem.cpp" />
     <ClCompile Include="Source\GameObjects\PlayerShip.cpp" />
-    <ClCompile Include="Source\GameObjects\Enemies\RearAttackShip.cpp" />
+    <ClCompile Include="Source\GameObjects\Enemies\FrogShip.cpp" />
     <ClCompile Include="Source\GameObjects\Enemies\StarEnemyShip.cpp" />
+    <ClCompile Include="Source\GameObjects\WeaponSystems\Mount.cpp" />
     <ClCompile Include="Source\GameObjects\WeaponSystems\SunBullet.cpp" />
     <ClCompile Include="Source\GameObjects\WeaponSystems\Turret.cpp" />
     <ClCompile Include="Source\GameObjects\WeaponSystems\WeaponSystem.cpp" />
@@ -78,7 +80,7 @@
     <ClCompile Include="Source\Managers\LevelManager.cpp" />
     <ClCompile Include="Source\Managers\LevelSelectScreen.cpp" />
     <ClCompile Include="Source\Managers\MenuManager.cpp" />
-    <ClCompile Include="Source\Managers\RearAttackWave.cpp" />
+    <ClCompile Include="Source\Managers\FrogShipWave.cpp" />
     <ClCompile Include="Source\Managers\StarEnemyShipWave.cpp" />
     <ClCompile Include="Source\Managers\Wave.cpp" />
     <ClCompile Include="Source\Managers\WaveManager.cpp">
@@ -127,6 +129,7 @@
     <ClInclude Include="Source\Engine\GraphicsEngine.h" />
     <ClInclude Include="Source\Engine\Input.h" />
     <ClInclude Include="Source\Engine\PlayerSlot.h" />
+    <ClInclude Include="Source\GameObjects\Graphics\Attachment.h" />
     <ClInclude Include="Source\GameObjects\WeaponSystems\Bullet.h" />
     <ClInclude Include="Source\GameObjects\Enemies\EnemyBullet.h" />
     <ClInclude Include="Source\GameObjects\Enemies\EnemyShip.h" />
@@ -140,9 +143,10 @@
     <ClInclude Include="Source\GameObjects\WeaponSystems\LaserBolt.h" />
     <ClInclude Include="Source\GameObjects\WeaponSystems\LaserSystem.h" />
     <ClInclude Include="Source\GameObjects\PlayerShip.h" />
-    <ClInclude Include="Source\GameObjects\Enemies\RearAttackShip.h" />
+    <ClInclude Include="Source\GameObjects\Enemies\FrogShip.h" />
     <ClInclude Include="Source\GameObjects\Enemies\StarEnemyShip.h" />
     <ClInclude Include="Source\GameObjects\Enemies\ArrowEnemyShip.h" />
+    <ClInclude Include="Source\GameObjects\WeaponSystems\Mount.h" />
     <ClInclude Include="Source\GameObjects\WeaponSystems\SunBullet.h" />
     <ClInclude Include="Source\GameObjects\WeaponSystems\Turret.h" />
     <ClInclude Include="Source\GameObjects\WeaponSystems\WeaponSystem.h" />
@@ -154,7 +158,7 @@
     <ClInclude Include="Source\Managers\LevelManager.h" />
     <ClInclude Include="Source\Managers\LevelSelectScreen.h" />
     <ClInclude Include="Source\Managers\MenuManager.h" />
-    <ClInclude Include="Source\Managers\RearAttackWave.h" />
+    <ClInclude Include="Source\Managers\FrogShipWave.h" />
     <ClInclude Include="Source\Managers\StarEnemyShipWave.h" />
     <ClInclude Include="Source\Managers\ArrowEnemyWave.h" />
     <ClInclude Include="Source\Managers\Wave.h" />

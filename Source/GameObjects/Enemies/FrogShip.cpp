@@ -1,10 +1,10 @@
 #include "../../pch.h"
-#include "RearAttackShip.h"
+#include "FrogShip.h"
 #include "../../globals.h"
 #include "../../Engine/GameEngine.h"
 
 
-RearAttackShip::RearAttackShip(xml_node mirrorNode) {
+FrogShip::FrogShip(xml_node mirrorNode) {
 
 	xml_node shipNode = mirrorNode.parent().parent();
 
@@ -51,7 +51,7 @@ RearAttackShip::RearAttackShip(xml_node mirrorNode) {
 }
 
 
-RearAttackShip::~RearAttackShip() {
+FrogShip::~FrogShip() {
 }
 
 
@@ -59,7 +59,7 @@ RearAttackShip::~RearAttackShip() {
 
 const double TIME_TO_CLIMAX = 3.0;
 const double TIME_TO_FIRE = 2.5;
-void RearAttackShip::update(double deltaTime, PlayerShip* player, vector<Bullet*>& liveBullets) {
+void FrogShip::update(double deltaTime, PlayerShip* player, vector<Bullet*>& liveBullets) {
 
 	timeAlive += deltaTime;
 
@@ -69,6 +69,18 @@ void RearAttackShip::update(double deltaTime, PlayerShip* player, vector<Bullet*
 	position = camera.screenToWorld(float(rt*rt)*startPos + 2 * float(rt*percent)*controlPoint
 		+ float(percent*percent)*climaxPos);
 
+	//if (percent > .5) {
+	//	// start aiming at player
+	//	Vector2 dirToPlayer = player->getPosition() - position;
+	//	dirToPlayer.Normalize();
+
+	//	Vector2 targetAngle = Vector2(dirToPlayer.x, dirToPlayer.y);
+	//	float angle = SimpleMath::Quaternion::
+
+	//	turretSprite.setRotation(atan2(targetDirection.y, targetDirection.x) + XM_PIDIV2);
+	//	
+	//	turretDirection.Normalize();
+	//}
 
 	for (auto const& weapon : weaponSystems) {
 		weapon->updatePosition(position);

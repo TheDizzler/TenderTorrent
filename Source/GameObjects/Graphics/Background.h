@@ -28,6 +28,7 @@ public:
 	const Vector2& getStartPosition();
 
 	bool startUpdate(double deltaTime);
+	void deathUpdate(double deltaTime);
 	/* Returns true on victory condition. */
 	bool update(double deltaTime);
 	void draw(SpriteBatch* batch);

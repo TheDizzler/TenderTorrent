@@ -5,11 +5,11 @@
 
 /** A ship that appears from the bottom of the screen and leaps in
 	parabolic curve. Always comes in pairs. */
-class RearAttackShip : public EnemyShip {
+class FrogShip : public EnemyShip {
 public:
 
-	RearAttackShip(xml_node shipNode);
-	virtual ~RearAttackShip();
+	FrogShip(xml_node shipNode);
+	virtual ~FrogShip();
 
 	virtual void update(double deltaTime, PlayerShip* player, vector<Bullet*>& liveBullets) override;
 

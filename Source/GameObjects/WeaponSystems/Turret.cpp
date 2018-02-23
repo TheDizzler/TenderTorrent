@@ -4,10 +4,7 @@
 #include "../../Managers/GameManager.h"
 
 
-Turret::Turret(Vector2 locationOffset) : WeaponSystem(locationOffset) {
-
-	//maxStoreSize = 12;
-	//coolDownTime = .25;
+Turret::Turret(Vector2 locationOffset) : Mount(locationOffset) {
 
 	loadTurretTexture(gfxAssets.getAsset("PlayerShip Turret"));
 	setWeaponStats(5, 5, .25);

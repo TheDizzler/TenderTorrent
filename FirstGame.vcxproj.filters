@@ -78,9 +78,6 @@
     <ClCompile Include="Source\GameObjects\Graphics\Background.cpp">
       <Filter>Source Files\GameObjects\Backgrounds</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Managers\RearAttackWave.cpp">
-      <Filter>Source Files\GameObjects\EnemyShips</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Managers\StarEnemyShipWave.cpp">
       <Filter>Source Files\GameObjects\EnemyShips</Filter>
     </ClCompile>
@@ -219,9 +216,6 @@
     <ClCompile Include="Source\GameObjects\Enemies\EnemyShip.cpp">
       <Filter>Source Files\GameObjects\EnemyShips</Filter>
     </ClCompile>
-    <ClCompile Include="Source\GameObjects\Enemies\RearAttackShip.cpp">
-      <Filter>Source Files\GameObjects\EnemyShips</Filter>
-    </ClCompile>
     <ClCompile Include="Source\GameObjects\Enemies\StarEnemyShip.cpp">
       <Filter>Source Files\GameObjects\EnemyShips</Filter>
     </ClCompile>
@@ -252,6 +246,18 @@
     <ClCompile Include="Source\GameObjects\WeaponSystems\Bullet.cpp">
       <Filter>Source Files\GameObjects\PlayerShip</Filter>
     </ClCompile>
+    <ClCompile Include="Source\GameObjects\WeaponSystems\Mount.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameObjects\Graphics\Attachment.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Managers\FrogShipWave.cpp">
+      <Filter>Source Files\GameObjects\EnemyShips</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameObjects\Enemies\FrogShip.cpp">
+      <Filter>Source Files\GameObjects\EnemyShips</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\globals.h">
@@ -274,9 +280,6 @@
     </ClInclude>
     <ClInclude Include="Source\GameObjects\Graphics\Background.h">
       <Filter>Header Files\GameObjects\Backgrounds</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Managers\RearAttackWave.h">
-      <Filter>Header Files\GameObjects\EnemyShips</Filter>
     </ClInclude>
     <ClInclude Include="Source\Managers\StarEnemyShipWave.h">
       <Filter>Header Files\GameObjects\EnemyShips</Filter>
@@ -428,9 +431,6 @@
     <ClInclude Include="Source\GameObjects\Enemies\EnemyShip.h">
       <Filter>Header Files\GameObjects\EnemyShips</Filter>
     </ClInclude>
-    <ClInclude Include="Source\GameObjects\Enemies\RearAttackShip.h">
-      <Filter>Header Files\GameObjects\EnemyShips</Filter>
-    </ClInclude>
     <ClInclude Include="Source\GameObjects\Enemies\StarEnemyShip.h">
       <Filter>Header Files\GameObjects\EnemyShips</Filter>
     </ClInclude>
@@ -460,6 +460,18 @@
     </ClInclude>
     <ClInclude Include="Source\GameObjects\WeaponSystems\Bullet.h">
       <Filter>Header Files\GameObjects\PlayerShip</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameObjects\WeaponSystems\Mount.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameObjects\Graphics\Attachment.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Managers\FrogShipWave.h">
+      <Filter>Header Files\GameObjects\EnemyShips</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameObjects\Enemies\FrogShip.h">
+      <Filter>Header Files\GameObjects\EnemyShips</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

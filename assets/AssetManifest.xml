@@ -28,18 +28,18 @@
 				<sprite x="26" y="62" width="12" height="12" />
 				<sprite x="39" y="62" width="12" height="12" />
 			</animation>
+			<animation name="Sun Bullet" timePerFrame="1.0">
+				<sprite  x="0" y="78" width="16" height="16" />
+			</animation>
 		</spritesheet>
 
-		<!--sprite name="Enemy Bullet A" file="bullet yellow.dds"/-->
-		<!--<sprite name="Cross Bullet" file="cross bullet.dds"/>-->
-		<!--sprite name="Laserbolt" file="laserbolt(24x24).dds"/-->
-		<sprite name="Sun Bullet" file="sunball.dds"/>
 
 
-		<!-- Enemy ship sprites -->
-		<sprite name="EnemyShip RearAttack" file="enemy ship A.dds"/>
-		<sprite name="EnemyShip Star" file="enemy ship B.dds"/>
-		<sprite name="EnemyShip Arrow" file="enemy ship arrow.dds"/>
+
+		
+		<!--<sprite name="EnemyShip RearAttack" file="enemy ship A.dds"/>-->
+		<!--<sprite name="EnemyShip Star" file="enemy ship B.dds"/>-->
+		<!--<sprite name="EnemyShip Arrow" file="enemy ship arrow.dds"/>-->
 		<spritesheet file="BigShipA.dds">
 			<sprite name="BigShipA" x="0" y="4" width="116" height="60" />
 			<sprite name="HexTurret" x="120" y="15" width="16" height="22">
@@ -53,9 +53,24 @@
 			</animation>
 		</spritesheet>
 
-		<!-- Player ship sprites -->
-		<sprite name="PlayerShip Hull" file="HeroShip.dds"/>
-		<sprite name="PlayerShip Turret" file="Turret(24x24).dds"/>
+		
+		<spritesheet file="GraphicsSheet.dds">
+			<!-- Player ship sprites -->
+			<sprite name="Diamond Ship Hull" x="0" y="0" width="64" height="64" >
+				<origin x="0" y="0" />
+			</sprite>
+			<sprite name="PlayerShip Turret" x="0" y="66" width="17" height="21" >
+				<origin x="8" y="13" />
+			</sprite>
+			<sprite name="Unknown Mount" x="29" y="71" width="15" height="16" >
+				<origin x="7" y="7" />
+			</sprite>
+
+			<!-- Enemy ship sprites -->
+			<sprite name="EnemyShip FrogShip" x="0" y="120" width="30" height="31" />
+			<sprite name="EnemyShip Star" x="42" y="120" width="39" height="38" />
+			<sprite name="EnemyShip Arrow" x="95" y="120" width="15" height="20" />
+		</spritesheet>
 
 		<!-- Explosions and kablooies-->
 		<spritesheet file="big fireballs.dds">

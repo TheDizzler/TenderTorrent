@@ -34,6 +34,10 @@ BigShipA::BigShipA(xml_node shipNode) : EnemyShip() {
 
 	engineL.load(gfxAssets.getAnimation("EngineBurn"));
 	engineR.load(gfxAssets.getAnimation("EngineBurn"));
+	xml_node eng = shipNode.child("attachments").find_child_by_attribute("name", "EngineL");
+	engineL.setOffset(Vector2(eng.attribute("x").as_float(), eng.attribute("y").as_float()));
+	eng = shipNode.child("attachments").find_child_by_attribute("name", "EngineR");
+	engineR.setOffset(Vector2(eng.attribute("x").as_float(), eng.attribute("y").as_float()));
 
 }
 
@@ -177,11 +181,13 @@ void BigShipA::update(double deltaTime, PlayerShip* player, vector<Bullet*>& liv
 }
 
 void BigShipA::draw(SpriteBatch* batch) {
+
+	engineL.draw(batch);
+	engineR.draw(batch);
 	EnemyShip::draw(batch);
 	hexTurretL->draw(batch);
 	hexTurretR->draw(batch);
-	engineL.draw(batch);
-	engineR.draw(batch);
+	
 }
 
 void BigShipA::setPosition(const Vector2& newPosition) {
@@ -189,6 +195,8 @@ void BigShipA::setPosition(const Vector2& newPosition) {
 	for (auto const& weapon : weaponSystems) {
 		weapon->updatePosition(position);
 	}
+	engineL.updatePosition(position);
+	engineR.updatePosition(position);
 }
 
 

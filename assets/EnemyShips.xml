@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root game="TenderTorrent" xml="AssetManifest" dir="assets/">
 
-	<ship name="Rear Attack Ship" mirrored="true">
-		<sprite>EnemyShip RearAttack</sprite>
+	<ship name="Frog Ship" mirrored="true">
+		<sprite>EnemyShip FrogShip</sprite>
 		<health>25</health>
 		<speed>0</speed>
 		<weaponPoints>
@@ -28,8 +28,7 @@
 			</mirror>
 		</mirrors>
 
-		<waveData maxTimeBetweenWaves="20" timeBetweenChanceForWave="3">
-		</waveData>
+		<waveData maxTimeBetweenWaves="20" timeBetweenChanceForWave="3" />
 
 	</ship>
 
@@ -133,6 +132,11 @@
 				<angle>-60</angle>
 			</weapon>
 		</weaponPoints>
+
+		<attachments>
+			<attachment name="EngineL" x="-29" y="-30" />
+			<attachment name="EngineR" x="29" y="-30" />
+		</attachments>
 
 		<waveData maxTimeBetweenWaves="30" timeBetweenChanceForWave="10" />
 	</ship>

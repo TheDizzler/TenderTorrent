@@ -173,6 +173,13 @@ bool Background::startUpdate(double deltaTime) {
 	return false;
 }
 
+void Background::deathUpdate(double deltaTime) {
+
+	if (currentWaypoint == NULL)
+		return;
+	update(deltaTime);
+}
+
 
 bool Background::update(double deltaTime) {
 

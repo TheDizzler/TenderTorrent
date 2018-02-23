@@ -1,9 +1,9 @@
 #pragma once
 
-#include "WeaponSystem.h"
+#include "Mount.h"
 #include "SunBullet.h"
 
-class Turret : public WeaponSystem {
+class Turret : public Mount {
 public:
 	Turret(Vector2 locationOffset);
 	virtual ~Turret();
@@ -19,7 +19,7 @@ public:
 	virtual void draw(SpriteBatch* batch) override;
 
 	virtual void setTint(const XMFLOAT4 newTint) override;
-	virtual void setScale(const Vector2& newScale);
+	virtual void setScale(const Vector2& newScale) override;
 
 
 private:

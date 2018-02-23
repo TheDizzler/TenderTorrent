@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../Graphics/Attachment.h"
 #include "../PlayerShip.h"
 #include "EnemyBullet.h"
 

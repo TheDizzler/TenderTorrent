@@ -15,17 +15,23 @@ void LevelManager::setGameManager(GameManager* gm) {
 
 bool LevelManager::initialize(ComPtr<ID3D11Device> device) {
 
-	levelManifest.reset(new xml_document());
-	xml_parse_result result = levelManifest->load_file(Assets::levelManifestFile);
-
+	/*xml_parse_result result = levelManifest.load_file(Assets::levelManifestFile);
 	if (!result) {
 		wostringstream wss;
 		wss << "Could not read Level Manifest file!";
 		wss << "\n" << result.description();
 		GameManager::showErrorDialog(wss.str().c_str(), L"Fatal Read Error!");
 		return false;
-	}
+	}*/
 
+	xml_parse_result result = shipDataDoc.load_file(Assets::shipDataManifestFile);
+	if (!result) {
+		wostringstream wss;
+		wss << "Could not read Ship Data file!";
+		wss << "\n" << result.description();
+		GameManager::showErrorDialog(wss.str().c_str(), L"Fatal Read Error!");
+		return false;
+	}
 
 	if (!mouse.loadMouseIcon(&guiFactory, "Mouse Reticle"))
 		return false;
@@ -69,12 +75,13 @@ bool LevelManager::loadLevel(ComPtr<ID3D11Device> device, const char_t* levelFil
 	totalPlayTime = 0;
 	gameOverTimer = 0;
 
-	playerShip.load(gfxAssets.getAsset("PlayerShip Hull"));
-	//if (!playerShip.loadBullet(&gfxAssets)) {
-	//	MessageBox(NULL, L"Failed to load weapons", L"ERROR", MB_OK);
-	//	return false;
-	//}
-	playerShip.setDimensions(&playerShip);
+	
+	//playerShip.load(gfxAssets.getAsset("PlayerShip Hull"));
+	//playerShip.setDimensions(&playerShip);
+	xml_node loadship = shipDataDoc.child("shipData").find_child_by_attribute("name", "Diamond Ship");
+	if (loadship == NULL)
+		return false;
+	playerShip.loadShip(loadship);
 	playerShip.reset();
 
 	bgManager.clear();
@@ -110,18 +117,6 @@ void LevelManager::update(double deltaTime) {
 
 				bullet->update(deltaTime);
 				waveManager.checkHitDetection(bullet);
-				/*for (Wave* wave : waveManager.waves) {
-					for (EnemyShip* enemy : wave->shipStore) {
-						if (enemy->isAlive) {
-							if (bullet->getHitArea()->collision(enemy->getHitArea())) {
-								enemy->takeDamage(bullet->damage);
-								bullet->isAlive = false;
-							}
-							if (once)
-								++liveCount;
-						}
-					}
-				}*/
 
 				for (ClothLayer* layer : bgManager.getClothes()) {
 					if (layer->isAlive()) {
@@ -178,7 +173,7 @@ void LevelManager::update(double deltaTime) {
 		case GAMEOVER:
 			for (Bullet* bullet : playerShip.liveBullets)
 				bullet->update(deltaTime);
-			bgManager.update(deltaTime);
+			bgManager.deathUpdate(deltaTime);
 			playerShip.deathUpdate(deltaTime);
 			waveManager.update(deltaTime, &playerShip);
 			gameOverTimer += deltaTime;
@@ -294,6 +289,7 @@ void LevelManager::draw(SpriteBatch* batch) {
 				camera.translationMatrix());
 			{
 				bgManager.draw(batch);
+				waveManager.draw(batch);
 				playerShip.deathDraw(batch);
 			}
 			batch->End();

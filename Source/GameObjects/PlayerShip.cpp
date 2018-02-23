@@ -8,20 +8,7 @@
 
 PlayerShip::PlayerShip() : GameObject() {
 
-
-	rightWeaponSlot.reset(new BasicGun(Vector2(26, -15)));
-	leftWeaponSlot.reset(new BasicGun(Vector2(-26, -15)));
-	centerWeaponSlot.reset(new LaserSystem(Vector2(0, 0)));
-
-	weaponSlots.push_back(rightWeaponSlot.get());
-	weaponSlots.push_back(leftWeaponSlot.get());
-	weaponSlots.push_back(centerWeaponSlot.get());
-
-	rightTurret.reset(new Turret(Vector2(12, -8)));
-	leftTurret.reset(new Turret(Vector2(-13, -8)));
-
 }
-
 
 PlayerShip::~PlayerShip() {
 
@@ -29,6 +16,75 @@ PlayerShip::~PlayerShip() {
 	explosions.clear();
 	weaponSlots.clear();
 }
+
+
+void PlayerShip::loadShip(xml_node shipNode) {
+
+	load(gfxAssets.getAsset(shipNode.attribute("hull").as_string()));
+
+	speed = shipNode.child("speed").attribute("normal").as_float();
+	firingSpeed = shipNode.child("speed").attribute("firing").as_float();
+
+	Vector2 hitpos, hitsize;
+	unique_ptr<SubHitArea> subHitArea;
+	for (xml_node hitBoxNode : shipNode.child("hitBoxes").children("hitBox")) {
+
+		hitpos = Vector2(hitBoxNode.attribute("x").as_float(), hitBoxNode.attribute("y").as_float());
+		hitsize = Vector2(hitBoxNode.attribute("width").as_float(), hitBoxNode.attribute("height").as_float());
+
+		subHitArea.reset(new SubHitArea(hitpos, hitsize));
+		subHitAreas.push_back(move(subHitArea));
+	}
+
+
+	Vector2 weaponOffset;
+	unique_ptr<WeaponSystem> weaponSlot;
+	for (xml_node weaponSlotNode : shipNode.child("weaponSlots").children("weaponSlot")) {
+		weaponOffset = Vector2(weaponSlotNode.attribute("x").as_float(),
+			weaponSlotNode.attribute("y").as_float());
+
+		enum WeaponType {
+			BASIC_GUN, LASERBOLT
+		};
+		WeaponType weapontype = (WeaponType) weaponSlotNode.attribute("type").as_uint();
+		switch (weapontype) {
+			case WeaponType::BASIC_GUN:
+				weaponSlot.reset(new BasicGun(weaponOffset));
+				break;
+			case WeaponType::LASERBOLT:
+				weaponSlot.reset(new LaserSystem(weaponOffset));
+				break;
+		}
+
+		weaponSlots.push_back(move(weaponSlot));
+	}
+
+	unique_ptr<Mount> mountSlot;
+	for (xml_node mountNode : shipNode.child("mounts").children("mount")) {
+		weaponOffset = Vector2(
+			mountNode.attribute("x").as_float(), mountNode.attribute("y").as_float());
+
+		enum MountType {
+			ERROR_, TURRET
+		};
+
+		MountType mounttype = (MountType) mountNode.attribute("type").as_uint();
+		switch (mounttype) {
+			case TURRET:
+				mountSlot.reset(new Turret(weaponOffset));
+				break;
+			case ERROR_:
+				GameEngine::errorMessage(L"daaaaamn booooooyyyy", L"Shiiiiet", !Globals::FULL_SCREEN);
+				return;
+
+		}
+
+		mounts.push_back(move(mountSlot));
+	}
+
+}
+
+
 
 void PlayerShip::reset() {
 
@@ -40,52 +96,37 @@ void PlayerShip::reset() {
 	maxEnergy = startMaxEnergy;
 	energy = startMaxEnergy;
 
-	rightWeaponSlot->update(0, position);
-	leftWeaponSlot->update(0, position);
-	centerWeaponSlot->update(0, position);
-	
-	rightTurret->setTint(Vector4(1, 1, 1, 1));
-	leftTurret->setTint(Vector4(1, 1, 1, 1));
-	rightTurret->setScale(Vector2(1, 1));
-	leftTurret->setScale(Vector2(1, 1));
+	for (const auto& slot : weaponSlots)
+		slot->update(0, position);
+
+	for (const auto& mount : mounts) {
+		mount->setTint(Vector4(1, 1, 1, 1));
+		mount->setScale(Vector2(1, 1));
+	}
 
 	setScale(Vector2(1, 1));
-	
+
 	setTint(Vector4(1, 1, 1, 1));
 	totalDeathTime = 0;
 }
 
 
-
-//bool PlayerShip::loadBullet(GFXAssetManager* gfxAsset) {
-//
-//	//rightWeaponSlot->loadBulletTexture(gfxAsset->getAnimation("Cross Bullet"));
-//	//leftWeaponSlot->loadBulletTexture(gfxAsset->getAnimation("Cross Bullet"));
-//	//centerWeaponSlot->loadBulletTexture(gfxAsset->getAnimation("Laserbolt"));
-//
-//	//leftTurret->loadTurretTexture(gfxAsset->getAsset("PlayerShip Turret"));
-//	//rightTurret->loadTurretTexture(gfxAsset->getAsset("PlayerShip Turret"));
-//	//leftTurret->loadBulletTexture(gfxAsset->getAnimation("Sun Bullet"));
-//	//rightTurret->loadBulletTexture(gfxAsset->getAnimation("Sun Bullet"));
-//
-//	return true;
-//}
-
-
 void PlayerShip::setPosition(const Vector2& newPosition) {
 	Sprite::setPosition(newPosition);
-	rightWeaponSlot->update(0, position);
-	leftWeaponSlot->update(0, position);
-	centerWeaponSlot->update(0, position);
-	rightTurret->update(0, position);
-	leftTurret->update(0, position);
+
+	for (const auto& slot : weaponSlots)
+		slot->update(0, position);
+	for (const auto& mount : mounts)
+		mount->update(0, position);
+
 }
 
 bool PlayerShip::startUpdate(double deltaTime) {
 
 	position.y -= float(firingSpeed * deltaTime);
-	rightTurret->update(deltaTime, position);
-	leftTurret->update(deltaTime, position);
+	for (const auto& mount : mounts)
+		mount->update(deltaTime, position);
+
 	return camera.worldToScreen(position).y < camera.viewportHeight - 3 * height;
 }
 
@@ -122,28 +163,29 @@ void PlayerShip::update(double deltaTime) {
 	camera.confineToScreen(this);
 
 	// Weapons
-	rightWeaponSlot->update(deltaTime, position);
-	leftWeaponSlot->update(deltaTime, position);
-	centerWeaponSlot->update(deltaTime, position);
+	for (const auto& slot : weaponSlots)
+		slot->update(deltaTime, position);
 
-	rightTurret->update(deltaTime, position);
-	leftTurret->update(deltaTime, position);
-	Vector2 turretsLocationMidPoint = (rightTurret->getPosition() + leftTurret->getPosition()) / 2;
+
+	for (const auto& mount : mounts)
+		mount->update(deltaTime, position);
+
+	Vector2 turretsLocationMidPoint = (mounts[0]->getPosition() + mounts[1]->getPosition()) / 2;
 	Vector2 mousepos = camera.screenToWorld(mouse.getPosition());
 	float y = mousepos.y - turretsLocationMidPoint.y;
 	float x = mousepos.x - turretsLocationMidPoint.x;
 	Vector2 targetDirection = Vector2(x, y);
 	targetDirection.Normalize();
 
-	rightTurret->setTurretRotation(targetDirection);
-	leftTurret->setTurretRotation(targetDirection);
+	static_cast<Turret*>(mounts[0].get())->setTurretRotation(targetDirection);
+	static_cast<Turret*>(mounts[1].get())->setTurretRotation(targetDirection);
 
 	liveBullets.erase(remove_if(liveBullets.begin(), liveBullets.end(),
 		[](const Bullet* bullet) { return !bullet->isAlive; }), liveBullets.end());
 
 
 	if (keyState.Space || joystick->xButtonDown()) {
-		for (WeaponSystem* weaponSlot : weaponSlots) {
+		for (const auto& weaponSlot : weaponSlots) {
 			if (energy >= weaponSlot->energyCost
 				&& weaponSlot->ready()) {
 				firing = true;
@@ -157,14 +199,11 @@ void PlayerShip::update(double deltaTime) {
 
 	if (!mouse.leftButtonLast() && mouse.leftButton()) {
 
-		if (rightTurret->ready()) {
-			liveBullets.push_back(rightTurret->fire());
-			energy -= rightTurret->energyCost;
-		}
-		if (leftTurret->ready()) {
-			liveBullets.push_back(leftTurret->fire());
-			energy -= rightTurret->energyCost;
-		}
+		for (const auto& mount : mounts)
+			if (mount->ready()) {
+				liveBullets.push_back(mount->fire());
+				energy -= mount->energyCost;
+			}
 	}
 
 	// Energy recharge
@@ -187,21 +226,24 @@ void PlayerShip::update(double deltaTime) {
 
 void PlayerShip::draw(SpriteBatch * batch) {
 
-	for (WeaponSystem* weaponSlot : weaponSlots)
+	for (const auto& weaponSlot : weaponSlots)
 		weaponSlot->draw(batch);
 
 
 	Sprite::draw(batch);
 
-	rightTurret->draw(batch);
-	leftTurret->draw(batch);
+	for (const auto& mount : mounts)
+		mount->draw(batch);
+
 
 }
 
 void PlayerShip::finishedUpdate(double deltaTime) {
+	// move to center of screen
+	Vector2 direction = Vector2(camera.viewportCenter) - position;
+	direction.Normalize();
+	setPosition(position - direction*speed*deltaTime);
 
-// move to center of screen
-//position += Vector2::Lerp( levelEndPosition, centerPosition,  
 }
 
 
@@ -215,20 +257,21 @@ void PlayerShip::deathUpdate(double deltaTime) {
 
 	Vector2 movement = deathVector * (float) deltaTime;
 	position += movement;
-	rightTurret->update(deltaTime, position);
-	leftTurret->update(deltaTime, position);
+
 
 	Color newTint = Color::Lerp(Vector4(1, 1, 1, 1), Vector4(0, 0, 0, 0),
 		float(totalDeathTime / TIME_TO_DIE));
 	setTint(newTint);
-	rightTurret->setTint(newTint);
-	leftTurret->setTint(newTint);
+
 
 	Vector2 newSize = Vector2::Lerp(Vector2(1, 1), Vector2(0, 0),
 		float(totalDeathTime / TIME_TO_DIE));
 	setScale(newSize);
-	rightTurret->setScale(newSize);
-	leftTurret->setScale(newSize);
+	for (const auto& mount : mounts) {
+		mount->update(deltaTime, position);
+		mount->setTint(newTint);
+		mount->setScale(newSize);
+	}
 
 	totalDeathTime += deltaTime;
 	timeSinceLastExplosion -= deltaTime;
@@ -261,18 +304,34 @@ void PlayerShip::deathUpdate(double deltaTime) {
 void PlayerShip::deathDraw(SpriteBatch* batch) {
 
 
-	for (WeaponSystem* weaponSlot : weaponSlots)
+	for (const auto& weaponSlot : weaponSlots)
 		weaponSlot->draw(batch);
 
 	Sprite::draw(batch);
 
-	rightTurret->draw(batch);
-	leftTurret->draw(batch);
+	for (const auto& mount : mounts)
+		mount->draw(batch);
 
 	for (const auto& explosion : explosions)
 		if (explosion->isAlive)
 			explosion->draw(batch);
 }
+
+
+bool PlayerShip::checkHitDetection(const HitArea& otherObjHitArea) {
+
+	// first check rough hit box
+	if (!hitArea.collision(otherObjHitArea))
+		return false;
+	for (auto& subHitArea : subHitAreas) {
+		// if we update subHitArea positions here we should be saving several cycles per frame
+		subHitArea->setPosition(position);
+		if (subHitArea->collision(otherObjHitArea))
+			return true;
+	}
+	return false;
+}
+
 
 int PlayerShip::getHealth() {
 	return maxEnergy;

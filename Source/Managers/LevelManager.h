@@ -68,7 +68,8 @@ public:
 
 private:
 
-	unique_ptr<xml_document> levelManifest;
+	//xml_document levelManifest;
+	xml_document shipDataDoc;
 
 	PlayState playState = LOADING;
 

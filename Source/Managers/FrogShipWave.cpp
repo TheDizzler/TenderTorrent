@@ -1,13 +1,13 @@
-#include "RearAttackWave.h"
+#include "FrogShipWave.h"
 #include "../Engine/GameEngine.h"
 
 
 
-RearAttackWave::~RearAttackWave() {
+FrogShipWave::~FrogShipWave() {
 }
 
 
-bool RearAttackWave::initialize(GFXAssetManager* gfxAssets, xml_node shipNode) {
+bool FrogShipWave::initialize(GFXAssetManager* gfxAssets, xml_node shipNode) {
 
 	xml_node waveDataNode = shipNode.child("waveData");
 	maxTimeBetweenLaunches = waveDataNode.attribute("maxTimeBetweenWaves").as_uint();
@@ -19,7 +19,7 @@ bool RearAttackWave::initialize(GFXAssetManager* gfxAssets, xml_node shipNode) {
 	if (ship == NULL) {
 		wostringstream wss;
 		wss << "Unable to find ship asset " << shipName;
-		wss << " in RearAttackWave.";
+		wss << " in FrogShipWave.";
 		GameEngine::showErrorDialog(wss.str(), L"This is bad");
 		return true;
 	}
@@ -29,7 +29,7 @@ bool RearAttackWave::initialize(GFXAssetManager* gfxAssets, xml_node shipNode) {
 	xml_node mirrorsNode = shipNode.child("mirrors");
 	for (int i = 0; i < MAX_SHIPS_IN_STORE; ++i) {
 		for (xml_node mirrorNode : shipNode.child("mirrors").children("mirror")) {
-			RearAttackShip* enemy = new RearAttackShip(mirrorNode);
+			FrogShip* enemy = new FrogShip(mirrorNode);
 			enemy->load(ship);
 			shipStore.push_back(enemy);
 		}
@@ -40,7 +40,7 @@ bool RearAttackWave::initialize(GFXAssetManager* gfxAssets, xml_node shipNode) {
 }
 
 
-void RearAttackWave::launchNewWave() {
+void FrogShipWave::launchNewWave() {
 
 	timeSinceLastLaunch = 0;
 	miniWavesLaunched = 0;
@@ -49,7 +49,7 @@ void RearAttackWave::launchNewWave() {
 }
 
 
-void RearAttackWave::update(double deltaTime, PlayerShip* player) {
+void FrogShipWave::update(double deltaTime, PlayerShip* player) {
 
 	Wave::update(deltaTime, player);
 
@@ -63,7 +63,7 @@ void RearAttackWave::update(double deltaTime, PlayerShip* player) {
 }
 
 
-void RearAttackWave::launchNextMiniWave() {
+void FrogShipWave::launchNextMiniWave() {
 
 
 	EnemyShip* next = shipStore[nextShipInStore++];
