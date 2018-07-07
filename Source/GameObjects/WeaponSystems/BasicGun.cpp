@@ -4,7 +4,7 @@
 
 BasicGun::BasicGun(Vector2 locOffset) : WeaponSystem(locOffset) {
 
-	setWeaponStats(5, 0, .1);
+	setWeaponStats(1, 0, .1);
 
 }
 

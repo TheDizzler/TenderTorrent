@@ -3,7 +3,9 @@
 #include "../Engine/GameEngine.h"
 #include <algorithm>
 
+/* Slots with joysticks connected */
 vector<shared_ptr<PlayerSlot>> activeSlots;
+/* Slots with joysticks not yet initialized. */
 deque<shared_ptr<PlayerSlot>> waitingSlots;
 CRITICAL_SECTION cs_activeSlotsAccess;
 

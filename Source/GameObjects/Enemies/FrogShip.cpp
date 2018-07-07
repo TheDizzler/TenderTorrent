@@ -38,29 +38,31 @@ FrogShip::FrogShip(xml_node mirrorNode) {
 	}
 
 
-
-
 	maxHealth = shipNode.child("health").text().as_int();
-
-
-	//position = startPos;
-	position = Globals::SHIP_STORE_POSITION;
 	health = maxHealth;
 
-	rotation = XM_PI;
+	position = Globals::SHIP_STORE_POSITION;
+
+
 }
 
 
 FrogShip::~FrogShip() {
 }
 
+void FrogShip::reset() {
+	EnemyShip::reset();
+	setRotation(0);
+}
 
 
+const double rotationSpeed = 4;
 
 const double TIME_TO_CLIMAX = 3.0;
-const double TIME_TO_FIRE = 2.5;
+const double TIME_TO_FIRE = 1.5;
 void FrogShip::update(double deltaTime, PlayerShip* player, vector<Bullet*>& liveBullets) {
-
+	
+	GameObject::updateDebug(deltaTime);
 	timeAlive += deltaTime;
 
 	double percent = timeAlive / TIME_TO_CLIMAX;
@@ -69,31 +71,49 @@ void FrogShip::update(double deltaTime, PlayerShip* player, vector<Bullet*>& liv
 	position = camera.screenToWorld(float(rt*rt)*startPos + 2 * float(rt*percent)*controlPoint
 		+ float(percent*percent)*climaxPos);
 
-	//if (percent > .5) {
-	//	// start aiming at player
-	//	Vector2 dirToPlayer = player->getPosition() - position;
-	//	dirToPlayer.Normalize();
+	if (percent > .25) {
+		// start aiming at player
+		Vector2 dirToPlayer = player->getCenter() - position;
+		dirToPlayer.Normalize();
 
-	//	Vector2 targetAngle = Vector2(dirToPlayer.x, dirToPlayer.y);
-	//	float angle = SimpleMath::Quaternion::
+		float angleToPlayer = atan2(dirToPlayer.y, dirToPlayer.x) + XM_PIDIV2;
+		dirToPlayer = Vector2(cos(angleToPlayer), sin(angleToPlayer));
+		//dirToPlayer += Vector2(cos(XM_PIDIV2), sin(XM_PIDIV2));
+		Vector2 currentRot(cos(rotation), sin(rotation));
 
-	//	turretSprite.setRotation(atan2(targetDirection.y, targetDirection.x) + XM_PIDIV2);
-	//	
-	//	turretDirection.Normalize();
-	//}
+		currentRot += (dirToPlayer - currentRot) * (float) deltaTime * rotationSpeed;
+		setRotation(atan2(currentRot.y, currentRot.x));
 
-	for (auto const& weapon : weaponSystems) {
-		weapon->updatePosition(position);
-		if (!weapon->fired && timeAlive >= TIME_TO_FIRE) {
-			weapon->fired = true;
-			Bullet* bullet = weapon->launchBullet(player->getPosition());
-			liveBullets.push_back(bullet);
+
+		if (timeAlive >= TIME_TO_FIRE && closeEnough(dirToPlayer, currentRot)) {
+			for (auto const& weapon : weaponSystems) {
+				weapon->timeSinceFired += deltaTime;
+				weapon->updatePosition(position);
+				if (weapon->ready()) {
+					weapon->fired = true;
+					Bullet* bullet = weapon->launchBullet(player->getCenter());
+					liveBullets.push_back(bullet);
+				}
+			}
 		}
 	}
 
 	if (position.y > camera.screenToWorld(Vector2(0, float(camera.viewportHeight + 120))).y) {
 		reset();
 	}
+}
+
+
+
+bool FrogShip::closeEnough(const Vector2& toPlayer, const Vector2& currentRot) const {
+
+	if (toPlayer.x > currentRot.x + .15 || toPlayer.x < currentRot.x - .15)
+		return false;
+
+	if (toPlayer.y > currentRot.y + .15 || toPlayer.y < currentRot.y - .15)
+		return false;
+
+	return true;
 }
 
 

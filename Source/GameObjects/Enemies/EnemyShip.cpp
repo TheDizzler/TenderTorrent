@@ -121,10 +121,21 @@ EnemyShip::EnemyWeaponSystem::~EnemyWeaponSystem() {
 void EnemyShip::EnemyWeaponSystem::reset(const Vector2& shipPosition) {
 	systemLocation = shipPosition + positionOffset;
 	fired = false;
+	timeSinceFired = fireDelay;
+	nextBulletInStore = 0;
 }
 
 void EnemyShip::EnemyWeaponSystem::updatePosition(const Vector2& shipPosition) {
 	systemLocation = shipPosition + positionOffset;
+}
+
+bool EnemyShip::EnemyWeaponSystem::ready() {
+	if (timeSinceFired < fireDelay)
+		return false;
+	if (bulletStore[nextBulletInStore]->isAlive == false)
+		return true;
+
+	return false;
 }
 
 EnemyBullet* EnemyShip::EnemyWeaponSystem::launchBullet(const Vector2& target) {
@@ -138,6 +149,7 @@ EnemyBullet* EnemyShip::EnemyWeaponSystem::launchBullet(const Vector2& target) {
 		direction.Normalize();
 		bullet->direction = direction;
 		bullet->isAlive = true;
+		timeSinceFired = 0;
 
 		if (nextBulletInStore >= bulletStore.size())
 			nextBulletInStore = 0;
@@ -150,6 +162,7 @@ EnemyBullet* EnemyShip::EnemyWeaponSystem::launchBullet() {
 	EnemyBullet* bullet = bulletStore[nextBulletInStore++].get();
 	bullet->setPosition(systemLocation);
 	bullet->isAlive = true;
+	timeSinceFired = 0;
 
 	if (nextBulletInStore >= bulletStore.size())
 		nextBulletInStore = 0;

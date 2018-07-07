@@ -152,6 +152,8 @@ public:
 
 	virtual void pause() override;
 
+	/*void notifyControllerRemoved(ControllerSocketNumber controllerSlot,
+		PlayerSlotNumber slotNumber);*/
 	virtual void controllerRemoved(ControllerSocketNumber controllerSlot,
 		PlayerSlotNumber slotNumber) override;
 	virtual void newController(shared_ptr<Joystick> newStick) override;
@@ -174,7 +176,7 @@ private:
 };
 
 
-
+/** A base screen for menu stuff. Note: NOT the same as the MenuManager. */
 class MenuScreen : public Screen {
 public:
 

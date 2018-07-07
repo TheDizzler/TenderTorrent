@@ -53,34 +53,11 @@ protected:
 	float rechargeTickCount = 1.5f;
 	double timeSinceRecharge = 0.0;
 
-	class SubHitArea {
-	public:
-		SubHitArea(const Vector2& locOffset, const Vector2& size) : locationOffset(locOffset) {
-			hitArea.size = size;
-		}
-		virtual ~SubHitArea() {
-		}
-		void setPosition(const Vector2& shipPosition) {
-			hitArea.position = shipPosition + locationOffset;
-		}
-		bool collision(_In_ const HitArea& other) const {
-			return hitArea.collision(other);
-		}
-
-	private:
-		Vector2 locationOffset;
-		HitArea hitArea;
-	};
+	
 	vector<unique_ptr<SubHitArea>> subHitAreas;
 	vector<unique_ptr<WeaponSystem>> weaponSlots;
 	vector<unique_ptr<Mount>> mounts;
-	// need these for now for loading bullet textures
-	/*unique_ptr<WeaponSystem> leftWeaponSlot;
-	unique_ptr<WeaponSystem> rightWeaponSlot;
-	unique_ptr<WeaponSystem> centerWeaponSlot;
 
-	unique_ptr<Turret> leftTurret;
-	unique_ptr<Turret> rightTurret;*/
 
 	bool firing = false;
 

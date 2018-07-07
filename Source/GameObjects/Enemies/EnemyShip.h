@@ -27,6 +27,8 @@ protected:
 		//int timesFired = 0;
 
 		virtual void updatePosition(const Vector2& shipPosition);
+
+		virtual bool ready();
 		/** Launches projectile at target. */
 		EnemyBullet* launchBullet(const Vector2& target);
 		/** Luanches projectile at set angle. */

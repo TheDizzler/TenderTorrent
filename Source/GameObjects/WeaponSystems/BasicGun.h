@@ -8,7 +8,7 @@ public:
 	BasicGun(Vector2 locationOffset);
 	virtual ~BasicGun();
 
-	virtual void fillBulletStore(Animation * bulletAsset) override;
+	virtual void fillBulletStore(Animation* bulletAsset) override;
 	virtual void setWeaponStats(int damage, int energyCost, double coolDownTime) override;
 
 	virtual void draw(SpriteBatch* batch) override;

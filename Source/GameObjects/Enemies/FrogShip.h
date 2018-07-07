@@ -11,13 +11,15 @@ public:
 	FrogShip(xml_node shipNode);
 	virtual ~FrogShip();
 
+	virtual void reset() override;
+
 	virtual void update(double deltaTime, PlayerShip* player, vector<Bullet*>& liveBullets) override;
 
 
 
 private:
 
-	
+	bool closeEnough(const Vector2& toPlayer, const Vector2& currentRot) const;
 
 	Vector2 controlPoint;
 	Vector2 climaxPos;

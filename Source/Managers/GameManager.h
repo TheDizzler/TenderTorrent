@@ -7,7 +7,8 @@
 
 #include <CommonStates.h>
 
-#define _QUICK_LAUNCH
+//#define _QUICK_LAUNCH
+#define DEBUG_HITBOXES
 
 extern GUIFactory guiFactory;
 extern GFXAssetManager gfxAssets;
@@ -94,6 +95,8 @@ public:
 
 
 private:
+
+	bool dummyStickUsed = false;
 
 	/*enum GameState {
 		NORMAL, TRANSITIONING,

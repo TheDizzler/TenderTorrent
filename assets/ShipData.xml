@@ -2,7 +2,7 @@
 <shipData game="TenderTorrent" xml="ShipData" dir="assets/">
 
 	<!-- All coordinates from top-left of sprite -->
-	<ship name="Diamond Ship" hull="Diamond Ship Hull">
+	<ship name="Stingray" hull="Stingray Hull">
 
 		<speed normal="225" firing="150"/>
 		<energy max="100" rechargeAmount="25" rechargeDelay="1.5" />

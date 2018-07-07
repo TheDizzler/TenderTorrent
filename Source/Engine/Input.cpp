@@ -337,17 +337,19 @@ void ControllerListener::makeControllerSocketAvailable(
 		GameEngine::errorMessage(L"Unknown socket number attempting to release.",
 			L"Controller Socket Number release Error");
 	} else {
-		list<ControllerSocketNumber>::iterator itr;
-		//list<ControllerSocketNumber>::iterator last = availableControllerSockets.begin();
-		for (itr = availableControllerSockets.begin();
-			itr != availableControllerSockets.end(); ++itr) {
-			if (*itr > socketNumber) {
-				availableControllerSockets.insert(itr, socketNumber);
-				break;
+		
+		if (availableControllerSockets.size() == 0) {
+			availableControllerSockets.push_front(socketNumber);
+		} else {
+			list<ControllerSocketNumber>::iterator itr;
+			for (itr = availableControllerSockets.begin();
+				itr != availableControllerSockets.end(); ++itr) {
+				if (*itr > socketNumber) {
+					availableControllerSockets.insert(itr, socketNumber);
+					break;
+				}
 			}
-			//last = itr;
 		}
-		//availableControllerSockets.push_front(socketNumber);
 	}
 }
 
@@ -431,7 +433,7 @@ DWORD WINAPI waitForPlayerThread(PVOID pVoid) {
 DWORD WINAPI waitForHUDThread(PVOID pVoid) {
 
 	JoyData* joyData = (JoyData*) pVoid;
-	
+
 	while (Input::gameInitialized == false) { // Jus hol up
 		//wostringstream wss;
 		//wss << L"Test Thread #" << GetCurrentThreadId() << endl;

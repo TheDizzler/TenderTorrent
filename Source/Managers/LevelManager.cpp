@@ -75,10 +75,8 @@ bool LevelManager::loadLevel(ComPtr<ID3D11Device> device, const char_t* levelFil
 	totalPlayTime = 0;
 	gameOverTimer = 0;
 
-	
-	//playerShip.load(gfxAssets.getAsset("PlayerShip Hull"));
-	//playerShip.setDimensions(&playerShip);
-	xml_node loadship = shipDataDoc.child("shipData").find_child_by_attribute("name", "Diamond Ship");
+
+	xml_node loadship = shipDataDoc.child("shipData").find_child_by_attribute("name", "Stingray");
 	if (loadship == NULL)
 		return false;
 	playerShip.loadShip(loadship);

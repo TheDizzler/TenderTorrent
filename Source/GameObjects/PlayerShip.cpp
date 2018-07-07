@@ -146,18 +146,16 @@ void PlayerShip::update(double deltaTime) {
 	if (firing)
 		currentSpeed = firingSpeed;
 
-	auto keyState = Keyboard::Get().GetState();
-
-	if (keyState.A || joystick->isLeftPressed())
+	if (keys.keyState.A || joystick->isLeftPressed())
 		position.x -= float(currentSpeed * deltaTime);
 
-	if (keyState.D || joystick->isRightPressed())
+	if (keys.keyState.D || joystick->isRightPressed())
 		position.x += float(currentSpeed * deltaTime);
 
 
-	if (keyState.W || joystick->isUpPressed())
+	if (keys.keyState.W || joystick->isUpPressed())
 		position.y -= float(currentSpeed * deltaTime);
-	if (keyState.S || joystick->isDownPressed())
+	if (keys.keyState.S || joystick->isDownPressed())
 		position.y += float(currentSpeed * deltaTime);
 
 	camera.confineToScreen(this);
@@ -184,7 +182,7 @@ void PlayerShip::update(double deltaTime) {
 		[](const Bullet* bullet) { return !bullet->isAlive; }), liveBullets.end());
 
 
-	if (keyState.Space || joystick->xButtonDown()) {
+	if (keys.keyState.Space || joystick->xButtonDown()) {
 		for (const auto& weaponSlot : weaponSlots) {
 			if (energy >= weaponSlot->energyCost
 				&& weaponSlot->ready()) {
@@ -339,6 +337,8 @@ int PlayerShip::getHealth() {
 
 void PlayerShip::takeDamage(int damageTaken) {
 
+return;
+
 	maxEnergy -= damageTaken;
 	if (energy > maxEnergy)
 		energy = maxEnergy;
@@ -348,15 +348,14 @@ void PlayerShip::takeDamage(int damageTaken) {
 			return;
 		isAlive = false;
 		// capture direction moving
-		auto keyState = Keyboard::Get().GetState();
 		deathVector = Vector2::Zero;
-		if (keyState.A)
+		if (keys.keyState.A || joystick->isLeftPressed())
 			deathVector.x = -1;
-		else if (keyState.D)
+		else if (keys.keyState.D || joystick->isRightPressed())
 			deathVector.x = 1;
-		if (keyState.W)
+		if (keys.keyState.W || joystick->isUpPressed())
 			deathVector.y = -1;
-		else if (keyState.S)
+		else if (keys.keyState.S || joystick->isDownPressed())
 			deathVector.y = 1;
 		deathVector.Normalize();
 		deathVector *= firingSpeed;

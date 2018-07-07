@@ -129,10 +129,18 @@ void MenuManager::loadLevel(string levelXMLFile) {
 	game->loadLevel(levelXMLFile);
 }
 
+//void MenuManager::notifyControllerRemoved(ControllerSocketNumber controllerSlot, PlayerSlotNumber slotNumber) {
+//	if (currentScreen != configScreen.get()) {
+//		configScreen->controllerRemoved(controllerSlot, slotNumber);
+//	}
+//}
+
 void MenuManager::controllerRemoved(ControllerSocketNumber controllerSlot, PlayerSlotNumber slotNumber) {
+	currentScreen->controllerRemoved(controllerSlot, slotNumber);
 }
 
 void MenuManager::newController(shared_ptr<Joystick> newStick) {
+	currentScreen->newController(newStick);
 }
 
 
@@ -440,6 +448,7 @@ void ConfigScreen::reloadGraphicsAssets() {
 
 void ConfigScreen::setup() {
 
+	testSpinner->clear();
 	vector<wstring> items;
 	for (const auto& playerSlot : activeSlots) {
 		wostringstream wss;
@@ -447,7 +456,6 @@ void ConfigScreen::setup() {
 		wss << " Player: " << playerSlot->getPlayerSlotNumber();
 		items.push_back(wss.str());
 	}
-
 	testSpinner->addItems(items);
 
 	Vector2 newPos(testSpinner->getPosition());
@@ -495,6 +503,7 @@ void ConfigScreen::controllerRemoved(ControllerSocketNumber controllerSlot,
 		GameEngine::showWarningDialog(
 			L"Joystick not found in spinner", L"Joystick Removal Error");
 	}
+	refreshTexture = true;
 }
 
 void ConfigScreen::newController(shared_ptr<Joystick> newStick) {
@@ -506,6 +515,7 @@ void ConfigScreen::newController(shared_ptr<Joystick> newStick) {
 	Vector2 newPos(testSpinner->getPosition());
 	newPos.x += testSpinner->getWidth() + 25;
 	spinnerLabel->setPosition(newPos);
+	refreshTexture = true;
 }
 
 void ConfigScreen::populateDisplayList(vector<ComPtr<IDXGIOutput>> displays) {

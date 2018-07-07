@@ -5,11 +5,65 @@
 
 
 GameObject::GameObject() : Sprite() {
+
+
 }
 
 
 GameObject::~GameObject() {
 }
+
+void GameObject::load(GraphicsAsset* const graphicsAsset) {
+	Sprite::load(graphicsAsset);
+
+#ifdef  DEBUG_HITBOXES
+	hbFrame.reset(guiFactory.createRectangleFrame(
+		Vector2(hitArea.position.x, hitArea.position.y),
+		Vector2(hitArea.size.x, hitArea.size.y)));
+	hbFrame->setAlpha(.75);
+	
+	//for (const auto& subs : subHitboxes) {
+	//	unique_ptr<RectangleFrame> frame;
+	//	frame.reset(guiFactory->createRectangleFrame(
+	//		Vector2(subs->position.x, subs->position.y /*- subs->position.z*/),
+	//		Vector2(subs->size.x, subs->size.y)));
+	//	frame->setTint(Colors::Cornsilk);
+	//	subTestFrames.push_back(move(frame));
+	//}
+#endif //  DEBUG_HITBOXES
+}
+
+void GameObject::draw(SpriteBatch* batch) {
+
+	Sprite::draw(batch);
+
+#ifdef  DEBUG_HITBOXES
+	hbFrame->draw(batch);
+#endif //  DEBUG_HITBOXES
+
+}
+
+void GameObject::updateDebug(double deltaTime) {
+#ifdef  DEBUG_HITBOXES
+	hbFrame->update();
+	hbFrame->setPosition(position);
+	hbFrame->setOrigin(origin);
+#endif //  DEBUG_HITBOXES
+}
+
+void GameObject::setPosition(const Vector2& pos) {
+	Sprite::setPosition(pos);
+
+	hbFrame->setPosition(hitArea.position);
+}
+
+void GameObject::setRotation(const float rot) {
+	Sprite::setRotation(rot);
+#ifdef  DEBUG_HITBOXES
+	hbFrame->setRotation(rot);
+#endif //  DEBUG_HITBOXES
+}
+
 
 float GameObject::getFloatFrom(xml_node node) {
 

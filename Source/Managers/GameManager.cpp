@@ -16,6 +16,9 @@ Dialog* GameManager::showDialog = NULL;
 GameManager::~GameManager() {
 	delete blendState;
 	showDialog = NULL;
+
+	if (dummyStickUsed)
+		delete joystick;
 }
 
 bool GameManager::initializeGame(GameEngine* gmngn,
@@ -58,12 +61,18 @@ bool GameManager::initializeGame(GameEngine* gmngn,
 
 	initErrorDialogs();
 
-	for (const auto& slot : waitingSlots) {
+	for (const auto& slot : activeSlots) {
 		if (slot->hasJoystick()) {
 			joystick = slot->getStick();
 			break;
 		}
 	}
+	
+	if (!joystick) { // create dummy stick
+		joystick = new DummyStick();
+		dummyStickUsed = true;
+	}
+
 
 	menuScreen.reset(new MenuManager());
 	menuScreen->setGameManager(this);
@@ -214,10 +223,29 @@ void GameManager::exit() {
 void GameManager::controllerRemoved(ControllerSocketNumber controllerSocket,
 	PlayerSlotNumber slotNumber) {
 	currentScreen->controllerRemoved(controllerSocket, slotNumber);
+	//menuScreen->notifyControllerRemoved(controllerSocket, slotNumber);
+
+	if (activeSlots.size() == 0) {
+		joystick = new DummyStick();
+		dummyStickUsed = true;
+	} else {
+		for (const auto& slot : activeSlots) {
+			if (slot->hasJoystick()) {
+				joystick = slot->getStick();
+				break;
+			}
+		}
+	}
+
 }
 
 void GameManager::newController(shared_ptr<Joystick> newStick) {
 	currentScreen->newController(newStick);
+	if (dummyStickUsed) {
+		dummyStickUsed = false;
+		delete joystick;
+		joystick = NULL;
+	}
 	if (joystick == NULL) {
 		joystick = newStick.get();
 	}

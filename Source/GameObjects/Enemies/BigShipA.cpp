@@ -94,15 +94,15 @@ void BigShipA::update(double deltaTime, PlayerShip* player, vector<Bullet*>& liv
 			percent = timeAlive / timeToTravel;
 			setPosition(camera.screenToWorld(Vector2::Lerp(startPos, attackPosition, (float) percent)));
 
-			hexTurretL->setRotation(player->getPosition());
-			hexTurretR->setRotation(player->getPosition());
+			hexTurretL->setRotation(player->getCenter());
+			hexTurretR->setRotation(player->getCenter());
 			hexTurretL->timeSinceFired += deltaTime;
 			if (hexTurretL->timeSinceFired >= hexTurretL->fireDelay) {
 				hexTurretL->timeSinceFired = 0;
 				hexTurretL->fired = true;
-				liveBullets.push_back(hexTurretL->launchBullet(player->getPosition()));
+				liveBullets.push_back(hexTurretL->launchBullet(player->getCenter()));
 				hexTurretR->fired = true;
-				liveBullets.push_back(hexTurretR->launchBullet(player->getPosition()));
+				liveBullets.push_back(hexTurretR->launchBullet(player->getCenter()));
 			}
 
 			if (percent >= 1) {
@@ -111,21 +111,15 @@ void BigShipA::update(double deltaTime, PlayerShip* player, vector<Bullet*>& liv
 			break;
 		case BigShipState::ATTACK:
 
-			hexTurretL->setRotation(player->getPosition());
-			hexTurretR->setRotation(player->getPosition());
-			/*hexTurretL->timeSinceFired += deltaTime;
-			if (hexTurretL->timeSinceFired >= hexTurretL->fireDelay) {
-				hexTurretL->timeSinceFired = 0;
-				liveBullets.push_back(hexTurretL->launchBullet(player->getPosition()));
-				liveBullets.push_back(hexTurretR->launchBullet(player->getPosition()));
-			}*/
+			hexTurretL->setRotation(player->getCenter());
+			hexTurretR->setRotation(player->getCenter());
 
 			for (auto const& weapon : weaponSystems) {
 				weapon->timeSinceFired += deltaTime;
 				//weapon->updatePosition(position);
 				if (weapon->timeSinceFired >= weapon->fireDelay) {
 					weapon->timeSinceFired = 0;
-					Bullet* bullet = weapon->launchBullet(player->getPosition());
+					Bullet* bullet = weapon->launchBullet(player->getCenter());
 					liveBullets.push_back(bullet);
 				}
 			}
@@ -153,15 +147,15 @@ void BigShipA::update(double deltaTime, PlayerShip* player, vector<Bullet*>& liv
 			break;
 		case BigShipState::EXITING:
 
-			hexTurretL->setRotation(player->getPosition());
-			hexTurretR->setRotation(player->getPosition());
+			hexTurretL->setRotation(player->getCenter());
+			hexTurretR->setRotation(player->getCenter());
 			hexTurretL->timeSinceFired += deltaTime;
 			if (hexTurretL->timeSinceFired >= hexTurretL->fireDelay) {
 				hexTurretL->timeSinceFired = 0;
 				hexTurretL->fired = true;
-				liveBullets.push_back(hexTurretL->launchBullet(player->getPosition()));
+				liveBullets.push_back(hexTurretL->launchBullet(player->getCenter()));
 				hexTurretR->fired = true;
-				liveBullets.push_back(hexTurretR->launchBullet(player->getPosition()));
+				liveBullets.push_back(hexTurretR->launchBullet(player->getCenter()));
 			}
 			timeSinceExiting += deltaTime;
 

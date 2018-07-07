@@ -23,7 +23,7 @@ void Bullet::update(double deltaTime) {
 
 	double deltaSpeed = deltaTime*bulletSpeed;
 	Vector2 newposition = position + direction*(float) deltaSpeed;
-	setPosition(newposition);
+	setPosition(newposition - camera.getDelta());
 	timeAlive += deltaTime;
 
 	if (!camera.viewContains(position)) {

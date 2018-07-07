@@ -49,10 +49,10 @@ void ArrowEnemyShip::update(double deltaTime, PlayerShip* player, vector<Bullet*
 		for (auto const& weapon : weaponSystems) {
 			weapon->updatePosition(position);
 			weapon->timeSinceFired += deltaTime;
-			if (weapon->timeSinceFired >= weapon->fireDelay) {
-				weapon->timeSinceFired = 0;
+			if (weapon->ready()) {
+				//weapon->timeSinceFired = 0;
 				weapon->fired = true;
-				Bullet* bullet = weapon->launchBullet(player->getPosition());
+				Bullet* bullet = weapon->launchBullet(player->getCenter());
 				liveBullets.push_back(bullet);
 			}
 		}
