@@ -81,7 +81,7 @@ void FrogShip::update(double deltaTime, PlayerShip* player, vector<Bullet*>& liv
 		//dirToPlayer += Vector2(cos(XM_PIDIV2), sin(XM_PIDIV2));
 		Vector2 currentRot(cos(rotation), sin(rotation));
 
-		currentRot += (dirToPlayer - currentRot) * (float) deltaTime * rotationSpeed;
+		currentRot += (dirToPlayer - currentRot) * float(deltaTime * rotationSpeed);
 		setRotation(atan2(currentRot.y, currentRot.x));
 
 

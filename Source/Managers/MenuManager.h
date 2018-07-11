@@ -173,6 +173,11 @@ private:
 	unique_ptr<LevelSelectScreen> levelSelectScreen;
 
 	GameManager* game;
+
+	unique_ptr<TextLabel> fpsLabel;
+	int frameCount = 0;
+	double fpsUpdateTime = 5;
+	const double FPS_UPDATE_TIME = 1;
 };
 
 
@@ -196,8 +201,8 @@ public:
 protected:
 
 	GameManager* game;
-	//vector<unique_ptr<GUIControl>> guiControls;
-	vector<GUIControl*> guiControls;
+	//vector<Selectable*> guiControls;
+	SelectorManager selectorManager;
 };
 
 
@@ -231,16 +236,18 @@ private:
 	unique_ptr<TexturePanel> texturePanel;
 	bool refreshTexture = true;
 
-	TextLabel* adapterLabel;
-	TextLabel* displayLabel;
-	TextLabel* testLabel;
+	unique_ptr<TextLabel> adapterLabel;
+	unique_ptr<TextLabel> displayLabel;
+	unique_ptr<TextLabel> testLabel;
 
 	ListBox* adapterListbox;
 	ListBox* displayListbox;
 	ComboBox* displayModeCombobox;
 
+	vector<TextLabel*> labels;
+
 	Spinner* testSpinner;
-	TextLabel* spinnerLabel;
+	unique_ptr<TextLabel> spinnerLabel;
 };
 
 class MainScreen : public MenuScreen {
@@ -259,7 +266,7 @@ public:
 
 private:
 	unique_ptr<PromptDialog> exitDialog;
-
+	SelectorManager dialogSelector;
 	void confirmExit();
 };
 

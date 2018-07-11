@@ -15,7 +15,7 @@
 #include <SDKDDKVer.h>		// ^
 
 #pragma comment (lib, "D3D11.lib")
-#pragma comment(lib, "DXGI.lib")
+#pragma comment (lib, "DXGI.lib")
 
 #include <d3d11_1.h>
 #include <dxgi1_2.h>

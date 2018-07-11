@@ -18,10 +18,12 @@ public:
 	void updateWarning(double deltaTime);
 	void updateGameOver(double deltaTime);
 
+
 	void draw(SpriteBatch* batch);
 	void drawPaused(SpriteBatch* batch);
 	void drawWarning(SpriteBatch* batch);
 	void drawGameOver(SpriteBatch* batch);
+
 
 	unique_ptr<Button> exitButton;
 	unique_ptr<Button> continueButton;

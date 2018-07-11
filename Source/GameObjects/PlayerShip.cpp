@@ -240,7 +240,7 @@ void PlayerShip::finishedUpdate(double deltaTime) {
 	// move to center of screen
 	Vector2 direction = Vector2(camera.viewportCenter) - position;
 	direction.Normalize();
-	setPosition(position - direction*speed*deltaTime);
+	setPosition(position - direction*speed*float(deltaTime));
 
 }
 

@@ -1,11 +1,7 @@
 #pragma once
 
 #include "../globals.h"
-//#include "../../DXTKGui/Controllers/Joystick.h"
 
-
-
-//using namespace std;
 
 extern CRITICAL_SECTION cs_activeSlotsAccess;
 
@@ -43,7 +39,9 @@ private:
 	JoyData* _threadJoystickData;
 };
 
+/** Slots with linked controllers. */
 extern vector<shared_ptr<PlayerSlot>> activeSlots;
+/** Slots waiting for input to assign joystick */
 extern deque<shared_ptr<PlayerSlot>> waitingSlots;
 
 class PlayerSlotManager {

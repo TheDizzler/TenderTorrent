@@ -169,6 +169,7 @@
     <Xml Include="assets\AssetManifest.xml">
       <SubType>Designer</SubType>
     </Xml>
+    <Xml Include="assets\BossShips.xml" />
     <Xml Include="assets\EnemyShips.xml">
       <SubType>Designer</SubType>
     </Xml>
@@ -185,6 +186,43 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="assets\bg\mako spritesheet bak.dds" />
+    <Image Include="assets\bg\mako spritesheet.dds" />
+    <Image Include="assets\bg\mako00.dds" />
+    <Image Include="assets\bg\mako01a.dds" />
+    <Image Include="assets\bg\mako01b.dds" />
+    <Image Include="assets\bg\mako01c.dds" />
+    <Image Include="assets\bg\mako01d.dds" />
+    <Image Include="assets\bg\mako01e.dds" />
+    <Image Include="assets\bg\mako01f.dds" />
+    <Image Include="assets\bg\mako01g.dds" />
+    <Image Include="assets\bg\mako01h.dds" />
+    <Image Include="assets\bg\mako01i.dds" />
+    <Image Include="assets\bg\shara spritesheet.dds" />
+    <Image Include="assets\bg\shara00.dds" />
+    <Image Include="assets\bg\shara01a.dds" />
+    <Image Include="assets\bg\tenta-owl.dds" />
+    <Image Include="assets\gfx\big fireballs.dds" />
+    <Image Include="assets\gfx\BigShipA.dds" />
+    <Image Include="assets\gfx\bullet sheet.dds" />
+    <Image Include="assets\gfx\corner frame b.dds" />
+    <Image Include="assets\gfx\GraphicsSheet.dds" />
+    <Image Include="assets\gfx\previews\mako preview.dds" />
+    <Image Include="assets\gfx\previews\shara preview.dds" />
+    <Image Include="assets\gui\button down (256x64).dds" />
+    <Image Include="assets\gui\button up (256x64).dds" />
+    <Image Include="assets\gui\dialog pink (200x200).dds" />
+    <Image Include="assets\gui\dialog pink (250x150).dds" />
+    <Image Include="assets\gui\LaunchButton Spritesheet.dds" />
+    <Image Include="assets\gui\ScrollBarTrackCustom.dds" />
+    <Image Include="assets\gui\ScrollBarUpCustom.dds" />
+    <Image Include="assets\gui\ScrollBarUpPressedCustom.dds" />
+    <Image Include="assets\gui\ScrubberCustom.dds" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="X3DAudio.lib" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{E9C22AAC-8D4D-4D44-8969-65311A131B1D}</ProjectGuid>

@@ -58,6 +58,9 @@ bool MenuManager::initialize(ComPtr<ID3D11Device> device) {
 		//new ScreenTransitions::SquareFlipScreenTransition());
 		new ScreenTransitions::LineWipeScreenTransition());
 
+	fpsLabel.reset(guiFactory.createTextLabel(Vector2(10.0f, (float) Globals::WINDOW_HEIGHT - 25),
+		L"FPS"));
+
 	return true;
 }
 
@@ -69,8 +72,22 @@ void MenuManager::update(double deltaTime) {
 			currentScreen = switchTo;
 			switchTo = NULL;
 		}
-	} else
+	} else {
+		fpsUpdateTime += deltaTime;
+		++frameCount;
+		if (fpsUpdateTime >= FPS_UPDATE_TIME) {
+
+			wostringstream wss;
+			wss << "fps: " << frameCount / fpsUpdateTime;
+			fpsLabel->setText(wss.str());
+			fpsLabel->update(deltaTime);
+			fpsUpdateTime = 0;
+			frameCount = 0;
+
+
+		}
 		currentScreen->update(deltaTime);
+	}
 
 }
 
@@ -88,6 +105,7 @@ void MenuManager::draw(SpriteBatch* batch) {
 		batch->Begin(SpriteSortMode_Deferred);
 		{
 			currentScreen->draw(batch);
+			fpsLabel->draw(batch);
 		}
 		batch->End();
 	}
@@ -154,10 +172,10 @@ MenuScreen::MenuScreen(MenuManager* mngr) {
 
 MenuScreen::~MenuScreen() {
 
-	for (GUIControl* control : guiControls)
+	/*for (Selectable* control : guiControls)
 		delete control;
 
-	//guiControls.clear();
+	guiControls.clear();*/
 }
 
 void MenuScreen::setGameManager(GameManager* gmMng) {
@@ -188,6 +206,9 @@ MainScreen::~MainScreen() {
 
 bool MainScreen::initialize(ComPtr<ID3D11Device> device) {
 
+	selectorManager.initialize(make_unique<GrowSelector>(&guiFactory));
+	selectorManager.setControllers(joystick, &keys, &mouse);
+
 	Vector2 buttonpos = Vector2(
 		float(Globals::WINDOW_WIDTH) / 2, float(Globals::WINDOW_HEIGHT) / 8);
 	Vector2 buttonsize = Vector2(float(Globals::WINDOW_WIDTH) / 4, 0);
@@ -199,23 +220,28 @@ bool MainScreen::initialize(ComPtr<ID3D11Device> device) {
 		Vector2::Zero, L"Play", Color(0, 0, 0, 1), false);
 	jammer->setEffect(make_unique<ColorJammer>(.525f));
 	button->setTextLabel(jammer, true);
-	guiControls.push_back(button);
+	//guiControls.push_back(button);
+	selectorManager.addControl(button);
 
 	buttonpos.y = float(Globals::WINDOW_HEIGHT) / 2 - float(button->getHeight()) / 2;
 	button = guiFactory.createButton(buttonpos, buttonsize, L"Settings");
 	button->setUnpressedColor(Color(1, .558f, 1, 1));
 	button->setActionListener(new SettingsButtonListener(this));
-	guiControls.push_back(button);
+	//guiControls.push_back(button);
+	selectorManager.addControl(button);
 
 	buttonpos.y = float(Globals::WINDOW_HEIGHT - Globals::WINDOW_HEIGHT / 8 - button->getHeight());
 	button = guiFactory.createButton(buttonpos, buttonsize, L"Exit");
 	button->setUnpressedColor(Color(1, .558f, 1, 1));
 	button->setActionListener(new OnClickListenerExitButton(this));
-	guiControls.push_back(button);
+	//guiControls.push_back(button);
+	selectorManager.addControl(button);
 
 	/*delete*/
 
 	{
+		dialogSelector.initialize(make_unique<ColorFlashSelector>(&guiFactory));
+		dialogSelector.setControllers(joystick, &keys, &mouse);
 
 		Vector2 dialogPos, dialogSize;
 		dialogSize = Vector2(float(Globals::WINDOW_WIDTH) / 2, float(Globals::WINDOW_HEIGHT) / 2);
@@ -231,6 +257,7 @@ bool MainScreen::initialize(ComPtr<ID3D11Device> device) {
 		quitButton.reset(guiFactory.createButton());
 		quitButton->setActionListener(new OnClickListenerDialogQuitButton(this));
 		quitButton->setText(L"Quit");
+
 		exitDialog->setConfirmButton(move(quitButton));
 		exitDialog->setCancelButton(L"Keep Testing!");
 		exitDialog->setOpenTransition(
@@ -250,18 +277,19 @@ bool MainScreen::initialize(ComPtr<ID3D11Device> device) {
 		//exitDialog->setCloseTransition(
 		/*new TransitionEffects::ShrinkTransition(
 		Vector2(1, 1), Vector2(.001, .001)));*/
+
+		exitDialog->setSelectorManager(joystick, &keys);
 	}
-
-
 
 	return true;
 }
 
 void MainScreen::reloadGraphicsAssets() {
 
-	for (auto const& control : guiControls)
-		control->reloadGraphicsAsset();
+	/*for (auto const& control : guiControls)
+		control->reloadGraphicsAsset();*/
 
+	selectorManager.reloadGraphicsAssets();
 	exitDialog->reloadGraphicsAsset();
 }
 
@@ -279,16 +307,18 @@ void MainScreen::update(double deltaTime) {
 	if (exitDialog->isOpen()) {
 		exitDialog->update(deltaTime);
 	} else {
-		for (auto const& control : guiControls)
-			control->update(deltaTime);
+		/*for (auto const& control : guiControls)
+			control->update(deltaTime);*/
+		selectorManager.update(deltaTime);
 	}
 }
 
 
 void MainScreen::draw(SpriteBatch* batch) {
-	for (auto const& control : guiControls)
-		control->draw(batch);
+	/*for (auto const& control : guiControls)
+		control->draw(batch);*/
 
+	selectorManager.draw(batch);
 	exitDialog->draw(batch);
 }
 
@@ -305,7 +335,8 @@ ConfigScreen::ConfigScreen(MenuManager* mngr) : MenuScreen(mngr) {
 }
 
 ConfigScreen::~ConfigScreen() {
-	guiControls.clear();
+	//guiControls.clear();
+	labels.clear();
 }
 
 
@@ -313,18 +344,22 @@ int MARGIN = 10;
 int itemHeight = 32;
 bool ConfigScreen::initialize(ComPtr<ID3D11Device> device) {
 
+	selectorManager.initialize(make_unique<GrowSelector>(&guiFactory));
+	selectorManager.setControllers(joystick, &keys, &mouse);
 
 	Vector2 controlPos = Vector2(50, 50);
 	//Labels for displaying pressed info
-	adapterLabel = guiFactory.createTextLabel(controlPos, L"Test");
+	adapterLabel.reset(guiFactory.createTextLabel(controlPos, L"Test"));
 	adapterLabel->setHoverable(true);
-	guiControls.push_back(adapterLabel);
+	labels.push_back(adapterLabel.get());
+
 
 	controlPos.y += adapterLabel->getHeight() + MARGIN;
 
-	// create listbox of gfx cards
+	//create listbox of gfx cards
 	adapterListbox = guiFactory.createListBox(controlPos, 400, itemHeight);
-	guiControls.push_back(adapterListbox);
+	//guiControls.push_back(adapterListbox);
+	selectorManager.addControl(adapterListbox);
 	vector<ListItem*> adapterItems;
 	for (ComPtr<IDXGIAdapter> adap : game->getAdapterList()) {
 		AdapterItem* item = new AdapterItem();
@@ -343,14 +378,15 @@ bool ConfigScreen::initialize(ComPtr<ID3D11Device> device) {
 
 
 	controlPos.y += adapterListbox->getHeight() + MARGIN * 2;
-	displayLabel = guiFactory.createTextLabel(controlPos, L"A");
-	guiControls.push_back(displayLabel);
+	displayLabel.reset(guiFactory.createTextLabel(controlPos, L"A"));
+	labels.push_back(displayLabel.get());
 
 	controlPos.y += displayLabel->getHeight() + MARGIN;
 
 	// create listbox of monitors available to pressed gfx card
 	displayListbox = guiFactory.createListBox(controlPos, 400, itemHeight);
-	guiControls.push_back(displayListbox);
+	//guiControls.push_back(displayListbox);
+	selectorManager.addControl(displayListbox);
 	// because only the one adapter has displays on my laptop
 	// this has to be grab the first (and only) display.
 	populateDisplayList(game->getDisplayListFor(0));
@@ -366,18 +402,19 @@ bool ConfigScreen::initialize(ComPtr<ID3D11Device> device) {
 	testSpinner = guiFactory.createSpinner(controlPos, 25, itemHeight);
 
 	vector<wstring> items;
-	for (const auto& playerSlot : waitingSlots) {
+	for (const auto& playerSlot : activeSlots) {
 		wostringstream wss;
 		wss << "Slot: " << playerSlot->getPlayerSlotNumber();
 		items.push_back(wss.str());
 	}
 
 	testSpinner->addItems(items);
-	guiControls.push_back(testSpinner);
+	//guiControls.push_back(testSpinner);
+	selectorManager.addControl(testSpinner);
 	controlPos.x += testSpinner->getWidth() + 25;
 
-	spinnerLabel = guiFactory.createTextLabel(controlPos, L"Controllers Found");
-	guiControls.push_back(spinnerLabel);
+	spinnerLabel.reset(guiFactory.createTextLabel(controlPos, L"Controllers Found"));
+	labels.push_back(spinnerLabel.get());
 
 
 	//Setup display mode combobox
@@ -401,7 +438,8 @@ bool ConfigScreen::initialize(ComPtr<ID3D11Device> device) {
 	OnClickListenerDisplayModeList* onClickDisplayMode =
 		new OnClickListenerDisplayModeList(this);
 	displayModeCombobox->setActionListener(onClickDisplayMode);
-	guiControls.push_back(displayModeCombobox);
+	//guiControls.push_back(displayModeCombobox);
+	selectorManager.addControl(displayModeCombobox);
 
 
 
@@ -413,11 +451,12 @@ bool ConfigScreen::initialize(ComPtr<ID3D11Device> device) {
 	check->setActionListener(onClickFullScreen);
 	check->setChecked(Globals::FULL_SCREEN);
 
-	guiControls.push_back(check);
+	//guiControls.push_back(check);
+	selectorManager.addControl(check);
 
-	testLabel = guiFactory.createTextLabel(
-		Vector2(250, 450), L"Test Messages here");
-	guiControls.push_back(testLabel);
+	testLabel.reset(guiFactory.createTextLabel(
+		Vector2(250, 450), L"Test Messages here"));
+	labels.push_back(testLabel.get());
 
 	// Create Apply and Cancel Buttons
 	ImageButton* button = (ImageButton*) guiFactory.createImageButton("Button Up", "Button Down");
@@ -426,14 +465,16 @@ bool ConfigScreen::initialize(ComPtr<ID3D11Device> device) {
 		Vector2((float) Globals::WINDOW_WIDTH / 2 - button->getWidth(),
 		(float) Globals::WINDOW_HEIGHT - button->getHeight() - 25));
 	button->setActionListener(new BackButtonListener(this));
-	guiControls.push_back(button);
+	//guiControls.push_back(button);
+	selectorManager.addControl(button);
 
 	button = (ImageButton*) guiFactory.createImageButton("Button Up", "Button Down");
 	button->setText(L"Apply");
 	button->setPosition(
 		Vector2((float) Globals::WINDOW_WIDTH / 2,
 		(float) Globals::WINDOW_HEIGHT - button->getHeight() - 25));
-	guiControls.push_back(button);
+	//guiControls.push_back(button);
+	selectorManager.addControl(button);
 
 	texturePanel.reset(guiFactory.createPanel());
 
@@ -442,8 +483,9 @@ bool ConfigScreen::initialize(ComPtr<ID3D11Device> device) {
 }
 
 void ConfigScreen::reloadGraphicsAssets() {
-	for (auto const& control : guiControls)
-		control->reloadGraphicsAsset();
+	/*for (auto const& control : guiControls)
+		control->reloadGraphicsAsset();*/
+	selectorManager.reloadGraphicsAssets();
 }
 
 void ConfigScreen::setup() {
@@ -471,10 +513,16 @@ void ConfigScreen::update(double deltaTime) {
 		menuManager->openMainMenu();
 	}
 
-	for (auto const& control : guiControls) {
+	/*for (auto const& control : guiControls) {
 		if (control->update(deltaTime))
 			refreshTexture = true;
-	}
+	}*/
+
+	for (auto const& label : labels)
+		if (label->update(deltaTime))
+			refreshTexture = true;
+	if (selectorManager.update(deltaTime))
+		refreshTexture = true;
 
 	if (refreshTexture) {
 		refreshTexture = false;
@@ -485,12 +533,15 @@ void ConfigScreen::update(double deltaTime) {
 
 void ConfigScreen::draw(SpriteBatch* batch) {
 	texturePanel->draw(batch);
-
+	selectorManager.drawSelector(batch);
 }
 
 void ConfigScreen::textureDraw(SpriteBatch* batch) {
-	for (auto const& control : guiControls)
-		control->draw(batch);
+	/*for (auto const& control : guiControls)
+		control->draw(batch);*/
+	for (auto const& label : labels)
+		label->draw(batch);
+	selectorManager.drawWithoutSelector(batch);
 }
 
 
@@ -633,8 +684,9 @@ void OnClickListenerDisplayModeList::onHover(ComboBox* listbox, int hoveredItemI
 void OnClickListenerFullScreenCheckBox::onClick(CheckBox* checkbox, bool isChecked) {
 
 	/*wostringstream wss;
-	wss << "CheckBox is checked: " << isChecked;
-	config->displayModeLabel->setText(wss);*/
+	wss << "CheckBox is checked: " << isChecked << endl;
+	OutputDebugString(wss.str().c_str());*/
+
 	if (!config->game->setFullScreen(isChecked)) {
 		// revert to old settings
 	} else {
