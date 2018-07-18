@@ -530,7 +530,4 @@
     <Image Include="assets\gui\ScrollBarUpPressedCustom.dds" />
     <Image Include="assets\gui\ScrubberCustom.dds" />
   </ItemGroup>
-  <ItemGroup>
-    <Library Include="X3DAudio.lib" />
-  </ItemGroup>
 </Project>

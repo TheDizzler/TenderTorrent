@@ -182,7 +182,9 @@
     <Xml Include="assets\shara.xml">
       <SubType>Designer</SubType>
     </Xml>
-    <Xml Include="assets\ShipData.xml" />
+    <Xml Include="assets\ShipData.xml">
+      <SubType>Designer</SubType>
+    </Xml>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -220,9 +222,6 @@
     <Image Include="assets\gui\ScrollBarUpCustom.dds" />
     <Image Include="assets\gui\ScrollBarUpPressedCustom.dds" />
     <Image Include="assets\gui\ScrubberCustom.dds" />
-  </ItemGroup>
-  <ItemGroup>
-    <Library Include="X3DAudio.lib" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{E9C22AAC-8D4D-4D44-8969-65311A131B1D}</ProjectGuid>

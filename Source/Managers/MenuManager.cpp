@@ -18,6 +18,7 @@ void MenuManager::reloadGraphicsAssets() {
 	transitionManager.reloadGraphicsAssets();
 	mainScreen->reloadGraphicsAssets();
 	configScreen->reloadGraphicsAssets();
+	fpsLabel->reloadGraphicsAsset();
 }
 
 
@@ -429,16 +430,15 @@ bool ConfigScreen::initialize(ComPtr<ID3D11Device> device) {
 	scrollBarDesc.scrubberImage = "Scrubber Custom";
 
 	displayModeCombobox =
-		guiFactory.createComboBox(controlPos, 75, itemHeight, 10, true);
-	//guiFactory->createListBox(controlPos, 75, itemHeight);
+		//guiFactory.createComboBox(controlPos, 75, itemHeight, 10, true);
+		guiFactory.createListBox(controlPos, 75, itemHeight, 10, true);
 
 	populateDisplayModeList(game->getDisplayModeList(displayListbox->getSelectedIndex()));
 	displayModeCombobox->setScrollBar(scrollBarDesc);
 	displayModeCombobox->setSelected(game->getSelectedDisplayModeIndex());
-	OnClickListenerDisplayModeList* onClickDisplayMode =
+	/*OnClickListenerDisplayModeList* onClickDisplayMode =
 		new OnClickListenerDisplayModeList(this);
-	displayModeCombobox->setActionListener(onClickDisplayMode);
-	//guiControls.push_back(displayModeCombobox);
+	displayModeCombobox->setActionListener(onClickDisplayMode);*/
 	selectorManager.addControl(displayModeCombobox);
 
 
@@ -486,6 +486,9 @@ void ConfigScreen::reloadGraphicsAssets() {
 	/*for (auto const& control : guiControls)
 		control->reloadGraphicsAsset();*/
 	selectorManager.reloadGraphicsAssets();
+	for (auto const& label : labels)
+		label->reloadGraphicsAsset();
+	texturePanel->reloadGraphicsAsset();
 }
 
 void ConfigScreen::setup() {
@@ -509,10 +512,6 @@ void ConfigScreen::setup() {
 void ConfigScreen::update(double deltaTime) {
 
 
-	if (keys.isKeyPressed(Keyboard::Escape)) {
-		menuManager->openMainMenu();
-	}
-
 	/*for (auto const& control : guiControls) {
 		if (control->update(deltaTime))
 			refreshTexture = true;
@@ -521,8 +520,13 @@ void ConfigScreen::update(double deltaTime) {
 	for (auto const& label : labels)
 		if (label->update(deltaTime))
 			refreshTexture = true;
+
 	if (selectorManager.update(deltaTime))
 		refreshTexture = true;
+
+	/*if (keys.isKeyPressed(Keyboard::Escape)) {
+		menuManager->openMainMenu();
+	}*/
 
 	if (refreshTexture) {
 		refreshTexture = false;

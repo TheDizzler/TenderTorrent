@@ -242,7 +242,8 @@ private:
 
 	ListBox* adapterListbox;
 	ListBox* displayListbox;
-	ComboBox* displayModeCombobox;
+	//ComboBox* displayModeCombobox;
+	ListBox* displayModeCombobox;
 
 	vector<TextLabel*> labels;
 
