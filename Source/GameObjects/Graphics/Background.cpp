@@ -140,7 +140,6 @@ int Background::getHeight() {
 }
 
 const Vector2& Background::getStartPosition() {
-	//return lastWaypoint->dest;
 	return startWaypoint;
 }
 

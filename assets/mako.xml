@@ -160,50 +160,5 @@
 
 		</subLayer>
 	</backgroundLayer>
-	<!--backgroundLayer layer="1">
-		mako01a.dds
-		<position x="118" y="347"/>
-		<size x="121" y="98"/>
-	</backgroundLayer>
-	<backgroundLayer layer="1">
-		mako01b.dds
-		<position x="30" y="449"/>
-		<size x="87" y="90"/>
-	</backgroundLayer>
-	<backgroundLayer layer="1">
-		mako01c.dds
-		<position x="303" y="360"/>
-		<size x="133" y="243"/>
-	</backgroundLayer>
-	<backgroundLayer layer="1">
-		mako01d.dds
-		<position x="212" y="610"/>
-		<size x="97" y="116"/>
-	</backgroundLayer>
-	<backgroundLayer layer="1">
-		mako01e.dds
-		<position x="87" y="535"/>
-		<size x="131" y="136"/>
-	</backgroundLayer>
-	<backgroundLayer layer="1">
-		mako01f.dds
-		<position x="298" y="714"/>
-		<size x="146" y="37"/>
-	</backgroundLayer>
-	<backgroundLayer layer="1">
-		mako01g.dds
-		<position x="101" y="438"/>
-		<size x="26" y="25"/>
-	</backgroundLayer>
-	<backgroundLayer layer="1">
-		mako01h.dds
-		<position x="289" y="594"/>
-		<size x="26" y="26"/>
-	</backgroundLayer>
-	<backgroundLayer layer="1" position="151, 837" size="310, 138">
-		mako01i.dds
-		<position x="151" y="837"/>
-		<size x="310" y="138"/>
-	</backgroundLayer-->
 
 </level>

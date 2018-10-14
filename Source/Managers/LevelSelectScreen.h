@@ -1,73 +1,70 @@
 #pragma once
 
 
-class LevelSelection {
+class LevelSelection : public Selectable {
 public:
 
-	LevelSelection(const Vector2& position, pugi::xml_node levelNode);
+	string levelXMLFile;
+
+	LevelSelection(GUIFactory* factory, MouseController* mouseController,
+		const Vector2& position, pugi::xml_node levelNode);
 	virtual ~LevelSelection();
 
-	void reloadGraphicsAssets();
+	virtual void reloadGraphicsAsset() override;
 
-	void update(double deltaTime);
+	virtual bool updateSelect(double deltaTime) override;
+	virtual bool update(double deltaTime) override;
 	void draw(SpriteBatch* batch);
 
+	virtual void setFont(const pugi::char_t* font = "Default Font") override;
+	virtual void setText(wstring text) override;
+	virtual const Vector2 XM_CALLCONV measureString() const override;
+	virtual const Vector2& getPosition() const override;
+	virtual const int getWidth() const override;
+	virtual const int getHeight() const override;
 	const Vector2& getSize();
 
-	bool isHover = false;
-	bool isPressed = false;
-	bool isClicked = false;
+
+	virtual bool clicked() override;
+	virtual bool pressed() override;
+	virtual bool hovering() override;
 
 	class OnClickListener {
 	public:
 		virtual void onClick(LevelSelection* level) = 0;
+		virtual void onPress(LevelSelection* level) = 0;
+		virtual void onHover(LevelSelection* level) = 0;
+		virtual void resetState(LevelSelection* level) = 0;
 	};
 
 
-	void setOnClickListener(OnClickListener* iOnC) {
-		if (onClickListener != NULL)
-			delete onClickListener;
-		onClickFunction = &OnClickListener::onClick;
-		onClickListener = iOnC;
-	}
-
-	void onClick() {
-		if (onClickListener != NULL) {
-			isClicked = isPressed = false;
-			(onClickListener->*onClickFunction)(this);
-		}
-	}
+	void setOnClickListener(OnClickListener* iOnC);
 
 
-	void setOnHoverListener(OnClickListener* iOnC) {
-		if (!onHoverListener != NULL)
-			delete onHoverListener;
-		onHoverFunction = &OnClickListener::onClick;
-		onHoverListener = iOnC;
-
-	}
-
-	void onHover() {
-		if (onHoverListener != NULL) {
-			(onHoverListener->*onHoverFunction)(this);
-		}
-	}
-
-	unique_ptr<Sprite> previewPic;
-	unique_ptr<RectangleFrame> picFrame;
-	unique_ptr<TextLabel> label;
-	string levelXMLFile;
-	unique_ptr<HitArea> hitArea;
-
-	typedef void (OnClickListener::*OnClickFunction) (LevelSelection*);
-	OnClickFunction onClickFunction;
-	OnClickListener* onClickListener = NULL;
-	OnClickFunction onHoverFunction;
-	OnClickListener* onHoverListener = NULL;
+	virtual void onClick() override;
+	virtual void onPress() override;
+	virtual void onHover() override;
+	virtual void resetState() override;
 
 	virtual void setToUnpressedState();
 	virtual void setToHoverState();
 	virtual void setToSelectedState();
+
+
+
+private:
+
+	typedef void (OnClickListener::*OnClickFunction) (LevelSelection*);
+	OnClickListener* onClickListener = NULL;
+	OnClickFunction onClickFunction;
+	OnClickFunction onHoverFunction;
+	OnClickFunction onPressFunction;
+	OnClickFunction onResetFunction;
+
+	Sprite previewPic;
+	unique_ptr<RectangleFrame> picFrame;
+	unique_ptr<TextLabel> label;
+	//unique_ptr<HitArea> hitArea;
 
 	Vector4 frameColor;
 	Vector4 labelColor;
@@ -85,13 +82,12 @@ public:
 	LevelSelectScreen(MenuManager* menuManager);
 	virtual ~LevelSelectScreen();
 
-	virtual void setGameManager(GameManager * game) override;
+	virtual void setGameManager(GameManager* game) override;
 	virtual bool initialize(ComPtr<ID3D11Device> device) override;
 	void reloadGraphicsAssets();
 
 	virtual void update(double deltaTime) override;
 	virtual void draw(SpriteBatch* batch) override;
-	//virtual void safedraw(SpriteBatch* batch) override;
 
 	virtual void pause() override;
 	virtual void controllerRemoved(ControllerSocketNumber controllerSlot,
@@ -105,9 +101,10 @@ private:
 	GameManager* game;
 	unique_ptr<xml_document> levelManifest;
 
-	vector<unique_ptr<LevelSelection>> levelSelections;
+	//vector<unique_ptr<LevelSelection>> levelSelections;
 
 	unique_ptr<TextLabel> titleLabel;
+	SelectorManager selectorManager;
 };
 
 
@@ -118,7 +115,12 @@ public:
 	}
 	virtual void onClick(LevelSelection* level) {
 		levelSelectScreen->loadLevel(level->levelXMLFile);
-
+	};
+	virtual void onPress(LevelSelection* level) {
+	};
+	virtual void onHover(LevelSelection* level) {
+	};
+	virtual void resetState(LevelSelection* level) {
 	};
 
 private:

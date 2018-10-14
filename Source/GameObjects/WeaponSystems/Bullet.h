@@ -2,14 +2,14 @@
 
 #include "..\Graphics\AnimatedSprite.h"
 
-
+/** The hiding place where all young bullet sprites live
+	when not performing their sacred duty. */
 static const Vector2 weaponStore = Vector2(-511, -511);
 
 class Bullet : public AnimatedSprite {
 public:
 	/** For constructing base bullet sprites */
 	Bullet();
-	//Bullet(const Vector2 &position);
 	virtual ~Bullet();
 
 	void setDamage(int newDamage);

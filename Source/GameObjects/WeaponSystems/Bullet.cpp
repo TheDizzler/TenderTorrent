@@ -7,10 +7,6 @@ Bullet::Bullet() : AnimatedSprite(weaponStore) {
 	load(gfxAssets.getAnimation("Cross Bullet"));
 }
 
-//Bullet::Bullet(const Vector2 &position) : AnimatedSprite(position) {
-//
-//	isAlive = false;
-//}
 
 Bullet::~Bullet() {
 }

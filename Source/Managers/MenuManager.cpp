@@ -148,18 +148,17 @@ void MenuManager::loadLevel(string levelXMLFile) {
 	game->loadLevel(levelXMLFile);
 }
 
-//void MenuManager::notifyControllerRemoved(ControllerSocketNumber controllerSlot, PlayerSlotNumber slotNumber) {
-//	if (currentScreen != configScreen.get()) {
-//		configScreen->controllerRemoved(controllerSlot, slotNumber);
-//	}
-//}
 
 void MenuManager::controllerRemoved(ControllerSocketNumber controllerSlot, PlayerSlotNumber slotNumber) {
-	currentScreen->controllerRemoved(controllerSlot, slotNumber);
+	mainScreen->controllerRemoved(controllerSlot, slotNumber);
+	configScreen->controllerRemoved(controllerSlot, slotNumber);
+	levelSelectScreen->controllerRemoved(controllerSlot, slotNumber);
 }
 
 void MenuManager::newController(shared_ptr<Joystick> newStick) {
-	currentScreen->newController(newStick);
+	mainScreen->newController(newStick);
+	configScreen->newController(newStick);
+	levelSelectScreen->newController(newStick);
 }
 
 
@@ -173,10 +172,6 @@ MenuScreen::MenuScreen(MenuManager* mngr) {
 
 MenuScreen::~MenuScreen() {
 
-	/*for (Selectable* control : guiControls)
-		delete control;
-
-	guiControls.clear();*/
 }
 
 void MenuScreen::setGameManager(GameManager* gmMng) {
@@ -193,6 +188,7 @@ void MenuScreen::controllerRemoved(ControllerSocketNumber controllerSlot,
 }
 
 void MenuScreen::newController(shared_ptr<Joystick> newStick) {
+	selectorManager.setJoystick(newStick.get());
 }
 
 
@@ -287,9 +283,6 @@ bool MainScreen::initialize(ComPtr<ID3D11Device> device) {
 
 void MainScreen::reloadGraphicsAssets() {
 
-	/*for (auto const& control : guiControls)
-		control->reloadGraphicsAsset();*/
-
 	selectorManager.reloadGraphicsAssets();
 	exitDialog->reloadGraphicsAsset();
 }
@@ -308,16 +301,12 @@ void MainScreen::update(double deltaTime) {
 	if (exitDialog->isOpen()) {
 		exitDialog->update(deltaTime);
 	} else {
-		/*for (auto const& control : guiControls)
-			control->update(deltaTime);*/
 		selectorManager.update(deltaTime);
 	}
 }
 
 
 void MainScreen::draw(SpriteBatch* batch) {
-	/*for (auto const& control : guiControls)
-		control->draw(batch);*/
 
 	selectorManager.draw(batch);
 	exitDialog->draw(batch);
@@ -336,7 +325,6 @@ ConfigScreen::ConfigScreen(MenuManager* mngr) : MenuScreen(mngr) {
 }
 
 ConfigScreen::~ConfigScreen() {
-	//guiControls.clear();
 	labels.clear();
 }
 

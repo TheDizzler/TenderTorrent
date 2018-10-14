@@ -6,7 +6,7 @@
 
 SunBullet::SunBullet() : Bullet() {
 	load(gfxAssets.getAnimation("Sun Bullet"));
-	bulletSpeed = 350;
+	bulletSpeed = 550;
 }
 
 

@@ -98,9 +98,6 @@ private:
 
 	bool dummyStickUsed = false;
 
-	/*enum GameState {
-		NORMAL, TRANSITIONING,
-	};*/
 
 	ScreenTransitions::ScreenTransitionManager transitionManager;
 	Screen* currentScreen = 0;

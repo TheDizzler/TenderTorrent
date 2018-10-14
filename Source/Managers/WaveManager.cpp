@@ -91,20 +91,18 @@ void WaveManager::checkHitDetection(Bullet* bullet) {
 
 void WaveManager::update(double deltaTime, PlayerShip* player) {
 
-	//liveBullets = 0;
 	for (const auto& wave : waves) {
 		wave->update(deltaTime, player);
 
 		for (Bullet* bullet : wave->liveBullets) {
-			//++liveBullets;
 			bullet->update(deltaTime);
-			/*if (bullet->getHitArea()->collision(&player->getHitArea())) {
-				bullet->isAlive = false;
-				player->takeDamage(bullet->damage);
-			}*/
 			if (player->checkHitDetection(bullet->getHitArea())) {
+				//if (player->state == PlayerState::SLIDE_ATTACK) {
+
+				//} else {
+					player->takeDamage(bullet->damage);
+				//}
 				bullet->isAlive = false;
-				player->takeDamage(bullet->damage);
 			}
 		}
 	}

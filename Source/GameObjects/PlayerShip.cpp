@@ -130,6 +130,88 @@ bool PlayerShip::startUpdate(double deltaTime) {
 	return camera.worldToScreen(position).y < camera.viewportHeight - 3 * height;
 }
 
+void PlayerShip::thrust(double deltaTime, float power) {
+
+	bool action = false;
+	if (keys.keyState.A || joystick->isLeftPressed()) {
+		position.x -= float(power * deltaTime);
+		action = true;
+	}
+	if (keys.keyState.D || joystick->isRightPressed()) {
+		position.x += float(power * deltaTime);
+		action = true;
+	}
+
+	if (keys.keyState.W || joystick->isUpPressed()) {
+		position.y -= float(power * deltaTime);
+		action = true;
+	}
+	if (keys.keyState.S || joystick->isDownPressed()) {
+		position.y += float(power * deltaTime);
+		action = true;
+	}
+	state = PlayerState::NO_INPUT;
+}
+
+void PlayerShip::alternateFire(double deltaTime) {
+
+	if (!mouse.leftButtonLast() && mouse.leftButton()) {
+
+		for (const auto& mount : mounts) {
+			if (mount->ready()) {
+				liveBullets.push_back(mount->fire());
+				energy -= mount->energyCost;
+			}
+		}
+	}
+}
+
+bool PlayerShip::mainWeaponFiring() {
+	return keys.keyState.Space || joystick->xButtonDown();
+}
+
+float slidePower;
+float timeSliding = 0;
+float SLIDE_TIME = .25f;
+int slideAttackCost = 25;
+void PlayerShip::slideAttackInit() {
+
+	if (energy >= slideAttackCost) {
+		if (joystick->lButtonPushed()) {
+			state = SLIDE_ATTACK;
+			setTint(DirectX::Colors::Pink);
+			timeSliding = 0;
+			slidePower = -440;
+			energy -= slideAttackCost;
+		} else if (joystick->rButtonPushed()) {
+			state = SLIDE_ATTACK;
+			setTint(DirectX::Colors::Pink);
+			timeSliding = 0;
+			slidePower = 440;
+			energy -= slideAttackCost;
+		}
+	}
+}
+
+void PlayerShip::rechargeEnergy(double deltaTime, int rechargeRate) {
+
+	// Energy recharge
+	if (energy < maxEnergy) {
+		timeSinceRecharge += deltaTime;
+
+		if (timeSinceRecharge >= rechargeTickCount) {
+
+			energy += rechargeAmount;
+			if (energy > maxEnergy)
+				energy = maxEnergy;
+			timeSinceRecharge = 0;
+		}
+	} else {
+
+		timeSinceRecharge = 0;
+	}
+}
+
 
 
 void PlayerShip::update(double deltaTime) {
@@ -138,27 +220,61 @@ void PlayerShip::update(double deltaTime) {
 		return;
 	}
 
-	// auto-movement from camera movement
+	// auto-movement to counter camera movement
 	position -= camera.getDelta();
 
-	// Movement
-	float currentSpeed = speed;
-	if (firing)
-		currentSpeed = firingSpeed;
+	switch (state) {
+		case PlayerState::NO_INPUT:
+			//rechargeEnergy(deltaTime, rechargeAmount / 2);
+		case PlayerState::MOVING:
+			thrust(deltaTime, speed);
 
-	if (keys.keyState.A || joystick->isLeftPressed())
-		position.x -= float(currentSpeed * deltaTime);
+			rechargeEnergy(deltaTime, rechargeAmount / 2);
 
-	if (keys.keyState.D || joystick->isRightPressed())
-		position.x += float(currentSpeed * deltaTime);
+			if (mainWeaponFiring()) {
+				state = PlayerState::FIRING;
+			}
+
+			alternateFire(deltaTime);
+
+			slideAttackInit();
+
+			break;
+		case PlayerState::FIRING:
+			thrust(deltaTime, firingSpeed);
+
+			if (mainWeaponFiring()) {
+				for (const auto& weaponSlot : weaponSlots) {
+					if (weaponSlot->ready()) {
+						liveBullets.push_back(weaponSlot->fire());
+					}
+				}
+			} else {
+				state = PlayerState::MOVING;
+			}
+
+			alternateFire(deltaTime);
+
+			slideAttackInit();
+
+			break;
+		case PlayerState::SLIDE_ATTACK:
+			timeSliding += deltaTime;
+			float t = timeSliding / SLIDE_TIME;
+			position.x += slidePower *deltaTime;
+			if (t >= 1) {
+				state = PlayerState::NO_INPUT;
+				setTint(Colors::White);
+			}
+
+			break;
 
 
-	if (keys.keyState.W || joystick->isUpPressed())
-		position.y -= float(currentSpeed * deltaTime);
-	if (keys.keyState.S || joystick->isDownPressed())
-		position.y += float(currentSpeed * deltaTime);
+	}
+
 
 	camera.confineToScreen(this);
+
 
 	// Weapons
 	for (const auto& slot : weaponSlots)
@@ -181,44 +297,6 @@ void PlayerShip::update(double deltaTime) {
 	liveBullets.erase(remove_if(liveBullets.begin(), liveBullets.end(),
 		[](const Bullet* bullet) { return !bullet->isAlive; }), liveBullets.end());
 
-
-	if (keys.keyState.Space || joystick->xButtonDown()) {
-		for (const auto& weaponSlot : weaponSlots) {
-			if (energy >= weaponSlot->energyCost
-				&& weaponSlot->ready()) {
-				firing = true;
-				liveBullets.push_back(weaponSlot->fire());
-				//energy -= weaponSlot->energyCost;
-			}
-		}
-	} else {
-		firing = false;
-	}
-
-	if (!mouse.leftButtonLast() && mouse.leftButton()) {
-
-		for (const auto& mount : mounts)
-			if (mount->ready()) {
-				liveBullets.push_back(mount->fire());
-				energy -= mount->energyCost;
-			}
-	}
-
-	// Energy recharge
-	if (energy < maxEnergy) {
-		timeSinceRecharge += deltaTime;
-
-		if (timeSinceRecharge >= rechargeTickCount) {
-
-			energy += rechargeAmount;
-			if (energy > maxEnergy)
-				energy = maxEnergy;
-			timeSinceRecharge = 0;
-		}
-	} else {
-
-		timeSinceRecharge = 0;
-	}
 }
 
 
@@ -337,7 +415,6 @@ int PlayerShip::getHealth() {
 
 void PlayerShip::takeDamage(int damageTaken) {
 
-return;
 
 	maxEnergy -= damageTaken;
 	if (energy > maxEnergy)
@@ -361,3 +438,4 @@ return;
 		deathVector *= firingSpeed;
 	}
 }
+

@@ -152,8 +152,6 @@ public:
 
 	virtual void pause() override;
 
-	/*void notifyControllerRemoved(ControllerSocketNumber controllerSlot,
-		PlayerSlotNumber slotNumber);*/
 	virtual void controllerRemoved(ControllerSocketNumber controllerSlot,
 		PlayerSlotNumber slotNumber) override;
 	virtual void newController(shared_ptr<Joystick> newStick) override;
@@ -201,7 +199,6 @@ public:
 protected:
 
 	GameManager* game;
-	//vector<Selectable*> guiControls;
 	SelectorManager selectorManager;
 };
 
@@ -242,7 +239,6 @@ private:
 
 	ListBox* adapterListbox;
 	ListBox* displayListbox;
-	//ComboBox* displayModeCombobox;
 	ListBox* displayModeCombobox;
 
 	vector<TextLabel*> labels;

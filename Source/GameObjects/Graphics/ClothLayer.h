@@ -9,6 +9,7 @@ public:
 	virtual ~ClothLayer();
 
 	void load(GraphicsAsset* const graphicsAsset, Sprite* cornerFrame);
+	/* Load shredded cloth asset */
 	void loadPiece(GraphicsAsset* const graphicsAsset);
 
 	void reloadGraphicsAssets();
@@ -26,26 +27,8 @@ public:
 
 	const HitArea& getHitArea() const;
 
-	/* example of use:
-	control->setMatrixFunction([&]() -> Matrix { return camera->translationMatrix(); }); */
-	/*void setMatrixFunction(function<Matrix()> translationMat) {
-		translationMatrix = translationMat;
-	}
-	void setCameraZoom(function<float()> zoomFunction) {
-		cameraZoom = zoomFunction;
-	}
-
-	virtual void updateProjectedHitArea();
-
-	virtual const Vector2 getScreenPosition(Matrix viewProjectionMatrix) const;
-	virtual unique_ptr<HitArea> getScreenHitArea(Matrix viewProjectionMatrix) const;*/
-
-
 	bool isAlive();
 private:
-	//function<Matrix()> translationMatrix;
-	//function<float()> cameraZoom;
-	//unique_ptr<HitArea> projectedHitArea;
 
 	HitArea hitArea;
 
@@ -64,7 +47,6 @@ private:
 
 	bool labelHidden = true;
 
-	//unique_ptr<GameObject> wholeCloth;
 	GameObject wholeCloth;
 	vector<unique_ptr<Tatter>> tatters;
 

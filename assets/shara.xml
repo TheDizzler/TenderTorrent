@@ -131,15 +131,4 @@
 			</cloth>
 		</subLayer>
 	</backgroundLayer>
-	<!--backgroundLayer layer="1">
-		shara01a.dds
-		<position x="303" y="619"/>
-		<size x="214" y="220"/>
-	</backgroundLayer>
-	<backgroundLayer layer="1">
-		shara01b.dds
-		<position x="208" y="304"/>
-		<size x="331" y="183"/>
-	</backgroundLayer-->
-
 </level>

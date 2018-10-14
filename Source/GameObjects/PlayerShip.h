@@ -13,9 +13,16 @@
 //	(float)camera.viewportCenter.x ,
 //	(float)camera.viewportHeight + 175);
 
+enum PlayerState {
+	NO_INPUT = -1, MOVING, FIRING, SLIDE_ATTACK
+};
 
 class PlayerShip : public GameObject {
 public:
+
+	
+	PlayerState state = PlayerState::NO_INPUT;
+
 	PlayerShip();
 	virtual ~PlayerShip();
 
@@ -59,7 +66,7 @@ protected:
 	vector<unique_ptr<Mount>> mounts;
 
 
-	bool firing = false;
+	//bool firing = false;
 
 	/* Normal speed of ship */
 	float speed = 225.0f;
@@ -72,6 +79,14 @@ protected:
 	double timeSinceLastExplosion = 0;
 
 	vector<unique_ptr<AnimatedSprite> > explosions;
+
+
+	void thrust(double deltaTime, float power);
+	void alternateFire(double deltaTime);
+	bool mainWeaponFiring();
+	void slideAttackInit();
+
+	void rechargeEnergy(double deltaTime, int rechargeRate);
 
 private:
 	bool lastStateVKLButtonDown;

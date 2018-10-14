@@ -39,8 +39,6 @@ protected:
 
 	
 	virtual void fillBulletStore(Animation* bulletAsset) = 0;
-	//int maxStoreSize = 24;
-	//vector<Bullet*> bulletStore;
 
 
 	size_t nextBullet = 0;

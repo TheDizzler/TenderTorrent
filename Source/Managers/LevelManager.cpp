@@ -95,9 +95,6 @@ bool LevelManager::loadLevel(ComPtr<ID3D11Device> device, const char_t* levelFil
 	startPos.y += camera.viewportHeight / 2;
 	playerShip.setPosition(startPos);
 
-
-
-
 	playState = STARTING;
 	return true;
 }
@@ -105,7 +102,6 @@ bool LevelManager::loadLevel(ComPtr<ID3D11Device> device, const char_t* levelFil
 
 void LevelManager::update(double deltaTime) {
 
-	bool once = true;
 	switch (playState) {
 		case PLAYING:
 			totalPlayTime += deltaTime;
@@ -124,7 +120,6 @@ void LevelManager::update(double deltaTime) {
 						}
 					}
 				}
-				once = false;
 			}
 
 
