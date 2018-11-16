@@ -20,6 +20,8 @@ x86/
 bld/
 [Bb]in/
 [Oo]bj/
+build/
+
 
 # Visual Studio 2015 cache/options directory
 .vs/
@@ -178,6 +180,7 @@ BundleArtifacts/
 !*.[Cc]ache/
 
 # Others
+*.[Cc]ache
 ClientBin/
 ~$*
 *~

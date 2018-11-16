@@ -141,6 +141,7 @@ LevelSelection::LevelSelection(GUIFactory* factory, MouseController* mouseContro
 	previewPic.load(
 		gfxAssets.getAsset(levelNode.attribute("preview").as_string()));
 	previewPic.setOrigin(Vector2::Zero);
+	previewPic.setTint(Vector4(1, 1, 1, .75));
 
 	Vector2 labelsize = label->measureString();
 	Vector2 totalsize = Vector2(picsize.x + frameMargin.x * 2,
@@ -185,7 +186,6 @@ bool LevelSelection::update(double deltaTime) {
 			setToHoverState();
 		}
 	} else {
-		//isPressed = false;
 		isHover = false;
 	}
 
@@ -251,10 +251,7 @@ void LevelSelection::setOnClickListener(OnClickListener* iOnC) {
 
 
 void LevelSelection::onClick() {
-	//if (onClickListener != NULL) {
-	//	isClicked = isPressed = false;
-	//	(onClickListener->*onClickFunction)(this);
-	//}
+
 	isClicked = true;
 	if (onClickListener != NULL) {
 		isClicked = isPressed = false;
@@ -278,6 +275,7 @@ void LevelSelection::onPress() {
 
 
 void LevelSelection::onHover() {
+
 	isHover = true;
 	if (onClickListener != NULL) {
 		(onClickListener->*onHoverFunction)(this);
@@ -301,14 +299,14 @@ void LevelSelection::resetState() {
 
 void LevelSelection::setToUnpressedState() {
 
-	previewPic.setTint(Vector4(1, 1, 1, 1));
+	previewPic.setTint(Vector4(1, 1, 1, .75));
 	picFrame->setTint(frameColor, true);
 	label->setTint(labelColor);
 }
 
 void LevelSelection::setToHoverState() {
 
-	previewPic.setTint(Vector4(1, 1, 1, .75));
+	previewPic.setTint(Vector4(1, 1, 1, 1));
 	picFrame->setTint(hoverFrameColor, true);
 	label->setTint(hoverLabelColor);
 }

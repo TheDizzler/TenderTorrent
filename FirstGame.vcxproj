@@ -63,6 +63,8 @@
     <ClCompile Include="Source\GameObjects\Graphics\GameObject.cpp" />
     <ClCompile Include="Source\GameObjects\Graphics\Tatter.cpp" />
     <ClCompile Include="Source\GameObjects\WeaponSystems\BasicGun.cpp" />
+    <ClCompile Include="Source\GameObjects\WeaponSystems\FlameWave.cpp" />
+    <ClCompile Include="Source\GameObjects\WeaponSystems\FlameWaveSystem.cpp" />
     <ClCompile Include="Source\GameObjects\WeaponSystems\LaserBolt.cpp" />
     <ClCompile Include="Source\GameObjects\WeaponSystems\LaserSystem.cpp" />
     <ClCompile Include="Source\GameObjects\PlayerShip.cpp" />
@@ -140,6 +142,8 @@
     <ClInclude Include="Source\GameObjects\Graphics\GameObject.h" />
     <ClInclude Include="Source\GameObjects\Graphics\Tatter.h" />
     <ClInclude Include="Source\GameObjects\WeaponSystems\BasicGun.h" />
+    <ClInclude Include="Source\GameObjects\WeaponSystems\FlameWave.h" />
+    <ClInclude Include="Source\GameObjects\WeaponSystems\FlameWaveSystem.h" />
     <ClInclude Include="Source\GameObjects\WeaponSystems\LaserBolt.h" />
     <ClInclude Include="Source\GameObjects\WeaponSystems\LaserSystem.h" />
     <ClInclude Include="Source\GameObjects\PlayerShip.h" />

@@ -1,0 +1,12 @@
+﻿<Window x:Class="Editor.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Editor"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="513.697" Width="864.866">
+	<Grid>
+		<StackPanel x:Name="previewStack" HorizontalAlignment="Left" Height="463" Margin="10,10,0,0" VerticalAlignment="Top" Width="837" Grid.Column="5" Grid.Row="1" Orientation="Horizontal"/>
+	</Grid>
+</Window>

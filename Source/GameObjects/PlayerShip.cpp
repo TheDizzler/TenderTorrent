@@ -1,10 +1,12 @@
 #include "../pch.h"
 #include "PlayerShip.h"
 #include "../GameObjects/WeaponSystems/BasicGun.h"
+#include "WeaponSystems/LaserSystem.h"
+#include "WeaponSystems/FlameWaveSystem.h"
 #include "../Engine/GameEngine.h"
 #include <random>
 #include <algorithm>
-//#include "../globals.h"
+
 
 PlayerShip::PlayerShip() : GameObject() {
 
@@ -44,7 +46,7 @@ void PlayerShip::loadShip(xml_node shipNode) {
 			weaponSlotNode.attribute("y").as_float());
 
 		enum WeaponType {
-			BASIC_GUN, LASERBOLT
+			BASIC_GUN, LASERBOLT, FLAME_WAVE
 		};
 		WeaponType weapontype = (WeaponType) weaponSlotNode.attribute("type").as_uint();
 		switch (weapontype) {
@@ -54,6 +56,8 @@ void PlayerShip::loadShip(xml_node shipNode) {
 			case WeaponType::LASERBOLT:
 				weaponSlot.reset(new LaserSystem(weaponOffset));
 				break;
+				case WeaponType::FLAME_WAVE:
+				weaponSlot.reset(new FlameWaveSystem(weaponOffset));
 		}
 
 		weaponSlots.push_back(move(weaponSlot));

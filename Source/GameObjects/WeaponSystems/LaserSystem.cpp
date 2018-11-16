@@ -4,7 +4,7 @@
 
 LaserSystem::LaserSystem(Vector2 position) : WeaponSystem(position) {
 
-	setWeaponStats(5, 0, .21);
+	setWeaponStats(10, 0, .21);
 }
 
 LaserSystem::~LaserSystem() {

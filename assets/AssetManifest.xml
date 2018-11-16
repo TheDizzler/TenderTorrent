@@ -31,6 +31,15 @@
 			<animation name="Sun Bullet" timePerFrame="1.0">
 				<sprite  x="0" y="78" width="16" height="16" />
 			</animation>
+			<animation name="Flame Wave" timePerFrame=".1">
+				<sprite x="66" y="64" width="30" height="32" />
+				<sprite x="99" y="64" width="30" height="32" />
+				<sprite x="132" y="64" width="30" height="32" />
+				<sprite x="165" y="64" width="30" height="32" />
+				<sprite x="198" y="64" width="30" height="32" />
+				<sprite x="231" y="64" width="30" height="32" />
+				<sprite x="264" y="64" width="30" height="32" />
+			</animation>
 		</spritesheet>
 
 

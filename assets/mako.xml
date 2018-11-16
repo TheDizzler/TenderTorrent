@@ -130,7 +130,7 @@
 	</backgroundLayer>
 
 	<backgroundLayer set="Bikini Bottom" layer="1">
-		<cloth x="1" y="895" part="Left Bottom Ring" health="150">
+		<cloth x="1" y="895" part="Left Bottom Ring" health="100">
 			<position x="202" y="912" />
 			<size x="19" y="21" />
 
@@ -140,7 +140,7 @@
 			<tatter x="81" y="895" />
 		</cloth>
 
-		<cloth x="1" y="917" part="Right Bottom Ring" health="150">
+		<cloth x="1" y="917" part="Right Bottom Ring" health="100">
 			<position x="289" y="916" />
 			<size x="22" y="19" />
 
@@ -153,7 +153,7 @@
 
 		<subLayer>
 
-			<cloth x="1" y="763" health="200">
+			<cloth x="1" y="763" health="150">
 				<position x="154" y="840"/>
 				<size x="304" y="131"/>
 			</cloth>

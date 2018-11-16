@@ -7,7 +7,7 @@
 
 #include <CommonStates.h>
 
-//#define _QUICK_LAUNCH
+#define _QUICK_LAUNCH
 #define DEBUG_HITBOXES
 
 extern GUIFactory guiFactory;

@@ -35,7 +35,7 @@
 
 	<ship name="Star Drift Ship">
 		<sprite>EnemyShip Star</sprite>
-		<health>50</health>
+		<health>40</health>
 		<timeToTravel>4.8</timeToTravel>
 		<weaponPoints>
 			<weapon type="Cannon">
@@ -75,7 +75,7 @@
 		<!-- A ship that comes in threes and has a random start location at the bottom of the screen.
 		First flies straight then drifts in a new direction after firing. -->
 		<sprite>EnemyShip Arrow</sprite>
-		<health>15</health>
+		<health>12</health>
 		<timeToTravel>5</timeToTravel>
 		<midPoint>WINDOW_HEIGHT / 2</midPoint>
 		<weaponPoints>

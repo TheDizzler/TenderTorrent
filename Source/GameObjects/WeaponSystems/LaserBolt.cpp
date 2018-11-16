@@ -4,11 +4,8 @@
 
 LaserBolt::LaserBolt() : Bullet() {
 	load(gfxAssets.getAnimation("Laserbolt"));
+	bulletSpeed = 750;
 }
-
-//LaserBolt::LaserBolt(Vector2 &position) : Bullet(position) {
-//
-//}
 
 LaserBolt::~LaserBolt() {
 }

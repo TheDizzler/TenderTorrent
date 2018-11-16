@@ -258,6 +258,12 @@
     <ClCompile Include="Source\GameObjects\Enemies\FrogShip.cpp">
       <Filter>Source Files\GameObjects\EnemyShips</Filter>
     </ClCompile>
+    <ClCompile Include="Source\GameObjects\WeaponSystems\FlameWaveSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameObjects\WeaponSystems\FlameWave.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\globals.h">
@@ -472,6 +478,12 @@
     </ClInclude>
     <ClInclude Include="Source\GameObjects\Enemies\FrogShip.h">
       <Filter>Header Files\GameObjects\EnemyShips</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameObjects\WeaponSystems\FlameWaveSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameObjects\WeaponSystems\FlameWave.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

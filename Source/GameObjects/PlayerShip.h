@@ -2,7 +2,7 @@
 
 #include "../Managers/GFXAssetManager.h"
 
-#include "WeaponSystems/LaserSystem.h"
+
 #include "WeaponSystems/Turret.h"
 #include "Graphics/GameObject.h"
 
