@@ -22,12 +22,12 @@ namespace Editor {
 	/// </summary>
 	public partial class EditorHome : Page {
 
-		public static String gameDirectory = AppDomain.CurrentDomain.BaseDirectory + "../../../../";
-		public static String assetDir = gameDirectory + "assets/";
-		public static String gfxDir = assetDir + "gfx/";
+		public static String GAME_DIRECTORY = AppDomain.CurrentDomain.BaseDirectory + "../../../../";
+		public static String ASSET_DIR = GAME_DIRECTORY + "assets/";
+		public static String GFX_DIR = ASSET_DIR + "gfx/";
 
-		public static String assetManifestFile = assetDir + "AssetManifest.xml";
-		public static String levelManifestFile = assetDir + "LevelManifest.xml";
+		public static String assetManifestFile = ASSET_DIR + "AssetManifest.xml";
+		public static String levelManifestFile = ASSET_DIR + "LevelManifest.xml";
 
 		public static XmlDocument assetManifestDoc;
 
@@ -123,29 +123,29 @@ namespace Editor {
 			XmlNode assetNode = EditorHome.assetManifestDoc.SelectNodes("//sprite[@name='" + previewImgName + "']")[0];
 			String previewImageFile = assetNode.Attributes["file"].Value;
 
-			DDSImage previewDDS = new DDSImage(
-					File.ReadAllBytes(EditorHome.gfxDir + previewImageFile));
+			//DDSImage previewDDS = new DDSImage(
+			//		File.ReadAllBytes(EditorHome.gfxDir + previewImageFile));
 
-			var hbitmap = previewDDS.BitmapImage.GetHbitmap();
-			previewImage = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(
-				hbitmap, IntPtr.Zero, System.Windows.Int32Rect.Empty,
-				System.Windows.Media.Imaging.BitmapSizeOptions.FromEmptyOptions());
+			//var hbitmap = previewDDS.BitmapImage.GetHbitmap();
+			//previewImage = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(
+			//	hbitmap, IntPtr.Zero, System.Windows.Int32Rect.Empty,
+			//	System.Windows.Media.Imaging.BitmapSizeOptions.FromEmptyOptions());
 
-			DeleteObject(hbitmap);
+			//DeleteObject(hbitmap);
+			previewImage = parseDDSFile(EditorHome.GFX_DIR + previewImageFile);
 		}
 
 
 		public XmlDocument loadLevel() {
 			levelDoc = new XmlDocument();
-			levelDoc.Load(EditorHome.assetDir + levelXmlFile);
+			levelDoc.Load(EditorHome.ASSET_DIR + levelXmlFile);
 			return levelDoc;
 		}
 
 
-		public BitmapSource parseDDSFile(String filepath) {
+		public static BitmapSource parseDDSFile(String filepath) {
 
-			DDSImage imgDDS = new DDSImage(
-					File.ReadAllBytes(EditorHome.gameDirectory + filepath));
+			DDSImage imgDDS = new DDSImage(File.ReadAllBytes(filepath));
 
 			var hbitmap = imgDDS.BitmapImage.GetHbitmap();
 			BitmapSource bitsource = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(
@@ -156,6 +156,7 @@ namespace Editor {
 
 			return bitsource;
 		}
-
 	}
+
+	
 }

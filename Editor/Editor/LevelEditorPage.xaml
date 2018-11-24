@@ -8,15 +8,57 @@
       Title="LevelEditor">
 
 	<DockPanel x:Name="levelDock" LastChildFill="True">
+
+		<Label x:Name="levelNameLabel" Content="Level Name" DockPanel.Dock="Top"
+			HorizontalAlignment="Center" VerticalAlignment="Top"/>
+		<TreeView x:Name="layerTreeview" DockPanel.Dock="Left" MinWidth="150" SelectedItemChanged="OnTreeViewItemChanged">
+			<TreeView.Resources>
+				<!--<HierarchicalDataTemplate DataType="{x:Type local:BgLayerSet}" ItemsSource="{Binding pieces}">
+					<StackPanel Orientation="Horizontal">
+						<CheckBox Click="layerCheckBox" IsChecked="True"/>
+						<TextBlock Text="{Binding set}" />
+					</StackPanel>
+					<DataTemplate DataType="{x:Type local:Cloth}">
+					<StackPanel Orientation="Horizontal">
+						<CheckBox Click="layerCheckBox" IsChecked="True" />
+						<TextBlock Text="{Binding part}"/>
+					</StackPanel>
+				</DataTemplate>
+					<DataTemplate DataType="{x:Type local:SubLayer}">
+						<StackPanel Orientation="Horizontal">
+							<CheckBox Click="layerCheckBox" IsChecked="True" />
+							<TextBlock Text="{Binding part}"/>
+						</StackPanel>
+					</DataTemplate>-->
+			</TreeView.Resources>
+		</TreeView>
+
 		
-		<Label x:Name="levelNameLabel" Content="Level Name" DockPanel.Dock="Top" HorizontalAlignment="Center" VerticalAlignment="Top"/>
-		<TreeView x:Name="layerTreeview" DockPanel.Dock="Left"/>
-		<ScrollViewer DockPanel.Dock="Right" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+		<StackPanel Width="300" DockPanel.Dock="Right">
+			<StackPanel x:Name="infoPanel">
+				<StackPanel.Background>
+					<RadialGradientBrush>
+						<GradientStop Color="#FFFFD1FF" Offset="0.452"/>
+						<GradientStop Color="Magenta" Offset="1"/>
+					</RadialGradientBrush>
+				</StackPanel.Background>
+				<StackPanel Orientation="Horizontal">
+					<Label Content="Name:" />
+					<TextBox x:Name="name" MinWidth="100"/>
+				</StackPanel>
+				<StackPanel Orientation="Horizontal">
+					<Label Content="Position:" />
+					<Label Content="x:" />
+					<TextBox x:Name="posX" MinWidth="30"/>
+					<Label Content="y:" />
+					<TextBox x:Name="posY" MinWidth="30"/>
+				</StackPanel>
+			</StackPanel>
+			<Image x:Name="spriteSheetImage" />
+		</StackPanel>
+
+		<ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
 			<Image x:Name="bgImage" />
 		</ScrollViewer>
-		
-
-
-
 	</DockPanel>
 </Page>
