@@ -38,80 +38,22 @@ namespace Editor {
 
 		public LevelEditorPage(LevelData lvlData) {
 			InitializeComponent();
+
 			levelData = lvlData;
 
 			parseLevelData();
 
 			// populate the Editor
+			
 			buildLayerTree();
-
-			createLevelBg(null);
-
-		}
-
-		private void buildLayerTree() {
-
-			layerTreeview.Items.Add(bgLayers[0]);
-
-			for (int i = 1; i < bgLayers.Count; ++i) {
-
-				BgLayerSet layerSet = (BgLayerSet)bgLayers[i];
-
-				StackPanel sp = new StackPanel();
-				sp.Orientation = Orientation.Horizontal;
-				CheckBox cb = new CheckBox();
-				cb.IsChecked = true;
-				cb.Click += layerCheckBox;
-				sp.Children.Add(cb);
-
-				TreeViewItem layerItem = new TreeViewItem { Header = layerSet.set };
+			scaleSlider.Value = scale;
 
 
-				foreach (Cloth cloth in layerSet.pieces) {
-					StackPanel spChild = new StackPanel();
-					spChild.Orientation = Orientation.Horizontal;
-					CheckBox cbChild = new CheckBox();
-					cbChild.IsChecked = true;
-					cbChild.Click += layerCheckBox;
-					spChild.Children.Add(cbChild);
-					spChild.Children.Add(new TreeViewItem { Header = cloth.part });
-					layerItem.Items.Add(spChild);
-				}
-				int subNum = 0;
-				foreach (SubLayer sub in layerSet.subLayers) {
-					StackPanel spChild = new StackPanel();
-					spChild.Orientation = Orientation.Horizontal;
-					CheckBox cbChild = new CheckBox();
-					cbChild.IsChecked = true;
-					cbChild.Click += layerCheckBox;
-					spChild.Children.Add(cbChild);
-					TreeViewItem subItem = new TreeViewItem { Header = "Sub Layer " + subNum };
-					foreach (Cloth cloth in sub.pieces) {
-						StackPanel spSubChild = new StackPanel();
-						spSubChild.Orientation = Orientation.Horizontal;
-						CheckBox cbSubChild = new CheckBox();
-						cbSubChild.IsChecked = true;
-						cbSubChild.Click += layerCheckBox;
-						spSubChild.Children.Add(cbSubChild);
-						spSubChild.Children.Add(new TreeViewItem { Header = cloth.part });
-
-						subItem.Items.Add(spSubChild);
-					}
-					spChild.Children.Add(subItem);
-					layerItem.Items.Add(spChild);
-				}
-
-				sp.Children.Add(layerItem);
-				layerTreeview.Items.Add(sp);
-			}
-
+			createLevelBg();
 
 		}
 
-		private void layerCheckBox(Object sender, RoutedEventArgs e) {
 
-			// show / hide
-		}
 
 		private void parseLevelData() {
 
@@ -119,7 +61,7 @@ namespace Editor {
 			XmlDocument levelDoc = levelData.loadLevel();
 			levelRoot = levelDoc.GetElementsByTagName("level")[0];
 
-			levelNameLabel.Content = levelRoot.Attributes["name"];
+			Title = levelRoot.Attributes["name"].Value;
 
 			bool result = float.TryParse(levelRoot.Attributes["scale"].Value, out scale);
 			result = Int32.TryParse(levelRoot.Attributes["numLayers"].Value, out numLayers);
@@ -139,7 +81,69 @@ namespace Editor {
 			}
 		}
 
-		public void createLevelBg(CheckBox[] layerCheckBoxes) {
+		private void buildLayerTree() {
+
+			layerTreeview.Items.Add(bgLayers[0]);
+
+			for (int i = 1; i < bgLayers.Count; ++i) {
+
+				BgLayerSet layerSet = (BgLayerSet)bgLayers[i];
+				StackPanel sp = new StackPanel();
+				sp.Orientation = Orientation.Horizontal;
+				CheckBox cb = new CheckBox();
+				cb.IsChecked = true;
+				cb.Click += layerCheckBox;
+				sp.Children.Add(cb);
+				layerSet.setCheckBox(cb);
+
+				foreach (Cloth cloth in layerSet.pieces) {
+					StackPanel spChild = new StackPanel();
+					spChild.Orientation = Orientation.Horizontal;
+					CheckBox cbChild = new CheckBox();
+					cbChild.IsChecked = true;
+					cbChild.Click += layerCheckBox;
+					spChild.Children.Add(cbChild);
+					spChild.Children.Add(cloth);
+					cloth.setCheckBox(cbChild);
+					layerSet.Items.Add(spChild);
+				}
+
+				int subNum = 0;
+				foreach (SubLayer sub in layerSet.subLayers) {
+					StackPanel spChild = new StackPanel();
+					spChild.Orientation = Orientation.Horizontal;
+					CheckBox cbChild = new CheckBox();
+					cbChild.IsChecked = true;
+					cbChild.Click += layerCheckBox;
+					spChild.Children.Add(cbChild);
+
+					sub.Header = "Sub Layer " + subNum;
+					sub.setCheckBox(cbChild);
+
+					foreach (Cloth cloth in sub.pieces) {
+						StackPanel spSubChild = new StackPanel();
+						spSubChild.Orientation = Orientation.Horizontal;
+						CheckBox cbSubChild = new CheckBox();
+						cbSubChild.IsChecked = true;
+						cbSubChild.Click += layerCheckBox;
+						spSubChild.Children.Add(cbSubChild);
+						spSubChild.Children.Add(cloth);
+						cloth.setCheckBox(cbSubChild);
+						sub.Items.Add(spSubChild);
+					}
+
+					spChild.Children.Add(sub);
+					layerSet.Items.Add(spChild);
+				}
+
+				sp.Children.Add(layerSet);
+				layerTreeview.Items.Add(sp);
+			}
+
+
+		}
+
+		public void createLevelBg() {
 
 			int width = bgLayers[0].bitmap.PixelWidth;
 			int height = bgLayers[0].bitmap.PixelHeight;
@@ -148,13 +152,18 @@ namespace Editor {
 			DrawingVisual dv = new DrawingVisual();
 			using (DrawingContext dc = dv.RenderOpen()) {
 				bgLayers[0].addBitmapSource(dc);
+
 				for (int i = 1; i < bgLayers.Count; ++i) {
 
 					BgLayerSet layer = (BgLayerSet)bgLayers[i];
+					if (!layer.addBitmapSource(dc))
+						continue;
 					foreach (Cloth cloth in layer.pieces) {
 						cloth.addBitmapSource(dc);
 					}
 					foreach (SubLayer sub in layer.subLayers) {
+						if (!sub.addBitmapSource(dc))
+							continue;
 						foreach (Cloth cloth in sub.pieces) {
 							cloth.addBitmapSource(dc);
 						}
@@ -169,29 +178,58 @@ namespace Editor {
 			PngBitmapEncoder encoder = new PngBitmapEncoder();
 			encoder.Frames.Add(BitmapFrame.Create(bmp));
 
+			if (File.Exists(outputFileName)) {
+				bgImage.Source = null;
+				File.Delete(outputFileName);
+			}
+
 			using (Stream stream = File.Create(outputFileName)) {
 				encoder.Save(stream);
 			}
 
-			bgImage.Source = new BitmapImage(new Uri(outputFileName, UriKind.Absolute));
+			BitmapImage img = new BitmapImage();
+			img.BeginInit();
+			img.CacheOption = BitmapCacheOption.OnLoad;
+			img.CreateOptions = BitmapCreateOptions.IgnoreImageCache;
+			img.UriSource = new Uri(outputFileName);
+			img.EndInit();
+
+			bgImage.Source = img;
 		}
 
 		private void OnTreeViewItemChanged(Object sender, RoutedPropertyChangedEventArgs<Object> e) {
 
 		}
+
+		private void layerCheckBox(Object sender, RoutedEventArgs e) {
+			// show / hide
+			createLevelBg();
+		}
+
+		private void scaleChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
+			if (scaleLabel != null)
+			scaleLabel.Content = e.NewValue;
+		}
 	}
 
 
 	public abstract class GameObject : TreeViewItem {
-		protected XmlNode node;
+
 		public BitmapSource bitmap;
+		protected XmlNode node;
+		protected CheckBox cb;
 
 		public GameObject(XmlNode objectNode) {
 			node = objectNode;
-
+			Header = node.Name;
 		}
 
-		public abstract void addBitmapSource(DrawingContext dc);
+
+		public void setCheckBox(CheckBox cbox) {
+			cb = cbox;
+		}
+
+		public abstract bool addBitmapSource(DrawingContext dc);
 	}
 
 	/// <summary>
@@ -207,15 +245,14 @@ namespace Editor {
 			bitmap = LevelData.parseDDSFile(bgFile);
 		}
 
-		public override void addBitmapSource(DrawingContext dc) {
-			dc.DrawImage(bitmap, new Rect(0, 0, bitmap.PixelWidth, bitmap.PixelHeight));
+		public override bool addBitmapSource(DrawingContext dc) {
+				dc.DrawImage(bitmap, new Rect(0, 0, bitmap.PixelWidth, bitmap.PixelHeight));
+				return true;
 		}
 	}
 
 
 	public class BgLayerSet : GameObject {
-
-		public new String Header { get { return set; } set { } }
 
 		public String set;
 
@@ -228,6 +265,7 @@ namespace Editor {
 			pieces = new ObservableCollection<Cloth>();
 			subLayers = new ObservableCollection<SubLayer>();
 			set = node.Attributes["set"].Value;
+			Header = set;
 
 			foreach (XmlNode clothNode in node.SelectNodes("cloth")) {
 				pieces.Add(new Cloth(clothNode, spriteSheetBitmapSource));
@@ -237,14 +275,15 @@ namespace Editor {
 			}
 		}
 
-		public override void addBitmapSource(DrawingContext dc) {
-			return;
+		public override bool addBitmapSource(DrawingContext dc) {
+			return cb.IsChecked.Value;
 		}
+
 
 	}
 
 	public class Cloth : GameObject {
-		public new String Header { get { return part; } set { } }
+		
 		public String part;
 		public Point position;
 		public int health;
@@ -265,6 +304,8 @@ namespace Editor {
 			} else {
 				part = node.Attributes["part"].Value;
 			}
+			Header = part;
+
 			int temp;
 			Boolean result = Int32.TryParse(node.Attributes["x"].Value, out temp);
 			positionInSheet.X = temp;
@@ -293,8 +334,12 @@ namespace Editor {
 			}
 		}
 
-		public override void addBitmapSource(DrawingContext dc) {
-			dc.DrawImage(bitmap, new Rect(position.X, position.Y, size.X, size.Y));
+		public override bool addBitmapSource(DrawingContext dc) {
+			if (cb.IsChecked.Value) {
+				dc.DrawImage(bitmap, new Rect(position.X, position.Y, size.X, size.Y));
+				return true;
+			}
+			return false;
 		}
 	}
 
@@ -312,8 +357,8 @@ namespace Editor {
 			}
 		}
 
-		public override void addBitmapSource(DrawingContext dc) {
-			return;
+		public override bool addBitmapSource(DrawingContext dc) {
+			return cb.IsChecked.Value;
 		}
 	}
 

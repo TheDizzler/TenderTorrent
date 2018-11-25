@@ -5,41 +5,34 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Editor"
       mc:Ignorable="d"
-      Title="LevelEditor">
+      Title="LevelEditor" MinWidth="600">
 
 	<DockPanel x:Name="levelDock" LastChildFill="True">
 
-		<Label x:Name="levelNameLabel" Content="Level Name" DockPanel.Dock="Top"
-			HorizontalAlignment="Center" VerticalAlignment="Top"/>
-		<TreeView x:Name="layerTreeview" DockPanel.Dock="Left" MinWidth="150" SelectedItemChanged="OnTreeViewItemChanged">
-			<TreeView.Resources>
-				<!--<HierarchicalDataTemplate DataType="{x:Type local:BgLayerSet}" ItemsSource="{Binding pieces}">
-					<StackPanel Orientation="Horizontal">
-						<CheckBox Click="layerCheckBox" IsChecked="True"/>
-						<TextBlock Text="{Binding set}" />
-					</StackPanel>
-					<DataTemplate DataType="{x:Type local:Cloth}">
-					<StackPanel Orientation="Horizontal">
-						<CheckBox Click="layerCheckBox" IsChecked="True" />
-						<TextBlock Text="{Binding part}"/>
-					</StackPanel>
-				</DataTemplate>
-					<DataTemplate DataType="{x:Type local:SubLayer}">
-						<StackPanel Orientation="Horizontal">
-							<CheckBox Click="layerCheckBox" IsChecked="True" />
-							<TextBlock Text="{Binding part}"/>
-						</StackPanel>
-					</DataTemplate>-->
-			</TreeView.Resources>
+		<StackPanel Orientation="Horizontal" DockPanel.Dock="Top" >
+			<Label Content="Scale:" />
+			<Slider x:Name="scaleSlider" MinWidth="100" Minimum=".1" Maximum="10" Margin="5" 
+			TickPlacement="BottomRight" Value="1" ValueChanged="scaleChanged">
+				<Slider.Background>
+					<LinearGradientBrush EndPoint = "0.5,1" StartPoint = "0.5,0">
+						<GradientStop Color = "Pink" Offset = "0" />
+						<GradientStop Color = "#FFF5DCDC" Offset = "1" />
+					</LinearGradientBrush>
+				</Slider.Background>
+			</Slider>
+			<Label x:Name="scaleLabel" Content="1" />
+		</StackPanel>
+
+		<TreeView x:Name="layerTreeview" DockPanel.Dock="Left" MinWidth="200">
 		</TreeView>
 
-		
+
 		<StackPanel Width="300" DockPanel.Dock="Right">
 			<StackPanel x:Name="infoPanel">
 				<StackPanel.Background>
 					<RadialGradientBrush>
-						<GradientStop Color="#FFFFD1FF" Offset="0.452"/>
-						<GradientStop Color="Magenta" Offset="1"/>
+						<GradientStop Color="#FFF5DCDC" Offset="0"/>
+						<GradientStop Color="Pink" Offset="1"/>
 					</RadialGradientBrush>
 				</StackPanel.Background>
 				<StackPanel Orientation="Horizontal">

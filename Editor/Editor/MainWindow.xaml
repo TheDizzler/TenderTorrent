@@ -6,6 +6,6 @@
         xmlns:local="clr-namespace:Editor"
         mc:Ignorable="d"
 		SizeToContent="Width"
-        Title="Tender Torrent Editor" Height="513.697" MinWidth="700" Source="EditorHome.xaml">
+        Title="Tender Torrent Editor" Height="800" MinWidth="1200" Source="EditorHome.xaml">
 	
 </NavigationWindow>
