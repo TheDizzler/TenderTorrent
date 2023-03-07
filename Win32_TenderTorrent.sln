@@ -1,0 +1,88 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33205.214
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{911E67C6-3D85-4FCE-B560-20A9C3E3FF48}") = "Win32_TenderTorrent", "build\Win32_TenderTorrent.exe", "{C7489E0E-0F1C-4A45-9891-65C27CF726F7}"
+	ProjectSection(DebuggerProjectSystem) = preProject
+		PortSupplier = 00000000-0000-0000-0000-000000000000
+		Executable = d:\github\TenderTorrent_deCPPed\build\Win32_TenderTorrent.exe
+		RemoteMachine = DIZZLERIZZLE3K
+		StartingDirectory = d:\github\TenderTorrent_deCPPed\build
+		Environment = Default
+		LaunchingEngine = 00000000-0000-0000-0000-000000000000
+		UseLegacyDebugEngines = No
+		LaunchSQLEngine = No
+		AttachLaunchAction = No
+		IORedirection = Auto
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "code", "code", "{A7E0B354-B654-4660-B94A-F460E31DBAB8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "miscl", "miscl", "{D331904C-B51B-44DC-8F65-95E4A83BECC8}"
+	ProjectSection(SolutionItems) = preProject
+		build.bat = build.bat
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DirectXTK", "DirectXTK", "{3A24EB31-2808-4A9E-AFF3-72A296B974BB}"
+	ProjectSection(SolutionItems) = preProject
+		packages\directxtk_desktop_2015.2017.12.13.1\build\native\include\Audio.h = packages\directxtk_desktop_2015.2017.12.13.1\build\native\include\Audio.h
+		packages\directxtk_desktop_2015.2017.12.13.1\build\native\include\CommonStates.h = packages\directxtk_desktop_2015.2017.12.13.1\build\native\include\CommonStates.h
+		packages\directxtk_desktop_2015.2017.12.13.1\build\native\include\DDSTextureLoader.h = packages\directxtk_desktop_2015.2017.12.13.1\build\native\include\DDSTextureLoader.h
+		packages\directxtk_desktop_2015.2017.12.13.1\build\native\include\DirectXHelpers.h = packages\directxtk_desktop_2015.2017.12.13.1\build\native\include\DirectXHelpers.h
+		packages\directxtk_desktop_2015.2017.12.13.1\build\native\include\Effects.h = packages\directxtk_desktop_2015.2017.12.13.1\build\native\include\Effects.h
+		packages\directxtk_desktop_2015.2017.12.13.1\build\native\include\GamePad.h = packages\directxtk_desktop_2015.2017.12.13.1\build\native\include\GamePad.h
+		packages\directxtk_desktop_2015.2017.12.13.1\build\native\include\GeometricPrimitive.h = packages\directxtk_desktop_2015.2017.12.13.1\build\native\include\GeometricPrimitive.h
+		packages\directxtk_desktop_2015.2017.12.13.1\build\native\include\GraphicsMemory.h = packages\directxtk_desktop_2015.2017.12.13.1\build\native\include\GraphicsMemory.h
+		packages\directxtk_desktop_2015.2017.12.13.1\build\native\include\Keyboard.h = packages\directxtk_desktop_2015.2017.12.13.1\build\native\include\Keyboard.h
+		packages\directxtk_desktop_2015.2017.12.13.1\build\native\include\Model.h = packages\directxtk_desktop_2015.2017.12.13.1\build\native\include\Model.h
+		packages\directxtk_desktop_2015.2017.12.13.1\build\native\include\Mouse.h = packages\directxtk_desktop_2015.2017.12.13.1\build\native\include\Mouse.h
+		packages\directxtk_desktop_2015.2017.12.13.1\build\native\include\PostProcess.h = packages\directxtk_desktop_2015.2017.12.13.1\build\native\include\PostProcess.h
+		packages\directxtk_desktop_2015.2017.12.13.1\build\native\include\PrimitiveBatch.h = packages\directxtk_desktop_2015.2017.12.13.1\build\native\include\PrimitiveBatch.h
+		packages\directxtk_desktop_2015.2017.12.13.1\build\native\include\ScreenGrab.h = packages\directxtk_desktop_2015.2017.12.13.1\build\native\include\ScreenGrab.h
+		packages\directxtk_desktop_2015.2017.12.13.1\build\native\include\SimpleMath.h = packages\directxtk_desktop_2015.2017.12.13.1\build\native\include\SimpleMath.h
+		packages\directxtk_desktop_2015.2017.12.13.1\build\native\include\SimpleMath.inl = packages\directxtk_desktop_2015.2017.12.13.1\build\native\include\SimpleMath.inl
+		packages\directxtk_desktop_2015.2017.12.13.1\build\native\include\SpriteBatch.h = packages\directxtk_desktop_2015.2017.12.13.1\build\native\include\SpriteBatch.h
+		packages\directxtk_desktop_2015.2017.12.13.1\build\native\include\SpriteFont.h = packages\directxtk_desktop_2015.2017.12.13.1\build\native\include\SpriteFont.h
+		packages\directxtk_desktop_2015.2017.12.13.1\build\native\include\VertexTypes.h = packages\directxtk_desktop_2015.2017.12.13.1\build\native\include\VertexTypes.h
+		packages\directxtk_desktop_2015.2017.12.13.1\build\native\include\WICTextureLoader.h = packages\directxtk_desktop_2015.2017.12.13.1\build\native\include\WICTextureLoader.h
+		packages\directxtk_desktop_2015.2017.12.13.1\build\native\include\XboxDDSTextureLoader.h = packages\directxtk_desktop_2015.2017.12.13.1\build\native\include\XboxDDSTextureLoader.h
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AtomosZEngine", "AtomosZEngine", "{FC7FF06E-859E-4EC5-BC97-F13C10649554}"
+	ProjectSection(SolutionItems) = preProject
+		Source\AtomosZEngine\AtomosZEngine.cpp = Source\AtomosZEngine\AtomosZEngine.cpp
+		Source\AtomosZEngine\AtomosZEngine.h = Source\AtomosZEngine\AtomosZEngine.h
+		Source\AtomosZEngine\AtomosZ_Platform.h = Source\AtomosZEngine\AtomosZ_Platform.h
+		Source\AtomosZEngine\StringHelper.h = Source\AtomosZEngine\StringHelper.h
+		Source\AtomosZEngine\UserInput.cpp = Source\AtomosZEngine\UserInput.cpp
+		Source\AtomosZEngine\UserInput.h = Source\AtomosZEngine\UserInput.h
+		Source\AtomosZEngine\Win32_AtomosZ.cpp = Source\AtomosZEngine\Win32_AtomosZ.cpp
+		Source\AtomosZEngine\Win32_AtomosZ.h = Source\AtomosZEngine\Win32_AtomosZ.h
+		Source\AtomosZEngine\Win32_DirectXTK.cpp = Source\AtomosZEngine\Win32_DirectXTK.cpp
+		Source\AtomosZEngine\Win32_DirectXTK.h = Source\AtomosZEngine\Win32_DirectXTK.h
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C7489E0E-0F1C-4A45-9891-65C27CF726F7}.Debug|x64.ActiveCfg = Release|x64
+		{C7489E0E-0F1C-4A45-9891-65C27CF726F7}.Debug|x86.ActiveCfg = Release|x64
+		{C7489E0E-0F1C-4A45-9891-65C27CF726F7}.Release|x64.ActiveCfg = Release|x64
+		{C7489E0E-0F1C-4A45-9891-65C27CF726F7}.Release|x86.ActiveCfg = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{FC7FF06E-859E-4EC5-BC97-F13C10649554} = {A7E0B354-B654-4660-B94A-F460E31DBAB8}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F7376E8C-C345-41B0-86A8-A8164A9120E6}
+	EndGlobalSection
+EndGlobal
